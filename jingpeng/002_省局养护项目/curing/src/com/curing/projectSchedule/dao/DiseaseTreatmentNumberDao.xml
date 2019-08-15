@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.DiseaseTreatmentNumberDao">
+	<!-- 工程进度（旧路面病害处治工程数量表）List取得 -->
+	<select id="getDiseaseTreatmentNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.DiseaseTreatmentNumberEntity">
+		SELECT
+		  dtn.Id
+		  , dtn.ProjectId                                 -- 项目id
+		  , dtn.DiseaseName                               -- 病害名称
+		  , dtn.DiseaseAmount                             -- 病害工程数量（㎡）
+		  , dtn.Caulking                                  -- 灌缝（m）
+		  , dtn.SBSConcrete                               -- 4cm温拌SBS改性沥青混凝土（AC-13)（㎡）
+		  , dtn.GravelUpper                               -- 20cm4.5%水泥稳定碎石上基层（㎡）
+		  , dtn.SevenConcrete                             -- 7cm沥青混凝土（㎡）
+		  , dtn.PermeableLayer                            -- 透层油（㎡）
+		  , dtn.StickyLayer                               -- 粘层油（㎡）
+		  , dtn.SingleAsphalt                             -- 单层沥青表面处治（㎡）
+		  , dtn.MillingFour                               -- 铣刨4cm面层（㎡）
+		  , dtn.MillingTwenty                             -- 铣刨20cm基层（㎡）
+		  , dtn.SprayAsphalt                              -- 喷洒沥青（㎡）
+		  , dtn.Gravel                                    -- 碎石（㎡）
+		  , dtn.StoneChip                                 -- 石屑（㎡）
+		  , dtn.DigOut                                    -- 挖除旧路面（㎡）
+		  , dtn.Remarks                                   -- 备注
+		  , dtn.IsDel
+		  , dtn.Creater
+		  , dtn.CreaterDate
+		  , dtn.Reviser
+		  , dtn.ReviserDate 
+		FROM
+		  DiseaseTreatmentNumber as dtn 
+		  left join V_EntryTree as ve 
+		    on dtn.ProjectId = ve.pid
+		WHERE
+		  dtn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and dtn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and dtn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="diseaseName!=null and diseaseName!=''">
+		    and dtn.diseaseName like concat('%',#{diseaseName},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="diseaseAmount!=null and diseaseAmount!=''">
+		    and dtn.diseaseAmount  like concat('%',#{diseaseAmount},'%')     -- 根据位置查询
+		  </if>
+		   order by dtn.CreaterDate desc
+	</select>
+	
+		<select id="getDiseaseTreatmentNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  dtn.DiseaseName                               -- 病害名称
+		  , dtn.DiseaseAmount                             -- 病害工程数量（㎡）
+		  , dtn.Caulking                                  -- 灌缝（m）
+		  , dtn.SBSConcrete                               -- 4cm温拌SBS改性沥青混凝土（AC-13)（㎡）
+		  , dtn.GravelUpper                               -- 20cm4.5%水泥稳定碎石上基层（㎡）
+		  , dtn.SevenConcrete                             -- 7cm沥青混凝土（㎡）
+		  , dtn.PermeableLayer                            -- 透层油（㎡）
+		  , dtn.StickyLayer                               -- 粘层油（㎡）
+		  , dtn.SingleAsphalt                             -- 单层沥青表面处治（㎡）
+		  , dtn.MillingFour                               -- 铣刨4cm面层（㎡）
+		  , dtn.MillingTwenty                             -- 铣刨20cm基层（㎡）
+		  , dtn.SprayAsphalt                              -- 喷洒沥青（㎡）
+		  , dtn.Gravel                                    -- 碎石（㎡）
+		  , dtn.StoneChip                                 -- 石屑（㎡）
+		  , dtn.DigOut                                    -- 挖除旧路面（㎡）
+		  , dtn.Remarks                                   -- 备注
+		FROM
+		  DiseaseTreatmentNumber as dtn 
+		  left join V_EntryTree as ve 
+		    on dtn.ProjectId = ve.pid
+		WHERE
+		  dtn.IsDel = 0
+		   order by dtn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（旧路面病害处治工程数量表）合计 -->
+	<select id="getDiseaseTreatmentNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.DiseaseTreatmentNumberSum">
+		SELECT
+		  sum(dtn.DiseaseAmount) as DiseaseAmountSum      -- 病害工程数量（㎡）
+		  , sum(dtn.Caulking) as CaulkingSum              -- 灌缝（m）
+		  , sum(dtn.SBSConcrete) as SBSConcreteSum        -- 4cm温拌SBS改性沥青混凝土（AC-13)（㎡）
+		  , sum(dtn.GravelUpper) as GravelUpperSum        -- 20cm4.5%水泥稳定碎石上基层（㎡）
+		  , sum(dtn.SevenConcrete) as SevenConcreteSum    -- 7cm沥青混凝土（㎡）
+		  , sum(dtn.PermeableLayer) as PermeableLayerSum  -- 透层油（㎡）
+		  , sum(dtn.StickyLayer) as StickyLayerSum        -- 粘层油（㎡）
+		  , sum(dtn.SingleAsphalt) as SingleAsphaltSum    -- 单层沥青表面处治（㎡）
+		  , sum(dtn.MillingFour) as MillingFourSum        -- 铣刨4cm面层（㎡）
+		  , sum(dtn.MillingTwenty) as MillingTwentySum    -- 铣刨20cm基层（㎡）
+		  , sum(dtn.SprayAsphalt) as SprayAsphaltSum      -- 喷洒沥青（㎡）
+		  , sum(dtn.Gravel) as GravelSum                  -- 碎石（㎡）
+		  , sum(dtn.StoneChip) as StoneChipSum            -- 石屑（㎡）
+		  , sum(dtn.DigOut) as DigOutSum                  -- 挖除旧路面（㎡）
+		FROM
+		  DiseaseTreatmentNumber as dtn 
+		  left join V_EntryTree as ve 
+		    on dtn.ProjectId = ve.pid
+		WHERE
+		  dtn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and dtn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and dtn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="diseaseName!=null and diseaseName!=''">
+		    and dtn.diseaseName like concat('%',#{diseaseName},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="diseaseAmount!=null and diseaseAmount!=''">
+		    and dtn.diseaseAmount  like concat('%',#{diseaseAmount},'%')     -- 根据位置查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（旧路面病害处治工程数量表） -->
+	<insert id="insertDiseaseTreatmentNumber" parameterType="com.curing.projectSchedule.model.DiseaseTreatmentNumberEntity">
+		INSERT 
+		INTO DiseaseTreatmentNumber( 
+			Id
+		  , ProjectId
+		  , DiseaseName
+		  , DiseaseAmount
+		  , Caulking
+		  , SBSConcrete
+		  , GravelUpper
+		  , SevenConcrete
+		  , PermeableLayer
+		  , StickyLayer
+		  , SingleAsphalt
+		  , MillingFour
+		  , MillingTwenty
+		  , SprayAsphalt
+		  , Gravel
+		  , StoneChip
+		  , DigOut
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{DiseaseName}
+		  , #{DiseaseAmount}
+		  , #{Caulking}
+		  , #{SBSConcrete}
+		  , #{GravelUpper}
+		  , #{SevenConcrete}
+		  , #{PermeableLayer}
+		  , #{StickyLayer}
+		  , #{SingleAsphalt}
+		  , #{MillingFour}
+		  , #{MillingTwenty}
+		  , #{SprayAsphalt}
+		  , #{Gravel}
+		  , #{StoneChip}
+		  , #{DigOut}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（旧路面病害处治工程数量表） -->
+	<update id="updateDiseaseTreatmentNumber" parameterType="com.curing.projectSchedule.model.DiseaseTreatmentNumberEntity">
+		UPDATE DiseaseTreatmentNumber 
+		SET
+		  DiseaseName = #{DiseaseName}
+		  , DiseaseAmount = #{DiseaseAmount}
+		  , Caulking = #{Caulking}
+		  , SBSConcrete = #{SBSConcrete}
+		  , GravelUpper = #{GravelUpper}
+		  , SevenConcrete = #{SevenConcrete}
+		  , PermeableLayer = #{PermeableLayer}
+		  , StickyLayer = #{StickyLayer}
+		  , SingleAsphalt = #{SingleAsphalt}
+		  , MillingFour = #{MillingFour}
+		  , MillingTwenty = #{MillingTwenty}
+		  , SprayAsphalt = #{SprayAsphalt}
+		  , Gravel = #{Gravel}
+		  , StoneChip = #{StoneChip}
+		  , DigOut = #{DigOut}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（旧路面病害处治工程数量表） -->
+	<update id="deleteDiseaseTreatmentNumber" parameterType="com.curing.projectSchedule.model.DiseaseTreatmentNumberEntity">
+		UPDATE DiseaseTreatmentNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

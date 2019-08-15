@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blindSample.dao.IndexMaintenanceCementMortarStrengthDao">
+
+	<!--  tab1 水泥品种列表获取   -->
+	<select id="getCementTypeList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  distinct CementType 
+		FROM
+		  JudgingBasis04006 
+		where
+		  IsValidData = 1 
+		order by
+		  CementType
+	</select>
+	<!--  tab1 水泥胶砂强度 List   -->
+	<select id="getCementMortarStrength" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			id,
+			CementType,
+		    CementStrengthGrade,
+		    '≥' + CAST ( RuptureStrength3 AS varchar(20) ) as RuptureStrength3,
+		    '≥' + CAST ( RuptureStrength28 AS varchar(20) ) as RuptureStrength28,
+		    '≥' + CAST ( CompTrength28 AS varchar(20) ) as CompTrength28,
+		    '≥' + CAST ( CompTrength3 AS varchar(20) ) as CompTrength3		    
+		FROM 
+			JudgingBasis04006
+		where 
+		 	IsValidData = 1 
+		order by 
+			CementType
+	</select>
+	
+	<!--  tab2 沥青三大指标   List  -->
+	<select id="getAsphalt" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+	    	id,
+		    AsphaltType,
+		    ISNULL(CAST ( PenetLowerLimit AS varchar(20) ),0) + '~' +CAST ( PenetUpperLimit AS varchar(20) ) as PenetLimit,
+		    '≥' + CAST ( SoftenPoint AS varchar(20) ) as SoftenPoint
+		 FROM 
+		 	JudgingBasis08001
+		 where 
+		 	IsValidData = 1
+		 order by
+		    AsphaltType
+	</select>
+	
+	<!--  tab3 马歇尔 List  -->
+	<select id="getMarshall" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+	    	id,
+		    CAST ( StabLowerLimit AS varchar(20) ) + '~' +CAST ( StabUpperLimit AS varchar(20) ) as StabLimit,
+			CAST ( FlowLowerLimit AS varchar(20) ) + '~' +CAST ( FlowUpperLimit AS varchar(20) ) as FlowLimit
+		 FROM 
+		 	JudgingBasis0900101
+		 where 
+		 	IsValidData = 1
+	</select>
+	
+	<!--  tab4  钢筋抗拉强度、屈服强度、伸长率、冷弯试验 List  -->
+	<select id="getRebar" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+	    	id,
+		    StrengthGrade,
+		    CAST ( Diameter1 AS varchar(20) ) + '-' +CAST ( Diameter2 AS varchar(20) ) as Diameter,
+	        '≥' + CAST ( YieldStrth AS varchar(20) ) as YieldStrth,
+      		'≥' + CAST ( TensileStrength AS varchar(20) ) as TensileStrength
+		 FROM 
+		 	JudgingBasisTest10
+		 where 
+		 	IsValidData = 1
+		 	and IsT1000201 = 0
+		 order by StrengthGrade
+	</select>
+	
+	<!--  tab5  钢筋接头抗拉强度、冷弯试验 List  -->
+	<select id="getRebarJoint" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+	    	id,
+		    StrengthGrade,
+	        CAST ( Diameter1 AS varchar(20) ) + '-' +CAST ( Diameter2 AS varchar(20) ) as Diameter,
+      		'≥' + CAST ( TensileStrength AS varchar(20) ) as TensileStrength
+		 FROM 
+		 	JudgingBasisTest10
+		 where 
+		 	IsValidData = 1
+		 	and IsT1000201 = 1
+		 order by StrengthGrade
+	</select>
+	
+	<!--  tab1 水泥胶砂强度 重复数据判断    -->
+	<select id="getCementMortarStrengthCount" parameterType="JudgingBasis04006" resultType="java.util.Map">
+		SELECT 
+			count(*) as count
+		FROM 
+			JudgingBasis04006
+		where 
+		 	IsValidData = 1 
+			and CementType = #{cementtype}
+			and CementStrengthGrade = #{cementstrengthgrade}
+	</select>
+	
+	<!--  tab1 水泥胶砂强度 插入数据  -->	
+	<insert id="addCementMortarStrength"  parameterType="JudgingBasis04006">
+		INSERT INTO 
+			JudgingBasis04006(
+				CementType,
+				CementStrengthGrade,
+				RuptureStrength3,
+				RuptureStrength28,
+				CompTrength28,
+				CompTrength3,
+			    Operator,
+			    CreateDate,
+			    Modifier,
+			    ModifyDate,
+				IsValidData)
+		VALUES
+			(#{cementtype},
+			 #{cementstrengthgrade},
+			 #{rupturestrength3},
+			 #{rupturestrength28},
+			 #{comptrength28},
+			 #{comptrength3},
+			 #{operator},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 #{modifier},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 1)
+	</insert>
+	
+	<!--  tab2 沥青三大指标 重复数据判断    -->
+	<select id="getAsphaltCount" parameterType="JudgingBasis08001" resultType="java.util.Map">
+		SELECT 
+			count(*) as count
+		FROM 
+			JudgingBasis08001
+		where 
+		 	IsValidData = 1 
+			and AsphaltType = #{asphalttype}
+			and not (#{penetlowerlimit} &gt; PenetUpperLimit or #{penetupperlimit} &lt; PenetLowerLimit)
+	</select>
+	
+	<!--  tab2 沥青三大指标 插入数据  -->	
+	<insert id="addAsphalt"  parameterType="JudgingBasis08001">
+		INSERT INTO 
+			JudgingBasis08001(
+				AsphaltType,
+			    PenetUpperLimit,
+			    PenetLowerLimit,
+			    SoftenPoint,
+			    Operator,
+			    CreateDate,
+			    Modifier,
+			    ModifyDate,
+			    IsValidData)
+		VALUES
+			(#{asphalttype},
+			 #{penetupperlimit},
+			 #{penetlowerlimit},
+			 #{softenpoint},
+			 #{operator},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 #{modifier},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 1)
+	</insert>
+	
+	<!--  tab3  马歇尔 重复数据判断    -->
+	<select id="getMarshallCount" parameterType="JudgingBasis0900101" resultType="java.util.Map">
+		SELECT 
+			count(*) as count
+		FROM 
+			JudgingBasis0900101
+		where 
+		 	IsValidData = 1 
+	</select>
+	
+	<!--  tab3   马歇尔 插入数据  -->	
+	<insert id="addMarshall"  parameterType="JudgingBasis0900101">
+		INSERT INTO 
+			JudgingBasis0900101(
+				StabLowerLimit,
+	        	StabUpperLimit,
+	        	FlowUpperLimit,
+	        	FlowLowerLimit,
+			    Operator,
+			    CreateDate,
+			    Modifier,
+			    ModifyDate,
+			    IsValidData)
+		VALUES
+			(#{stablowerlimit},
+			 #{stabupperlimit},
+			 #{flowupperlimit},
+			 #{flowlowerlimit},
+			 #{operator},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 #{modifier},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 1)
+	</insert>
+	
+	<!--  tab4  钢筋抗拉强度、屈服强度、伸长率、冷弯试验  && tab5 钢筋接头抗拉强度、冷弯试验  重复数据判断    -->
+	<select id="getRebarCount" parameterType="JudgingBasisTest10" resultType="java.util.Map">
+		SELECT 
+			count(*) as count
+		FROM 
+			JudgingBasisTest10
+		where 
+		 	IsValidData = 1 
+			and StrengthGrade = #{strengthgrade}
+			and IsT1000201 = #{ist1000201}
+			and not (#{diameter1} &gt; Diameter2 or #{diameter2} &lt; Diameter1)
+	</select>
+	
+	<!--  tab4  钢筋抗拉强度、屈服强度、伸长率、冷弯试验   && tab5 钢筋接头抗拉强度、冷弯试验  插入数据-->	
+	<insert id="addRebar"  parameterType="JudgingBasisTest10">
+		INSERT INTO 
+			JudgingBasisTest10(
+				StrengthGrade,
+	        	Diameter1,
+	        	Diameter2,
+	        	YieldStrth,
+      			TensileStrength,
+      			IsT1000201,
+			    Operator,
+			    CreateDate,
+			    Modifier,
+			    ModifyDate,
+			    IsValidData)
+		VALUES
+			(#{strengthgrade},
+			 #{diameter1},
+			 #{diameter2},
+			 #{yieldstrth},
+			 #{tensilestrength},
+			 #{ist1000201},
+			 #{operator},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 #{modifier},
+			 CONVERT(varchar(100),GETDATE(),20),
+			 1)
+	</insert>
+	
+	<!--  tab1 水泥胶砂强度 删除数据  -->	
+	<update id="updateCementMortarStrength" parameterType="JudgingBasisDeleteEntity">	
+		UPDATE 
+			JudgingBasis04006  
+		SET 
+			IsValidData = 0, 
+			Modifier = #{modifier},
+			ModifyDate=CONVERT(varchar(100),GETDATE(),20)
+		WHERE 
+			Id= #{id}
+	</update>
+	
+	<!--  tab2 沥青三大指标 删除数据  -->	
+	<update id="updateAsphalt" parameterType="JudgingBasisDeleteEntity">	
+		UPDATE 
+			JudgingBasis08001  
+		SET 
+			IsValidData = 0, 
+			Modifier = #{modifier},
+			ModifyDate=CONVERT(varchar(100),GETDATE(),20)
+		WHERE 
+			Id= #{id}
+	</update>
+	
+	<!--  tab3 马歇尔 删除数据  -->	
+	<update id="updateMarshall" parameterType="JudgingBasisDeleteEntity">	
+		UPDATE 
+			JudgingBasis0900101  
+		SET 
+			IsValidData = 0, 
+			Modifier = #{modifier},
+			ModifyDate=CONVERT(varchar(100),GETDATE(),20)
+		WHERE 
+			Id= #{id}
+	</update>
+	
+	<!--  tab4 钢筋抗拉强度、屈服强度、伸长率、冷弯试验 删除数据 &&tab5 钢筋接头抗拉强度、冷弯试验 删除数据-->	
+	<update id="updateRebar" parameterType="JudgingBasisDeleteEntity">	
+		UPDATE 
+			JudgingBasisTest10  
+		SET 
+			IsValidData = 0, 
+			Modifier = #{modifier},
+			ModifyDate=CONVERT(varchar(100),GETDATE(),20)
+		WHERE 
+			Id= #{id}
+	</update>
+	
+</mapper>

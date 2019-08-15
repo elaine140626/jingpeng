@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.PipeCulvertNumberDao">
+	<!-- 工程进度（圆管涵工程数量汇总表）List取得 -->
+	<select id="getPipeCulvertNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PipeCulvertNumberEntity">
+		SELECT
+		    pcn.Id                           -- 主键
+		  , pcn.ProjectId                    -- 项目id
+		  , pcn.PileNumber                   -- 桩号
+		  , pcn.M15Body                      -- M15浆砌块石端墙墙身（m³）
+		  , pcn.C25ConcreteWall              -- C20混凝土端墙基础（m³）
+		  , pcn.C25ConcreteTube              -- C20混凝土管基（m³）
+		  , pcn.C25ConcreteCap               -- C25混凝土墙帽（m³）
+		  , pcn.GravelCushion                -- 砂砾垫层（m³）
+		  , pcn.RubbleHole                   -- M7.5浆砌片石洞口铺砌（m³）
+		  , pcn.RubbleWater                  -- M7.5浆砌片石隔水墙（m³）
+		  , pcn.M10RubbleBody                -- M10浆砌块石八字翼墙墙身（m³）
+		  , pcn.C15StoneConcrete             -- C15片石混凝土翼墙基础（m³）
+		  , pcn.TubeRebar                    -- 管涵钢筋（Kg）
+		  , pcn.TubeConcrete                 -- 管涵混凝土（m³）
+		  , pcn.BackfillPellets              -- 回填砾料（m³）
+		  , pcn.Excavation                   -- 基坑开挖（m³）
+		  , pcn.Remarks
+		  , pcn.IsDel
+		  , pcn.Creater
+		  , pcn.CreaterDate
+		  , pcn.Reviser
+		  , pcn.ReviserDate 
+		FROM
+		  PipeCulvertNumber as pcn 
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid 
+		WHERE
+		  pcn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pcn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pcn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pcn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		   order by pcn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（圆管涵工程数量汇总表）合计 -->
+	<select id="getPipeCulvertNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PipeCulvertNumberSum">
+		SELECT
+		    sum(pcn.M15Body)          as M15BodySum             -- M15浆砌块石端墙墙身（m³）
+		  , sum(pcn.C25ConcreteWall)  as C25ConcreteWallSum     -- C20混凝土端墙基础（m³）
+		  , sum(pcn.C25ConcreteTube)  as C25ConcreteTubeSum     -- C20混凝土管基（m³）
+		  , sum(pcn.C25ConcreteCap)   as C25ConcreteCapSum      -- C25混凝土墙帽（m³）
+		  , sum(pcn.GravelCushion)    as GravelCushionSum       -- 砂砾垫层（m³）
+		  , sum(pcn.RubbleHole)       as RubbleHoleSum          -- M7.5浆砌片石洞口铺砌（m³）
+		  , sum(pcn.RubbleWater)      as RubbleWaterSum         -- M7.5浆砌片石隔水墙（m³）
+		  , sum(pcn.M10RubbleBody)    as M10RubbleBodySum       -- M10浆砌块石八字翼墙墙身（m³）
+		  , sum(pcn.C15StoneConcrete) as C15StoneConcreteSum    -- C15片石混凝土翼墙基础（m³）
+		  , sum(pcn.TubeRebar)        as TubeRebarSum           -- 管涵钢筋（Kg）
+		  , sum(pcn.TubeConcrete)     as TubeConcreteSum        -- 管涵混凝土（m³）
+		  , sum(pcn.BackfillPellets)  as BackfillPelletsSum     -- 回填砾料（m³）
+		  , sum(pcn.Excavation)       as ExcavationSum          -- 基坑开挖（m³）
+		FROM
+		 PipeCulvertNumber as pcn 
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid 
+		WHERE
+		  pcn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pcn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pcn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pcn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（圆管涵工程数量汇总表） -->
+	<insert id="insertPipeCulvertNumber" parameterType="com.curing.projectSchedule.model.PipeCulvertNumberEntity">
+		INSERT 
+		INTO PipeCulvertNumber ( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , M15Body
+		  , C25ConcreteWall
+		  , C25ConcreteTube
+		  , C25ConcreteCap
+		  , GravelCushion
+		  , RubbleHole
+		  , RubbleWater
+		  , M10RubbleBody
+		  , C15StoneConcrete
+		  , TubeRebar
+		  , TubeConcrete
+		  , BackfillPellets
+		  , Excavation
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{M15Body}
+		  , #{C25ConcreteWall}
+		  , #{C25ConcreteTube}
+		  , #{C25ConcreteCap}
+		  , #{GravelCushion}
+		  , #{RubbleHole}
+		  , #{RubbleWater}
+		  , #{M10RubbleBody}
+		  , #{C15StoneConcrete}
+		  , #{TubeRebar}
+		  , #{TubeConcrete}
+		  , #{BackfillPellets}
+		  , #{Excavation}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		); 
+	</insert>
+	
+	<!-- 更新工程进度（圆管涵工程数量汇总表） -->
+	<update id="updatePipeCulvertNumber" parameterType="com.curing.projectSchedule.model.PipeCulvertNumberEntity">
+		UPDATE PipeCulvertNumber 
+		SET
+		    PileNumber = #{PileNumber}
+		  , M15Body = #{M15Body}
+		  , C25ConcreteWall = #{C25ConcreteWall}
+		  , C25ConcreteTube = #{C25ConcreteTube}
+		  , C25ConcreteCap = #{C25ConcreteCap}
+		  , GravelCushion = #{GravelCushion}
+		  , RubbleHole = #{RubbleHole}
+		  , RubbleWater = #{RubbleWater}
+		  , M10RubbleBody = #{M10RubbleBody}
+		  , C15StoneConcrete = #{C15StoneConcrete}
+		  , TubeRebar = #{TubeRebar}
+		  , TubeConcrete = #{TubeConcrete}
+		  , BackfillPellets = #{BackfillPellets}
+		  , Excavation = #{Excavation}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（圆管涵工程数量汇总表） -->
+	<update id="deletePipeCulvertNumber" parameterType="com.curing.projectSchedule.model.PipeCulvertNumberEntity">
+		UPDATE PipeCulvertNumber
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+</mapper>

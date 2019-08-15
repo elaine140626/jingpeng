@@ -1,0 +1,238 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>粗集料针、片状颗粒含量试验</title>
+<link href="../resources/css2/record.css" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+<style type="text/css">
+.inputClass{
+	text-align: center;
+    width: 100%;
+    height:96%;
+    border: none;
+}
+.search_select {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+}
+</style>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei"
+			style="position: relative; float: right;"></div>
+		<div id="istestcollection" class="jilu_title" style="padding-top: 60px;">粗集料针、片状颗粒含量试验自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">粗集料针、片状颗粒含量试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="16%">试验依据</td>
+					<td width="34%"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td width="34%"><input class="inputClass" type="text" id="testDate"></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td><label id="sampleName"></label></td>
+					<td>试件数量</td>
+					<td><label id="sampleCount"></label></td>
+				</tr>
+				<tr>
+					<td>试验员</td>
+					<td><label id="testOperator"></label></td>
+					<td>直径</td>
+					<td><label id="diameter"></label></td>
+				</tr>
+				<tr>
+					<td>集料种类</td>
+					<td><label id="aggregate_Type"></label></td>
+					<td>集料规格</td>
+					<td><label id="aggregate_Specification"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="12%">施工单位</td>
+					<td width="16%"><label id="constructionUnit"></label></td>
+					<td width="8%">工程名称</td>
+					<td width="20%"><label id="engineeringName"></label></td>
+					<td width="10%">工程部位/用途</td>
+					<td width="34%"><label id="purpose"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="16%">试验方法</td>
+					<td>
+					<select class="search_select" id="test_Method" disabled="disabled">
+						<option value="a">规准仪法</option>
+						<option value="b">游标卡尺法</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="show1">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="12%">试件总质量(g)</td>
+						<td width="16%">粒级（方孔筛）（mm)</td>					
+						<td width="14%">针状颗粒质量(g)</td>
+						<td width="14%">片状颗粒质量(g)</td>
+						<td width="22%">针片状颗粒总质量（g)</td>
+						<td width="22%">针片状颗粒含量(%)</td>
+					</tr>
+				</thead>
+				<tbody id="list"></tbody>
+					<tr>
+						<td width="12%" rowspan="6"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="samp_Mass"></td>
+						<td width="16%"><input class="inputClass" type="text" name="name" id="single_Stage1"></td>							
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="acic_Parti_Mass1"></td> 
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="flaky_Parti_Mass1"></td>
+						<td width="22%" rowspan="6"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="elon_Part_Mass"></td>
+						<td width="22%" rowspan="6"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" id="elongated_Particles"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input class="inputClass" type="text" name="name" id="single_Stage2"></td>					
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="acic_Parti_Mass2"></td>
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="flaky_Parti_Mass2"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input class="inputClass" type="text" name="name" id="single_Stage3"></td>							
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="acic_Parti_Mass3"></td> 
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="flaky_Parti_Mass3"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input class="inputClass" type="text" name="name" id="single_Stage4"></td>							
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="acic_Parti_Mass4"></td> 
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="flaky_Parti_Mass4"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input class="inputClass" type="text" name="name" id="single_Stage5"></td>							
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="acic_Parti_Mass5"></td> 
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="flaky_Parti_Mass5"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input class="inputClass" type="text" name="name" id="single_Stage6"></td>						
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="acic_Parti_Mass6"></td> 
+						<td width="14%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name" id="flaky_Parti_Mass6"></td>
+					</tr>			
+			</table>
+		</div>
+		<div id="show2">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="12%" rowspan="2">试验序号</td>
+						<td width="16%" rowspan="2">试样总质量(g)</td>					
+						<td width="28%" rowspan="2">试样中所含针片状颗粒的总质量(g)</td>
+						<td width="22%" colspan="2">针片状颗粒含量(%)</td>
+					</tr>
+					<tr>
+						<td width="22%">单值</td>
+						<td width="22%">平均值</td>
+					</tr>
+					<tr>
+						<td width="12%" rowspan="3">1</td>
+						<td width="16%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="samp_Mass1"></td>					
+						<td width="28%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="in_Samp_Mass1"></td>
+						<td width="22%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="elongated_Particles1"></td>
+						<td width="22%" rowspan="3"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="avg_Elon_Part1"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="samp_Mass21"></td>								
+						<td width="28%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="in_Samp_Mass21"></td>       
+						<td width="22%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="elongated_Particles21"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="samp_Mass31"></td>								
+						<td width="28%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="in_Samp_Mass31"></td>       
+						<td width="22%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="elongated_Particles31"></td>
+					</tr>
+					<tr>
+						<td width="12%" rowspan="3">2</td>
+						<td width="16%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="samp_Mass2"></td>					
+						<td width="28%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="in_Samp_Mass2"></td>
+						<td width="22%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="elongated_Particles2"></td>
+						<td width="22%" rowspan="3"><input class="inputClass" type="text" name="name1" id="avg_Elon_Part2"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="samp_Mass22"></td>								
+						<td width="28%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="in_Samp_Mass22"></td>       
+						<td width="22%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="elongated_Particles22"></td>
+					</tr>
+					<tr>
+						<td width="16%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="samp_Mass32"></td>								
+						<td width="28%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" name="name1" id="in_Samp_Mass32"></td>       
+						<td width="22%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" name="name1" id="elongated_Particles32"></td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_7 xbj1">
+				<tr>
+					<td width="16%" align="center">判定指标</td>
+					<td width="84%"><input class="inputClass" type="text" id="judgementIndex"></td>
+				</tr>
+				<tr>
+					<td width="16%" align="center">结果判定</td>
+					<td width="84%">
+					<select class="search_select" id="isQualifiedTest">
+						<option value="">未判定</option>
+						<option value="0">不合格</option>
+						<option value="1">合格</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="saveBtnShow" class="fanhui" style="float:left;">
+			<input id="save" type="button" value="保&nbsp;&nbsp;存" class="btncha">
+		</div>
+		<div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div>
+	</div>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../resources/DataTables/datatables.js"></script>
+	<script type="text/javascript" src="../resources/js/shiyan23.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/jedate/jedate.js"></script>
+	<script type="text/javascript">
+	    jeDate({
+	        dateCell:"#testDate",
+	        format:"YYYY-MM-DD",
+	        isinitVal:false,
+	        isTime:true, 
+	   	 isClear:false,
+	    })
+	</script>
+</body>
+</html>

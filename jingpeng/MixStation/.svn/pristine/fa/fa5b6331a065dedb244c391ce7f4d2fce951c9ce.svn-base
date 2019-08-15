@@ -1,0 +1,173 @@
+var baseUrl = "";
+var thisIds = "";
+$(function() {
+	// 注册判断
+	var flag = getUrlParam("flag");
+	baseUrl = getContextPath();
+	$.ajax({
+        type: "post",
+        url: "../testUserInfo/getTestUserName.html",
+        data:{},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	//获取当前登录人做显示
+        	$(".userid").html(data.userName);
+        	thisIds = data.id;
+        }
+    });
+	
+	if(flag == 'true'){
+		// 获取平台用户信息
+		getList();
+	}else{
+		// 获取app用户信息
+		getAppUserList();
+	}	
+});
+
+//获取前页面参数
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); //匹配目标参数
+    if(r != null){
+        return decodeURIComponent(r[2]);
+//这里为什么是从第三个字符解析呢？不知道这样理解对不对，因为路径后面的参数形式为参数名=参数值，而第一个字符为参数名，第二个为=，第三个就为参数值了。。。因为下面调用的时候得出的就是参数值
+    }
+    return null;//返回参数值
+}
+
+function getList() {
+	$.ajax({
+		type : "POST",
+		url : baseUrl + "/testUserInfo/getUserInformation.html",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			var list = data.data;
+			$("#roleType").attr("style","display:block");
+			isDelete = list;
+	    	html = "";
+	    	for (var j = 0; j < list.length; j++) {
+	    		var testName = "|";
+		    	for(var i = 0; i < list[j].list2.length; i++) {
+		    		testName +=list[j].list2[i].TestRoomName+"|"
+		    	}
+	    		html += '<tr>'
+    				+'<td>'+(j+1)+'</td>'
+	                +'<td>'+list[j].list1.userCode+'</td>'
+	                +'<td>'+list[j].list1.name+'</td>'
+	                +'<td>'+testName+'</td>'
+	                +'<td><span>'+list[j].list1.operation+'</span></td>'
+	           +'</tr>'
+			}
+	    	$("#list").html(html);
+		}
+	});
+}
+
+// 获取app用户信息
+function getAppUserList() {
+	$.ajax({
+		type : "POST",
+		url : "../testUserInfo/getAppUserList",
+		data : {
+			usercode:"",
+			id:""
+		},
+		dataType : "json",
+		success : function(data) {
+			$("#roleType").attr("style","display:none");
+			var list = data.data;
+	    	html = "";
+	    	for (var j = 0; j < list.length; j++) {
+	    		html += '<tr>'
+    				+'<td>'+(j+1)+'</td>'
+	                +'<td>'+list[j].usercode+'</td>'
+	                +'<td>'+list[j].name+'</td>'
+	                +"<td><span><a href='javascript:void(0)' onclick='updateAppUser(\""+list[j].id+"\")'>修改</a><a href='javascript:void(0)' onclick='delAppUser(\""+list[j].id+"\")'>删除</a></span></td>"
+	           +'</tr>'
+			}
+	    	$("#list").html(html);
+		}
+	});
+}
+
+// 更新app用户信息
+function updateAppUser(id) {
+	// 修改界面
+	window.location.href = "../testUserInfo/user.html?i_id="+id+"&flag=false";
+}
+
+//删除app用户信息
+function delAppUser(id) {
+	$.ajax({
+		type : "POST",
+		url :"../testUserInfo/deleteAppUser",
+		data : {"id":id},
+		async:false,
+		dataType : "json",
+		success : function(data) {
+			if(data.code=="success"){
+				swal({
+					title: data.message,
+					type: data.code,
+					confirmButtonColor: '#AEDEF4',
+					confirmButtonText: '确定',
+					
+				},
+				function(){
+					location.reload();
+				});
+			}else{
+				swal({
+					title: data.message,
+					type: data.code,
+					confirmButtonColor: '#AEDEF4',
+					confirmButtonText: '确定',	
+				});
+			}		
+		}
+	});
+}
+
+function update(i_id) {
+	window.location.href = baseUrl+"/testUserInfo/user.html?i_id="+i_id+"&flag=true";
+}
+
+function del(i_id) {
+	if(thisIds==i_id){
+		swal("操作失败","不能删除当前登录的账号！", "info");
+		return;
+	}
+	swal({
+		title: "确定操作吗？",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: '#AEDEF4',
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		cancelButtonFont: '微软雅黑',
+		
+	},
+	function(){
+		$.ajax({
+			type : "POST",
+			url : baseUrl + "/testUserInfo/testUserdel.html",
+			data : {"id":i_id},
+			async:false,
+			dataType : "json",
+			success : function(data) {
+				if(data.code=="200"){
+					swal("操作成功",data.message, "info");
+					window.location.href = baseUrl+"/testUserInfo/userinfo.html";
+				}else{
+					swal("操作失败",data.message, "info");
+					return;
+				}
+				
+			}
+		});
+	
+	});
+}

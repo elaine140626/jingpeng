@@ -1,0 +1,101 @@
+<!-- 试验查询页面 -->
+<link rel="stylesheet" href="../../js/layui/css/layui.css">	
+<script src="../../js/HighwayPlatform/TestRoom/index_analysis.js" type="text/javascript" charset="utf-8"></script>
+<div>
+	<div class="layui-btn-group" style="margin-top: 25px;">
+		<button class="layui-btn" id="btn1" onclick="changeChart(this,'chart1')">混凝土强度分布</button>
+		<button class="layui-btn" id="btn2" onclick="changeChart(this,'chart2')">指标沥青波动</button>
+		<button class="layui-btn" id="btn3" onclick="changeChart(this,'chart3')">沥青混合料指标波动</button>
+	</div>
+</div>
+<div class="chartMain layui-form" style="margin-top: 75px;">
+	<!--混凝土强度分布-->
+	<div id="chart1" style="margin-top: -42px;">
+		<div class="layui-inline">
+			<div class="layui-inline">
+				<label class="layui-form-label" style="width: 100px;">试验日期：</label>
+				<div class="layui-input-inline">
+				  <input type="text" name="startTime" id="startTime" lay-verify="date" placeholder="开始日期" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label" style="width: 40px;margin-left: -4px;">--</label>
+				<div class="layui-input-inline">
+				  <input type="text" name="endTime" id="endTime" lay-verify="date" placeholder="结束日期" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<button class="layui-btn" style="margin-top: -6px;margin-left: 12px;" onclick="initChart1()">查询</button>
+	    </div>
+		<div style="height:500px" id="echart1"></div>
+	</div>
+	<!--指标沥青波动-->
+	<div id="chart2" style="margin-top: -42px;">
+		<div class="layui-inline">
+			<label style="width: 86px;" class="layui-form-label">沥青种类</label>
+		</div>
+		<div class="layui-inline">
+			<select name="city" id="asphaltType" lay-verify="required" lay-filter="changeAsphaltType">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div class="layui-inline">
+			<label style="width: 118px;" class="layui-form-label">沥青标号/等级</label>
+		</div>
+		<div class="layui-inline">
+			<select name="city" id="asphaltGrade" lay-verify="required">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div class="layui-inline">
+			<div class="layui-inline">
+				<label class="layui-form-label" style="width: 100px;">试验日期：</label>
+				<div class="layui-input-inline">
+				  <input type="text" name="startTime2" id="startTime2" lay-verify="date" placeholder="开始日期" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label" style="width: 40px;margin-left: -4px;">--</label>
+				<div class="layui-input-inline">
+				  <input type="text" name="endTime2" id="endTime2" lay-verify="date" placeholder="结束日期" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<button class="layui-btn" style="margin-top: -6px;margin-left: 12px;" onclick="initChart2()">查询</button>
+	    </div>
+		<div style="height:500px;margin-top: 41px;" id="echart2"></div>
+	</div>
+	<!--沥青混合料指标波动-->
+	<div id="chart3" style="margin-top: -42px;">
+		<div class="layui-inline">
+			<label style="width: 100px;" class="layui-form-label">混合料种类</label>
+		</div>
+		<div class="layui-inline">
+			<select name="city" id="mixtureType" lay-verify="required" lay-filter="changeGradationType">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div class="layui-inline">
+			<label style="width: 86px;" class="layui-form-label">级配类型</label>
+		</div>
+		<div class="layui-inline">
+			<select name="city" id="gradationType" lay-verify="required">
+				<option value="">请选择</option>
+			</select>
+		</div>
+		<div class="layui-inline">
+			<div class="layui-inline">
+				<label class="layui-form-label" style="width: 100px;">试验日期：</label>
+				<div class="layui-input-inline">
+				  <input type="text" name="startTime3" id="startTime3" lay-verify="date" placeholder="开始日期" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label" style="width: 40px;margin-left: -4px;">--</label>
+				<div class="layui-input-inline">
+				  <input type="text" name="endTime3" id="endTime3" lay-verify="date" placeholder="结束日期" autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			<button class="layui-btn" style="margin-top: -6px;margin-left: 12px;" onclick="initChart3()">查询</button>
+	    </div>
+		<div style="height:500px;margin-top: 41px;" id="echart3"></div>
+	</div>
+</div>

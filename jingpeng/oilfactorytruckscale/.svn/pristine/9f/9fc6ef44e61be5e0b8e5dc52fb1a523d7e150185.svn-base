@@ -1,0 +1,203 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	<!-- select2 下拉多选  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+	<title>编辑其他出库单</title>
+	<style type="text/css">
+		.col-sm-offset-10{
+			 margin-left: 58%;
+		}
+	</style>
+	</head>
+	<body>
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i>首页 
+		<span class="c-gray en">&gt;</span>其他出库单
+		<span class="c-gray en">&gt;</span>编辑其他出库单
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"title="刷新">
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="pd-20">
+	  <form class="form form-horizontal" id="form1" style="margin-top:-20px"  method="post">
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">车牌号码：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="plateNumber" name="plateNumber"  maxlength="20" >
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">流水号：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="serial_ID" name="serial_ID"  maxlength="50" >
+			</div>
+		</div>
+			<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">客户名称：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="client" name="client"  maxlength="100" >
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">供料单位：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="unit" name="unit"   maxlength="20">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">产品名称：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="materielName" name="materielName"  maxlength="50" >
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">规格型号：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="materielModel" name="materielModel"  maxlength="50" >
+			</div>
+		</div>
+  		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">毛重（t）：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="grossWeight" name="grossWeight"  maxlength="10"  onchange="getNetWeight();">
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">皮重（t）：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="tareWeight" name="tareWeight"  maxlength="10"   onchange="getNetWeight();">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">净重（t）：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="suttle" name="suttle"  maxlength="10">
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">承运人：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="deliveryMan" name="deliveryMan" maxlength="10" >
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">承运人电话：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="deliveryManPhone" name="deliveryManPhone" maxlength="15" >
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">车队名称：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="fleetName" name="fleetName" maxlength="50" >
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">收货人：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="consignee" name="consignee" maxlength="10" >
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">收货电话：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="consigneePhone" name="consigneePhone" maxlength="15">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">报告编号：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="testReport" name="testReport" maxlength="200" >
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">温度（℃）：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="temperature" name="temperature" maxlength="10">
+			</div>
+		</div>
+		
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">检斤员：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="qualityInspector" name="qualityInspector"  maxlength="10">
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">称重时间：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" onfocus="WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss' })" value="" placeholder="" id="measureTime" name="measureTime" maxlength="">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">封签号1：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="facingSlipNum" name="facingSlipNum"  maxlength="10">
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">封签号2：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="facingSlipNum2" name="facingSlipNum2" maxlength="10">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">封签号3：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="facingSlipNum3" name="facingSlipNum3"  maxlength="10">
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">封签号4：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="facingSlipNum4" name="facingSlipNum4" maxlength="10">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">是否自提：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<select class="select" style="width:310px;height:31px" id="isSelfMention" name="isSelfMention">
+					<option value="0">是</option>
+					<option value="1">否</option>
+				</select>
+			</div>
+			<label class="form-label col-xs-3 col-sm-2">备注：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="text" class="input-text" value="" placeholder="" id="remarks" name="remarks" maxlength="200">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-3 col-sm-2">上传司机签名：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="file" id="myBlogImage" name="upload"/>
+				<input type="hidden" id="fileName">
+			</div>
+		</div>
+		<div id="electronicsName1" class="row cl" style="display:none">
+			<label class="form-label col-xs-3 col-sm-2">电子签名：</label>
+			<div class="formControls col-xs-3 col-sm-2">
+				<input type="hidden" id="files">
+				<a id="sd" target="_blank" onclick="preview()"><span id="file"></span></a>
+				<a type="button" value="下载" id="downloadBtn" style="text-decoration:none" onclick="downloadFile()">
+				<img src="../../img/common/download.png" width="20" height="20" alt="下载" title="下载">
+				</a>
+				<a type="button" value="删除" id="deleteBtn" style="text-decoration:none" onclick="deleteFiles()">
+				<img src="../../img/common/del.png" width="20" height="20" alt="删除" title="删除">
+				</a>
+			</div>
+		</div>
+		
+	
+	  </form>
+	</div>
+	<div class="row cl">
+	    <div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-10">
+	  		<button onclick="save();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+	  		<button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+	  	</div>
+	</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="../../js/upload/upload.js"></script>
+	<script type="text/javascript" src="../../js/jquery-upload-file/js/jquery.uploadfile.js"></script>
+	<script type="text/javascript" src="../../js/jquery-upload-file/js/ajaxfileupload.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/weighingManagement/weighingQueryOtherOut_add.js"></script>
+	</body>
+</html>

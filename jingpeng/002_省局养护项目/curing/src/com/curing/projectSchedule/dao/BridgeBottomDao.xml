@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.BridgeBottomDao">
+	<!-- 工程进度（小桥下部工程量汇总表）List取得 -->
+	<select id="getBridgeBottomList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeBottomEntity">
+		SELECT
+		    bb.Id                      -- id 
+		  , bb.ProjectId               -- 项目id
+		  , bb.CoreNumber              -- 中心桩号
+		  , bb.BridgeName              -- 桥名
+		  , bb.Bearing                 -- 支座、锚栓及垫石支座（块）
+		  , bb.BearingRebar            -- 支座、锚栓及垫石钢筋（Kg）
+		  , bb.BearingC40Concrete      -- 支座、锚栓及垫石C40混凝土（m³）
+		  , bb.PlatformC25Concrete     -- 台身C25混凝土（m³）
+		  , bb.PlatformRebar           -- 台身钢筋（Kg）
+		  , bb.CapC30Concrete          -- 台帽C30混凝土（m³）
+		  , bb.CapRebar                -- 台帽钢筋（Kg）
+		  , bb.BaffleC30Concrete       -- 挡块C30混凝土（m³）
+		  , bb.BaffleRebar             -- 挡块钢筋（Kg）
+		  , bb.BasicsC25Concrete       -- 台基础C25混凝土（m³）
+		  , bb.BasicsRebar             -- 台基础C25混凝土（m³）
+		  , bb.PierC20Concrete         -- 墩身C20混凝土（m³）
+		  , bb.PierRebar               -- 墩身钢筋（Kg）
+		  , bb.PierCapC30Concrete      -- 墩帽C30混凝土（m³）
+		  , bb.PierCapRebar            -- 墩帽钢筋（Kg）
+		  , bb.Remarks                 -- 备注
+		  , bb.IsDel
+		  , bb.Creater
+		  , bb.CreaterDate
+		  , bb.Reviser
+		  , bb.ReviserDate
+		FROM
+		  BridgeBottom bb 
+		  left join V_EntryTree as ve 
+		    on bb.ProjectId = ve.pid 
+		WHERE
+		  bb.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and bb.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and bb.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and bb.coreNumber like concat('%',#{coreNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and bb.bridgeName like concat('%',#{bridgeName},'%')     -- 根据名称查询
+		  </if>
+		  order by bb.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（小桥下部工程量汇总表）合计 -->
+	<select id="getBridgeBottomSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeBottomSum">
+		SELECT
+		    sum(bb.Bearing)             as BearingSum                 -- 支座、锚栓及垫石支座（块）
+		  , sum(bb.BearingRebar)        as BearingRebarSum            -- 支座、锚栓及垫石钢筋（Kg）
+		  , sum(bb.BearingC40Concrete)  as BearingC40ConcreteSum      -- 支座、锚栓及垫石C40混凝土（m³）
+		  , sum(bb.PlatformC25Concrete) as PlatformC25ConcreteSum     -- 台身C25混凝土（m³）
+		  , sum(bb.PlatformRebar)       as PlatformRebarSum           -- 台身钢筋（Kg）
+		  , sum(bb.CapC30Concrete)      as CapC30ConcreteSum          -- 台帽C30混凝土（m³）
+		  , sum(bb.CapRebar)            as CapRebarSum                -- 台帽钢筋（Kg）
+		  , sum(bb.BaffleC30Concrete)   as BaffleC30ConcreteSum       -- 挡块C30混凝土（m³）
+		  , sum(bb.BaffleRebar)         as BaffleRebarSum             -- 挡块钢筋（Kg）
+		  , sum(bb.BasicsC25Concrete)   as BasicsC25ConcreteSum       -- 台基础C25混凝土（m³）
+		  , sum(bb.BasicsRebar)         as BasicsRebarSum             -- 台基础C25混凝土（m³）
+		  , sum(bb.PierC20Concrete)     as PierC20ConcreteSum         -- 墩身C20混凝土（m³）
+		  , sum(bb.PierRebar)           as PierRebarSum               -- 墩身钢筋（Kg）
+		  , sum(bb.PierCapC30Concrete)  as PierCapC30ConcreteSum      -- 墩帽C30混凝土（m³）
+		  , sum(bb.PierCapRebar)        as PierCapRebarSum            -- 墩帽钢筋（Kg）
+		FROM
+		  BridgeBottom bb 
+		  left join V_EntryTree as ve 
+		    on bb.ProjectId = ve.pid 
+		WHERE
+		  bb.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and bb.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and bb.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and bb.coreNumber like concat('%',#{coreNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and bb.bridgeName like concat('%',#{bridgeName},'%')     -- 根据名称查询
+		  </if>
+	</select>
+	<!-- 导出 -->
+		<select id="getBridgeBottomListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		    bb.CoreNumber              -- 中心桩号
+		  , bb.BridgeName              -- 桥名
+		  , bb.Bearing                 -- 支座、锚栓及垫石支座（块）
+		  , bb.BearingRebar            -- 支座、锚栓及垫石钢筋（Kg）
+		  , bb.BearingC40Concrete      -- 支座、锚栓及垫石C40混凝土（m³）
+		  , bb.PlatformC25Concrete     -- 台身C25混凝土（m³）
+		  , bb.PlatformRebar           -- 台身钢筋（Kg）
+		  , bb.CapC30Concrete          -- 台帽C30混凝土（m³）
+		  , bb.CapRebar                -- 台帽钢筋（Kg）
+		  , bb.BaffleC30Concrete       -- 挡块C30混凝土（m³）
+		  , bb.BaffleRebar             -- 挡块钢筋（Kg）
+		  , bb.BasicsC25Concrete       -- 台基础C25混凝土（m³）
+		  , bb.BasicsRebar             -- 台基础C25混凝土（m³）
+		  , bb.PierC20Concrete         -- 墩身C20混凝土（m³）
+		  , bb.PierRebar               -- 墩身钢筋（Kg）
+		  , bb.PierCapC30Concrete      -- 墩帽C30混凝土（m³）
+		  , bb.PierCapRebar            -- 墩帽钢筋（Kg）
+		  , bb.Remarks                 -- 备注
+		FROM
+		  BridgeBottom bb 
+		  left join V_EntryTree as ve 
+		    on bb.ProjectId = ve.pid 
+		WHERE
+		  bb.IsDel = 0
+		  order by bb.CreaterDate desc
+	</select>
+	
+	<!-- 新增工程进度（小桥下部工程量汇总表） -->
+	<insert id="insertBridgeBottom" parameterType="com.curing.projectSchedule.model.BridgeBottomEntity">
+		INSERT 
+		INTO BridgeBottom ( 
+			Id
+		  , ProjectId
+		  , CoreNumber
+		  , BridgeName
+		  , Bearing
+		  , BearingRebar
+		  , BearingC40Concrete
+		  , PlatformC25Concrete
+		  , PlatformRebar
+		  , CapC30Concrete
+		  , CapRebar
+		  , BaffleC30Concrete
+		  , BaffleRebar
+		  , BasicsC25Concrete
+		  , BasicsRebar
+		  , PierC20Concrete
+		  , PierRebar
+		  , PierCapC30Concrete
+		  , PierCapRebar
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{CoreNumber}
+		  , #{BridgeName}
+		  , #{Bearing}
+		  , #{BearingRebar}
+		  , #{BearingC40Concrete}
+		  , #{PlatformC25Concrete}
+		  , #{PlatformRebar}
+		  , #{CapC30Concrete}
+		  , #{CapRebar}
+		  , #{BaffleC30Concrete}
+		  , #{BaffleRebar}
+		  , #{BasicsC25Concrete}
+		  , #{BasicsRebar}
+		  , #{PierC20Concrete}
+		  , #{PierRebar}
+		  , #{PierCapC30Concrete}
+		  , #{PierCapRebar}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		); 
+	</insert>
+	
+	<!-- 更新工程进度（小桥下部工程量汇总表） -->
+	<update id="updateBridgeBottom" parameterType="com.curing.projectSchedule.model.BridgeBottomEntity">
+		UPDATE BridgeBottom 
+		SET
+		    CoreNumber = #{CoreNumber}
+		  , BridgeName = #{BridgeName}
+		  , Bearing = #{Bearing}
+		  , BearingRebar = #{BearingRebar}
+		  , BearingC40Concrete = #{BearingC40Concrete}
+		  , PlatformC25Concrete = #{PlatformC25Concrete}
+		  , PlatformRebar = #{PlatformRebar}
+		  , CapC30Concrete = #{CapC30Concrete}
+		  , CapRebar = #{CapRebar}
+		  , BaffleC30Concrete = #{BaffleC30Concrete}
+		  , BaffleRebar = #{BaffleRebar}
+		  , BasicsC25Concrete = #{BasicsC25Concrete}
+		  , BasicsRebar = #{BasicsRebar}
+		  , PierC20Concrete = #{PierC20Concrete}
+		  , PierRebar = #{PierRebar}
+		  , PierCapC30Concrete = #{PierCapC30Concrete}
+		  , PierCapRebar = #{PierCapRebar}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（小桥下部工程量汇总表） -->
+	<update id="deleteBridgeBottom" parameterType="com.curing.projectSchedule.model.BridgeBottomEntity">
+		UPDATE BridgeBottom
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+</mapper>

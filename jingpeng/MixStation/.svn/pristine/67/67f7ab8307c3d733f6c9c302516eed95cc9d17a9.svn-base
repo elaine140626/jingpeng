@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blindSample.dao.ShiYan02Dao">
+
+	<!--  试验21  粗集料筛分试验   -->
+	<select id="getShiYan21" parameterType="java.util.Map" resultType="ShiYan21Entity">
+		select
+		  ti.SerialNumber                                 -- 流水号
+		  , tri.TestRoomName                              -- 实验室名
+		  , ti.TestRules                                  -- 试验依据
+		  , CONVERT(varchar (100), ti.TestDate, 23) as testDate -- 试验日期
+		  , bi.SampleName                                 -- 样品名称
+		  , bi.SampleCount                                -- 试件数量
+		  , ti.TestOperator                               -- 实验员
+		  , bd.Diameter                                   -- 直径
+		  , t0.Aggregate_Type                             -- 集料种类
+		  , t0.Aggregate_Specification                    -- 集料规格
+		  , bi.ConstructionUnit                           -- 施工单位
+		  , bi.EngineeringName                            -- 工程名称
+		  , bi.Purpose                                    -- 工程部位/用途
+		  , t0.Pass_Rate1                                 -- 小于0.075mm的含量（%）1
+		  , t0.Pass_Rate2                                 -- 小于0.075mm的含量（%）2
+		  , ti.IsQualifiedTest                            -- 结果判定
+		  , ti.QRCode                                     -- 二维码
+		from
+		  testInfo as ti                                  -- 保存实验基本信息表
+		  left join TestRoomInfo as tri                   -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join blindInfo as bi                       -- 盲样信息表
+		    on ti.QRCode = bi.QRCode 
+		  left join blindDetailed_01 as bd                -- 盲样明细表
+		    on bi.Id = bd.BlindId 
+		  left join Test0200101T0 as t0 
+		    on ti.SerialNumber = t0.SerialNumber 
+		where
+		  ti.id = #{id}
+	</select>
+	
+	<!--  试验21明细  粗集料筛分试验   -->
+	<select id="getShiYanDetail21" parameterType="java.util.Map" resultType="ShiYan21DetailEntity">
+		select
+		  t01.Sieve_Size                                  -- 筛孔尺寸（mm）
+		  , t01.Sub_Sieve_Resi1                           -- 分计筛余（%）
+		  , t01.Total_Sieve_Resi1                         -- 累计筛余（%）
+		  , t01.Pass_Rate1                                -- 通过百分率（%）
+		  , t01.Set_Max_Pass_Rate                         -- 上限
+		  , t01.Avg_Pass_Rate                             -- 中值
+		  , t01.Set_Main_Pass_Rate                        -- 下限
+		from
+		  Test0200101T01 as t01 
+		where
+		  SerialNumber = #{serialnumber}
+
+	</select>
+	
+	<!--  试验25  细集料筛分试验   -->
+	<select id="getShiYan25" parameterType="java.util.Map" resultType="ShiYan21Entity">
+		select
+		  ti.SerialNumber                                 -- 流水号
+		  , tri.TestRoomName                              -- 实验室名
+		  , ti.TestRules                                  -- 试验依据
+		  , CONVERT(varchar (100), ti.TestDate, 23) as testDate -- 试验日期
+		  , bi.SampleName                                 -- 样品名称
+		  , bi.SampleCount                                -- 试件数量
+		  , ti.TestOperator                               -- 实验员
+		  , bd.Diameter                                   -- 直径
+		  , t0.Aggregate_Type                             -- 集料种类
+		  , t0.Aggregate_Specification                    -- 集料规格
+		  , bi.ConstructionUnit                           -- 施工单位
+		  , bi.EngineeringName                            -- 工程名称
+		  , bi.Purpose                                    -- 工程部位/用途
+		  , t0.Pass_Rate1                                 -- 小于0.075mm的含量（%）1
+		  , t0.Pass_Rate2                                 -- 小于0.075mm的含量（%）2
+		  , t0.Avg_Fineness_Modulus                       -- 平均细度模数
+		  , ti.IsQualifiedTest                            -- 结果判定
+		  , ti.QRCode                                     -- 二维码
+		from
+		  testInfo as ti                                  -- 保存实验基本信息表
+		  left join TestRoomInfo as tri                   -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join blindInfo as bi                       -- 盲样信息表
+		    on ti.QRCode = bi.QRCode 
+		  left join blindDetailed_01 as bd                -- 盲样明细表
+		    on bi.Id = bd.BlindId 
+		  left join Test0200102T0 as t0 
+		    on ti.SerialNumber = t0.SerialNumber 
+		where
+		  ti.id = #{id}
+	</select>
+	
+	<!--  试验25明细  细集料筛分试验   -->
+	<select id="getShiYanDetail25" parameterType="java.util.Map" resultType="ShiYan21DetailEntity">
+		select
+		  t01.Sieve_Size                                  -- 筛孔尺寸（mm）
+		  , t01.Sub_Sieve_Resi1                           -- 分计筛余（%）
+		  , t01.Total_Sieve_Resi1                         -- 累计筛余（%）
+		  , t01.Pass_Rate1                                -- 通过百分率（%）
+		  , t01.Set_Max_Pass_Rate                         -- 上限
+		  , t01.Avg_Pass_Rate                             -- 中值
+		  , t01.Set_Main_Pass_Rate                        -- 下限
+		from
+		  Test0200102T01 as t01 
+		where
+		  SerialNumber = #{serialnumber}
+	</select>
+	
+	<!--  试验22  粗集料含泥量试验   -->
+	<select id="getShiYan22" parameterType="java.util.Map" resultType="ShiYan21Entity">
+		select
+		  ti.SerialNumber                                 -- 流水号
+		  , tri.TestRoomName                              -- 实验室名
+		  , ti.TestRules                                  -- 试验依据
+		  , CONVERT(varchar (100), ti.TestDate, 23) as testDate -- 试验日期
+		  , bi.SampleName                                 -- 样品名称
+		  , bi.SampleCount                                -- 试件数量
+		  , ti.TestOperator                               -- 实验员
+		  , bd.Diameter                                   -- 直径
+		  , t0.Aggregate_Type                             -- 集料种类
+		  , t0.Aggregate_Specification                    -- 集料规格
+		  , bi.ConstructionUnit                           -- 施工单位
+		  , bi.EngineeringName                            -- 工程名称
+		  , bi.Purpose                                    -- 工程部位/用途
+		  , t0.JudgementIndex                             -- 判定指标
+		  , ti.IsQualifiedTest                            -- 结果判定
+		  , ti.QRCode                                     -- 二维码
+		from
+		  testInfo as ti                                  -- 保存实验基本信息表
+		  left join TestRoomInfo as tri                   -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join blindInfo as bi                       -- 盲样信息表
+		    on ti.QRCode = bi.QRCode 
+		  left join blindDetailed_01 as bd                -- 盲样明细表
+		    on bi.Id = bd.BlindId 
+		  left join Test02015T0 as t0 
+		    on ti.SerialNumber = t0.SerialNumber 
+		  where
+			  ti.id = #{id}
+	</select>
+	
+	<!--  试验22明细  粗集料含泥量试验   -->
+	<select id="getShiYanDetail22" parameterType="java.util.Map" resultType="ShiYan22DetailEntity">
+		select
+		  t01.BSmpl_Mass1                                 -- 试验前烘干试样质量(g)1
+		  , t01.ASmpl_Mass1                               -- 试验后烘干试样质量(g)1
+		  , t01.Sediment_Percentage1                      -- 含泥量/小于0.075mm颗粒含量1单值
+		  , t01.BSmpl_Mass2                               -- 试验前烘干试样质量(g)2
+		  , t01.ASmpl_Mass2                               -- 试验后烘干试样质量(g)2
+		  , t01.Sediment_Percentage2                      -- 含泥量/小于0.075mm颗粒含量2单值
+		  , t01.Avg_Sedi_Perc                             -- 含泥量/小于0.075mm颗粒含量平均值
+		from
+		  Test02015T01 as t01 
+		where
+		  SerialNumber = #{serialnumber}
+	</select>
+	
+	<!--  试验26  细集料含泥量试验   -->
+	<select id="getShiYan26" parameterType="java.util.Map" resultType="ShiYan21Entity">
+		select
+		  ti.SerialNumber                                 -- 流水号
+		  , tri.TestRoomName                              -- 实验室名
+		  , ti.TestRules                                  -- 试验依据
+		  , CONVERT(varchar (100), ti.TestDate, 23) as testDate -- 试验日期
+		  , bi.SampleName                                 -- 样品名称
+		  , bi.SampleCount                                -- 试件数量
+		  , ti.TestOperator                               -- 实验员
+		  , bd.Diameter                                   -- 直径
+		  , t0.Aggregate_Type                             -- 集料种类
+		  , t0.Aggregate_Specification                    -- 集料规格
+		  , bi.ConstructionUnit                           -- 施工单位
+		  , bi.EngineeringName                            -- 工程名称
+		  , bi.Purpose                                    -- 工程部位/用途
+		  , t0.JudgementIndex                             -- 判定指标
+		  , ti.IsQualifiedTest                            -- 结果判定
+		  , ti.QRCode                                     -- 二维码
+		from
+		  testInfo as ti                                  -- 保存实验基本信息表
+		  left join TestRoomInfo as tri                   -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join blindInfo as bi                       -- 盲样信息表
+		    on ti.QRCode = bi.QRCode 
+		  left join blindDetailed_01 as bd                -- 盲样明细表
+		    on bi.Id = bd.BlindId 
+		  left join Test02006T0 as t0 
+		    on ti.SerialNumber = t0.SerialNumber 
+		where
+		  ti.id = #{id}
+	</select>
+	
+	<!--  试验26明细  细集料含泥量试验   -->
+	<select id="getShiYanDetail26" parameterType="java.util.Map" resultType="ShiYan22DetailEntity">
+		select
+		  t01.BSmpl_Mass1                                 -- 试验前烘干试样质量(g)1
+		  , t01.ASmpl_Mass1                               -- 试验后烘干试样质量(g)1
+		  , t01.Sediment_Percentage1                      -- 含泥量1单值
+		  , t01.BSmpl_Mass2                               -- 试验前烘干试样质量(g)2
+		  , t01.ASmpl_Mass2                               -- 试验后烘干试样质量(g)2
+		  , t01.Sediment_Percentage2                      -- 含泥量2单值
+		  , t01.Avg_Sedi_Perc                             -- 含泥量平均值
+		from
+		  Test02006T01 as t01 
+		where
+		  SerialNumber = #{serialnumber}
+	</select>
+	
+	<!--  试验23  粗集料针、片状颗粒含量试验   -->
+	<select id="getShiYan23" parameterType="java.util.Map" resultType="ShiYan21Entity">
+		select
+		  ti.SerialNumber                                 -- 流水号
+		  , tri.TestRoomName                              -- 实验室名
+		  , ti.TestRules                                  -- 试验依据
+		  , CONVERT(varchar (100), ti.TestDate, 23) as testDate -- 试验日期
+		  , bi.SampleName                                 -- 样品名称
+		  , bi.SampleCount                                -- 试件数量
+		  , ti.TestOperator                               -- 实验员
+		  , bd.Diameter                                   -- 直径
+		  , t0.Aggregate_Type                             -- 集料种类
+		  , t0.Aggregate_Specification                    -- 集料规格
+		  , bi.ConstructionUnit                           -- 施工单位
+		  , bi.EngineeringName                            -- 工程名称
+		  , bi.Purpose                                    -- 工程部位/用途
+		  , t0.Test_Method                                -- 试验方法
+		  , t0.JudgementIndex                             -- 判定指标
+		  , ti.IsQualifiedTest                            -- 结果判定
+		  , ti.QRCode                                     -- 二维码
+		  , t0.Samp_Mass                                  -- 试件总质量(g)
+		  , t0.Elon_Part_Mass                             -- 针片状颗粒总质量（g)
+		  , t0.Elongated_Particles                        -- 针片状颗粒含量(%)
+		from
+		  testInfo as ti                                  -- 保存实验基本信息表
+		  left join TestRoomInfo as tri                   -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join blindInfo as bi                       -- 盲样信息表
+		    on ti.QRCode = bi.QRCode 
+		  left join blindDetailed_01 as bd                -- 盲样明细表
+		    on bi.Id = bd.BlindId 
+		  left join Test02002T0 as t0 
+		    on ti.SerialNumber = t0.SerialNumber 
+		where
+		  ti.id = #{id}
+	</select>
+	
+	<!--  试验23明细  粗集料针、片状颗粒含量试验(规准仪法)   -->
+	<select id="getShiYanDetail2302" parameterType="java.util.Map" resultType="ShiYan2302DetailEntity">
+		select
+		  t01.Single_Stage                                -- 粒级（方孔筛）（mm)
+		  , t01.Acic_Parti_Mass                           -- 针状颗粒质量(g)
+		  , t01.Flaky_Parti_Mass                          -- 片状颗粒质量(g)
+		from
+		  Test02002T02 as t01 
+		where
+		  SerialNumber = #{serialnumber}
+	</select>
+	
+	<!--  试验23明细  粗集料针、片状颗粒含量试验(游标卡尺法)   -->
+	<select id="getShiYanDetail2301" parameterType="java.util.Map" resultType="ShiYan2301DetailEntity">
+		select
+		  t01.Test_Serial                                 -- 试验序号
+		  , t01.Samp_Mass1                                -- 试样总质量(g)1
+		  , t01.In_Samp_Mass1                             -- 试样中所含针片状颗粒的总质量(g)1
+		  , t01.Elongated_Particles1                      -- 针片状颗粒含量(%)单值1
+		  , t01.Samp_Mass2                                -- 试样总质量(g)2
+		  , t01.In_Samp_Mass2                             -- 试样中所含针片状颗粒的总质量(g)2
+		  , t01.Elongated_Particles2                      -- 针片状颗粒含量(%)单值2
+		  , t01.Samp_Mass3                                -- 试样总质量(g)3
+		  , t01.In_Samp_Mass3                             -- 试样中所含针片状颗粒的总质量(g)3
+		  , t01.Elongated_Particles3                      -- 针片状颗粒含量(%)单值3
+		  , t01.Avg_Elon_Part                             -- 平均针片状颗粒含量
+		from
+		  Test02002T01 as t01 
+		where
+		  SerialNumber = #{serialnumber}
+	</select>
+	
+	<!--  试验27  水泥凝结时间   -->
+	<select id="getShiYan27" parameterType="java.util.Map" resultType="ShiYan21Entity">
+		select
+		  ti.SerialNumber                                 -- 流水号
+		  , tri.TestRoomName                              -- 实验室名
+		  , ti.TestRules                                  -- 试验依据
+		  , CONVERT(varchar (100), ti.TestDate, 23) as testDate -- 试验日期
+		  , bi.SampleName                                 -- 样品名称
+		  , bi.SampleCount                                -- 试件数量
+		  , ti.TestOperator                               -- 实验员
+		  , bd.Diameter                                   -- 直径
+		  , t0.CementType                                 -- 水泥品种
+		  , t0.CementStrengthGrade                        -- 强度等级
+		  , bi.ConstructionUnit                           -- 施工单位
+		  , bi.EngineeringName                            -- 工程名称
+		  , bi.Purpose                                    -- 工程部位/用途
+		  , ti.IsQualifiedTest                            -- 结果判定
+		  , ti.QRCode                                     -- 二维码
+		  , t0.Start_Hour                                 -- 起始时间时
+		  , t0.Start_Minute                               -- 起始时间分
+		  , t0.Initial_Set_Hour                           -- 初凝状态时间时
+		  , t0.Initial_Set_Minute                         -- 初凝状态时间分
+		  , t0.Final_Set_Hour                             -- 终凝状态时间时
+		  , t0.Final_Set_Minute                           -- 终凝状态时间分
+		  , t0.Init_Set_Time                              -- 初凝时间（分）
+		  , t0.Final_Set_Time                             -- 终凝时间（分）
+		from
+		  testInfo as ti                                  -- 保存实验基本信息表
+		  left join TestRoomInfo as tri                   -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join blindInfo as bi                       -- 盲样信息表
+		    on ti.QRCode = bi.QRCode 
+		  left join blindDetailed_01 as bd                -- 盲样明细表
+		    on bi.Id = bd.BlindId 
+		  left join Test04003T0 as t0 
+		    on ti.SerialNumber = t0.SerialNumber 
+		where
+		  ti.id = #{id}
+	</select>
+	<!--  *************************保存操作*************************************   -->
+	<!--  试验21~试验27 TestInfo更新   -->
+	<update id="updateTestInfo" parameterType="ShiYan21Entity">
+		update TestInfo 
+		set
+		  TestDate = #{testDate}
+		  , IsQualifiedTest = #{isQualifiedTest}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>
+	<!--  *************************试验21 粗集料筛分试验*************************************   -->
+	<!-- 试验21 粗集料筛分试验 t0表更新-->
+	<update id="updateTest0200101T0" parameterType="ShiYan21Entity">
+		update Test0200101T0 
+		set
+		  Pass_Rate1 = #{Pass_Rate1}
+		  , Pass_Rate2 = #{Pass_Rate2}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>
+	
+	<!-- 试验21 粗集料筛分试验 t1表删除-->
+	<delete id="deleteTest0200101T01" parameterType="String">
+		delete 
+		from
+		  Test0200101T01 
+		where
+		  SerialNumber = #{serialNumber}
+	</delete>
+	
+	<!-- 试验21 粗集料筛分试验 t1表插入-->
+	<insert id="insertTest0200101T01" parameterType="ShiYan21DetailEntity">
+		INSERT 
+		INTO Test0200101T01( 
+		  SerialNumber
+		  , Sieve_Size
+		  , Sub_Sieve_Resi1
+		  , Total_Sieve_Resi1
+		  , Pass_Rate1
+		  , Avg_Pass_Rate
+		  , Set_Max_Pass_Rate
+		  , Set_Main_Pass_Rate
+		  , CreateDate
+		) 
+		VALUES ( 
+		  #{serialNumber}
+		  , #{Sieve_Size}
+		  , #{Sub_Sieve_Resi1}
+		  , #{Total_Sieve_Resi1}
+		  , #{Pass_Rate1}
+		  , #{Avg_Pass_Rate}
+		  , #{Set_Max_Pass_Rate}
+		  , #{Set_Main_Pass_Rate}
+		  , getDate()
+		) 
+	</insert>
+	<!--  *************************试验25 细集料筛分试验*************************************   -->
+	<!-- 试验25 细集料筛分试验 t0表更新-->
+	<update id="updateTest0200102T0" parameterType="ShiYan21Entity">
+		update Test0200102T0 
+		set
+		  Pass_Rate1 = #{Pass_Rate1}
+		  , Pass_Rate2 = #{Pass_Rate2}
+		  , Avg_Fineness_Modulus = #{Avg_Fineness_Modulus}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>
+	
+	<!-- 试验25 细集料筛分试验 t1表删除-->
+	<delete id="deleteTest0200102T01" parameterType="String">
+		delete 
+		from
+		  Test0200102T01 
+		where
+		  SerialNumber = #{serialNumber}
+	</delete>
+		
+	<!-- 试验25 细集料筛分试验 t1表插入-->
+	<insert id="insertTest0200102T01" parameterType="ShiYan21DetailEntity">
+		INSERT 
+		INTO Test0200102T01( 
+		  SerialNumber
+		  , Sieve_Size
+		  , Sub_Sieve_Resi1
+		  , Total_Sieve_Resi1
+		  , Pass_Rate1
+		  , Avg_Pass_Rate
+		  , Set_Max_Pass_Rate
+		  , Set_Main_Pass_Rate
+		  , CreateDate
+		) 
+		VALUES ( 
+		  #{serialNumber}
+		  , #{Sieve_Size}
+		  , #{Sub_Sieve_Resi1}
+		  , #{Total_Sieve_Resi1}
+		  , #{Pass_Rate1}
+		  , #{Avg_Pass_Rate}
+		  , #{Set_Max_Pass_Rate}
+		  , #{Set_Main_Pass_Rate}
+		  , getDate()
+		) 
+	</insert>
+	<!--  *************************试验22 粗集料含泥量试验*************************************   -->
+	<!-- 试验22 粗集料含泥量试验 t0表更新-->
+	<update id="updateTest02015T0" parameterType="ShiYan21Entity">
+		update Test02015T0 
+		set
+		  JudgementIndex = #{judgementIndex}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>	
+	
+	<!-- 试验22 粗集料含泥量试验 t1表删除-->
+	<delete id="deleteTest02015T01" parameterType="String">
+		delete 
+		from
+		  Test02015T01 
+		where
+		  SerialNumber = #{serialNumber}
+	</delete>
+	
+	<!-- 试验22 粗集料含泥量试验 t1表插入-->
+	<insert id="insertTest02015T01" parameterType="ShiYan22DetailEntity">
+		INSERT 
+		INTO Test02015T01( 
+		  SerialNumber
+		  , BSmpl_Mass1
+		  , ASmpl_Mass1
+		  , Sediment_Percentage1
+		  , BSmpl_Mass2
+		  , ASmpl_Mass2
+		  , Sediment_Percentage2
+		  , Avg_Sedi_Perc
+		  , CreateDate
+		) 
+		VALUES ( 
+		  #{serialNumber}
+		  , #{BSmpl_Mass1}
+		  , #{ASmpl_Mass1}
+		  , #{Sediment_Percentage1}
+		  , #{BSmpl_Mass2}
+		  , #{ASmpl_Mass2}
+		  , #{Sediment_Percentage2}
+		  , #{Avg_Sedi_Perc}
+		  , getDate()
+		)  
+	</insert>
+	
+	<!--  *************************试验26 细集料含泥量试验*************************************   -->
+	<!-- 试验26 细集料含泥量试验 t0表更新-->
+	<update id="updateTest02006T0" parameterType="ShiYan21Entity">
+		update Test02006T0 
+		set
+		  JudgementIndex = #{judgementIndex}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>	
+	
+	<!-- 试验26 细集料含泥量试验 t1表删除-->
+	<delete id="deleteTest02006T01" parameterType="String">
+		delete 
+		from
+		  Test02006T01 
+		where
+		  SerialNumber = #{serialNumber}
+	</delete>
+	
+	<!-- 试验26 细集料含泥量试验 t1表插入-->
+	<insert id="insertTest02006T01" parameterType="ShiYan22DetailEntity">
+		INSERT 
+		INTO Test02006T01( 
+		  SerialNumber
+		  , BSmpl_Mass1
+		  , ASmpl_Mass1
+		  , Sediment_Percentage1
+		  , BSmpl_Mass2
+		  , ASmpl_Mass2
+		  , Sediment_Percentage2
+		  , Avg_Sedi_Perc
+		  , CreateDate
+		) 
+		VALUES ( 
+		  #{serialNumber}
+		  , #{BSmpl_Mass1}
+		  , #{ASmpl_Mass1}
+		  , #{Sediment_Percentage1}
+		  , #{BSmpl_Mass2}
+		  , #{ASmpl_Mass2}
+		  , #{Sediment_Percentage2}
+		  , #{Avg_Sedi_Perc}
+		  , getDate()
+		)  
+	</insert>
+	<!--  *************************试验23 粗集料针、片状颗粒含量试验*************************************   -->
+	<!-- 试验23 粗集料针、片状颗粒含量试验 t0表更新-->
+	<update id="updateTest02002T0" parameterType="ShiYan21Entity">
+		update Test02002T0 
+		set
+		  Samp_Mass = #{Samp_Mass}
+		  , Elon_Part_Mass = #{Elon_Part_Mass}
+		  , Elongated_Particles = #{Elongated_Particles}
+		  , JudgementIndex = #{judgementIndex}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>
+		
+	<!-- 试验23 粗集料针、片状颗粒含量试验(规准仪法) t1表删除-->
+	<delete id="deleteTest02002T02" parameterType="String">
+		delete 
+		from
+		  Test02002T02 
+		where
+		  SerialNumber = #{serialNumber}
+	</delete>
+	
+	<!-- 试验23 粗集料针、片状颗粒含量试验(规准仪法) t1表插入-->
+	<insert id="insertTest02002T02" parameterType="ShiYan2302DetailEntity">
+		INSERT 
+		INTO Test02002T02( 
+		  SerialNumber
+		  , Single_Stage
+		  , Acic_Parti_Mass
+		  , Flaky_Parti_Mass
+		  , CreateDate
+		) 
+		VALUES ( 
+		  #{SerialNumber}
+		  , #{Single_Stage}
+		  , #{Acic_Parti_Mass}
+		  , #{Flaky_Parti_Mass}
+		  , getDate()
+		)  
+	</insert>
+	
+	<!-- 试验23 粗集料针、片状颗粒含量试验(游标卡尺法) t1表删除-->
+	<delete id="deleteTest02002T01" parameterType="String">
+		delete 
+		from
+		  Test02002T01 
+		where
+		  SerialNumber = #{serialNumber}
+	</delete>
+	
+	<!-- 试验23 粗集料针、片状颗粒含量试验(游标卡尺法) t1表插入-->
+	<insert id="insertTest02002T01" parameterType="ShiYan2301DetailEntity">
+		INSERT 
+		INTO Test02002T01( 
+		  SerialNumber
+		  , Test_Serial
+		  , Samp_Mass1
+		  , In_Samp_Mass1
+		  , Elongated_Particles1
+		  , Samp_Mass2
+		  , In_Samp_Mass2
+		  , Elongated_Particles2
+		  , Samp_Mass3
+		  , In_Samp_Mass3
+		  , Elongated_Particles3
+		  , Avg_Elon_Part
+		  , CreateDate
+		) 
+		VALUES ( 
+		  #{serialNumber}
+		  , #{Test_Serial}
+		  , #{Samp_Mass1}
+		  , #{In_Samp_Mass1}
+		  , #{Elongated_Particles1}
+		  , #{Samp_Mass2}
+		  , #{In_Samp_Mass2}
+		  , #{Elongated_Particles2}
+		  , #{Samp_Mass3}
+		  , #{In_Samp_Mass3}
+		  , #{Elongated_Particles3}
+		  , #{Avg_Elon_Part}
+		  , getDate()
+		) 
+	</insert>
+	
+	<!--  *************************试验27 水泥凝结时间*************************************   -->
+	<!-- 试验27 水泥凝结时间 t0表更新-->
+	<update id="updateTest04003T0" parameterType="ShiYan21Entity">
+		UPDATE Test04003T0 
+		SET
+		  Start_Hour = #{Start_Hour}
+		  , Start_Minute = #{Start_Minute}
+		  , Initial_Set_Hour = #{Initial_Set_Hour}
+		  , Initial_Set_Minute = #{Initial_Set_Minute}
+		  , Final_Set_Hour = #{Final_Set_Hour}
+		  , Final_Set_Minute = #{Final_Set_Minute}
+		  , Init_Set_Time = #{Init_Set_Time}
+		  , Final_Set_Time = #{Final_Set_Time}
+		  , Modifier = #{modifier}
+		  , ModifyDate = getDate() 
+		where
+		  SerialNumber = #{serialNumber}
+	</update>
+	
+</mapper>

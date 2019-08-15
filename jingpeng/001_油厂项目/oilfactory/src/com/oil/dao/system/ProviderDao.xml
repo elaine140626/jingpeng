@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.ProviderDao">
+	<!-- 查询供应商信息 -->
+	<select id="getProvider" resultType="Provider">
+		select * from supplier where IsDel = 0 ORDER BY CreaterDate DESC
+	</select>
+	<!-- 根据供应商名称模糊查询 -->
+	<select id="findProvider" resultType="Provider">
+		select * from supplier where IsDel = 0
+		<if test="SupplierName !=null  and SupplierName != '' ">
+			and SupplierName LIKE '%${SupplierName}%'
+		</if>
+	</select>
+	<!--修改功能查询供应商信息 -->
+	<select id="findProviderByid" parameterType="int" resultType="Provider">
+		select * from supplier where id=#{id}
+	</select>
+	<!--添加供应商信息 -->
+	<insert id="addProvider" parameterType="Provider">
+		insert into supplier
+		(SupplierNumber,SupplierName,Address,Contacts,Telephone,OtherNumbers,Remarks,ArrearsMoney,CreaterDate,ReviserDate,IsDel)
+		values(#{SupplierNumber},#{SupplierName},#{Address},#{Contacts},#{Telephone},#{OtherNumbers},#{Remarks},#{ArrearsMoney},now(),now(),0)
+	</insert>
+	<!--修改供应商信息 -->
+	<update id="updateProvider" parameterType="Provider">
+		update supplier set
+		SupplierNumber = #{SupplierNumber},
+		SupplierName = #{SupplierName},
+		Address =#{Address},
+		Contacts = #{Contacts},
+		Telephone = #{Telephone},
+		OtherNumbers =#{OtherNumbers},
+		Remarks =#{Remarks},
+		ArrearsMoney = #{ArrearsMoney}
+		WHERE id= #{id}
+	</update>
+	<!-- 删除供应商信息 -->
+	<update id="delProviderById" parameterType="int">
+		UPDATE supplier SET IsDel=1 WHERE id = #{id}
+	</update>
+	<!-- 删除校验查询 -->
+	<select id="getAllStoragemeasure" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from storagemeasure where IsDel = 0
+		<if test="supplierId != null and supplierId != 0">
+			and SupplierId = #{supplierId}
+		</if>
+	</select>
+</mapper>

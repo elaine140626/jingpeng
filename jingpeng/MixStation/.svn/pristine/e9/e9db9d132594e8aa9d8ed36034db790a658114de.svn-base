@@ -1,0 +1,96 @@
+$(function() {
+	//试验汇总
+	$.ajax({
+		type : "POST",
+		url : "../testInfo/getIndexSummary.html",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			$("#syzs")[0].innerHTML=data.data[0].sumCount;
+			$("#zdcj")[0].innerHTML=data.data[0].sumAutoCount;
+			$("#mysy")[0].innerHTML=data.data[0].sumBlindCount;
+			
+			$("#zdsysmc")[0].innerHTML=data.data[0].testRoomName;
+			$("#zdsyzs")[0].innerHTML=data.data[0].autoCount;
+			$("#zdhgs")[0].innerHTML=data.data[0].autoQualifiedCount;
+			
+			$("#mysysmc")[0].innerHTML=data.data[0].testRoomName;
+			$("#mysyzs")[0].innerHTML=data.data[0].blindCount;
+			$("#myhgs")[0].innerHTML=data.data[0].blindQualifiedCount;
+		}
+	});
+});
+
+// app验证
+function changeApp(flag){
+	$("#flag").val(flag);
+	$("#loginModal").attr("style","display:block");
+}
+
+// 确定
+$('#ok').on('click', function(event) {
+	
+	var pd = $("#yanzhengma").val();
+	// 验证
+	if(pd == "test2018"){
+		
+		if($("#flag").val() == 'true'){
+			// 注册界面
+			$(location).attr('href', '../testUserInfo/user.html?flag=false');
+		}else{
+			// app用户管理界面
+			$(location).attr('href', '../testUserInfo/userinfo.html?flag=false');
+		}		
+	}else{
+		swal({
+			title: "App验证码错误，无法操作!",
+			text: "",
+			type: "error",
+			confirmButtonText: '确定',
+			cancelButtonFont: '微软雅黑',
+		});
+	}
+});
+
+// 关闭
+$('#login_close').on('click', function(event) {
+	$("#loginModal").attr("style","display:none");
+	$("#yanzhengma").val("");
+});
+
+//	平台验证
+function changePingTai(flag){
+	$("#flag").val(flag);
+	$("#loginModal1").attr("style","display:block");
+}
+
+// 确定
+$('#ok1').on('click', function(event) {
+	
+	var pd = $("#yanzhengma1").val();
+	// 验证
+	if(pd == "test2018"){
+		
+		if($("#flag").val() == 'true'){
+			// 平台用户注册界面
+			$(location).attr('href', '../testUserInfo/user.html?flag=true');
+		}else{
+			// 用户管理界面
+			$(location).attr('href', '../testUserInfo/userinfo.html?flag=true');
+		}		
+	}else{
+		swal({
+			title: "验证码错误，无法操作!",
+			text: "",
+			type: "error",
+			confirmButtonText: '确定',
+			cancelButtonFont: '微软雅黑',
+		});
+	}
+});
+
+// 关闭
+$('#login_close1').on('click', function(event) {
+	$("#loginModal1").attr("style","display:none");
+	$("#yanzhengma1").val("");
+});

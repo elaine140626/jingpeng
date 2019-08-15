@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.TestSelectDao">
+	<select id="getInfo" parameterType="java.util.Map" resultType="TestSelectEntity">
+		select 
+			t.Id,                            -- id 
+			t.SerialNumber,                  -- 流水号
+			t.UniqueIdentifier,              -- 试验室唯一标识
+			t.SampleCode,                    -- 样品编号
+			t.SampleCount,                   -- 试件个数
+			CONVERT(varchar(100), t.TestDate, 23) as TestDate, -- 试验日期
+			t.TestOperator,                  -- 试验员
+			case when t.IsTestCollection ='1' then '自动采集试验' when t.IsTestBlind ='1' then '盲样采集试验' else '正常试验' end as testType,
+			t.IsTestCollection,              -- 是否自动采集试验
+			t.IsTestBlind,                   -- 是否盲样试验
+			t.CollectionState,               -- 采集状态
+			t.IsQualifiedTest,               -- 试验是否合格
+			t.TestState,                     -- 试验状态
+			t2.TestRoomName,                 -- 试验室名称
+			t3.TestName,                     -- 试验名称
+			t3.TestTable,                    -- 试验关联表
+			t4.TestClassification_Name       -- 试验类别
+		from TestInfo t                  -- 试验室基本信息表
+		left join BlindInfo t1           -- 盲样信息表
+		on t.QRCode = t1.QRCode          -- 二维码
+		left join TestRoomInfo t2        -- 试验室信息
+		on t.UniqueIdentifier = t2.UniqueIdentifier
+		left join TestPageInfos t3       -- 试验页面信息
+		on t3.Id = t.TestNameId          -- 试验名称id
+		left join TestClassification t4  -- 试验分类表
+		on t4.TestClassification_Code = t3.TestClass_Code  -- 试验分类
+		where
+		  1=1 and t.IsValidData = 1
+		  <if test="testNameId != 0">
+		   and t.TestNameId = #{testNameId}
+		 </if>
+		 <if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and t.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+		 </if>
+		  <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+		   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	  	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+		  </if>
+		order by t.CreateDate desc
+	</select>
+	
+	<!--  修改试验状态为已完成-->	
+	<update id="changeTestState" parameterType="java.util.Map">	
+		UPDATE 
+			TestInfo  
+		SET 
+			TestState = '2', 
+			Modifier = #{modifier},
+			ModifyDate=CONVERT(varchar(100),GETDATE(),20)
+		WHERE 
+			Id= #{id}
+	</update>
+</mapper>

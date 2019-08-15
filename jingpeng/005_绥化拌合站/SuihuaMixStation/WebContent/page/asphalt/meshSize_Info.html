@@ -1,0 +1,53 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/meshSize_Info.js" type="text/javascript" charset="utf-8"></script>
+<div class="luru" data-toggle="modal" onclick="getAddView()">
+	<a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn">筛孔设定</a>
+</div>
+<div class="lq_biao">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="asphalt_meshSize">
+		<thead>
+			<tr>
+				<th scope="col" class="xh" width="5%">序号</th>
+				<th scope="col" width="10%">操作</th>
+				<th scope="col" width="30%">拌和站名称</th>
+				<th scope="col" width="15%">筛孔</th>
+				<th scope="col" width="10%">录入人</th>
+				<th scope="col" width="30%">录入时间</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div class="modal fade" id="loginModal" >
+	<div class="modal-dialog modal-lg" >
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>筛孔设定</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt3" style="padding: 0 20px;">
+				<form id="addForm">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fazhi" id="meshSizeTable">
+						<tr>
+							<td width="30%" align="right">拌和站名称：</td>
+							<td width="70%" align="left">
+								<select name="orgId" id="orgId" style="width: 348px">
+								</select>
+								<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">筛孔：</td>
+							<td align="left">
+							<input type="text" id="meshSize" name="meshSize" maxlength="7" onkeyup="clearNoDecimal(this,3,3)" onblur="checkPoint(this)" style="width:348px;" placeholder="请输入筛孔"/>
+							<span style="color:red;">*</span>
+							</td>
+						</tr>
+					</table>
+					<div class="fazhi" align="center">
+						<input type="button" id="sdff" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addMeshSize()">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

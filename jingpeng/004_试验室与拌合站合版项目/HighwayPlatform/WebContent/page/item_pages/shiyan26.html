@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>细集料含泥量试验</title>
+<link href="../../css/record.css" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet" href="../../css/systyle.css">
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+<style type="text/css">
+.inputClass{
+	text-align: center;
+    width: 100%;
+    height:96%;
+    border: none;
+}
+.search_select {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+}
+</style>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei"
+			style="position: relative; float: right;"></div>
+		<div id="istestcollection" class="jilu_title" style="padding-top: 60px;">细集料含泥量试验自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">细集料含泥量试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="16%">试验依据</td>
+					<td width="34%"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td width="34%"><input class="inputClass" type="text" id="testDate"></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td><label id="sampleName"></label></td>
+					<td>试件数量</td>
+					<td><label id="sampleCount"></label></td>
+				</tr>
+				<tr>
+					<td>试验员</td>
+					<td><label id="testOperator"></label></td>
+					<td>直径</td>
+					<td><label id="diameter"></label></td>
+				</tr>
+				<tr>
+					<td>集料种类</td>
+					<td><label id="aggregate_Type"></label></td>
+					<td>集料规格</td>
+					<td><label id="aggregate_Specification"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="12%">施工单位</td>
+					<td width="16%"><label id="constructionUnit"></label></td>
+					<td width="8%">工程名称</td>
+					<td width="20%"><label id="engineeringName"></label></td>
+					<td width="10%">工程部位/用途</td>
+					<td width="34%"><label id="purpose"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="12%" rowspan="2">试验次数</td>
+						<td width="24%" rowspan="2">试验前烘干试样质量(g)</td>					
+						<td width="30%" rowspan="2">试验后烘干试样质量(g)</td>
+						<td width="34%" colspan="2">含泥量（%）</td>
+					</tr>
+					<tr>
+						<td width="17%">单值</td>
+						<td width="17%">平均值</td>
+					</tr>
+					<tr>
+						<td width="12%">1</td>
+						<td width="24%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="bSmpl_Mass1"/></td>					
+						<td width="30%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="aSmpl_Mass1"/></td>
+						<td width="17%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" id="sediment_Percentage1"></td>
+						<td width="17%" rowspan="2"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" id="avg_Sedi_Perc"></td>
+					</tr>
+					<tr>
+						<td width="12%">2</td>
+						<td width="24%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="bSmpl_Mass2"></td>								
+						<td width="30%"><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="aSmpl_Mass2"></td>         
+						<td width="17%"><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" id="sediment_Percentage2"></td>
+					</tr>
+				</thead>
+				<!-- <tbody id="list"></tbody> -->
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_7 xbj1">
+				<tr>
+					<td width="16%" align="center">判定指标</td>
+					<td width="84%"><input class="inputClass" type="text" id="judgementIndex"></td>
+				</tr>
+				<tr>
+					<td width="16%" align="center">结果判定</td>
+					<td width="84%"><select class="search_select" id="isQualifiedTest">
+						<option value="">未判定</option>
+						<option value="0">不合格</option>
+						<option value="1">合格</option>
+					</select></td>
+				</tr>
+			</table>
+		</div>
+		<div id="saveBtnShow" class="fanhui" style="float:left;">
+			<input id="save" type="button" value="保&nbsp;&nbsp;存" class="btncha">
+		</div>
+		<!-- <div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div> -->
+	</div>
+	<script src="../../js/common/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="../../js/DataTables/datatables.js"></script>
+	<script src="../../js/HighwayPlatform/TestRoom/common.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../../js/HighwayPlatform/TestRoom/shiyan26.js"></script>
+	<script type="text/javascript" src="../../js/jedate/jedate.js"></script>
+	<script type="text/javascript">
+	   jeDate({
+	       dateCell:"#testDate",
+	       format:"YYYY-MM-DD",
+	       isinitVal:false,
+	       isTime:true, 
+	  	 isClear:false,
+	   })
+	</script>
+</body>
+</html>

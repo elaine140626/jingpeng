@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="../resources/Jqjs/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/chart.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/swiper.min.css" />
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/common.css" />
+		<script src="../resources/Jqjs/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/chalk.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/1.4/ckplayer/ckplayer.js"></script>
+		<script type="text/javascript" src="../resources/1.4/ezuikit.js"></script>
+		<style type="text/css">
+			
+			#myPlayer,
+			#myPlayer2,
+			#myPlayer3{
+				width: 501px;
+				height: 300px;
+				float: left;
+			}
+			
+		</style>
+
+	</head>
+
+	<body>
+		<div id="contain">
+			<div id="blind" class="half mleft0 mbottom">
+				<h3 class="title">试验汇总展示</h3>
+				<div id="main"></div>
+				<div id="count">
+					<div id="count1">
+						<ul>
+							<li>试验室1</li>
+							<li>实验总数：<span>500</span></li>
+							<li>自动采集试验数：<span>500</span></li>
+							<li>盲样试验数：<span>500</span></li>
+						</ul>
+					</div>
+					<div id="count2">
+						<ul>
+							<li>试验室2</li>
+							<li>实验总数：<span>500</span></li>
+							<li>自动采集试验数：<span>500</span></li>
+							<li>盲样试验数：<span>500</span></li>
+						</ul>
+					</div>
+					<div id="count3">
+						<ul>
+							<li>试验室3</li>
+							<li>实验总数：<span>500</span></li>
+							<li>自动采集试验数：<span>500</span></li>
+							<li>盲样试验数：<span>500</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div id="automatic" class="half mleft1 mbottom">
+				<h3 class="title">自动采集查询</h3>
+				<div class="swiper-container" id="swiper1">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<div class="pie" id="pie1"></div>
+							<div class="pieCon col-10">
+								<div class="icon-pie">
+									<div class="icon_half"></div>
+									<div class="icon_text">自动采集合格率：<span>100%</span></div>
+								</div>
+								<div class="noIconz-pie"><span class="i1">自动采集总数量：</span><span class="i2">1000</span></div>
+								<div class="noIconz-pie"><span class="i1">合格实验数量：</span><span class="i3">1000</span></div>
+							</div>
+
+						</div>
+						<div class="swiper-slide">
+							<div class="pie" id="pie2"></div>
+							<div class="pieCon col-10">
+								<div class="icon-pie">
+									<div class="icon_half"></div>
+									<div class="icon_text">自动采集合格率：<span>100%</span></div>
+								</div>
+								<div class="noIconz-pie"><span class="i1">自动采集总数量：</span><span class="i2">1000</span></div>
+								<div class="noIconz-pie"><span class="i1">合格实验数量：</span><span class="i3">1000</span></div>
+							</div>
+
+						</div>
+						<div class="swiper-slide">
+							<div class="pie" id="pie3"></div>
+							<div class="pieCon col-10">
+								<div class="icon-pie">
+									<div class="icon_half"></div>
+									<div class="icon_text">自动采集合格率：<span>100%</span></div>
+								</div>
+								<div class="noIconz-pie"><span class="i1">自动采集总数量：</span><span class="i2">1000</span></div>
+								<div class="noIconz-pie"><span class="i1">合格实验数量：</span><span class="i3">1000</span></div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div id="mixing" class="half mleft0">
+				<h3 class="title">盲样查询</h3>
+				<div class="swiper-container" id="swiper2">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+
+							<div class="pieCon0">
+								<div class="icon-pie0">
+									<div class="icon_half"></div>
+									<div class="icon_text0">盲样合格率：<span>100%</span></div>
+								</div>
+								<div class="icon-pie0">
+									<div class="noIconz-pie"><span class="i1">盲样总数：</span><span class="i2">1000</span></div>
+									<div class="noIconz-pie"><span class="i1">盲样合格数：</span><span class="i3">1000</span></div>
+								</div>
+							</div>
+							<div class="pie0" id="pie4"></div>
+						</div>
+						<div class="swiper-slide">
+
+							<div class="pieCon0">
+								<div class="icon-pie0">
+									<div class="icon_half"></div>
+									<div class="icon_text0">盲样合格率：<span>100%</span></div>
+								</div>
+								<div class="icon-pie0">
+									<div class="noIconz-pie"><span class="i1">盲样总数：</span><span class="i2">1000</span></div>
+									<div class="noIconz-pie"><span class="i1">盲样合格数：</span><span class="i3">1000</span></div>
+								</div>
+							</div>
+							<div class="pie0 " id="pie5"></div>
+						</div>
+						<div class="swiper-slide">
+							<div class="pieCon0">
+								<div class="icon-pie0">
+									<div class="icon_half"></div>
+									<div class="icon_text0">盲样合格率：<span>100%</span></div>
+								</div>
+								<div class="icon-pie0">
+									<div class="noIconz-pie"><span class="i1">盲样总数：</span><span class="i2">1000</span></div>
+									<div class="noIconz-pie"><span class="i1">盲样合格数：</span><span class="i3">1000</span></div>
+								</div>
+							</div>
+							<div class="pie0 " id="pie6"></div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div id="camera" class="half mleft1">
+				<!--<h3 class="title">现场</h3>-->
+				<div id="mp4">
+					<div class="cameraDetai0">
+						<div class="cameraa">
+							<video id="myPlayer" poster="" controls playsInline webkit-playsinline autoplay>
+					<source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />
+					<!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+						</video>
+						</div>
+						<div class="cameraa">
+								<video id="myPlayer2" poster="" controls playsInline webkit-playsinline autoplay>
+					<source src="rtmp://live.hkstv.hk.lxdns.com/live/hks" type="rtmp/flv" />
+					<!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+						</video>
+						</div>
+					</div>
+					<div class="cameraDetai0">
+						<div class="cameraa">
+							<video id="myPlayer3" poster="" controls playsInline webkit-playsinline autoplay>
+					<source src="rtmp://pull-g.kktv8.com/livekktv/100987038" type="rtmp/flv" />
+					<!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+					</video>
+						</div>
+						<div class="cameraa last">
+							<div class="cameraText">实时监控区</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>
+<script type="text/javascript">
+new EZUIPlayer('myPlayer');
+new EZUIPlayer('myPlayer2');
+new EZUIPlayer('myPlayer3');
+
+</script>

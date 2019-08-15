@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.purchase.PurchaseDao">
+
+	<!-- 供应商查询 -->
+	<select id="getSupplier" resultType="java.util.Map">
+	
+		select * from Supplier
+		
+	</select>
+	
+		<!-- 采购申请查询 -->
+	<select id="getPurchaserequisition" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+	pqs.Id as id  
+	,pqs.SerialID as serialID 
+	,DATE_FORMAT(pqs.ApplyDate,'%Y-%m-%d %H:%i:%s') as applyDate 
+	,pqs.Applicant as applicant 
+	,pqs.ApplyDepartment as applyDepartment 
+	,pqs.GoodsName as goodsName 
+	,pqs.Model as model 
+	,pqs.ApplyNumber as applyNumber 
+	,pqs.Purpose as purpose 
+	,pqs.IsUrgentState as isUrgentState 
+	,DATE_FORMAT(pqs.EstimatedTime,'%Y-%m-%d %H:%i:%s') as estimatedTime 
+	,pqs.ApplicantRemarks as applicantRemarks 
+	,pqs.EntryClerkApplicant as entryClerkApplicant 
+	,pqs.PurchaseLevel as purchaseLevel 
+	,pqs.ConsumablesShow as consumablesShow 
+	, pqs.ApplySign as applySign
+   	from purchaserequisition pqs where pqs.IsDel = 0 
+   	<if test="id!=null and id!=''">
+				and pqs.Id =  #{id}
+	</if>
+	</select>
+	
+			<!-- 物料信息获取 -->
+	<select id="getMaterielInfo" parameterType="java.util.Map" resultType="java.util.Map">
+select 
+	minfo.Unit as unit
+	,minfo.MaterielName as materielName
+	,minfo.MaterielModel as materielModel
+	,dary.Content as content
+from MaterielInfo minfo
+	LEFT JOIN datadictionary dary  -- 数据字典
+		on minfo.MaterielType = dary.Code
+where minfo.IsDel = 0 and dary.Type = 1
+   	<if test="id!=null and id!=''">
+				and minfo.Id =  #{id}
+	</if>
+	</select>
+
+	<!-- 添加采购合同-->
+	<insert id="addPurchasecontract" useGeneratedKeys="true" keyProperty="Id" parameterType="java.util.Map">
+		INSERT 
+		INTO purchasecontract(
+		SerialID 
+		  ,	date
+		  , SupplierId
+		  , ContractState
+		  , FreightBalance
+		  , ExpectMoney
+		  , Remarks
+		  , IsDel
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{contractNumber}
+		  , #{date}
+		  , #{supplierId}
+		  , #{contractState}
+		  , #{freightBalance}
+		  , #{expectMoney}
+		  , #{remarks}
+		  , 0
+		  , NOW()
+		) 
+	</insert>
+	
+		<!-- 添加采购合同明细-->
+	<insert id="addPurchaseorderinfo" parameterType="java.util.Map">
+		INSERT 
+		INTO purchaseorderinfo(
+		SerialID 
+		  ,	PurchaseOrderId
+		  ,	PurchaseRequisitionId
+		  , MaterielInfoId
+		  , Number
+		  , ArrivalDate
+		  , UnitPrice
+		  , Money
+		  , TaxRate
+		  , Remarks
+		  , IsDel
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{serialID}
+		  , #{purchaseOrderId}
+		  , #{purchaseRequisitionId}
+		  , #{materielInfoId}
+		  , #{number}
+		  , #{arrivalDate}
+		  , #{unitPrice}
+		  , #{money}
+		  , #{taxRate}
+		  , #{remarks}
+		  , 0
+		  , NOW()
+		) 
+	</insert>
+	
+		<!-- 添加上传文件 -->
+	<insert id="adduploadfile" parameterType="java.util.Map">
+		INSERT 
+		INTO uploadfile(
+		SerialID 
+		  ,	FileName
+		  , FileRoute
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{serialID}
+		  , #{fileName}
+		  , #{fileRoute}
+		  , 0
+		  , #{creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<select id="getPurchasecontractList" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+ 		pact.Id as id
+ 		,pact.SerialID as serialID
+		,pact.ContractState as contractState
+		,DATE_FORMAT(pact.date,'%Y-%m-%d %H:%i:%s')  as date
+		,pact.Remarks as remarks
+		,spp.SupplierName as supplierName
+		,spp.Telephone as telephone
+		,pact.CancellationCause as cancellationCause
+		,ifnull(upf.FileName ,0) as fileName
+		from purchasecontract pact
+		LEFT JOIN supplier spp
+			on spp.id = pact.SupplierId
+		LEFT JOIN uploadfile upf
+			on upf.SerialID = pact.SerialID
+			where pact.IsDel = 0
+		<if test="serialID!=null and serialID!=''">
+		 and pact.SerialID like concat('%',#{serialID},'%') 
+		  </if>
+		  
+		  <if test="supplierName!=null and supplierName!=''">
+		 and spp.SupplierName like concat('%',#{supplierName},'%') 
+		  </if>
+		  
+		  <if test="contractState!=null and contractState!=''">
+		  	and pact.ContractState in
+		  	<foreach collection="contractState" item="item" index="index" open="(" separator="," close=")">
+				#{item}								
+			</foreach>
+		  </if>	
+	</select>
+	
+	<select id="getPurchasecontractById" parameterType="java.util.Map" resultType="java.util.Map">
+			select 
+				 pact.Id as id
+				,pact.SerialID as serialID 
+				,DATE_FORMAT(pact.date,'%Y-%m-%d %H:%i:%s') as date
+				,pact.SupplierId as supplierId
+				,pact.ContractState as contractState
+				,pact.FreightBalance as freightBalance
+				,pact.ExpectMoney as expectMoney
+				,pact.Remarks as remarks
+				,ifnull(upfile.FileName ,'') as fileName
+			from purchasecontract pact 
+			LEFT JOIN uploadfile upfile
+			on upfile.SerialID = pact.SerialID
+				where pact.id = #{id}
+	</select>
+	
+	<select id="getPurchaseorderinfoById" parameterType="java.util.Map" resultType="java.util.Map">
+			select 
+				pinfo.Id AS Id
+				,pinfo.SerialID as serialID
+				,pinfo.PurchaseOrderId as purchaseOrderId
+				,pinfo.PurchaseRequisitionId as purchaseRequisitionId
+				,pinfo.MaterielInfoId as materielInfoId
+				,pinfo.Number as number
+				,pinfo.ArrivalDate as arrivalDate
+				,pinfo.UnitPrice as unitPrice
+				,pinfo.Money as money
+				,pinfo.TaxRate as taxRate
+				,pinfo.Remarks as remarks
+				,ption.SerialID as ptSerialID
+			from purchaseorderinfo pinfo
+			LEFT JOIN purchaserequisition ption
+				on ption.Id = pinfo.PurchaseRequisitionId
+				where pinfo.PurchaseOrderId = #{id} and pinfo.IsDel = 0
+	</select>
+	
+	<!-- 修改采购合同 -->
+	<update id="updatePurchasecontractById" useGeneratedKeys="true" keyProperty="Id" parameterType="java.util.Map">
+		UPDATE purchasecontract 
+		SET
+		  	date = #{date}
+		  , SupplierId = #{supplierId}
+		  , ContractState = #{contractState}
+		  , FreightBalance = #{freightBalance}
+		  , ExpectMoney = #{expectMoney}
+		  , CancellationCause = #{cancellationCause}
+		  , Remarks = #{remarks}
+		  , IsDel = 0
+		  , ReviserDate = NOW()
+		WHERE
+		  SerialID = #{contractNumber}
+	</update>
+	
+		<!-- 修改采购合同 明细-->
+	<update id="updatePurchaseorderinfoById" parameterType="java.util.Map">
+		UPDATE purchaseorderinfo 
+		SET
+		  	PurchaseOrderId = #{purchaseOrderId}
+		  ,	PurchaseRequisitionId = #{purchaseRequisitionId}
+		  , MaterielInfoId = #{materielInfoId}
+		  , Number = #{number}
+		  , ArrivalDate = #{arrivalDate}
+		  , UnitPrice = #{unitPrice}
+		  , Money = #{money}
+		  , TaxRate = #{taxRate}
+		  , Remarks = #{remarks}
+		  , IsDel = 0
+		  , ReviserDate = NOW()
+		WHERE
+		  SerialID = #{serialID}
+	</update>
+	
+			<!-- 删除采购合同 -->
+	<update id="delPurchasecontractById" parameterType="java.util.Map">
+		UPDATE purchasecontract 
+		SET
+		  	IsDel = 1
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 删除采购合同 明细-->
+	<update id="delPurchaseorderinfo" parameterType="java.util.Map">
+		UPDATE purchaseorderinfo 
+		SET
+		 	IsDel = 1
+		  , ReviserDate = NOW()
+		WHERE
+		  SerialID = #{serialID}
+	</update>
+	
+	<!-- 采购合同作废-->
+	<update id="ZuoFeiPurchasecontract" parameterType="java.util.Map">
+		UPDATE purchasecontract 
+		SET
+		 	ContractState = 3
+		  ,CancellationCause = #{cancellationCause}
+		  ,Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 验证是否调用 -->
+	<select id="getExAndstor" parameterType="java.util.Map" resultType="java.util.Map">
+	
+	select 
+ stue.Id
+from storagemeasure stue
+where stue.PurchaseContractId = #{id} 
+and stue.IsDel = 0
+UNION
+select 
+ ex.Id
+from exportmeasure ex
+where ex.PurchaseContractId = #{id} 
+and ex.IsDel = 0
+	
+	</select>
+	
+	<!-- 采购申请标识修改-->
+	<update id="updatePurchaserequisitionIsApplySign" parameterType="java.util.Map">
+		UPDATE purchaserequisition 
+		SET
+		 	ApplySign = #{applySign} 
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 根据合同Id 查找对应的采购申请信息 -->
+	<select id="getPurchaserequisitionByPurchasecontractId"  parameterType="java.util.Map" resultType="java.util.Map" >
+				SELECT
+			pit.Id as id 
+			,pit.SerialID as serialID
+		from purchaserequisition pit
+		LEFT JOIN purchaseorderinfo einfo
+			ON einfo.PurchaseRequisitionId = pit.id
+		LEFT JOIN purchasecontract act
+			ON act.Id = einfo.PurchaseOrderId
+		where einfo.IsDel = 0
+			and act.Id = #{id}
+		order by serialID
+	</select>
+</mapper>

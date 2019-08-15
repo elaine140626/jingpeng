@@ -1,0 +1,127 @@
+<!-- 沥青级配 -->
+<script src="../../js/mixStation/pitch/granularComposition.js" type="text/javascript" charset="utf-8"></script>
+
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 配比管理 &gt; 级配</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<!-- <div class="shu_btn">
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+				<div class="dtree_Tree">
+					<div class="dTreeNode rootNode">
+						<a>吉东公路盲样试验室</a>
+					</div>
+					<div id="dd0-1" class="clip" style="display:block;">
+						<div class="dTreeNode"><img src="../../image/img/joinbottom.gif" alt="">
+							<a id="sd1" class="node" href="#" onmouseover="window.status='authority';return true;" onmouseout="window.status='';return true;">
+								<input type="checkbox" desc="ZS1中心试验室" name="authority" id="authority_2" cshow="ZS1中心试验室" value="ZS1" onclick="javascript: d.checkNode(2,0,false,&quot;ZS1中心试验室&quot;,this.checked);"
+								 checked="checked">
+								<span class="dtree_node" node_id="2">ZS1中心试验室</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<form action="" method="get" class="sousuo">
+			<label>级配编号：</label>
+			<input type="text" class="search_input rightwbj" id="proportion_Code">
+			<label>产品名称：</label>
+			<input type="text" id="material_Name" class="search_input rightwbj" list="materialNames" onchange="changeMaterialName(1)">
+            <dataList id="materialNames" class="search_input" style="padding: 0;"></dataList>
+			<label>产品型号：</label>
+			<input type="text" id="material_Model" class="search_input rightwbj" list="materialModels">
+			<dataList id="materialModels" class="search_input" style="padding: 0;"></dataList>
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" id="chaxun" onclick="initAsphaltGradingList();">
+		</form>
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="show()">新增录入</a></div>
+			<div class="table-b-right table-c-right">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="list"
+				 role="grid" aria-describedby="list_info">
+					<thead>
+						<tr role="row">
+							<th scope="col" width="8%">序号</th>
+							<th scope="col" width="12%">级配编号</th>
+							<th scope="col">产品名称/型号</th>
+							<th scope="col" width="10%">创建人</th>
+							<th scope="col">创建时间</th>
+							<th scope="col" width="15%">备注</th>
+							<th scope="col">操作</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" style="height:791px" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>级配信息</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="mbphb_luru">
+                	<tr>
+                		<td width="10%" align="right"><span style="color:red">*</span>级配编号：</td>
+                		<td width="20%">
+		                    <input name="id" type="hidden" id="id">
+		                    <input name="grade_Code" type="text" id="grade_Code" placeholder="输入物料编码" required="required" maxlength="40" onkeyup="value=value.replace(/[\W]/g,'')">
+                		</td>
+                		<td width="10%" align="right"><span style="color:red">*</span>产品名称：</td>
+                		<td width="20%">
+                			<select type="text" id="materialName" onchange="changeMaterialName(2)"></select>
+                		</td>
+                		<td width="10%" align="right"><span style="color:red">*</span>产品型号：</td>
+                		<td width="20%">
+                			<select type="text" id="materialModel"></select>
+                		</td>
+                	</tr>
+                	<tr>
+	                    <td width="10%" align="right">备注：</td>
+	                    <td height="60" colspan="5" valign="bottom">
+	                    	<textarea name="remarks" cols="40" class="textkuan" style="width:97%" rows="2" id="remarks"></textarea>
+	                    </td>
+                  	</tr>
+                	<tr>
+	                    <td width="10%" align="right">筛孔选择：</td>
+	                    <td colspan="5">
+	                    	<div style="width:97%;" id="meshList"></div>
+	                    </td>
+                  	</tr>
+                </table>
+                
+                <div class="table-box" style="margin: 20px;">
+				    <table id="table"></table>
+				</div>
+				
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                  <tbody><tr>
+                    <td align="center"><input type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="saveOrUpdate();"></td>
+                  </tr>
+              </tbody></table>
+
+       	  </div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#toggle').on('click', function(event) {
+		event.stopPropagation();
+		$(this).siblings('#content').toggle();
+		var tag = $(this).siblings('#content');
+		var flag = true;
+		$(document).bind("click", function(e) {
+			var target = $(e.target);
+			if (target.closest(tag).length == 0 && flag == true) {
+				$(tag).hide();
+				flag = false;
+			}
+		});
+	});
+</script>

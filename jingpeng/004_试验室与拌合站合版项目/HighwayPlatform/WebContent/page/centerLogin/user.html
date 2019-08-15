@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>吉东公路盲样检测系统</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../../css/bootstrap.css">
+<link rel="stylesheet" href="../../css/systyle.css">
+<link rel="StyleSheet" href="../../css/dtree2.css"/>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<script src="../../js/common/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/common/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/common.js" type="text/javascript"></script>
+ <script type="text/javascript" src="../../js/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../../js/HighwayPlatform/user.js"></script>
+<script type="text/javascript" src="../../js/dtree2.js"></script>
+</head>
+
+<body>
+<div class="top">
+        <div class="topleft">吉东公路盲样检测系统</div>
+        <div class="topright" id="rootUser">
+            <span class="userid"></span><span>你好！</span>
+            <!-- <a href="../page/userinfo.html" target="_blank" class="shezhi">用户管理</a> -->
+            <a href="javascript:;" class="out" onclick="outLogin()"><span></span>安全退出</a>
+        </div>
+</div>
+<div class="container-fluid content">
+
+        <div class="rightcon" style="padding-left:0;">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：平台系统 > <span id="title"></span></div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="lq_main">
+                	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+                    	<tr class="dise">
+                        <th colspan="2" align="left" scope="col"><span>用户注册</span></th>      
+                      </tr>
+                      <tr>
+                        <td width="23%" align="right">用户名：</td>
+                        <td width="77%">
+                        <input type="hidden" id="i_id" value="">
+                        <input type="text" name="textfield2" id="userName" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">密码：</td>
+                        <td><input type="password" name="textfield2" id="password" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">确认密码：</td>
+                        <td><input type="password" name="textfield2" id="repassword" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">姓名：</td>
+                        <td><input type="text" name="textfield2" id="name" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>                         
+                      <tr style="width:50%;">
+	                      <table width="50%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+	                      <tr>
+	                        <th colspan="2" style="text-align: center">试验室权限</th>      
+	                      </tr>
+	                      <tr>
+	                        <td style="width:50%;" align="right">权限类型：</td>
+	                        <td>
+	                        	&nbsp;&nbsp;<input id="q1" checked="checked" type="radio" value="0" class="radioItem" name="checkbox"/>试验室
+								&nbsp;&nbsp;<input id="q2" type="radio" value="1" class="radioItem" name="checkbox"/>指挥部
+	                        </td>
+	                      </tr>
+	                      <tr id="sfsy">
+	                        <td style="width:50%;" align="right">是否是收样：</td>
+	                        <td>
+	                        	&nbsp;&nbsp;<input id="r1" type="radio" value="1" name="gender"/>是
+								&nbsp;&nbsp;<input id="r2" type="radio" value="0" name="gender" checked="checked">否
+	                        </td>
+	                      </tr>
+	                      <tr id="sfcy" style="display: none;">
+	                        <td  style="width:50%;" align="right">是否是抽样：</td>
+	                        <td>
+	                        	&nbsp;&nbsp;<input id="s1" type="radio" value="1" name="cy"/>是
+								&nbsp;&nbsp;<input id="s2" type="radio" value="0" name="cy" checked="checked">否
+	                        </td>
+	                      </tr>
+	                      <tr id="tree">
+		                      	<td  colspan="2" align="center">
+		                        <div class="dtree2"></div>
+								<script type="text/javascript">
+								    var parentNode = '';
+									d = new dTree('d', true);   //参数一: 树名称。参数二：单选多选 true多选  false单选  默认单选               
+			                        d.add(0, -1, '吉东公路盲样检测系统'); 
+			                        // d.add(1, 0, 'authority', '吉东公路盲样检测系统', '吉东公路盲样检测系统', true, false);
+									$.ajax({
+								        type: "post",
+								        url: "../../UserInfo/getTestRoomList.action",
+								        data:{},
+								        async:false,
+								        dataType: "json",
+								        success: function (data) {
+								        	for (var i = 0; i < data.data.length; i++) {
+								        		// 父类节点
+												if(data.data[i].ParentNode != null && data.data[i].ParentNode != 0){
+													// 根据父类id区分子集
+													if(data.data[i].ParentNode == parentNode){
+														d.add(data.data[i].Id,
+																data.data[i].ParentNode,
+																'children',
+																data.data[i].TestRoomName,
+																data.data[i].TestRoomName,
+																false,
+																false);
+													}
+												}else{
+													// 父类显示
+													d.add(data.data[i].Id,
+															data.data[i].ParentNode,
+															'authority',
+															data.data[i].TestRoomName,
+															data.data[i].TestRoomName,
+															false,
+															false);
+													// 父类节点
+													parentNode = data.data[i].Id;
+												}
+											}
+								        	document.write(d);
+				                            d.openAll();
+								        }
+								    });
+									
+		                        </script>
+		                        </td>
+	                        </tr>
+	                      </table>
+                      </tr>
+                      <tr style="width:50%;">
+                       <table width="50%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+	                      <tr>
+	                        <th colspan="2" style="text-align: center">拌合站权限</th>      
+	                      </tr>
+	                       <tr id="tree1">
+		                        <td style="width:42%;"></td>
+		                        <td>
+		                        <div class="dtree2"></div>
+								<script type="text/javascript">
+									     d = new dTree('d', true);
+										 $.ajax({
+												type : "POST",
+												url : "../../UserInfo/getOrgInfoList.action",
+												async:false,
+												data : {},
+												dataType : "json",
+												success : function(data) {
+													for(var i = 0; i < data.data.length; i++) {
+														var org_Name = data.data[i].str_org_Name;
+														if(data.data[i].str_org_Type == "0" || data.data[i].str_org_Type == 0) {
+															d.add(data.data[i].i_id, -1, org_Name);
+														} else if(data.data[i].str_org_Type == "1" || data.data[i].str_org_Type == 1) {
+															d.add(data.data[i].i_id, data.data[i].i_parent_Id, 'authority1', org_Name, org_Name, true, false);
+														} else {
+															d.add(data.data[i].i_id, data.data[i].i_parent_Id, 'authority1', org_Name, org_Name ,false, false);
+														}
+													}
+													document.write(d);
+							                        d.openAll();
+												}
+										});  
+			                        </script>
+		                        </td>
+	                        </tr>
+	                      </table>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="text-align: center"><input style="margin-left: 20%;" type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="add()"></td>
+                      </tr>
+                    </table>
+              </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.productionManagement.ActualMaterialConsumptionDao">	
+	<!-- 计划调度表获取（实际原材料消耗） -->
+	<select id="getPlanMeasure" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		SELECT
+		  * 
+		FROM
+		  v_planmeasure as vpm 
+		where
+		  vpm.IsComplete = 0
+		  <if test="id!=null and id!=''">
+		  and vpm.Id = #{id}                              -- 按照id查询
+		  </if>	
+		  <if test="materielName!=null and materielName!=''">
+		  and vpm.MaterielName like '%${materielName}%'   -- 产品名称
+		  </if>	
+		  <if test="materielModel!=null and materielModel!=''">
+		  and vpm.MaterielModel like '%${materielModel}%' -- 产品规格
+		  </if>	
+		  <if test="isConfirmSubmission!=null and isConfirmSubmission!=''">
+		  and vpm.IsConfirmSubmission = #{isConfirmSubmission} -- 状态
+		  </if>
+		  order by vpm.ReviserDate desc	 	  	  
+	</select>
+	
+	<!-- 生产管理表更新 -->
+	<update id="updateProductionManagement" parameterType="com.oil.model.testreports.ProductionManagementEntity">
+		UPDATE productionmanagement 
+		SET
+		  ActualWeight = #{ActualWeight}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 物料信息表更新（库存减少） -->
+	<update id="reduceStock" parameterType="com.oil.model.testreports.ProductionManagementEntity">
+		UPDATE materielinfo 
+		SET
+		  PrimeNumber = PrimeNumber - #{ActualWeight}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{MaterielId}
+	</update>
+	
+	<!-- 物料信息表更新（库存增加） -->
+	<update id="increaseStock" parameterType="com.oil.model.dispath.NextProductionPlanEntity">
+		UPDATE materielinfo 
+		SET
+		  PrimeNumber = PrimeNumber + #{ActualWeight}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{MaterielId}
+	</update>
+
+</mapper>

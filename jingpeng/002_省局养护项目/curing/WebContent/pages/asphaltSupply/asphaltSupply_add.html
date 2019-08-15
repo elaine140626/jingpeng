@@ -1,0 +1,246 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico">
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"
+	type="text/css" />
+<link rel="stylesheet" type="text/css"
+	href="../../js/zTree/v3/css/metroStyle/metroStyle.css" />
+<link rel="stylesheet" type="text/css" href="../../css/search.css" />
+<title>沥青供应</title>
+</head>
+<body>
+	<div class="pd-20">
+		<form class="form form-horizontal" id="form1"
+			style="margin-top: -20px" method="post">
+			<div class="cl pd-5 bg-1 bk-gray mt-20">基本信息</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>技术标准与结构：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text"  id="standardStructure"
+							name="standardStructure" maxlength="200"/>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-5 col-sm-3"><span
+						class="c-red">*</span>投标完成时间：</label>
+					<div class="formControls col-xs-7 col-sm-8">
+						<input type="text" onfocus="WdatePicker({ })"
+							class="input-text Wdate" id="finishTime" name="finishTime" />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>资金来源：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<select class="input-text" id="capitalSource" name="capitalSource"></select>
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>项目性质：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<select class="input-text" id="projectNature" name="projectNature"></select>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>改性90#类别：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<select class="input-text" id="modifiedType" name="modifiedType"></select>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>改性90#平数：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="modifiedNumber"
+							name="modifiedNumber" maxlength="13" onchange="modifiedTotal()"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' />
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>改性90#厚度：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="modifiedThickness"
+							name="modifiedThickness" maxlength="13" onchange="modifiedTotal()"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>改性90#配合比沥青用量（%）：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" onchange="modifiedTotal()"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'
+							id="modifiedProportion" name="modifiedProportion" />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>改性90#小计：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" readonly="readonly"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'
+							id="modifiedSubtotal" name="modifiedSubtotal" />
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>其他90#类别：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<select class="input-text" id="otherType" name="otherType"></select>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>其他90#平数：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="otherNumber"
+							name="otherNumber" maxlength="13" onchange="otherTotal()"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>其他90#厚度：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="otherThickness"
+							name="otherThickness" maxlength="13" onchange="otherTotal()"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' />
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>其他90#配合比沥青用量（%）：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" onchange="otherTotal()"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'
+							id="otherProportion" name="otherProportion" />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>其他90#小计：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" readonly="readonly"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'
+							id="otherSubtotal" name="otherSubtotal" />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>乳化沥青类别：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<select class="input-text" id="emulsifyType" name="emulsifyType"></select>
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>乳化沥青平数：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" onkeyup='clearNoDecimal(this,8,4)' onchange="emulsifyTotal()" onblur='checkPoint(this)'  id="emulsifyNumber" name="emulsifyNumber"/>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>乳化沥青厚度：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="emulsifyThickness"
+							name="emulsifyThickness" maxlength="13"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' onchange="emulsifyTotal()" />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>乳化沥青小计：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="emulsifySubtotal"
+							name="emulsifySubtotal" maxlength="13" readonly="readonly"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' />
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>140#沥青：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="asphalt140"
+						 name="asphalt140" maxlength="13"
+						 onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' onchange="addTotal()"/>
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>总量：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="total" name="total" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)' />
+					</div>
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<label class="form-label col-xs-4 col-sm-3"><span
+						class="c-red">*</span>备注：</label>
+					<div class="formControls col-xs-8 col-sm-8">
+						<input type="text" class="input-text" id="remarks"
+							name="remarks" maxlength="200" />
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-8 col-xs-offset-5 col-sm-offset-4">
+					<button  id="saveButton" onclick="save();" class="btn btn-primary radius"
+						type="button">
+						<i class="Hui-iconfont">&#xe632;</i> 保存
+					</button>
+					<button onclick="layer_close();" class="btn btn-default radius"
+						type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript"
+		src="../../js/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript"
+		src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript"
+		src="../../js/zTree/v3/js/jquery.ztree.all-3.5.js"></script>
+	<script type="text/javascript"
+		src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>
+	<script type="text/javascript"
+		src="../../js/datatables/1.10.0/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript"
+		src="../../js/systemJs/common/entryTree.js"></script>
+	<script type="text/javascript"
+		src="../../js/systemJs/common/datadictionary.js"></script>
+	<script type="text/javascript"
+		src="../../js/systemJs/asphaltSupply/asphaltSupply_add.js"></script>
+</body>
+</html>

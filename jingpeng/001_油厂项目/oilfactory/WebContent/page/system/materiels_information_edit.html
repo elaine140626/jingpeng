@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script type="text/javascript" src="../../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/system/materiel_edit.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 20%;
+				text-align: right;
+			}
+			
+			.ui_text_lt {
+				width: 60%;
+			}
+			
+			.ui_input_txt01 {
+				width: 45%;
+			}
+			
+			.ui_select01 {
+				width: 47%;
+				margin-left:2%;
+			}
+			
+			.text {
+				height: 80px;
+				resize: none
+			}
+		</style>
+	</head>
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<!-- <input type="hidden" name="fyID" value="14458625716623" id="fyID" /> -->
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					物料信息
+				</div>
+				<div class="ui_content">
+					<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+						<tr>
+							<td class="ui_text_rt" width="80">物料编号：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="materielNumber" name="materielNumber" onchange="changeMaterielNumber(value);"  onkeyup="value=value.replace(/[\W]/g,'')" maxlength="50"/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">物料名称：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="materielName" name="materielName" onchange="changeMateriel();" maxlength="50"/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">规格型号：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="materielModel" name="materielModel" onchange="changeMateriel();" maxlength="50"/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">单位：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="unit" name="unit" maxlength="20"/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">物料级别：</td>
+							<td class="ui_text_lt">
+								<select id="materielType" name="materielType" class="ui_input_txt01" style="padding: 0;">
+								</select>
+								<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">默认仓库：</td>
+							<td class="ui_text_lt">
+								<select id="warehouseId" name="warehouseId" class="ui_input_txt01" style="padding: 0;">
+								</select>
+								<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">年期初数量：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="primeNumber" name="primeNumber" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">年期初含税金额(元)：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="taxMoney" name="taxMoney" maxlength="8" onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">年期初不含税金额(元)：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="noTaxMoney" name="noTaxMoney" onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)' maxlength="8"/><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">备注：</td>
+							<td class="ui_text_lt">
+								<textarea rows="5" cols="5" class="ui_input_txt01 text" id="remarks" name="remarks" maxlength="200"></textarea>
+							</td>
+						</tr>
+						<tr id="continuityTr" style="display:block;">
+							<td class="ui_text_rt">是否连续添加:<input type="checkbox" id="continuityAdd"/> </td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td class="ui_text_lt">
+								&nbsp;<input id="submitbutton" type="button" value="保存" class="ui_input_btnsave" /> &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

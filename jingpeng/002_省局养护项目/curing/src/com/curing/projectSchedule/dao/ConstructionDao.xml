@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.ConstructionDao">
+	<!-- 工程进度（施工组织设计）List取得 -->
+	<select id="getConstructionList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.ConstructionEntity">
+		SELECT
+		  c.Id
+		  , c.ProjectId                                   -- 项目id
+		  , ve.ProjectNumber                              -- 项目编号
+		  , ve.ProjectName								  -- 项目名称
+		  , c.BuildCompany                                -- 施工单位
+		  , c.BuildDesign                                 -- 施工组织设计（文档）
+		  , c.Reply                                       -- 监督申请批复
+		  , c.UploadPicture                               -- 上传图片
+		  , c.Remarks                                     -- 备注
+		  , c.IsDel
+		  , c.Creater
+		  , c.CreaterDate
+		  , c.Reviser
+		  , c.ReviserDate 
+		FROM
+		  Construction as c 
+		  left join V_EntryTree as ve 
+		    on c.ProjectId = ve.pid
+		WHERE
+		  c.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and c.Id = #{id}                              -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and c.ProjectId = #{treeIds}                  -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="projectNumber!=null and projectNumber!=''">
+		    and ve.ProjectNumber like concat('%',#{projectNumber},'%') -- 根据项目编号查询
+		  </if>
+		  <if test="projectName!=null and projectName!=''">
+		    and ve.ProjectName like concat('%',#{projectName},'%') -- 根据项目名称查询
+		  </if>
+		  <if test="buildCompany!=null and buildCompany!=''">
+		    and c.BuildCompany like concat('%',#{buildCompany},'%') -- 根据施工单位查询
+		  </if>
+		   order by c.CreaterDate desc
+	</select>
+	
+	<!-- 新增工程进度（施工组织设计） -->
+	<insert id="insertConstruction" parameterType="com.curing.projectSchedule.model.ConstructionEntity">
+		INSERT 
+		INTO Construction( 
+		  Id
+		  , ProjectId
+		  , BuildCompany
+		  , BuildDesign
+		  , Reply
+		  , UploadPicture
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES (
+			REPLACE(UUID(),'-','') 
+		  , #{ProjectId}
+		  , #{BuildCompany}
+		  , #{BuildDesign}
+		  , #{Reply}
+		  , #{UploadPicture}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（施工组织设计） -->
+	<update id="updateConstruction" parameterType="com.curing.projectSchedule.model.ConstructionEntity">
+		UPDATE Construction 
+		SET
+		  BuildCompany = #{BuildCompany}
+		  , BuildDesign = #{BuildDesign}
+		  , Reply = #{Reply}
+		  , UploadPicture = #{UploadPicture}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（施工组织设计） -->
+	<update id="deleteConstruction" parameterType="com.curing.projectSchedule.model.ConstructionEntity">
+		UPDATE Construction 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

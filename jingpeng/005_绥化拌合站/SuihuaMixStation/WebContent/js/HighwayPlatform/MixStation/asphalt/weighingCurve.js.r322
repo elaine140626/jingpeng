@@ -1,0 +1,289 @@
+var startTime;
+var endTime;
+var org_ID;
+$(function() {
+	/*$("#startTime").hide();
+	$("#endTime").hide();*/
+	$("#asphalt_search").hide();
+	$("#startTime2").val(getNowFormatDate(1));
+	$("#endTime2").val(getNowFormatDate(0));
+	/*$("#startTime2").val('2019-06-11 10:21:20');
+	$("#endTime2").val('2019-06-11 10:41:20');*/
+	org_ID = $("#orgIds").val();
+	if (org_ID.length>0){
+		org_ID = org_ID.substr(1,org_ID.length-1)
+	}
+	getOrgId()
+	getEchar(org_ID);
+});
+
+function getOrgId(){
+	$("#areaScreening").html("");
+	$.ajax({
+		type : "POST",
+		url : "../../WeighingCurve/getOrganizationInfo.action",
+		data : {
+			"org_ID":org_ID
+			},
+		dataType : "json",
+		success : function(data) {
+			for (var i = 0; i < data.length; i++) {
+				$("#areaScreening").append(["<a style=\"font-size: 17px;\" onclick='getEchar("+data[i].id+")' href='javascript:;'>"+data[i].orgName+"</a>&nbsp;&nbsp;&nbsp;"].join(""))
+				//$("#areaScreening").append(["<input name=\"\" type=\"button\" onclick=\"getEchar("+data[i].id+")\" value=\""+data[i].orgName+"\" class=\"login-button\">"].join(""))
+				}
+			//$("#areaScreening").append(["<br><input name=\"\" style=\"margin-top: 10px;\" type=\"button\" onclick=\"getEchar('"+org_ID+"')\" value=\"轮播显示\" class=\"login-button\">"].join(""))
+			$("#areaScreening").append(["<br><a style=\"font-size: 17px; color: #0080FF;\"   onclick=\"getEchar('"+org_ID+"')\"href='javascript:;'>轮播显示</a>"].join(""))
+			}
+		})
+}
+
+function getEchar(orgId){
+	if(orgId == -1){
+		org_ID = $("#orgIds").val();
+		if (org_ID.length>0){
+			org_ID = org_ID.substr(1,org_ID.length-1)
+		}
+		orgId = org_ID;
+		getOrgId()
+	}
+	$("#loading").show();
+	var myChart = echarts.init(document.getElementById('echar'));
+	startTime = $("#startTime2").val();
+	endTime = $("#endTime2").val();
+	if(startTime == '' || endTime == ''){
+		swal("操作失败","请输入查询时间", "info");
+		$("#loading").hide();
+		return;
+	}
+	if(startTime>endTime){
+		swal("操作失败","开始时间大于结束时间!", "info");
+		$("#loading").hide();
+		return;
+	}
+	var timeCount = daysBetween(startTime,endTime)
+	if(timeCount > 12){
+		swal("操作失败","查询间隔不能超过12小时", "info");
+		$("#loading").hide();
+		return;
+	}
+	
+	//生成初始时间和结束时间时间段的数组(按秒查询)
+	var d_arr = [];
+	d_arr = getSecondsAll(startTime,endTime);
+	var seriesOption = [];
+	$.ajax({
+		type : "POST",
+		url : "../../WeighingCurve/getWeighingCurveEchar.action",
+		data : {"startTime":startTime,
+			"endTime":endTime,
+			"org_ID":orgId
+			},
+		dataType : "json",
+		success : function(data) {
+			var weighingCurveEcharList = data;
+			var isNullAll;
+			for (var i = 0; i < weighingCurveEcharList.length; i++) {
+				if(weighingCurveEcharList[i].length > 0){
+					isNullAll = false;
+					break;
+				}else{
+					isNullAll = true;
+				}
+			}
+			if(isNullAll){
+				creatChart('无记录',d_arr,'')
+				return;
+			}
+
+	for (var i = 0; i < weighingCurveEcharList.length; i++) {
+		var chartArr = [];
+		//series 各值集合
+		var seriesOptionArry = {
+				data:[],
+				type : 'line',
+				name : ''
+		};
+		if(weighingCurveEcharList[i].length <= 0){
+			continue;
+		}
+		//循环日期
+		for (var k = 0;k < d_arr.length;k ++) {
+		    var flg = true;
+		    var weighingCurvecount;
+		    //循环试验项目的每个日期 
+		    	for (var j = 0; j < weighingCurveEcharList[i].length; j++) {
+		    		//如果当前循环的日期 与 试验项目时间循环的其中一天日期一样 添加数量 否则 数量为0
+		    		if (weighingCurveEcharList[i][j].collectionTime === d_arr[k]+"") {
+		    			flg = false;
+		    			weighingCurvecount = weighingCurveEcharList[i][j].weighingValue+"";
+		    			break
+		    		}
+					
+				}
+		    	if (flg) {
+		    		chartArr.push("0");
+		    	} else {
+		    		chartArr.push(weighingCurvecount);
+		    	}
+		}
+		seriesOptionArry.data= chartArr;
+		seriesOptionArry.name = weighingCurveEcharList[i][0].orgName;
+		seriesOption.push(seriesOptionArry);
+	}
+	
+	//定时刷新图标，显示不同的数据
+	var i = 1;
+	if(chart_timer) {
+		clearInterval(chart_timer)
+	}
+	if(seriesOption.length > 1){
+		chart_timer = setInterval(function(){
+			if(i >= seriesOption.length) {
+				i=0;
+			}
+			var titles = seriesOption[i].name;
+			var pram = seriesOption[i];
+			creatChart(titles, d_arr, pram)
+			i ++;
+		},5000)
+	}else{
+		var titles = seriesOption[0].name;
+		var pram = seriesOption[0];
+		creatChart(titles, d_arr, pram)
+	}
+	}
+	})
+}
+
+//echart创建折线图
+function creatChart(title,d_arr,echarSeries) {
+	var myChart = echarts.init(document.getElementById('echar'));
+	option = {
+		title : {
+			text : title,
+			x : 'center'
+		},
+		tooltip : {
+			trigger : 'axis'
+		},
+		 dataZoom: [{
+		        type: 'inside',
+		        start: 0,
+		        end: 100
+		    }, {
+		        start: 0,
+		        end: 10,
+		        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+		        handleSize: '80%',
+		        handleStyle: {
+		            color: '#fff',
+		            shadowBlur: 3,
+		            shadowColor: 'rgba(0, 0, 0, 0.6)',
+		            shadowOffsetX: 2,
+		            shadowOffsetY: 2
+		        }
+		    }],
+		xAxis : {
+			type : 'category',
+			boundaryGap: false,
+			data : d_arr
+		},
+		yAxis : {
+			type : 'value',
+		    name: "秒处理称重量",
+		    show: true,
+		    axisLabel: {
+	                 formatter: '{value} kg'
+	            }
+		},
+		series :echarSeries
+	};
+
+	$("#loading").hide();
+	myChart.setOption(option, true);
+}
+
+//日期初始化赋值
+function getNowFormatDate(flg) {
+	if(flg == 0) {
+		//获取当前日期
+		var date = new Date().Format("yyyy-MM-dd hh:mm:ss");
+	} else {
+		//获取1个小时前的日期
+		var myDate = new Date().Format("yyyy-MM-dd hh:mm:ss");
+		var date = new Date(new Date() - 1000 * 60 * 60).Format("yyyy-MM-dd hh:mm:ss");
+	}
+	return date;
+}
+
+//对Date的扩展，将 Date 转化为指定格式的String
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符， 
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 
+Date.prototype.Format = function (fmt) { //author: meizz 
+    var o = {
+        "M+": this.getMonth() + 1, //月份 
+        "d+": this.getDate(), //日 
+        "h+": this.getHours(), //小时 
+        "m+": this.getMinutes(), //分 
+        "s+": this.getSeconds(), //秒 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+        "S": this.getMilliseconds() //毫秒 
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+
+//区间时间段内的秒
+function getSecondsAll(begin,end){
+	var dateArry = [];
+	var bd = new Date(begin), be = new Date(end);
+	var bd_time = bd.getTime(), be_time = be.getTime(), time_diff = be_time - bd_time;
+	for (var i = 0; i <= time_diff; i += 1000) {
+		var ds = new Date(bd_time + i);
+		var year =ds.getYear()+"";
+		var years ='20'+ year.slice(1);
+		var month = ds.getMonth() + 1;
+		var day = ds.getDate();
+		var hours = ds.getHours(); //小时 
+		var minutes = ds.getMinutes(); //分 
+		var seconds = ds.getSeconds(); //秒 
+		if (month < 10) {
+			month = "0" + month;
+		}
+		if (day < 10) {
+			day = "0" + day;
+		}
+		if (hours < 10) {
+			hours = "0" + hours;
+		}
+		if (minutes < 10) {
+			minutes = "0" + minutes;
+		}
+		if (seconds < 10) {
+			seconds = "0" + seconds;
+		}
+		dateArry.push(years + "-"+month + '-' + day+" "+hours+":"+minutes+":"+seconds);
+	}
+	return dateArry;
+}
+
+function daysBetween(sDate1,sDate2){
+    //Date.parse() 解析一个日期时间字符串，并返回1970/1/1 午夜距离该日期时间的毫秒数
+    var time1 = Date.parse(new Date(sDate1));
+    var time2 = Date.parse(new Date(sDate2));
+    var nDays = Math.abs(parseInt((time2 - time1)/1000/60/60));
+    return  nDays;
+};
+
+jeDate("#startTime2",{
+	format: "YYYY-MM-DD hh:mm:ss",
+	isinitVal:true,
+	isTime: true,
+})
+jeDate("#endTime2",{
+	format: "YYYY-MM-DD hh:mm:ss",
+	isinitVal:true,
+	isTime: true,
+})

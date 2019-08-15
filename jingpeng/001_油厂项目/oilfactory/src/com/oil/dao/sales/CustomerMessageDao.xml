@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.sales.CustomerMessageDao">
+	 <resultMap id="getAllCustomerMessageMap" type="CustomerMessage">
+        <id property="uuid" column="uuid" />
+        <result property="customer_number" column="customernumber" />
+        <result property="customer_name" column="customername" />
+        <result property="parent_nodeId" column="parentnodeId" />
+        <result property="province" column="province" />
+        <result property="address" column="address" />
+        <result property="contacts" column="contacts" />
+        <result property="telephone" column="telephone" />
+        <result property="other_number" column="othernumber" />
+        <result property="remarks" column="remarks" />
+        <result property="creater" column="creater" />
+        <result property="creater_date" column="creater_date" />
+        <result property="reviser" column="reviser" />
+        <result property="reviser_date" column="reviserdate" />
+        <result property="tid" column="tid" />
+    </resultMap>
+    
+     <resultMap id="getdatadictionaryMap" type="Datadictionary">
+        <id property="uuid" column="uuid" />
+        <result property="uuid" column="Uuid" />
+        <result property="type" column="Type" />
+        <result property="code" column="Code" />
+        <result property="content" column="Content" />
+        <result property="isDel" column="IsDel" />
+        <result property="creater" column="Creater" />
+        <result property="createrDate" column="CreaterDate" />
+        <result property="reviser" column="Reviser" />
+        <result property="reviserDate" column="ReviserDate" />
+    </resultMap>
+</mapper>

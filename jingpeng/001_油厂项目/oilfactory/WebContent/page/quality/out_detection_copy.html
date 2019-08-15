@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../../css/report/report-common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/report/liqing.css" />
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 	
+		<script src="../../js/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/oilfactory/quality/out_detection_copy.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+		<style type="text/css">
+			.noprint1 {
+		       position: absolute;
+			    right: 20%;
+			    top: 5%;
+			    width: 50px;
+			    height: 30px;
+			    background: #28a4c9;
+			    border-radius: 3px;
+			    color: #fff;
+			    border: 0;
+			}  
+			.noprint2 {
+		       position: absolute;
+			    right: 15%;
+			    top: 5%;
+			    width: 50px;
+			    height: 30px;
+			    background: #28a4c9;
+			    border-radius: 3px;
+			    color: #fff;
+			    border: 0;
+			}
+			.border{
+				border:1px solid #000;
+			}
+		 	@media print {
+		    	.noprint1{
+		      	display: none;
+		    	}
+		    	.noprint2{
+		      	display: none;
+		    	}
+		    	.border {
+		    		border:1px solid #fff;
+		    	}
+		  	}
+		  	
+		  	   /* .gongzhang{
+		  	   width: 170px;
+			    height: 170px;
+			    position: absolute;
+			    bottom: -67px;
+			    left: 74px;
+		  	   }  */
+		</style>
+	</head>
+	<body>
+		<div class="tableContain">
+			<form id="recortForm" method="post">
+			<button type='button' class='noprint1' onclick="window.print()">打印</button>
+			<button type='button' class='noprint2' onclick="closes()">关闭</button>
+			<div class="border">
+				<div class="table">
+					<div class="header">
+						<!-- <div class="page">第<span id="reportPage"></span>页，共<span id="reportPageS"></span>页</div>
+						<div class="testNum" id="recortCode">JB011001</div>
+						<div class="erweima"><img src="../images/1545355291.png" /></div> -->
+						<div class="title font16" id="recortName"><span id="reportRenown">检测报告</span></div>
+					</div>
+					<div class="testMsg">
+						<div class="testRoom">
+							<div class="roomName">产品型号：</div>
+							<div id="productModel" class="roomname fontFangSong" style="text-align:left"></div>
+						</div>
+						 <div class="testRoom">
+							<div class="roomName">使用地点：</div>
+							<div id="usePlace" class="roomname fontFangSong" style="text-align:left"></div>
+						</div> 
+						<div class="testRoom">
+							<div class="roomName">检测日期：</div>
+							<div id="testDate" class="roomname fontFangSong" style="text-align:left"></div>
+						</div>
+						 <div class="testRoom">
+							<div class="roomName">报告编号：</div>
+							<div id="testReportNumber" class="roomname fontFangSong" style="text-align:left"></div>
+						</div> 
+					</div>
+					<div class="tables">
+						<div class="commonTable2">
+							<div class="commonTable2-line">
+								<div>序号</div>
+								<div>检测指标</div>
+								<div>单位</div>
+								<div>技术要求</div>
+								<div>检测结果</div>
+								<div>试验方法</div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id0"></span></div>
+								<div><span id="testingItems0"></span></div>
+								<div><span id="indexUnit0"></span></div>
+								<div><span id="skillRequire0"></span></div>
+								<div><span id="testResult0"></span></div>
+								<div><span id="testMethod0"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id1"></span></div>
+								<div><span id="testingItems1"></span></div>
+								<div><span id="indexUnit1"></span></div>
+								<div><span id="skillRequire1"></span></div>
+								<div><span id="testResult1"></span></div>
+								<div><span id="testMethod1"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id2"></span></div>
+								<div><span id="testingItems2"></span></div>
+								<div><span id="indexUnit2"></span></div>
+								<div><span id="skillRequire2"></span></div>
+								<div><span id="testResult2"></span></div>
+								<div><span id="testMethod2"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id3"></span></div>
+								<div><span id="testingItems3"></span></div>
+								<div><span id="indexUnit3"></span></div>
+								<div><span id="skillRequire3"></span></div>
+								<div><span id="testResult3"></span></div>
+								<div><span id="testMethod3"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id4"></span></div>
+								<div><span id="testingItems4"></span></div>
+								<div><span id="indexUnit4"></span></div>
+								<div><span id="skillRequire4"></span></div>
+								<div><span id="testResult4"></span></div>
+								<div><span id="testMethod4"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id5"></span></div>
+								<div><span id="testingItems5"></span></div>
+								<div><span id="indexUnit5"></span></div>
+								<div><span id="skillRequire5"></span></div>
+								<div><span id="testResult5"></span></div>
+								<div><span id="testMethod5"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id6"></span></div>
+								<div><span id="testingItems6"></span></div>
+								<div><span id="indexUnit6"></span></div>
+								<div><span id="skillRequire6"></span></div>
+								<div><span id="testResult6"></span></div>
+								<div><span id="testMethod6"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id7"></span></div>
+								<div><span id="testingItems7"></span></div>
+								<div><span id="indexUnit7"></span></div>
+								<div><span id="skillRequire7"></span></div>
+								<div><span id="testResult7"></span></div>
+								<div><span id="testMethod7"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id8"></span></div>
+								<div><span id="testingItems8"></span></div>
+								<div><span id="indexUnit8"></span></div>
+								<div><span id="skillRequire8"></span></div>
+								<div><span id="testResult8"></span></div>
+								<div><span id="testMethod8"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id9"></span></div>
+								<div><span id="testingItems9"></span></div>
+								<div><span id="indexUnit9"></span></div>
+								<div><span id="skillRequire9"></span></div>
+								<div><span id="testResult9"></span></div>
+								<div><span id="testMethod9"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id10"></span></div>
+								<div><span id="testingItems10"></span></div>
+								<div><span id="indexUnit10"></span></div>
+								<div><span id="skillRequire10"></span></div>
+								<div><span id="testResult10"></span></div>
+								<div><span id="testMethod10"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id11"></span></div>
+								<div><span id="testingItems11"></span></div>
+								<div><span id="indexUnit11"></span></div>
+								<div><span id="skillRequire11"></span></div>
+								<div><span id="testResult11"></span></div>
+								<div><span id="testMethod11"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id12"></span></div>
+								<div><span id="testingItems12"></span></div>
+								<div><span id="indexUnit12"></span></div>
+								<div><span id="skillRequire12"></span></div>
+								<div><span id="testResult12"></span></div>
+								<div><span id="testMethod12"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id13"></span></div>
+								<div><span id="testingItems13"></span></div>
+								<div><span id="indexUnit13"></span></div>
+								<div><span id="skillRequire13"></span></div>
+								<div><span id="testResult13"></span></div>
+								<div><span id="testMethod13"></span></div>
+							</div>
+							<div class="commonTable2-line">
+								<div><span id="id14"></span></div>
+								<div><span id="testingItems14"></span></div>
+								<div><span id="indexUnit14"></span></div>
+								<div><span id="skillRequire14"></span></div>
+								<div><span id="testResult14"></span></div>
+								<div><span id="testMethod14"></span></div>
+							</div>
+						</div>
+						<div class="commonTable3">
+							<div class="commonTable3-line">
+								<div>结论</div>
+								<div style="text-align:left"><span id="conclusion"></span></div>
+							</div>
+							<div class="commonTable3-line">
+								<div>备注</div>
+								<div  style="text-align:left"><span id="reportRemarks"></span></div>
+							</div>
+						</div>
+					</div>
+	
+					<div class="footer">
+						<div class="line">检测单位：<span id="detectionUnitName"></span></div>
+						<div class="block">
+							<div class="blockTitle">检测人：</div>
+							<div class="blockContain"><img id="testPersonnelId" src="" /></div>
+						</div>
+						<div class="block">
+							<div class="blockTitle">复核：</div>
+							<div class="blockContain"><img id="reviewerId" src="" /></div>
+						</div>
+						<div class="block">
+							<div class="blockTitle">检测负责人：</div>
+							<div class="blockContain"><img id="inspectionSupervisorId" src="" /></div>
+						</div>
+						<div class="line" style = "text-align:right">
+							<div class="blockTitle"><span id="factoryTime"></span></div>
+							<div class="gongzhang"><img id="detectionUnitId" src="" /></div>
+						</div>
+					</div>
+				</div>
+				</div>
+			</form>
+		</div>
+
+	</body>
+
+</html>

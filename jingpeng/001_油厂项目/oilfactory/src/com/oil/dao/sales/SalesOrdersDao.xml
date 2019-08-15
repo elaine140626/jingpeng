@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.sales.SalesOrdersDao">
+	<!-- 客户信息获取 -->
+	<select id="getCustomerInfo" parameterType="java.util.Map" resultType="Customerinfo">
+		SELECT
+		  Address
+		  , Contacts
+		  , Telephone 
+		FROM
+		  customerinfo 
+		WHERE
+		  Id = #{id}
+	</select>
+	
+	<select id="getCustomerInfoEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  sod.OrderDetailedNumber as orderDetailedNumber  -- 流水号
+		  , so.ContractId                                 -- 客户Id
+		  , u.CustomerName as customerName
+		  ,  DATE_FORMAT(ex.GrossMeasureTime, '%Y-%m-%d %H:%m:%s') as grossMeasureTime -- 发货日期
+		  , sod.MaterielId                                -- 产品Id
+		  , m.MaterielName as materielName                -- 物料名称
+		  , m.MaterielModel as materielModel              -- 规格名称
+		  , sod.AsphaltContent as asphaltContent          -- 沥青含量
+		  , sod.AsphaltContentExchange                    -- 兑换后沥青含量（%）
+		  , IF ( 
+		    ex.OutType = 1
+		    , n.AllotWeight
+		    , ex.Suttle
+		  ) as allotWeight                                --  出厂重量
+		  , tp.ReceiptWeight AS receiptWeight             -- 到厂重量
+		  , tp.collectWeigh AS collectWeigh               -- 结算重量
+		  , sod.SalePrice as salePrice                    -- 销售单价
+		  , sod.SaleMoney as saleMoney                    -- 销售金额
+		  , tp.PlateNumber as plateNumber                 -- 车牌号码
+		  , sod.TaxRate                                   -- 税率
+		  , de.Content as taxRateContent                  -- 数据字典税率
+		  , sod.TransportBalance as transportBalance      -- 是否自提
+		  , so.Contacts as contacts                       -- 联系人
+		  , so.Telephone as telephone                     -- 联系电话
+		  , sod.Remarks as remarks                        -- 备注
+		FROM
+		  SalesOrderDetailed sod 
+		  LEFT JOIN materielinfo m 
+		    on m.id = sod.MaterielId                      -- 物料id
+		    and m.IsDel=0
+		  left join datadictionary de 
+		    on de.Type = 'sl' 
+		    and de.code = sod.TaxRate                     -- 数据字典税率
+		  LEFT JOIN SalesOrder so 
+		    ON sod.SalesOrderId = so.Id                   -- 销售合同Id
+		    and so.IsDel=0 
+		  LEFT JOIN exportmeasure ex 
+		    ON ex.OrderDetailedId = sod.id
+		    and ex.IsDel=0 
+		  LEFT JOIN noweighoutwarehouse n 
+		    ON n.DispatchOutWarehouseId = ex.Id           -- 运输单Id
+		    and n.IsDel=0 
+		  LEFT JOIN TransportList tp 
+		    ON tp.DispatchOutWarehouseId = ex.id          -- 运输单Id
+		    and tp.IsDel=0 
+		  left join CustomerInfo u 
+		    on u.Id = so.CustomerId                       -- 客户id
+		    and u.IsDel=0 
+		  left join userinfo as ui                        -- 销售员表
+		    on so.UserInfoId = ui.Id 
+		    and ui.IsDel=0 
+		  left join cityinfo as ci 
+		    on u.CityId = ci.Id
+		    and ci.IsDel=0 
+		  left join provinceinfo as pi 
+		    on ci.ProvinceId = pi.Id 
+		    and pi.IsDel=0
+		  left join salecompany sc 
+		    on so.SalesCompanyId = sc.Id
+		    and sc.IsDel=0 
+		  where  sod.IsDel=0  
+	      <if test="level == 1">
+		  and ci.ProvinceId = #{treeId}                   -- 按照tree省查询
+		  </if>
+		  <if test="level == 2">
+		  and u.CityId = #{treeId}                      -- 按照tree市查询
+		  </if>
+		  <if test="level == 3">
+		  and so.CustomerId = #{treeId}                   -- 按照tree客户查询
+		  </if>
+		  <if test="startTime != null and startTime != ''">
+	      and <![CDATA[ DATE_FORMAT(so.CreaterDate, '%Y-%m-%d') >=  #{startTime}  ]]>
+	      </if>
+	      <if test="endTime != null and endTime != ''">
+	      and <![CDATA[ DATE_FORMAT(so.CreaterDate, '%Y-%m-%d') <=  #{endTime}  ]]>
+	      </if>
+	      <if test="reviser != null and reviser != ''">
+	      and so.UserInfoId = #{reviser}                   -- 按照合同Id查询
+	      </if>
+	      order by so.CreaterDate desc
+	
+	</select>
+	<!-- 销售订单目录tree -->
+	<select id="getContractTree" resultType="ContractTreeEntity">
+	<!-- 	select
+		  CONCAT('p',pi.Id) as piid
+		  , pi.Province as piname
+		  , CONCAT('c',ci.Id) as ciid
+		  , ci.CityName as ciname
+		  , CONCAT('k',cus.Id) as cusid
+		  , cus.CustomerName as cusname 
+		from
+		  provinceinfo as pi                             
+		  left join cityinfo as ci                        
+		    on pi.Id = ci.ProvinceId 
+		  left join customerinfo as cus                  
+		    on ci.Id = cus.CityId 
+		    and cus.IsDel = 0
+	 -->
+		select DISTINCT
+		  CONCAT('p', pi.Id) as piid
+		  , pi.Province as piname
+		  , CONCAT('c', ci.Id) as ciid
+		  , ci.CityName as ciname
+		  , CONCAT('k', cus.Id) as cusid
+		  , cus.CustomerName as cusname
+		  , cus.CustomerCode as cuscode                   -- 客户编号
+		from
+		  customerinfo as cus 
+		  left join SalesOrder as sal 
+		    on cus.Id = sal.CustomerId 
+		  left join cityinfo as ci                        -- 市信息表
+		    on ci.Id = cus.CityId 
+		  left join provinceinfo as pi                    -- 省信息表
+		    on pi.Id = ci.ProvinceId 
+		where
+		  cus.IsDel = 0 
+		  and sal.IsDel = 0
+		<if test="keyword != null and keyword != ''">
+			and ( 
+			  pi.Province like concat('%',#{keyword},'%') 
+			  or ci.CityName like concat('%',#{keyword},'%') 
+			  or cus.CustomerName like concat('%',#{keyword},'%')
+			)
+		</if>
+		<if test="reviser != nul and reviser != ''">
+			and sal.UserInfoId = #{reviser}
+		</if>
+		order by
+		  piid
+		  , ciid
+		  , cusid
+	</select>
+	<!-- 销售订单取得 -->
+	<select id="getSalesOrdersInfo" parameterType="java.util.Map" resultType="SalesOrdersInfoEntity">
+		select
+		  so.Id                                           -- 订单id
+		  , so.OrderNumber                                -- 订单编号
+		  , so.ContractId                                 -- 合同id
+		  , con.ContractNumber                            -- 合同编号
+		  , so.CustomerId                                 -- 客户id
+		  , CONCAT(pi.Province,'-',ci.CityName,'-',cus.CustomerName) as CustomerName -- 客户名称
+		  , cus.CustomerCode                              -- 客户编号
+		  , so.CustomerAlias                              -- 客户别称
+		  , so.OrderState                                 -- 订单状态
+		  , getContentByCode('ddzt', so.OrderState) as OrderStateName -- 订单状态（数据字典） 0:执行中 1:未执行 2:完成 3:作废 4:其他
+		  , so.UserInfoId                                 -- 销售员id
+		  , ui.Name                                       -- 销售员
+		  , so.Address                                    -- 送货地址
+		  , so.Contacts                                   -- 联系人
+		  , so.Telephone                                  -- 联系方式
+		  , so.Remarks                                    -- 备注
+		  , con.SalesCompanyId                             -- 销售公司id
+		  , sc.CompanyName    as   SalesCompanyName       -- 销售公司名称
+		  , so.CancellationCause						  -- 作废原因
+	  	  , so.CreaterDate						  		  -- 创建时间
+		from
+		  salesorder as so                                -- 销售订单表
+		  left join contractInfo as con                   -- 合同信息表
+		    on so.ContractId = con.Id 
+		    and con.IsDel=0
+		  left join customerinfo as cus                   -- 客户信息表
+		    on con.CustomerId = cus.Id 
+		    and cus.IsDel=0
+		  left join userinfo as ui                        -- 销售员表
+		    on so.UserInfoId = ui.Id 
+		    and ui.IsDel=0
+		  left join cityinfo as ci 
+    		on cus.CityId = ci.Id 
+    		and ci.IsDel=0
+    	  left join provinceinfo as pi 
+    		on ci.ProvinceId = pi.Id 
+    		and pi.IsDel=0
+    	  left join salecompany sc
+    	  	on so.SalesCompanyId = sc.Id
+    	  	and sc.IsDel=0
+		where
+		  so.IsDel=0                               
+		  <if test="id!=null and id!=''">
+		  and so.Id = #{id}                               -- 按照id查询
+		  </if>
+		  <if test="level == 1">
+		  and ci.ProvinceId = #{treeId}                   -- 按照tree省查询
+		  </if>
+		  <if test="level == 2">
+		  and cus.CityId = #{treeId}                      -- 按照tree市查询
+		  </if>
+		  <if test="level == 3">
+		  and so.CustomerId = #{treeId}                   -- 按照tree客户查询
+		  </if>
+		  <if test="startTime != null and startTime != ''">
+	      and <![CDATA[ DATE_FORMAT(so.CreaterDate, '%Y-%m-%d') >=  #{startTime}  ]]>
+	      </if>
+	      <if test="endTime != null and endTime != ''">
+	      and <![CDATA[ DATE_FORMAT(so.CreaterDate, '%Y-%m-%d') <=  #{endTime}  ]]>
+	      </if>
+	      <if test="contractId != null and contractId != ''">
+	      and so.ContractId = #{contractId}                   -- 按照合同Id查询
+	      </if>
+	      <if test="reviser != null and reviser != ''">
+	      and so.UserInfoId = #{reviser}                   -- 按照合同Id查询
+	      </if>
+	      <if test="treeIdName != null and treeIdName != ''">
+	      and (pi.Province like concat('%',#{treeIdName},'%') or ci.CityName like concat('%',#{treeIdName},'%') or cus.CustomerName like concat('%',#{treeIdName},'%'))
+	      </if>
+	      order by so.CreaterDate desc
+	</select>
+	
+	<!-- 销售订单明细查询 -->
+	<select id="getSalesOrdersDetailed" parameterType="java.util.Map" resultType="SalesOrdersDetailedEntity">
+		SELECT
+		  sod.Id
+		  , sod.SalesOrderId                              -- 销售订单id		  
+		  , sod.ExchangeMaterielId                        -- 兑换物料id
+		  , mai1.MaterielName     as ExchangeMaterielName   -- 兑换物料名称
+		  , mai1.MaterielModel    as ExchangeMaterielModel  -- 兑换规格型号
+		  , sod.MaterielId                                -- 物料id
+		  , mai.MaterielName                              -- 物料名称
+		  , mai.MaterielModel                             -- 规格型号
+		  , sod.AsphaltContent                            -- 沥青含量
+		  , sod.AsphaltContentExchange                    -- 兑换后沥青含量（%）
+		  , sod.UnitPrice                                 -- 单价 
+		  , sod.ListModel                                 -- 磅单显示产品名称-型号
+		  , sod.TransportBalance                          -- 运输结算情况
+		  , getContentByCode('ysjsqk', sod.TransportBalance) as TransportBalanceName
+		  <!-- , DATE_FORMAT(sod.ExpectedDeliveryDate, '%Y-%m-%d %H:%m:%s') as ExpectedDeliveryDate -->
+		  , sod.ExpectedDeliveryDate as ExpectedDeliveryDate -- 预计发车时间
+		  , sod.IsCancel                                  -- 是否作废
+		  , sod.CancelPerson                              -- 作废人
+		  , DATE_FORMAT(sod.CancelDate, '%Y-%m-%d %H:%m:%s') as CancelDate -- 作废时间
+		  , sod.SaleNumber                                -- 销售数量
+		  , sod.SalePrice                                 -- 销售单价
+		  , sod.SaleMoney                                 -- 销售金额
+		  , sod.TaxRate                                   -- 税率
+		  , sod.Remarks                                   -- 备注	
+		  , sod.IsActualDelivery  						  -- 是否实际发货
+		  , sod.IsExchange								  -- 是否兑换
+		  , sod.Proportion								  -- 兑换比例
+		  , sod.Transports								  -- 运输地点
+		  , sod.Distance						          -- 运输距离
+		  , sod.Mileage                                   -- 里程
+		  , sod.OrderDetailedNumber as orderDetailedNumber
+		  , sod.StartAddress as StartAddress
+		  ,	pu.IsLowerHair                                -- 下发生产计划
+		  , pu.IsInspector                                -- 生产工艺通知单  是否审核
+		  , pu.IsExamine 		                          -- 是否审核通过
+		  , pu.IsCheck    	                              -- 生产任务确认 库存管理
+		  , pu.IsProduction    	                             
+		  , pu.IsApplication                              -- 提交质检申请
+		  , pu.IsAdjust
+		  , pu.IsQualified                                -- 是否合格
+		  ,	pu.IsComplete  		                          -- 生产完成确认
+		  , pu.isConfirmSubmission  
+		  , ex.TareWeight			                      -- 皮重
+		  , ex.GrossWeight		                          -- 毛重
+		FROM
+		  salesorderdetailed as sod 
+		  left join materielinfo as mai                   -- 物料信息表
+		    on sod.MaterielId = mai.Id 		    
+		  left join materielinfo as mai1                  -- 物料信息表
+		    on sod.ExchangeMaterielId = mai1.Id 
+		  left join PlanMeasure as pu                     -- 物料型号表
+		    on pu.SalesOrderDetailedId = sod.Id 
+		  left join exportmeasure as ex                   -- 出库
+		    on ex.SalesOrderId = sod.Id 
+		WHERE
+		  sod.IsDel = 0 
+		  and sod.SalesOrderId = #{id}                    -- 销售订单id
+	</select>
+	
+	<!-- 销售订单编号查重 -->
+	<select id="checkOrderNumber" resultType="String">
+		SELECT
+		  count(*) as count
+		FROM
+		  salesorder 
+		WHERE
+		  OrderNumber = #{OrderNumber}
+		  <if test="id!=null and id!=''">
+		  and Id != #{id}
+		  </if>	
+	</select>
+	
+	<!-- 销售订单表插入 -->
+	<insert id="insertSalesOrdersInfo" parameterType="SalesOrdersInfoEntity">
+		INSERT 
+		INTO salesorder( 
+		  OrderNumber
+		  , ContractId
+		  , CustomerId
+		  , CustomerAlias
+		  , Address
+		  , Contacts
+		  , Telephone
+		  , OrderState
+		  , SalesCompanyId
+		  , UserInfoId
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{OrderNumber}
+		  , #{ContractId}
+		  , #{CustomerId}
+		  , #{CustomerAlias}
+		  , #{Address}
+		  , #{Contacts}
+		  , #{Telephone}
+		  , #{OrderState}
+		  , #{SalesCompanyId}
+		  , #{UserInfoId}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 	
+	</insert>
+	
+	<!-- 销售订单表插入 -->
+	<insert id="addSalesOrders" parameterType="map">
+		INSERT 
+		INTO salesorder( 
+		  OrderNumber
+		  , ContractId
+		  , CustomerId
+		  , CustomerAlias
+		  , Address
+		  , Contacts
+		  , Telephone
+		  , OrderState
+		  , SalesCompanyId
+		  , UserInfoId
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{orderNumber}
+		  , #{contractId}
+		  , #{customerId}
+		  , #{customerAlias}
+		  , #{address}
+		  , #{contacts}
+		  , #{telephone}
+		  , #{orderState}
+		  , #{salesCompanyId}
+		  , #{userInfoId}
+		  , #{remarks}
+		  , 0
+		  , #{creater}
+		  , NOW()
+		) 	
+	</insert>
+	
+	<!-- 取得刚插入销售订单表的id -->
+	<select id="getSalesOrderId" parameterType="String" resultType="int">
+		select
+		  max(id) as id
+		from
+		  salesorder 
+		where
+		  Creater = #{Creater}
+	</select>
+	<!-- 销售订单明细表插入 -->
+	<insert id="insertSalesOrdersDetailed" parameterType="SalesOrdersDetailedEntity">
+		INSERT 
+		INTO salesorderdetailed( 
+		  SalesOrderId
+		  , MaterielId
+		  , OrderDetailedNumber
+		  , ExchangeMaterielId
+		  , AsphaltContent
+		  , AsphaltContentExchange
+		  , ListModel
+		  , UnitPrice
+		  , SaleNumber
+		  , SalePrice
+		  , SaleMoney
+		  , TransportBalance
+		  , ExpectedDeliveryDate
+		  , TaxRate
+		  , Remarks
+		  , IsCancel
+		  , IsActualDelivery
+		  , IsExchange
+		  , Proportion
+		  , ExchangeWeight
+		  , CancelPerson
+		  , CancelDate
+		<!--   ,	StartAddress -->
+		  , Transports
+		  , Distance
+		  , Mileage
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{SalesOrderId}
+		  , #{MaterielId}
+		  , #{OrderDetailedNumber}
+		  , #{ExchangeMaterielId}
+		  , #{AsphaltContent}
+		  , #{AsphaltContentExchange}
+		  , #{ListModel}
+		  , #{UnitPrice}
+		  , #{SaleNumber}
+		  , #{SalePrice}
+		  , #{SaleMoney}
+		  , #{TransportBalance}
+		  , #{ExpectedDeliveryDate}
+		  , #{TaxRate}
+		  , #{Remarks}
+		  , #{IsCancel}
+		  , #{IsActualDelivery}
+		  , #{IsExchange}
+		  , #{Proportion}
+		  , #{ExchangeWeight}
+		  , #{CancelPerson}
+		  , NOW()
+		<!--   ,	#{StartAddress} -->
+		  , #{Transports}
+		  , #{Distance}
+		  , #{Mileage}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 	
+	</insert>
+	
+	<!-- 销售订单明细表插入 -->
+	<insert id="addSalesOrdersDetailed" parameterType="map">
+		INSERT 
+		INTO salesorderdetailed( 
+		  SalesOrderId
+		  , MaterielId
+		  , OrderDetailedNumber
+		  , ExchangeMaterielId
+		  , ListModel
+		  , UnitPrice
+		  , SaleNumber
+		  , SalePrice
+		  , SaleMoney
+		  , TransportBalance
+		  , ExpectedDeliveryDate
+		  , TaxRate
+		  , Remarks
+		  , IsCancel
+		  , IsActualDelivery
+		  , IsExchange
+		  , Proportion
+		  , ExchangeWeight
+		  , CancelPerson
+		  , CancelDate
+		<!--   ,	StartAddress -->
+		  , Transports
+		  , Distance
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{salesOrderId}
+		  , #{materielId}
+		  , #{orderDetailedNumber}
+		  , #{exchangeMaterielId}
+		  , #{listModel}
+		  , #{unitPrice}
+		  , #{saleNumber}
+		  , #{salePrice}
+		  , #{saleMoney}
+		  , #{transportBalance}
+		  , #{expectedDeliveryDate}
+		  , #{taxRate}
+		  , #{remarks}
+		  , #{isCancel}
+		  , #{isActualDelivery}
+		  , #{isExchange}
+		  , #{proportion}
+		  , #{exchangeWeight}
+		  , #{cancelPerson}
+		  , NOW()
+		<!--   ,	#{StartAddress} -->
+		  , #{transports}
+		  , #{distance}
+		  , 0
+		  , #{userId}
+		  , NOW()
+		) 	
+	</insert>
+	
+	<!-- 销售明细表更新 -->
+	<update id="updateSalesOrdersDetailed" parameterType="SalesOrdersDetailedEntity">
+		UPDATE salesorderdetailed 
+		SET
+		  MaterielId = #{MaterielId}
+		  , OrderDetailedNumber = #{OrderDetailedNumber}
+		  , ExchangeMaterielId = #{ExchangeMaterielId}
+		  , AsphaltContent = #{AsphaltContent}
+		  , AsphaltContentExchange = #{AsphaltContentExchange}
+		  , ListModel = #{ListModel}
+		  , UnitPrice = #{UnitPrice}
+		  , SaleNumber = #{SaleNumber}
+		  , SalePrice = #{SalePrice}
+		  , SaleMoney = #{SaleMoney}
+		  , TransportBalance = #{TransportBalance}
+		  , ExpectedDeliveryDate = #{ExpectedDeliveryDate}
+		  , TaxRate = #{TaxRate}
+		  , Remarks = #{Remarks}
+		  , IsCancel = #{IsCancel}
+		  , IsActualDelivery = #{IsActualDelivery}
+		  , IsExchange = #{IsExchange}
+		  , Proportion = #{Proportion}
+		  , ExchangeWeight = #{ExchangeWeight}
+		  , CancelPerson = #{CancelPerson}
+		  , CancelDate = NOW()
+		 <!--  ,	StartAddress = #{StartAddress} -->
+		  , Transports = #{Transports}
+		  , Distance = #{Distance}
+		  , Mileage = #{Mileage}
+		  , IsDel = 0
+		  , Creater = #{Creater}
+		  , CreaterDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	
+	<!-- 销售订单表更新 -->
+	<update id="updateSalesOrdersInfo" parameterType="SalesOrdersInfoEntity">
+		UPDATE salesorder 
+		SET
+		  OrderNumber = #{OrderNumber}
+		  , ContractId = #{ContractId}
+		  , CustomerId = #{CustomerId}
+		  , CustomerAlias = #{CustomerAlias}
+		  , Address = #{Address}
+		  , Contacts = #{Contacts}
+		  , Telephone = #{Telephone}
+		  , OrderState = #{OrderState}
+		  , CancellationCause = #{CancellationCause}
+		  , SalesCompanyId = #{SalesCompanyId}
+		  , UserInfoId = #{UserInfoId}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Creater}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 销售订单明细更新删除 -->
+	<delete id="deleteSalesOrdersDetailed" parameterType="String">
+		delete 
+		from
+		  salesorderdetailed 
+		WHERE
+		  SalesOrderId = #{Id}
+		  and IsDel = 0
+	</delete>
+	
+	<!-- 销售订单作废 -->
+	<update id="updateOrderState" parameterType="SalesOrdersInfoEntity">
+		UPDATE salesorder 
+		SET
+		  OrderState = '3'
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		  , CancellationCause = #{CancellationCause}
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 销售订单删除 -->
+	<update id="updateIsDelSalesOrdersInfo" parameterType="String">
+		UPDATE salesorder 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 销售订单明细删除 (删除所有)-->
+	<update id="updateIsDelSalesOrdersDetailed" parameterType="String">
+		UPDATE salesorderdetailed 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW() 
+		WHERE
+		  SalesOrderId = #{Id} 
+	</update>
+	
+		<!-- 取得刚客户止运地信息 -->
+	<select id="getCustomertransportsById" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  	Id,
+			customerId,
+			startAddress,
+			transports,
+			distance 
+		from
+		  customertransports 
+		where
+		  Id = #{id}
+		  <if test="startAddress!=null and startAddress!=''">
+		  and StartAddress = #{startAddress}
+		  </if>	
+		  		  <if test="transports!=null and transports!=''">
+		  and Transports = #{transports}
+		  </if>	
+	</select>
+	
+	<!-- 销售订单明细删除 (删除指定)-->
+	<update id="updateIsDelSalesOrdersDetailedByOrderDetailedNumber" parameterType="String">
+		UPDATE salesorderdetailed 
+		SET
+		  IsDel = 1
+		  , ReviserDate = NOW() 
+		WHERE
+		  OrderDetailedNumber = #{orderDetailedNumber} 
+	</update>
+		
+	<!-- 删除订单明细验证 -->
+	<select id="isDelOrderDetailedNumber" parameterType="String" resultType="int">
+		SELECT
+		  count(*) as count
+		FROM
+		  exportMeasure s                                 -- 调度出库表
+		  left join salesorder t                          -- 销售订单表
+		    on s.SalesOrderId = t.Id                      -- 销售订单id
+		  left join salesorderdetailed t1                 -- 销售订单明细表
+		    on s.OrderDetailedId = t1.Id 
+		where
+		  s.IsDel = 0
+		<if test="orderDetailedNumber!=null and orderDetailedNumber!=''">
+			and t1.OrderDetailedNumber =  #{orderDetailedNumber}
+	    </if>
+	</select>
+</mapper>

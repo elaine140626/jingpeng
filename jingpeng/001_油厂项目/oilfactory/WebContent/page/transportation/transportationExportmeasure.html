@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../DataTables/datatables.css" /></link>
+		<script type="text/javascript" src="../../js/oilfactory/transportation/transportationExportmeasure.js"></script>
+		<title>瑞德公路管理系统</title>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#addBtn').fancybox({
+					'href': 'transportationExportmeasureAddOrUpdate.html',
+					'width': 1680,
+					'height': 650,
+					'type': 'iframe',
+					'hideOnOverlayClick': false,
+					'showCloseButton': false,
+					'onClosed': function() {
+						window.location.href = 'transportation.html';
+					}
+				})
+				$("#search").on({
+					"click": function(e){
+						search();
+					}
+				});
+			});
+			
+		</script>
+		<style type="text/css">
+			#main {
+				position: absolute;
+				top: 70px;
+				left: 0px;
+				right: 30px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+							.dataTables_scrollBody{
+		height: 600px
+	}
+			.ui_input_txt02 {
+				width: 130px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="main">
+					<div id="top_nav">
+						<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;运输管理&nbsp;>&nbsp;<span style="color:#1A5CC6">运输单</span></span>
+					</div>
+					<div class="ui_tb">
+						<div id="box_border">
+							<div id="box_top">运输单</div>
+							<div id="box_center" style="padding-left: 20px;overflow: hidden;">
+							按单据编号查询：&nbsp;&nbsp;
+								<input type="text" id="freibillNumber" style="width: 170px;" value="" class="ui_input_txt01" />
+							按车牌号查询：&nbsp;&nbsp;
+								<input type="text" id="freplateNumber" style="width: 170px;" value="" class="ui_input_txt01" />
+								<input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" id="search" />
+								<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="新增运输单" class="ui_input_btnadd" id="addBtn">
+							</div>
+							<div>
+								<table id="tranSportList" style="width: 100%;" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+								<thead>
+									<tr>
+										<th class="xuhao">序号</th>
+										<th width="80px" class="caozuo">操作</th>
+										<th class="hetongbianhao">单据编号</th>
+										<th class="kehumingcheng">出库时间</th>
+										<th class="kehumingcheng">止运地</th>
+										<th class="xiaoshouyuan">车牌号</th>
+										<th class="xiaoshouyuan">司机</th>
+										<th class="xuhao">状态</th>
+										<th class="dianhua">联系方式</th>
+										<th class="beizhu">备注</th>
+									</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>	
+					</div>
+				</div>
+				</div>
+		</form>
+
+	</body>
+
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/upload/upload.js"></script>
+		<script type="text/javascript" src="../../js/jquery-upload-file/js/jquery.uploadfile.js"></script>
+		<script type="text/javascript" src="../../js/jquery-upload-file/ajaxfileupload.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script src="../../js/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/Purchase/purchase_edit.js"></script>	
+		<title>瑞德公路管理系统</title>
+<!-- 		<script>
+			//执行一个laydate实例
+			laydate.render({
+			  elem: '#ContractDate' //指定元素
+		      ,format: 'yyyy-MM-dd'
+			});
+	    </script> -->
+		<style type="text/css">
+		/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				#sider {
+					position: absolute;
+					top: 40px;
+					height: 200px;
+					/*width: 400px;*/
+					left: 5px;
+					right: 5px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				
+				#main {
+					position: absolute;
+					top: 245px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				#sider {
+					position: absolute;
+					top: 70px;
+					height: 130px;
+					/*width: 400px;*/
+					left: 25px;
+					right: 25px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				
+				#main {
+					position: absolute;
+					top: 205px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+			}
+			.box_border {
+				/* position: absolute; */
+				bottom: 10px;
+				/* overflow-y: auto; */
+				height: 255px;
+				/* left: 0;
+				right: 0;
+				top: 0px; */
+			}
+			#box_border {
+			    border: none;	
+			    height: 255px;
+				overflow: auto;	    
+			}
+			tr {
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.ui_text_rt {
+				text-align: left;
+				padding-left: 0px;
+			}
+			
+			.rtTop {
+				vertical-align: top;
+			}
+			
+			.row {
+				margin: 0 15px;
+			}
+			
+			.newLine {
+				padding: 5px 0;
+			}
+			
+			.ui_input_txt02,
+			.ui_select01,
+			.ui_area01 {
+				margin-left: -20px;
+				padding-left: 5px;
+			}
+			
+			.ui_input_txt {
+				margin-left: 0;
+				margin-top: 4px;
+			}
+			.table tr td select{
+				width:80%;
+				border-radius:2px;
+			}
+			.table tr td input{
+				width:92%;
+			}
+			.table tr td select.half_select {
+				width:40%;
+			}
+			.table tr td input.harf_input {
+				width:40%;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="top_nav">
+					<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;合同管理&nbsp;>&nbsp;采购合同管理&nbsp;>&nbsp;<span style="color:#1A5CC6">采购合同</span></span>
+				</div>
+				<div id="sider">
+					<div id="ContractNumberFlag"  class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4  col-sm-4">合同编号：</div>
+						<input type="text" value="" style="background:#CCCCCC" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" id="ContractNumber" name="ContractNumber" maxlength="32"/>
+						<span style="color:red;">*</span>
+					</div>
+					<!-- <div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">采购申请单编号：</div>
+						<input  name="PurchaseOrderId" style="width:246px;" id="PurchaseOrderId" onchange="changePurchaseOrder(this)" list="PurchaseOrderIdList" type='text' />
+						<dataList id="PurchaseOrderIdList" class='ui_input_txt02' style='padding: 0;'>
+						</dataList> 
+						<span style="color:red;">*</span>
+					</div> -->
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">采购合同状态：</div>
+						<select id="ContractState" name="ContractState" class="ui_select01 col-lg-8 col-sm-8">
+						</select>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">合同日期：</div>
+						<input type="text" class="ui_input_txt02 col-lg-8 col-sm-8" readonly="readonly"
+						 id="date" name="date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+						<span style="color:red;">*</span>
+					</div>
+				
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">供应商名称：</div>
+						<select id="SupplierId" name="SupplierId" class="ui_select01 col-lg-8 col-sm-8" onchange="onchangeSupplier(this.value)">
+						</select>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">供应商联系人：</div>
+						<input type="text" value="" style="background:#CCCCCC" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" id="Contacts" name="Contacts" maxlength="32"/>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">联系人电话：</div>
+						<input type="text" value="" style="background:#CCCCCC" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" id="Telephone" name="Telephone" maxlength="32"/>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">运费结算情况：</div>
+						<select id="FreightBalance" name="FreightBalance" class="ui_select01 col-lg-8 col-sm-8" onchange="onchangeFreightBalance(this)">
+						<option value="-1">--请选择--</option>
+						<option value="0">我方</option>
+						<option value="1">对方</option>
+						<option value="2">对方代垫</option>
+						</select>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">备注：</div>
+						<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="remarks" name="remarks" maxlength="200"/>
+					</div>
+						<div class="col-lg-3 col-sm-6 newLine " style='height: 26px;'>
+						<div class="ui_text_rt col-lg-3 col-sm-3">附件上传：</div>
+						<table class="col-lg-9 col-sm-9">
+							<tr>
+								 <td id="upfile" style="text-align:center;">
+					 				<span id="upShow" style=";text-align:center;display:block;">
+					 					<input type="file" id="myBlogImage" name="myfiles"/>
+					 				</span>
+					 				<span id="upSelectShow" style="display:none;text-align:center;">
+					 					<a id="fileShow" style="margin-left: -200px;\"></a>
+					 					<a type="button" value="下载" id="downloadBtn" onclick="downloadFile(this)">
+					 						<img src="../../img/common/download.png" width="20" height="20" alt="下载" title="下载">
+					 					</a>
+					 					<a type="button" value="删除" id="deleteBtn"  onclick="deleteFile(this)">
+					 						<img src="../../img/common/del.png" width="20" height="20" alt="删除" title="删除">
+					 					</a>
+					 						<input type="hidden" id="files" value="" name="transportRoute"/>
+					 				</span>
+					 			</td>
+							</tr>
+						</table>
+					</div>
+					
+					<div  id="ExpectMoneyIsShow" class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">预计运费金额：</div>
+						<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" onkeyup='checkPrice(this)' id="ExpectMoney" name="ExpectMoney" maxlength="9"/>
+						<span style="color:red;">*</span>
+					</div>
+				</div>
+				<div id="main">
+					<div class="ui_tb" id="details1" style="display: block;    height: 400px;">
+						<div id="box_border" style="height: 380px;">
+							<div class="box_border">
+								<table id="tableList" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+									<tr>
+										<th>序号</th>
+										<th>操作</th>
+										<th>合同明细流水号</th>
+										<th>采购申请流水号</th>
+										<th>货物名称</th>
+										<th>规格型号</th>
+										<th>单位</th>
+										<th>物料类别</th>
+										<th>预计数量</th>
+										<th>预计到货时间</th>
+										<th>单价(元)</th>	
+										<th width="70px">税率(%)</th>
+										<th>金额(元)</th>
+										<th>备注</th>
+									</tr>								
+								</table>
+								<div style="width: 100%;text-align: center;">
+									<input type="button" value="再添加一条" class="ui_input_btnadd " onclick="addTable()"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div>
+						<input type="button" value="保存" class="ui_input_btnsave " onclick="save()"/>
+						<input type="button" value="关闭" onclick="location.href='purchase.html'" class="ui_input_btnclose" />
+					</div>
+				</div>
+			</div>
+		</form>
+
+	</body>
+
+</html>

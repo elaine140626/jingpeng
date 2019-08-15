@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			#sider,
+			#main,
+			#return {
+				position: relative;
+				top: 70px;
+				left: 25px;
+				right: 25px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			
+			.box_border {
+				position: absolute;
+				bottom: 10px;
+				overflow-y: auto;
+				left: 0;
+				right: 0;
+				top: 0px;
+			}
+			
+			tr {
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.ui_text_rt {
+				text-align: right;
+				padding-left: 0px;
+			}
+			
+			.rtTop {
+				vertical-align: top;
+			}
+			
+			.row {
+				margin: 0 15px;
+			}
+			
+			.newLine {
+				padding: 5px 0;
+			}
+			
+			.ui_input_txt02,
+			.ui_select01,
+			.ui_area01 {
+				margin-left: -10px;
+				padding-left: 5px;
+			}
+			
+			.ui_input_txt {
+				margin-left: 0;
+				margin-top: 4px;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				//status 状态   1 整车调拨   2 半车调拨  3 退货
+				var status = URL_Request('status');
+				if(status == 1) {
+					$('#sider').show();
+					$('#main').hide();
+					$('#return').hide();
+				} else if(status == 2) {
+					$('#sider').hide();
+					$('#main').show();
+					$('#return').hide();
+				} else if(status == 3) {
+					$('#sider').hide();
+					$('#main').hide();
+					$('#return').show();
+				}
+				console.log(status);
+			})
+			//截取url中参数的值
+			function URL_Request(strName) {
+				var strHref = document.location.toString();
+				var intPos = strHref.indexOf("?");
+				var strRight = strHref.substr(intPos + 1); //==========获取到右边的参数部分
+				var arrTmp = strRight.split("&"); //=============以&分割成数组
+
+				for(var i = 0; i < arrTmp.length; i++) //===========循环数组
+				{
+					var dIntPos = arrTmp[i].indexOf("=");
+					var paraName = arrTmp[i].substr(0, dIntPos);
+					var paraData = arrTmp[i].substr(dIntPos + 1);
+					if(paraName.toUpperCase() == strName.toUpperCase()) {
+						return paraData;
+					}
+				}
+				return "";
+			}
+		</script>
+
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;销售管理&nbsp;>&nbsp;销售出库单&nbsp;>&nbsp;<span style="color:#1A5CC6">详情</span></span>
+			</div>
+			<div id="sider">
+				<div id="box_top">整车调拨出库单 <input type="button" value="关闭" onclick="location.href='outlist.html'" class="ui_input_btnclose " /></div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售订单编号：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">12321323123</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售公司名称：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">是</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">客户名称：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">XXXXX公司</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">客户别称：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">拌合站</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">车牌号码：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">辽A-cs123</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">车主：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">XXX</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">车主联系方式：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">13405968676</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">物料名称/型号：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">沥青/110</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">磅单打印物料名称：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">1222</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">磅单输出名称：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">3000</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">收货人：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">XXX</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">收货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">13405968676</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">收货地址：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">辽宁省沈阳市和平区XXXX</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">是否大车称重：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">是</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">送货人：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">XXX</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">送货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">13405968676</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">备注：</div>
+						<div class="ui_text_rt col-lg-8 col-sm-8">无</div>
+					</div>
+			</div>
+			<div id="main">
+				<div id="box_top">半车调拨出库单 <input type="button" value="关闭" onclick="location.href='outlist.html'" class="ui_input_btnclose " /></div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">销售订单编号：</div>
+						<div class="ui_text_rt col-lg-8">12321323123</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">销售公司名称：</div>
+						<div class="ui_text_rt col-lg-8">是</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">客户名称：</div>
+						<div class="ui_text_rt col-lg-8">XXXXX公司</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">客户别称：</div>
+						<div class="ui_text_rt col-lg-8">拌合站</div>
+					</div>
+
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车牌号码：</div>
+						<div class="ui_text_rt col-lg-8">辽A-cs123</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车主：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车主联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">物料名称/型号：</div>
+						<div class="ui_text_rt col-lg-8">沥青/110</div>
+					</div>
+
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">磅单打印物料名称：</div>
+						<div class="ui_text_rt col-lg-8">1222</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">磅单输出名称：</div>
+						<div class="ui_text_rt col-lg-8">3000</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">收货人：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">收货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+
+				</div>
+
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">收货地址：</div>
+						<div class="ui_text_rt col-lg-8">辽宁省沈阳市和平区XXXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">是否大车称重：</div>
+						<div class="ui_text_rt col-lg-8">是</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">送货人：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">送货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">备注：</div>
+						<div class="ui_text_rt col-lg-8">无</div>
+					</div>
+				</div>
+				<div id="box_top">半车调拨未称重出库单</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">销售订单编号：</div>
+						<div class="ui_text_rt col-lg-8">12321323123</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">客户名称：</div>
+						<div class="ui_text_rt col-lg-8">XXXXX公司</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">客户别称：</div>
+						<div class="ui_text_rt col-lg-8">拌合站</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">是否随车带走：</div>
+						<div class="ui_text_rt col-lg-8">是</div>
+					</div>
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车牌号码：</div>
+						<div class="ui_text_rt col-lg-8">辽A-cs123</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车主：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车主联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">结算情况：</div>
+						<div class="ui_text_rt col-lg-8">我方垫付</div>
+					</div>
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">销售数量：</div>
+						<div class="ui_text_rt col-lg-8">1222</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">销售单价：</div>
+						<div class="ui_text_rt col-lg-8">3000</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">销售金额：</div>
+						<div class="ui_text_rt col-lg-8">120000</div>
+					</div>
+
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">物料名称/型号：</div>
+						<div class="ui_text_rt col-lg-8">沥青/110</div>
+					</div>
+				</div>
+
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">收货人：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">收货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">收货地址：</div>
+						<div class="ui_text_rt col-lg-8">辽宁省沈阳市和平区XXXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">税率：</div>
+						<div class="ui_text_rt col-lg-8">0.05%</div>
+					</div>
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">送货人：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">送货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">备注：</div>
+						<div class="ui_text_rt col-lg-8">无</div>
+					</div>
+				</div>
+			</div>
+			<div id="return">
+				<div id="box_top">退货单 <input type="button" value="关闭" onclick="location.href='outlist.html'" class="ui_input_btnclose " /></div>
+				<div class="row newLine">
+
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">客户名称：</div>
+						<div class="ui_text_rt col-lg-8">XXXXX公司</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">客户别称：</div>
+						<div class="ui_text_rt col-lg-8">拌合站</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">结算重量：</div>
+						<div class="ui_text_rt col-lg-8">23</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">退货重量：</div>
+						<div class="ui_text_rt col-lg-8">23</div>
+					</div>
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车牌号码：</div>
+						<div class="ui_text_rt col-lg-8">辽A-cs123</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车主：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">车主联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">物料名称/型号：</div>
+						<div class="ui_text_rt col-lg-8">沥青/110</div>
+					</div>
+
+				</div>
+				<div class="row newLine">
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">送货人：</div>
+						<div class="ui_text_rt col-lg-8">XXX</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">送货人联系方式：</div>
+						<div class="ui_text_rt col-lg-8">13405968676</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="ui_text_rt col-lg-4">备注：</div>
+						<div class="ui_text_rt col-lg-8">无</div>
+					</div>
+				</div>
+			</div>
+	</body>
+	<script type="text/javascript">
+		//tableList1下的 除了第一个
+		//给单元格注册鼠标点击事件
+		$("#tableList1 td").click(function() {
+			edit(this);
+		});
+		$('input[type=radio][name=radio]').change(function() {
+			if(this.value == '0') {
+
+			} else if(this.value == '1') {
+
+			}
+		});
+	</script>
+
+</html>

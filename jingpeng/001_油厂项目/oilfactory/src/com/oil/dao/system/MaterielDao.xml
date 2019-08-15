@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.MaterielDao">
+	<!-- 查询物料信息 -->
+	<select id="getMateriel" resultType="com.oil.model.system.MaterielInfo" parameterType="java.util.Map">
+		SELECT
+		  a.Id                                                          -- 物料id
+		  , a.MaterielNumber                                            -- 物料编号
+		  , a.MaterielName                                              -- 物料名称
+		  , a.MaterielModel                                             -- 物料型号
+		  , a.Unit                                                      -- 单位 
+		  , a.MaterielType                                              -- 物料类别
+		  , getContentByCode('1', a.MaterielType) AS MaterielTypeName   -- 物料类别名称
+		  , d.Id as WarehouseId                                         -- 仓库id
+		  , d.WarehouseName                                             -- 仓库名称
+		  , a.PrimeNumber                                               -- 初期数量
+		  , a.TaxMoney                                                  -- 期初含税金额
+		  , a.NoTaxMoney                                                -- 期初不含税金额
+		  , a.Remarks                                                   -- 备注
+		  , a.IsDel                                                     -- 删除标识：0：未删除  1：已删除
+		  , a.Creater                                                   -- 创建人
+		  , a.CreaterDate                                               -- 创建时间
+		  , a.Reviser                                                   -- 修改人
+		  , a.ReviserDate                                               -- 修改时间
+		FROM
+		  materielinfo a               -- 物料信息表
+		  LEFT JOIN WarehouseInfo d    -- 仓库信息表
+		    ON a.WarehouseId = d.Id 
+		    AND d.IsDel = 0 
+		WHERE
+		  a.IsDel = 0
+		<if test="id != null and id != 0">
+			and a.Id = #{id}
+		</if>
+		<if test="warehouseId != null and warehouseId != 0">
+			and a.WarehouseId = #{warehouseId}
+		</if>
+		<if test="MaterielName != null and MaterielName != ''">
+			and a.MaterielName LIKE '%${MaterielName}%'
+		</if>
+		ORDER BY a.CreaterDate DESC
+	</select>
+	
+	<!-- 物料编号,物料名称,物料型号判断重复 -->
+	<select id="getAllMaterielNumber" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		  * 
+		from
+		  materielinfo -- 物料信息表
+		where
+		  IsDel = 0
+		<if test="materielNumber != null and materielNumber != ''">
+			and MaterielNumber = #{materielNumber}
+		</if>
+		<if test="materielName != null and materielName != ''">
+			and MaterielName = #{materielName}
+		</if>
+		<if test="materielModel != null and materielModel != ''">
+			and MaterielModel = #{materielModel}
+		</if>
+	</select>
+	
+	<!-- 删除校验查询 -->
+	<select id="getAllContractdetailed" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		   *
+		from
+		  contractinfo c               -- 合同信息表
+		left join contractdetailed cd  -- 合同明细表
+		on c.Id = cd.ContractId
+		and cd.IsDel = 0
+		where c.IsDel = 0
+		<if test="materielId != null and materielId != 0">
+			and cd.MaterielId = #{materielId}
+		</if>
+	</select>
+	
+	<!-- 删除物料信息 -->
+	<update id="delMaterielById" parameterType="int">
+		UPDATE materielinfo SET IsDel = 1 WHERE id = #{id}
+	</update>
+	
+	<!--添加物料信息 -->
+	<insert id="addMateriel" parameterType="com.oil.model.system.MaterielInfo">
+		insert 
+		into materielinfo( 
+		  MaterielNumber
+		  , MaterielName
+		  , MaterielModel
+		  , MaterielType
+		  , Unit
+		  , WarehouseId
+		  , Remarks
+		  , PrimeNumber
+		  , TaxMoney
+		  , NoTaxMoney
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		values ( 
+		   #{MaterielNumber}
+		  , #{MaterielName}
+		  , #{MaterielModel}
+		  , #{MaterielType}
+		  , #{Unit}
+		  , #{WarehouseId}
+		  , #{Remarks}
+		  , #{PrimeNumber}
+		  , #{TaxMoney}
+		  , #{NoTaxMoney}
+		  , 0
+		  , #{Creater}
+		  , now()
+		)
+	</insert>
+	
+	<!--修改物料信息 -->
+	<update id="updateMateriel" parameterType="com.oil.model.system.MaterielInfo">
+		update materielinfo 
+		set
+		  MaterielNumber = #{materielNumber}
+		  , MaterielName = #{materielName}
+		  , MaterielModel = #{materielModel}
+		  , MaterielType = #{materielType}
+		  , Unit = #{unit}
+		  , WarehouseId = #{warehouseId}
+		  , Remarks = #{remarks}
+		  , PrimeNumber = #{primeNumber}
+		  , TaxMoney = #{taxMoney}
+		  , NoTaxMoney = #{noTaxMoney} 
+		  , Reviser = #{reviser}
+		  , ReviserDate = now()
+		WHERE
+		  id = #{id}
+	</update>
+
+	<!-- 查询仓库名称 -->
+	<select id="getWarehouseInfo" parameterType="java.util.Map" resultType="WarehouseInfo">
+		SELECT
+		  a.Id
+		  , a.WarehouseName   -- 仓库名称
+		FROM
+		  WarehouseInfo a     -- 仓库信息表   
+		WHERE
+		 a.IsDel = 0
+		<if test="id != null and id != ''">
+		   and a.id IN ( 
+			    SELECT distinct
+			      WarehouseId    -- 仓库信息id
+			    FROM
+			      materielinfo b -- 物料信息表
+			    WHERE
+			      b.IsDel = 0
+			  ) 
+			and a.WarehouseType = 7     -- 油罐
+			and a.Id = #{id}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/system/warehouse_information_edit.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: right;
+			}
+			
+			.ui_text_lt {
+				width: 60%;
+			}
+			
+			.ui_input_txt01 {
+				width: 45%;
+			}
+			
+			.ui_select01 {
+				width: 47%;
+				margin-left:2%;
+			}
+			
+			.text {
+				height: 80px;
+				resize: none
+			}
+		</style>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<input type="hidden" name="fyID" value="14458625716623" id="fyID" />
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					仓库信息
+				</div>
+				<div class="ui_content">
+					<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+						<tr>
+							<td class="ui_text_rt" width="80">仓库编号：</td>
+							<td class="ui_text_lt">
+								<input id="warehouseNumber"  onkeyup="value=value.replace(/[\W]/g,'')" onchange="onchangeWarehouseNumber(this)" type="text" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">仓库名称：</td>
+							<td class="ui_text_lt">
+								<input id="warehouseName" type="text" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">类别：</td>
+							<td class="ui_text_lt">
+								<select class="ui_input_txt01 " id="type" style="padding: 0;" onchange="ShowIsHide()">
+									<option value="6">仓库</option>
+									<option value="7">储罐</option>
+								</select>
+							</td>
+						</tr>
+						<tr class="isShowHouse">
+							<td class="ui_text_rt">仓库存储类别：</td>
+							<td class="ui_text_lt">
+								<select class="ui_input_txt01 " id="warehouseType" style="padding: 0;">
+									<option value="-1">请选择</option>
+								</select><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr class="isShow">
+							<td class="ui_text_rt">储罐高：</td>
+							<td>
+								<input type="text" id="tankHeight" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr class="isShow">
+							<td class="ui_text_rt">罐容：</td>
+							<td>
+								<input type="text" id="tankCapacity" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr class="isShow">
+							<td class="ui_text_rt">位置：</td>
+							<td>
+								<input type="text" id="position" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr class="isShow">
+							<td class="ui_text_rt">液体高度：</td>
+							<td>
+								<input type="text" id="liquidHeight" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr class="isShow">
+							<td class="ui_text_rt">储罐预警最低高度：</td>
+							<td>
+								<input type="text" id="alarmLow" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr class="isShow">
+							<td class="ui_text_rt">储罐预警最高高度：</td>
+							<td>
+								<input type="text" id="alarmHigh" value="" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">备注：</td>
+							<td class="ui_text_lt">
+								<textarea name="" rows="5" cols="5" id="remarks" class="ui_input_txt01 text"></textarea>
+							</td>
+						</tr>
+						<tr id="continuityTr" style="display:block;">
+							<td class="ui_text_rt">是否连续添加:<input type="checkbox" id="continuityAdd"/> </td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td class="ui_text_lt">
+								&nbsp;<input id="submitbutton" type="button" value="保存" onclick="addWareHouse()" class="ui_input_btnsave" /> &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

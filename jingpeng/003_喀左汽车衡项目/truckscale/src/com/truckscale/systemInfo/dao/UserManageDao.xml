@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.systemInfo.dao.UserManageDao">
+	<!-- 获取用户信息  -->
+	<select id="getUserInfo" parameterType="java.util.Map" resultType="com.truckscale.systemInfo.model.UserManageEntity">
+		 SELECT
+			  Id
+			  , UserName
+			  , PassWord
+			  , RoleCode
+			  , Name
+			  , Age
+			  , Sex
+			  , Birthday
+			  , Address
+			  , Telephone
+			  , UserPost
+			  , UserState
+			  , OtherNumbers
+			  , Remarks
+			  , IsDel
+			  , Creater
+			  , CreaterDate
+			  , Reviser
+			  , ReviserDate
+			FROM
+			  truckscale.userinfo 
+			WHERE 1=1  and IsDel = 0 
+		<if test="id != null and id != ''">
+		  	and Id = #{id}
+		 </if>
+		 <if test="userName != null and userName != ''">
+		  	and UserName = #{userName}
+		 </if>
+		 <if test="passWord != null and passWord != ''">
+		  	and PassWord = #{passWord}
+		  </if>
+	</select>
+
+	<!-- 添加用户信息  -->
+	<insert id="insertUserInfo" parameterType="com.truckscale.systemInfo.model.UserManageEntity">
+					INSERT 
+			INTO truckscale.userinfo( 
+			  UserName
+			  , PassWord
+			  , RoleCode
+			  , Name
+			  , Age
+			  , Sex
+			  , Birthday
+			  , Address
+			  , Telephone
+			  , UserPost
+			  , UserState
+			  , OtherNumbers
+			  , Remarks
+			  , IsDel
+			  , Creater
+			  , CreaterDate
+			) 
+			VALUES ( 
+			  #{UserName}
+			  , '111111'
+			  , #{RoleCode}
+			  , #{Name}
+			  , #{Age}
+			  , #{Sex}
+			  , #{Birthday}
+			  , #{Address}
+			  , #{Telephone}
+			  , #{UserPost}
+			  , #{UserState}
+			  , #{OtherNumbers}
+			  , #{Remarks}
+			  , 0
+			  , #{Creater}
+			  , NOW() 
+			) 
+	</insert>
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo" parameterType="com.truckscale.systemInfo.model.UserManageEntity">
+			UPDATE userinfo 
+			SET
+			  PassWord = #{PassWord}
+			  , RoleCode = #{RoleCode}
+			  , Name = #{Name}
+			  , Age = #{Age}
+			  , Sex = #{Sex}
+			  , Birthday = #{Birthday}
+			  , Address = #{Address}
+			  , Telephone = #{Telephone}
+			  , UserPost = #{UserPost}
+			  , UserState = #{UserState}
+			  , OtherNumbers = #{OtherNumbers}
+			  , Remarks = #{Remarks}
+			  , Reviser = #{Reviser}
+			  , ReviserDate = NOW() 
+			WHERE
+			  Id = #{Id}
+	</update>
+
+	<!-- 删除用户信息  -->
+	<update id="deleteUserInfo" parameterType="java.util.Map">
+		UPDATE truckscale.userinfo
+		SET
+		    IsDel = 1               -- 删除标识
+		    ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 重置用户密码 -->
+	<update id="updatePassWord" parameterType="java.util.Map">
+		UPDATE truckscale.userinfo
+		SET
+		     PassWord = '111111'
+		    ,Reviser = #{Reviser}               
+		    ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 修改用户密码 -->
+	<update id="updatePass" parameterType="java.util.Map">
+	UPDATE truckscale.userinfo
+		SET
+		     PassWord = #{password}
+		    ,Reviser = #{Reviser}               
+		    ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>	
+</mapper>

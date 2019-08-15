@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>瑞德公路管理系统</title>
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+	<link rel="stylesheet" href="../../css/sweet-alert.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+	<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+	<link href="../../css/resister.css" rel="stylesheet" type="text/css">
+	<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../js/oilfactory/user/register.js"></script>
+	<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+	<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+	<script type="text/javascript" src="../../js/MD5/md5.js"></script>
+	<script src="../../js/js/My97DatePicker/WdatePicker.js"></script>
+	<script>
+		//执行一个laydate实例
+/* 		laydate.render({
+		  elem: '#birthday' //指定元素
+	      ,format: 'yyyy-MM-dd'
+		}); */
+   </script>
+</head>
+<body>
+<div>
+	<div id="nav_links">
+		用户注册信息
+	</div>
+	<form id="form" method="post">
+		<div>
+			<div><label>用户名：</label><input type="text" name="username" id="username" onKeyUp="value=value.replace(/[\W]/g,'')" onchange="changeUserName(this.value);" maxlength="18"/><span style="color:red;">  *</span></div>
+		</div>
+		<div>
+			<div><label>密码：</label>
+			<input type="password" name="password" id="password"  onkeyup="value=value.replace(/[^\w\.\/]/ig,'');" onchange="changePassWord(this.value);" maxlength="128"/><span style="color:red;">  *(密码必须是6位以上的数字、字母、符号组合)</span></div>
+		</div>
+		<div>
+			<div><label>确认密码：</label>
+			<input type="password" name="confirmPw" id="confirmPw" onchange="changeConfirmPw(this.value);" maxlength="128"/><span style="color:red;">  *</span></div>
+		</div>
+		<div>
+			<div><label>用户权限：</label>
+				<input name="rolecode" type="checkbox" value='0' /> 管理员 
+				<input name="rolecode" type="checkbox" value='1' /> 销售员 
+				<input name="rolecode" type="checkbox" value='2' /> 销售总监
+				<input name="rolecode" type="checkbox" value='3' /> 调度员 
+				<input name="rolecode" type="checkbox" value='4' /> 质检员
+		    </div>
+		</div>
+		<div>
+			<div><label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				<input name="rolecode" type="checkbox" value='5' /> 质检主任
+				<input name="rolecode" type="checkbox" value='6' /> 财务
+			    <input name="rolecode" type="checkbox" value='7' /> 总经理
+			    <input name="rolecode" type="checkbox" value='8' /> 库管
+	    		<input name="rolecode" type="checkbox" value='9' /> 生产部长
+		    </div>
+		</div>
+		<div>
+			<div><label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+				<input name="rolecode" type="checkbox" value='10' /> 生产副部长
+	    		<input name="rolecode" type="checkbox" value='11' /> 生产班长
+	    		<input name="rolecode" type="checkbox" value='12' /> 检斤员
+	    		<input name="rolecode" type="checkbox" value='13' /> 调度管理员
+		    </div>
+		</div>
+		<div>
+			<div><label>姓名：</label><input type="text" name="name" id="name" onchange="changeName(this.value);" maxlength="18"/><span style="color:red;">  *</span></div>
+		</div>
+		<div>
+			<div><label>性别：</label>
+			<input name="sex" type="radio" value='1' checked="checked" />男
+			<input name="sex" type="radio" value='0' />女</div>
+		</div>
+		<div>
+			<div><label>出生日期：</label><input type="text" onfocus="WdatePicker({lang:'cn'})" readonly="readonly" onchange="changeBirthday(this.value);" name="birthday" id="birthday" /><span style="color:red;">  *</span></div>
+		</div>
+		<div>
+			<div><label>年龄：</label><input onkeyup="onlyNumber(this);" style="background:#CCCCCC;"  readonly="readonly" onafterpaste="onlyNumberAfter(this);" type="text" name="age" id="age" /></div>
+		</div>
+		<div>
+			<div><label>联系电话：</label><input placeholder="请输入联系电话" type="text" name="telephone" id="telephone" onkeyup="value=value.replace(/[^\d-]/g,'')" maxlength="14"/><span style="color:red;">  *</span></div>
+		</div>
+		<div>
+			<div><label>其他联系方式：</label><input type="text" name="othernumbers" id="othernumbers" maxlength="14" onkeyup="value=value.replace(/[^\d-]/g,'')"/></div>
+		</div>
+		<div>
+			<div><label>地址：</label><input type="text" name="address" id="address" maxlength="100"/><span style="color:red;">  *</span></div>
+		</div>
+		<div id="btn_area">
+			<input type="button" class="login_btn" id="sure" value="注册" onclick="submitForm(form);">
+			<input type="button" class="login_btn" style="background:red;" id="sure" value="返回登录界面" onclick="outRegister();">
+		</div>
+	</form>
+</div>	
+</body>
+</html>

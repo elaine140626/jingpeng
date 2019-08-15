@@ -1,0 +1,11 @@
+
+{
+    "projectName":"国道集贤至当壁公路宝山至宝清段改扩建工程试验室信息化智能管控系统",
+    "projectItem":[
+
+    	{"itemName":"试验汇总","itemUrl":"test_summaryNew.html","clickCLass":"focus_b","class":"nav2"},
+    	{"itemName":"自动采集","itemUrl":"automatic_collection.html","clickCLass":"focus_e","class":"nav5"},
+    	{"itemName":"指标维护","itemUrl":"maintenance.html","clickCLass":"focus_e","class":"nav7"}
+    ]
+    
+}

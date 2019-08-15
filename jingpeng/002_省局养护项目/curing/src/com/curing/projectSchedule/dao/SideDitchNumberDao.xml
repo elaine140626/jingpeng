@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SideDitchNumberDao">
+	<!-- 工程进度（边沟工程数量表）List取得 -->
+	<select id="getSideDitchNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SideDitchNumberEntity">
+		SELECT
+		  sdn.Id
+		  , sdn.ProjectId                                 -- 项目id
+		  , sdn.PileNumber                                -- 起讫桩号
+		  , sdn.Position                                  -- 位置
+		  , sdn.Form                                      -- 形式
+		  , sdn.Length                                    -- 长度（m）
+		  , sdn.Foundation                                -- 挖基土方（m³）
+		  , sdn.Mortar                                    -- 10号砂浆抹面（㎡）
+		  , sdn.SandCushion                               -- 10cm砂垫层（m³）
+		  , sdn.Rubble                                    -- 7.5号浆砌片石（m³）
+		  , sdn.C20Concrete                               -- C20混凝土（m³）
+		  , sdn.CoverPlate                                -- 盖板（块）
+		  , sdn.EightRebar                                -- 8mm钢筋（Kg）
+		  , sdn.TwelveRebar                               -- 12mm钢筋（Kg）
+		  , sdn.C25Concrete                               -- C25混凝土（m³）
+		  , sdn.Remarks                                   -- 备注
+		  , sdn.IsDel
+		  , sdn.Creater
+		  , sdn.CreaterDate
+		  , sdn.Reviser
+		  , sdn.ReviserDate 
+		FROM
+		  SideDitchNumber as sdn 
+		  left join V_EntryTree as ve 
+		    on sdn.ProjectId = ve.pid
+		WHERE
+		  sdn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sdn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sdn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sdn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and sdn.Position  like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="form!=null and form!=''">
+		    and sdn.form like concat('%',#{form},'%') -- 根据建设性质查询
+		  </if>
+		  order by sdn.CreaterDate desc
+	</select>
+	
+	<select id="getSideDitchNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  sdn.PileNumber                                -- 起讫桩号
+		  , sdn.Position                                  -- 位置
+		  , sdn.Form                                      -- 形式
+		  , sdn.Length                                    -- 长度（m）
+		  , sdn.Foundation                                -- 挖基土方（m³）
+		  , sdn.Mortar                                    -- 10号砂浆抹面（㎡）
+		  , sdn.SandCushion                               -- 10cm砂垫层（m³）
+		  , sdn.Rubble                                    -- 7.5号浆砌片石（m³）
+		  , sdn.C20Concrete                               -- C20混凝土（m³）
+		  , sdn.CoverPlate                                -- 盖板（块）
+		  , sdn.EightRebar                                -- 8mm钢筋（Kg）
+		  , sdn.TwelveRebar                               -- 12mm钢筋（Kg）
+		  , sdn.C25Concrete                               -- C25混凝土（m³）
+		  , sdn.Remarks                                   -- 备注
+		FROM
+		  SideDitchNumber as sdn 
+		  left join V_EntryTree as ve 
+		    on sdn.ProjectId = ve.pid
+		WHERE
+		  sdn.IsDel = 0
+		  order by sdn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（边沟工程数量表）合计 -->
+	<select id="getSideDitchNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SideDitchNumberSum">
+		SELECT
+		  sum(sdn.Length) as LengthSum                    -- 长度（m）
+		  , sum(sdn.Foundation) as FoundationSum          -- 挖基土方（m³）
+		  , sum(sdn.Mortar) as MortarSum                  -- 10号砂浆抹面（㎡）
+		  , sum(sdn.SandCushion) as SandCushionSum        -- 10cm砂垫层（m³）
+		  , sum(sdn.Rubble) as RubbleSum                  -- 7.5号浆砌片石（m³）
+		  , sum(sdn.C20Concrete) as C20ConcreteSum        -- C20混凝土（m³）
+		  , sum(sdn.CoverPlate) as CoverPlateSum          -- 盖板（块）
+		  , sum(sdn.EightRebar) as EightRebarSum          -- 8mm钢筋（Kg）
+		  , sum(sdn.TwelveRebar) as TwelveRebarSum        -- 12mm钢筋（Kg）
+		  , sum(sdn.C25Concrete) as C25ConcreteSum        -- C25混凝土（m³）
+		FROM
+		  SideDitchNumber as sdn 
+		  left join V_EntryTree as ve 
+		    on sdn.ProjectId = ve.pid
+		WHERE
+		  sdn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sdn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sdn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sdn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and sdn.Position  like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="form!=null and form!=''">
+		    and sdn.form like concat('%',#{form},'%') -- 根据建设性质查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（边沟工程数量表） -->
+	<insert id="insertSideDitchNumber" parameterType="com.curing.projectSchedule.model.SideDitchNumberEntity">
+		INSERT 
+		INTO SideDitchNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , Position
+		  , Form
+		  , Length
+		  , Foundation
+		  , Mortar
+		  , SandCushion
+		  , Rubble
+		  , C20Concrete
+		  , CoverPlate
+		  , EightRebar
+		  , TwelveRebar
+		  , C25Concrete
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{Position}
+		  , #{Form}
+		  , #{Length}
+		  , #{Foundation}
+		  , #{Mortar}
+		  , #{SandCushion}
+		  , #{Rubble}
+		  , #{C20Concrete}
+		  , #{CoverPlate}
+		  , #{EightRebar}
+		  , #{TwelveRebar}
+		  , #{C25Concrete}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（边沟工程数量表） -->
+	<update id="updateSideDitchNumber" parameterType="com.curing.projectSchedule.model.SideDitchNumberEntity">
+		UPDATE SideDitchNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , Position = #{Position}
+		  , Form = #{Form}
+		  , Length = #{Length}
+		  , Foundation = #{Foundation}
+		  , Mortar = #{Mortar}
+		  , SandCushion = #{SandCushion}
+		  , Rubble = #{Rubble}
+		  , C20Concrete = #{C20Concrete}
+		  , CoverPlate = #{CoverPlate}
+		  , EightRebar = #{EightRebar}
+		  , TwelveRebar = #{TwelveRebar}
+		  , C25Concrete = #{C25Concrete}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（边沟工程数量表） -->
+	<update id="deleteSideDitchNumber" parameterType="com.curing.projectSchedule.model.SideDitchNumberEntity">
+		UPDATE SideDitchNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

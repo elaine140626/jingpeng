@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="../../css/scrollTable.css" />
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<link rel="stylesheet" type="text/css"
+	href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript"
+	src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+<script type="text/javascript"
+	src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript"
+	src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript"
+	src="../../js/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/repertory/outBound.js"></script>
+<title>瑞德公路管理系统</title>
+<style type="text/css">
+	#sider {
+		position: absolute;
+		top: 70px;
+		left: 0px;
+		bottom: 0px;
+		width: 260px;
+		border: 1px solid #DEDFDF;
+	}
+	
+	.fuchuang4 {
+    position: absolute;
+    width: 604px;
+    height: auto;
+    left: 58.8%;
+    top: 20%;
+    background-color: rgb(255, 255, 255);
+    z-index: 9999;
+    margin-right: 5px;
+    display: none;
+    padding: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(16, 75, 141);
+    border-image: initial;
+    border-radius: 3px;
+	}
+	.fuchuang3 {
+    position: absolute;
+    width: 604px;
+    height: auto;
+    left: 58.8%;
+    top: 20%;
+    background-color: rgb(255, 255, 255);
+    z-index: 9999;
+    margin-right: 5px;
+    display: none;
+    padding: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(16, 75, 141);
+    border-image: initial;
+    border-radius: 3px;
+}
+	
+	#main {
+		position: absolute;
+		top: 70px;
+		left: 270px;
+		right: 10px;
+		bottom: 0px;
+		border: 1px solid #DEDFDF;
+		overflow-y:hidden;
+	}
+</style>
+</head>
+
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post"
+		enctype="multipart/form-data">
+		<div id="container">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;库存管理&nbsp;>&nbsp;<span style="color:#1A5CC6">出库单</span></span>
+			</div>
+			<div id="sider">
+				<a class="shouqi" href="javascript:;" title="收起菜单"></a> <a
+					class="zhankai" href="javascript:;" title="展开菜单"></a>
+				<div id="box_top">销售订单</div>
+				<div id="box_center" style="padding-left: 20px;">
+					关键字查询： <input type="text" id="keyword" name="keyword" onblur="keywordSelect()"
+						class="ui_input_txt02" />
+				</div>
+				<ul id="tree" class="ztree"></ul>
+			</div>
+			<div id="main" >
+				<div class="ui_tb">
+					<div id="box_border">
+						<div id="box_top">出库单查询</div>
+						<div id="box_center" style="padding-left: 20px; overflow: hidden;">
+							&nbsp;&nbsp;&nbsp;&nbsp;按车辆查询：&nbsp;&nbsp; 
+							<input type="text" class="ui_input_txt02" id="plateNumber" list="plateNumbers"/>
+							<dataList id="plateNumbers" class="ui_input_txt02" style="padding: 0;"></dataList>
+							<input type="button" value="查询" style="margin-left: 20px; margin-top: 2px;" onclick="selectInfoList()" class="ui_input_btnsearch" />
+						</div>
+						<ul id="ulList">
+							<li class="click">销售出库单</li>
+							<li>未称重出库单</li>
+						</ul>
+						<div id="saleDiv0" class="sale">
+							<div style="overflow-x: auto;min-height:500px;">
+								<table id="outBoundTable" class="table table-striped" style="width: 3640px;" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr>
+											<th class="xuhao">序号</th>
+											<th class="hetongbianhao">出库单号</th>
+											<th class="kehumingcheng">车牌号</th>
+											<th class="hetongbianhao">产品名称-型号</th>
+											<th class="xinghao">客户名称</th>
+											<th class="kehumingcheng">送货地址</th>
+											<th class="kehumingcheng">客户别称</th>
+											<th class="xiaoshouyuan">出库类型</th>
+											<th class="xiaoshouyuan">是否未入场出库</th>
+											<th class="xiaoshouyuan">是否关联空发单</th>
+											<th class="dianhua">出场时间</th>
+											<th class="beizhu">货物净重（t）</th>
+											<th class="yunshujiesuan">结算重量（t）</th>
+											<th class="yunshujiesuan">涨亏吨（t）</th>
+											<th class="hetongzhuangtai">货品单价</th>
+											<th class="shuilv">运费总额</th>
+											<th class="caozuo1">合同编号</th>
+											<th class="caozuo1">销售订单编号</th>
+											<th class="caozuo1">销售员</th>
+											<th class="caozuo1">司机-联系电话</th>
+											<th class="caozuo1">收货人-电话</th>
+											<th class="caozuo1">出厂检测报告</th>
+											<th class="caozuo1">出厂封签号</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+						<div id="saleDiv1" class="sale" style="margin-top: 200px;">
+							<div style="overflow-x: auto;min-height:500px;">
+								<table id="listTable" class="table table-striped" style="width: 3640px;" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr>
+											<th class="xuhao">序号</th>
+											<th class="hetongbianhao">出库单号</th>
+											<th class="xinghao">日期</th>
+											<th class="kehumingcheng">往来单位</th>
+											<th class="kehumingcheng">车牌号码</th>
+											<th class="hetongbianhao">产品名称</th>
+											<th class="xiaoshouyuan">成品出库量</th>
+											<th class="xiaoshouyuan">对方收量</th>
+											<th class="xiaoshouyuan">差异</th>
+											<th class="dianhua">备注</th>
+											<th class="beizhu">合同编号</th>
+											<th class="yunshujiesuan">销售单价</th>
+											<th class="yunshujiesuan">销售员</th>
+											<th class="hetongzhuangtai">收货人</th>
+											<th class="shuilv">收货电话</th>
+											<th class="shuilv">是否随车带走</th>
+											<th class="shuilv">发货方式</th>
+											<th class="shuilv">邮单编号</th>
+											<th class="shuilv">类型</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

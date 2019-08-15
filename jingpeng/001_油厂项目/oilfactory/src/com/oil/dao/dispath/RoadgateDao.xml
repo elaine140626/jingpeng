@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.dispath.RoadgateDao">
+
+<select id="getRoadgateList" parameterType="java.util.Map" resultType="Roadgate">
+	SELECT  
+	Id as id
+	, CarNumber as carNumber
+	, OutWarehouseId as outWarehouseId
+	, IsDel as isDel
+	, Creater as creater
+	, CreaterDate as createrDate
+	, Reviser as reviser
+	, ReviserDate as reviserDate
+	FROM roadgate
+	WHERE IsDel = 0 
+	<if test="id != null and id != ''">
+		AND Id = #{id}
+	</if>
+	<if test="carNumber != null and carNumber != ''">
+		AND CarNumber = #{carNumber}
+	</if>
+	ORDER BY CreaterDate desc
+</select>
+
+<insert id="addRoadgate" parameterType="Roadgate">
+	INSERT 
+	INTO roadgate(
+	CarNumber
+	,OutWarehouseId
+	,IsDel
+	,Creater
+	,CreaterDate
+	) 
+	VALUES (
+	   #{carNumber} 
+      , #{outWarehouseId}
+	  , 0
+	  , #{creater}
+	  , now()
+	  )
+</insert>
+
+<!-- 合同明细更新删除 -->
+<delete id="deleteRoadgate" parameterType="Roadgate">
+	delete 
+	from
+	  roadgate 
+	WHERE
+	  CarNumber = #{carNumber} 
+</delete>
+
+</mapper>

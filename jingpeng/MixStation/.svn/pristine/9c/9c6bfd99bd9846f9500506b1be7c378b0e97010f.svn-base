@@ -1,0 +1,284 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/style.css">
+<link rel="StyleSheet" href="../resources/css/dtree.css"/>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+<script type="text/javascript" src="../resources/jedate/jedate.js"></script>
+<script type="text/javascript" src="../resources/js/echarts.min.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+</head>
+
+<body>
+<div class="top">
+	<div class="row">
+        <div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+        <div class="topright">
+            <span class="userid"></span><span>你好！</span>
+            <a href="../User/platformUserinfo.html" class="shezhi">用户管理</a>
+            <a href="../Common/platformOut.html" class="out">安全退出</a>
+        </div>
+	</div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+            <ul>
+            	<li><a href="../Platform/index.html" class="nav1">首页</a></li>
+                <li><a href="../Andr/platform_asphalt_statistics.html" class="focus_b">沥青混合料</a></li>
+                <li><a href="../cemAndr/platform_cement_statistics.html" class="nav3">水泥混凝土</a></li>
+                <li><a href="../waterstabilityAndr/platform_waterstability_statistics.html" class="nav4">水泥稳定土</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：沥青混合料（<span class="banhez" id="station"></span>） > 预警信息查询</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+                <div class="shunav">
+                	<div class="shu_btn">
+                    <script type="text/javascript">
+					$(function() {
+						/* $("#toggle").click(function() {
+							$(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+							$("#content").slideToggle();
+						}); */
+						
+						$('#toggle').on('click',function (event) {
+ 						    event.stopPropagation();
+ 						    $(this).siblings('#content').toggle();
+ 						    var tag = $(this).siblings('#content');
+ 						    var flag = true;
+ 						    $(document).bind("click",function(e){
+ 						        var target = $(e.target);
+ 						        if(target.closest(tag).length == 0 && flag == true){
+ 						            $(tag).hide();
+ 						            flag = false;
+ 						        }
+ 						    });
+ 						});
+					});
+					</script>
+                        <span class="shu_ban" id="toggle">拌合站</span>
+                        <div class="dtree" id="content" style="display:none;">
+						<script type="text/javascript">
+						var baseUrl= getContextPath();
+						$.ajax({
+							type : "POST",
+							url : baseUrl + "/Andr/getOrg.html",
+							async:false,
+							data : {},
+							dataType : "json",
+							success : function(data) {
+								d = new dTree('d', true);
+								var html = "";
+								for(var i = 0; i < data.length; i++) {
+									if(data[i].org_Type == "1" || data[i].org_Type == 1) {
+										d.add(data[i].Id, -1, data[i].Org_Name, true, false);
+									} else {
+										d.add(data[i].Id, data[i].Parent_Id, 'authority', data[i].Id, data[i].Org_Name ,false, false);
+										html += "<span class='s'>"+data[i].Org_Name+"</span>";
+									}
+								}
+								$("#station").html(html);
+								document.write(d);
+			                    d.openAll();
+							}
+						});   
+                        </script>
+                    </div>
+                    </div>
+                    <div class="shu_jieguo">
+                        <ul id="ulSelected" class="duihao"></ul>
+                    </div>   
+                    <form action="" method="get" class="sousuo">
+                        <label>生产时间：</label>
+                        <input type="text" value="2018-03-09" size="20" class="search_input"id="start_Time" readonly="readonly">
+                        <label>--</label>
+                      	<input type="text" value="2018-05-07" size="20" class="search_input" id="end_Time" readonly="readonly">
+                    	<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" id="btnlqwar">
+                  	</form>
+                </div>
+                <div class="lq_main">
+                    <ul>
+                        <li><a href="javascript:goto('../Andr/platform_asphalt_statistics.html');">生产统计</a></li>
+                        <li><a href="javascript:goto('../Andr/platform_asphalt_date.html');">生产数据</a></li>
+                        <li><a href="javascript:goto('../Andr/platform_asphalt_raw_material_consumption.html');">原材料消耗</a></li>
+                        <li class="on"><a href="javascript:goto('../Andr/platform_asphalt_warning.html');">预警信息查询</a></li>
+                        <li><a href="javascript:goto('../Andr/platform_asphalt_warningdeviation.html');">预警偏差设置</a></li>
+                    </ul>
+                    <div class="chart" id="container" style="width: 1700px;height:280px;">
+
+                        </div>
+                    <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-gao" id="Asphalt_warning">
+                                <thead>
+                              <tr>
+                                <th rowspan="2" class="xh" scope="col">序号</th>
+                                <th rowspan="2" scope="col">拌合站名称</th>
+                                <th rowspan="2" scope="col">设备名称</th>
+                                <th rowspan="2" scope="col">生产总盘数</th>
+                                <th rowspan="2" scope="col">预警盘数</th>
+                                <th colspan="5" scope="col">预警明细</th>
+                                <th rowspan="2" scope="col">预警率(%)</th>
+                                <th rowspan="2" scope="col">明细</th>
+                              </tr>
+                              <tr>
+                                <th scope="col">骨料</th>
+                                <th scope="col">粉料</th>
+                                <th scope="col">沥青</th>
+                                <th scope="col">外掺剂</th>
+                                <th scope="col">级配</th>
+                              </tr>
+                              </thead>
+
+                            </table>
+                            </div>
+          		</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../resources/images/chakan.png" width="16" height="16"></span>
+		 	 	<h3>预警信息明细</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt th20">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" id="alertdetail">
+                    <thead>
+                  <tr>
+                    <th rowspan="2" scope="col" style="text-align: center">序号</th>
+                    <th rowspan="2" scope="col" style="text-align: center">日期</th>
+                    <th rowspan="2" scope="col" style="text-align: center">拌合站名称</th>
+                    <th rowspan="2" scope="col" style="text-align: center">设备名称</th>
+                    <th rowspan="2" scope="col" style="text-align: center">生产总盘数</th>
+                    <th rowspan="2" scope="col" style="text-align: center">预警盘数</th>
+                    <th colspan="5" scope="col" style="text-align: center">预警明细</th>
+                    <th rowspan="2" scope="col" style="text-align: center">预警率(%)</th>
+                  </tr>
+                  <tr>
+                    <th scope="col" style="text-align: center">骨料</th>
+                    <th scope="col" style="text-align: center">粉料</th>
+                    <th scope="col" style="text-align: center">沥青</th>
+                    <th scope="col" style="text-align: center">外掺剂</th>
+                    <th scope="col" style="text-align: center">级配</th>
+                  </tr>
+                  </thead>
+                  <tbody id="altb"></tbody>
+                </table>
+
+  	  	  </div>
+		</div>
+	</div>
+</div>	
+</div>
+
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<!-- <script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script> -->
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="../resources/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/js/platform_asphalt_warning.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script type="text/javascript">
+
+jeDate({
+    dateCell:"#start_Time",
+    format:"YYYY-MM-DD",
+    isinitVal:false,
+    isTime:true,
+    isClear:false,
+   
+    okfun:function(val){
+        console.log(val)
+        alert(val)}
+})
+
+jeDate({
+dateCell:"#end_Time",
+format:"YYYY-MM-DD",
+isinitVal:false,
+isTime:true,
+isClear:false,
+okfun:function(val){
+    console.log(val)
+    alert(val)}
+})
+
+option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            crossStyle: {
+                color: '#999'
+            }
+        }
+    },
+    grid: {
+        left: '2%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    toolbox: {
+    },
+    legend: {
+        data:['蒸发量','降水量']
+    },
+    xAxis: [
+        {
+            type: 'category',
+            data: [],
+            axisPointer: {
+                type: 'shadow'
+            }
+        }
+    ],
+    yAxis: [
+        {
+            type: 'value',
+            name: '数值',
+            min: 0,
+           /*  max: 100,
+            interval: 10, */
+            axisLabel: {
+                formatter: '{value} '
+            }
+        }
+    ],
+    series: [
+       
+        
+    ]
+};
+
+
+
+    </script>
+
+
+</body>
+</html>

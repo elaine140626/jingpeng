@@ -1,0 +1,22 @@
+$(function() {
+	//试验汇总
+	$.ajax({
+		type : "POST",
+		url : "../testInfo/getTestSummary.html",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			$("#syzs")[0].innerHTML=data.data[0].testCount;
+			$("#zdcj")[0].innerHTML=data.data[0].testZD;
+			$("#mysy")[0].innerHTML=data.data[0].testMY;
+			
+			$("#zdsysmc")[0].innerHTML=data.data[0].TestRoomName;
+			$("#zdsyzs")[0].innerHTML=data.data[0].testZD;
+			$("#zdhgs")[0].innerHTML=data.data[0].testZDHE;
+			
+			$("#mysysmc")[0].innerHTML=data.data[0].TestRoomName;
+			$("#mysyzs")[0].innerHTML=data.data[0].testMY;
+			$("#myhgs")[0].innerHTML=data.data[0].testMYHE;
+		}
+	});
+});

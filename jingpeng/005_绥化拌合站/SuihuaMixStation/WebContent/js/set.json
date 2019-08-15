@@ -1,0 +1,41 @@
+{
+    "projectName":"绥化市公路智慧管理平台",
+    "projectItem":[ 
+		{	"name":"试验信息",
+			"project":[
+		    	
+		    ],
+		    "index_block":"index_item_block/test_index_block.html"
+	    },
+	    {
+	    	"name":"拌合站信息",
+			"project":[
+				{
+					"item_name":"沥青拌合站",
+					"item_project":[
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "生产配合比","itemUrl": "mix_proportion.html","clickCLass": "focus_f","class": "nav6","status": "proportion" },
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产分析","itemUrl": "product_analysis.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "称重曲线","itemUrl": "weighingCurve.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_g","class": "nav7","status": "deviation" },
+						{"itemName": "级配设置","itemUrl": "granular_composition.html","clickCLass": "focus_g","class": "nav7","status": "composition" },
+						{"itemName": "筛孔设置","itemUrl": "meshSize_Info.html","clickCLass": "focus_g","class": "nav7","status": "meshSize" }
+					],
+					"page_url":"asphalt/asphalt.html"
+				}
+			],
+			"index_block":"index_item_block/mix_index_block.html"
+			
+	    }
+    
+    ],
+    "slides":[
+    	"../image/slides/img1.jpg",
+    	"../image/slides/img2.jpg",
+    	"../image/slides/img3.jpg"
+    ],
+    "index_block_img":"../image/images/about.jpg",
+    "index_block_text":"<div><h2>绥化市公路</h2><p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p><p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p><p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p><p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p><p>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</p></div>"
+}

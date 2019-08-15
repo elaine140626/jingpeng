@@ -1,0 +1,52 @@
+<!--生产统计页面-->
+<script src="../../js/HighwayPlatform/MixStation/asphalt/production_statistics.js" type="text/javascript" charset="utf-8"></script>
+
+<div class="charttt" id="statistics_echar"></div>
+<div class="lq_biao">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="lqstatisticslist">
+		<thead>
+			<tr>
+				<th scope="col" class="xh" style="text-align: center">序号</th>
+				<th scope="col" style="text-align: center">拌和站名称</th>
+				<th scope="col" style="text-align: center">生产总量(kg)</th>
+				<th scope="col" style="text-align: center">沥青用量(kg)</th>
+				<th scope="col" style="text-align: center">生产总盘数</th>
+				<th scope="col" style="text-align: center">合格盘数</th>
+				<th scope="col" style="text-align: center">不合格盘数</th>
+				<th scope="col" style="text-align: center">合格率(%)</th>
+				<th scope="col" class="mx" style="text-align: center">明细</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/chakan.png" width="16"height="16"></span>
+				<h3>生产统计明细</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal">
+						<span aria-hidden="true" class="tan_close">×</span>
+					</button>
+			</div>
+			<div class="tan_dx_txt">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" id="lqstatisticspage">
+					<thead id="thead">
+						<tr>
+							<th scope="col" class="xh" style="text-align: center">序号</th>
+							<th scope="col" style="text-align: center">采集日期</th>
+							<th scope="col" style="text-align: center">拌合设备</th>
+							<th scope="col" style="text-align: center">生产总盘数</th>
+							<th scope="col" style="text-align: center">合格盘数</th>
+							<th scope="col" style="text-align: center">不合格盘数</th>
+							<th scope="col" style="text-align: center">沥青用量(kg)</th>
+							<th scope="col" style="text-align: center">生产总量(kg)</th>
+						</tr>
+					</thead>
+					<tbody id="tb"></tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+</div>

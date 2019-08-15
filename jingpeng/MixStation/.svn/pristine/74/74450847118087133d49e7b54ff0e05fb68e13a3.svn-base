@@ -1,0 +1,140 @@
+package com.blindSample.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.blindSample.dao.TestUserInfoDao;
+import com.blindSample.model.APPUserInfo;
+import com.blindSample.service.TestUserInfoService;
+import com.userInfo.dao.UserInfoDao;
+import com.userInfo.model.PtUserInfo;
+
+@Service
+@Transactional
+public class TestUserInfoServiceImpl implements TestUserInfoService{
+	@Autowired
+	private TestUserInfoDao testUserInfoDao;
+	
+	@Autowired
+	private UserInfoDao userInfoDao;
+
+	// 登录验证
+	public PtUserInfo getUserLogin(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.getUserLogin(map);
+	}
+
+	// 获取用户信息
+	public PtUserInfo getUserInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.getUserInfo(map);
+	}
+
+	// 用户注册
+	public int insertUserInfo(PtUserInfo ptUserInfo) {
+		// TODO Auto-generated method stub
+		return userInfoDao.insertUserInfo(ptUserInfo);
+	}
+
+	// 更新用户信息
+	public int updateUserInfo(PtUserInfo ptUserInfo) {
+		// TODO Auto-generated method stub
+		return userInfoDao.updateUserInfo(ptUserInfo);
+	}
+
+	// 删除用户
+	public int deleteUserInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.deleteUserInfo(map);
+	}
+	
+	// 添加试验室权限
+	public int insertTestSetDetailed(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.insertTestSetDetailed(map);
+	}
+
+	// 删除试验室权限
+	public int delTestSetDetailed(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.delTestSetDetailed(map);
+	}
+	
+	// 添加拌合站权限
+	public int insertOrgSetDetailed(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.insertOrgSetDetailed(map);
+	}
+
+	// 删除拌合站权限
+	public int delOrgSetDetailed(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.delOrgSetDetailed(map);
+	}
+
+	// 获取试验室树形信息
+	public List<Map<String, Object>> getTestRoomList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return userInfoDao.getTestRoomList(map);
+	}
+
+	// 获取拌合站树形信息
+	public List<Map<String, Object>> getOrgInfoList() {
+		// TODO Auto-generated method stub
+		return userInfoDao.getOrgInfoList();
+	}
+
+	// 获取app用户信息
+	public List<APPUserInfo> getAppUserList(Map<String, Object> map){
+		return testUserInfoDao.getAppUserList(map);
+	}
+
+	// 更新app用户信息
+	public int updateAppUser(Map<String, Object> map) {
+		return testUserInfoDao.updateAppUser(map);
+	}
+
+	// 删除app用户信息
+	public int deleteAppUser(Map<String, Object> map) {
+		return testUserInfoDao.deleteAppUser(map);
+	}
+
+	// 添加app用户信息
+	public int addAppUser(Map<String, Object> map) {
+		return testUserInfoDao.addAppUser(map);
+	}
+
+	// 获取app用户信息
+	public List<APPUserInfo> getAppUserList(Map<String, Object> map){
+		return testUserInfoDao.getAppUserList(map);
+	}
+
+	// 更新app用户信息
+	public int updateAppUser(Map<String, Object> map) {
+		return testUserInfoDao.updateAppUser(map);
+	}
+
+	// 删除app用户信息
+	public int deleteAppUser(Map<String, Object> map) {
+		return testUserInfoDao.deleteAppUser(map);
+	}
+
+	// 添加app用户信息
+	public int addAppUser(Map<String, Object> map) {
+		return testUserInfoDao.addAppUser(map);
+	}
+
+	// 获取用户的试验室权限
+	public List<Map<String, Object>> getUserTestInfo(Map<String, Object> map) {
+		return userInfoDao.getUserTestInfo(map);
+	}
+
+	// 获取用户的拌合站权限
+	public List<Map<String, Object>> getUserOrgInfo(Map<String, Object> map) {
+		return userInfoDao.getUserOrgInfo(map);
+	}
+}

@@ -1,0 +1,102 @@
+package com.blindSample.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.blindSample.dao.VideoSurveillanceDao;
+import com.blindSample.model.AutoCollectionEntity;
+import com.blindSample.model.BlindInfoEntity;
+import com.blindSample.model.VideoSurveillance;
+import com.blindSample.service.VideoSurveillanceService;
+import com.kdt.base.exception.BusinessException;
+import com.kdt.base.exception.DataAccessException;
+
+@Service
+@Transactional
+public class VideoSurveillanceServiceImpl implements VideoSurveillanceService {
+	
+	@Autowired
+	VideoSurveillanceDao videoSurveillanceDao;
+
+	public List<VideoSurveillance> getVideoSurveillance(Map<String, Object> map) throws BusinessException {
+		// TODO Auto-generated method stub
+		try {
+			return videoSurveillanceDao.getVideoSurveillance(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+
+	public List<VideoSurveillance> getVideoSurveillanceById(Map<String, Object> map) throws BusinessException {
+		// TODO Auto-generated method stub
+		try {
+			return videoSurveillanceDao.getVideoSurveillanceById(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+
+	// 获取用户权限下试验室的试验数量
+	public List<Map<String, Object>> getTestInfoList(Map<String, Object> map) throws BusinessException {
+		try {
+			return videoSurveillanceDao.getTestInfoList(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+	
+	// 自动采集数量
+	public List<Map<String, Object>> getAutoCollectionCount(Map<String, Object> map) throws BusinessException {
+		try {
+			return videoSurveillanceDao.getAutoCollectionCount(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+	
+	// 自动采集明细
+	public List<AutoCollectionEntity> getAutoCollectionList(Map<String, Object> map) throws BusinessException {
+		try {
+			return videoSurveillanceDao.getAutoCollectionList(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+	
+	// 盲样数量
+	public List<Map<String, Object>> getBlindCount(Map<String, Object> map) throws BusinessException {
+		try {
+			return videoSurveillanceDao.getBlindCount(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+	
+	// 盲样明细
+	public List<BlindInfoEntity> getBlindList(Map<String, Object> map) throws BusinessException {
+		try {
+			return videoSurveillanceDao.getBlindList(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+
+}

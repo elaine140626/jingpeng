@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.asphaltSupply.dao.AsphaltPurchasingDao">
+	<!-- 沥青采购取得 -->
+	<select id="getAsphaltPurchasing" parameterType="java.util.Map" resultType="com.curing.asphaltSupply.model.AsphaltPurchasingEntity">
+		SELECT
+		  ap.Id                              -- id
+		  , ap.FirstAsphaltSupplyId          -- 沥青供应id
+		  , ap.MonthNeedApril                -- 月初需求（4月）
+		  , ap.MonthNeedMay                  -- 月初需求（5月）
+		  , ap.MonthNeedJune                 -- 月初需求（6月）
+		  , ap.MonthNeedJuly                 -- 月初需求（7月）
+		  , ap.MonthNeedAug                  -- 月初需求（8月）
+		  , ap.MonthNeedSep                  -- 月初需求（9月）
+		  , ap.MonthNeedOct                  -- 月初需求（10月）
+		  , ap.ActualSupplyApril             -- 实际需求（4月）
+		  , ap.ActualSupplyMay               -- 实际需求（5月）
+		  , ap.ActualSupplyJune              -- 实际需求（6月）
+		  , ap.ActualSupplyJuly              -- 实际需求（7月）
+		  , ap.ActualSupplyAug               -- 实际需求（8月）
+		  , ap.ActualSupplySep               -- 实际需求（9月）
+		  , ap.ActualSupplyOct               -- 实际需求（10月）
+		  , (ap.MonthNeedApril - ap.ActualSupplyApril) as differenceApril  -- 仍未需求（4月）
+		  , (ap.MonthNeedMay - ap.ActualSupplyMay)     as differenceMay    -- 仍未需求（5月）
+		  , (ap.MonthNeedJune - ap.ActualSupplyJune)   as differenceJune   -- 仍未需求（6月）
+		  , (ap.MonthNeedJuly - ap.ActualSupplyJuly)   as differenceJuly   -- 仍未需求（7月）
+		  , (ap.MonthNeedAug - ap.ActualSupplyAug) as differenceAug        -- 仍未需求（8月）
+		  , (ap.MonthNeedSep - ap.ActualSupplySep) as differenceSep        -- 仍未需求（9月）
+		  , (ap.MonthNeedOct - ap.ActualSupplyOct) as differenceOct        -- 仍未需求（10月）
+		  , ap.Remarks
+		  , ap.IsDel
+		  , ap.Creater
+		  , ap.CreaterDate
+		  , ap.Reviser
+		  , ap.ReviserDate 
+		FROM
+		  asphaltpurchase ap
+		where ap.isDel = 0
+		<if test="firstAsphaltSupplyId != null and firstAsphaltSupplyId != ''">
+			and ap.FirstAsphaltSupplyId = #{firstAsphaltSupplyId}
+		</if>
+	</select>
+
+    <!-- 更新沥青采购 -->
+	<insert id="insertAsphaltPurchasing" parameterType="com.curing.asphaltSupply.model.AsphaltPurchasingEntity">
+		INSERT 
+		INTO asphaltpurchase( 
+		  Id
+		  , FirstAsphaltSupplyId
+		  , MonthNeedApril
+		  , MonthNeedMay
+		  , MonthNeedJune
+		  , MonthNeedJuly
+		  , MonthNeedAug
+		  , MonthNeedSep
+		  , MonthNeedOct
+		  , ActualSupplyApril
+		  , ActualSupplyMay
+		  , ActualSupplyJune
+		  , ActualSupplyJuly
+		  , ActualSupplyAug
+		  , ActualSupplySep
+		  , ActualSupplyOct
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  	REPLACE(UUID(),'-','')
+		  , #{FirstAsphaltSupplyId}
+		  , #{MonthNeedApril}
+		  , #{MonthNeedMay}
+		  , #{MonthNeedJune}
+		  , #{MonthNeedJuly}
+		  , #{MonthNeedAug}
+		  , #{MonthNeedSep}
+		  , #{MonthNeedOct}
+		  , #{ActualSupplyApril}
+		  , #{ActualSupplyMay}
+		  , #{ActualSupplyJune}
+		  , #{ActualSupplyJuly}
+		  , #{ActualSupplyAug}
+		  , #{ActualSupplySep}
+		  , #{ActualSupplyOct}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		);
+	</insert>
+
+	<!-- 更新沥青采购 -->
+	<update id="updateAsphaltPurchasing" parameterType="com.curing.asphaltSupply.model.AsphaltPurchasingEntity">
+		UPDATE asphaltpurchase 
+		SET
+		    MonthNeedApril = #{MonthNeedApril}
+		  , MonthNeedMay = #{MonthNeedMay}
+		  , MonthNeedJune = #{MonthNeedJune}
+		  , MonthNeedJuly = #{MonthNeedJuly}
+		  , MonthNeedAug = #{MonthNeedAug}
+		  , MonthNeedSep = #{MonthNeedSep}
+		  , MonthNeedOct = #{MonthNeedOct}
+		  , ActualSupplyApril = #{ActualSupplyApril}
+		  , ActualSupplyMay = #{ActualSupplyMay}
+		  , ActualSupplyJune = #{ActualSupplyJune}
+		  , ActualSupplyJuly = #{ActualSupplyJuly}
+		  , ActualSupplyAug = #{ActualSupplyAug}
+		  , ActualSupplySep = #{ActualSupplySep}
+		  , ActualSupplyOct = #{ActualSupplyOct}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  FirstAsphaltSupplyId = #{firstAsphaltSupplyId}
+	</update>
+</mapper>

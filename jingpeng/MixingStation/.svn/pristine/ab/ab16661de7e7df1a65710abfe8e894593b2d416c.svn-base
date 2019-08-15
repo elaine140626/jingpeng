@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.cement.Cement_TheoPropDetailedDao">
+	<select id="getCement_TheoPropDetailed" parameterType="cement_TheoPropDetailed" resultType="cement_TheoPropDetailed">
+	
+		SELECT id i_id TheoProp_ID i_theoProp_Id,Materials_ID i_materials_Id,Weight d_weight,Material_Origin str_material_Origin,Manufacturer str_Manufacturer from Cement_TheoPropDetailed
+		where Valid_Flag=1
+	
+	</select>
+	
+	<select id="getCement_TheoPropDetailedByTheoProp_ID" parameterType="cement_TheoryProportion" resultType="cement_TheoPropDetailed">
+	
+		SELECT c.id i_id,c.TheoProp_ID i_theoProp_Id,c.Materials_ID i_materials_Id,c.Weight d_weight,c.Material_Origin str_material_Origin,c.Manufacturer str_Manufacturer,
+		v.Material_Model  str_material_Model ,v.Material_Name str_material_Name,v.id i_materials_Id
+		from Cement_TheoPropDetailed c
+		left join V_MaterialInfo v on c.Materials_ID=v.id
+		where c.Valid_Flag=1 and c.TheoProp_ID =#{i_id}
+	
+	</select>
+	
+	<insert id="addCement_TheoPropDetailed" parameterType="java.util.List">
+	
+		INSERT INTO Cement_TheoPropDetailed (TheoProp_ID,Materials_ID,Weight,Material_Origin,Manufacturer)
+		VALUES 
+		  <foreach collection="list" item="CementTargetProDList" index="index" separator=",">
+		  		(#{CementTargetProDList.i_theoProp_Id},#{CementTargetProDList.i_materials_Id},#{CementTargetProDList.d_weight},#{CementTargetProDList.str_material_Origin},
+		  		#{CementTargetProDList.str_Manufacturer})
+		  </foreach>
+		
+	</insert>
+
+	<update id="updateCement_TheoPropDetailed">
+	
+		UPDATE Cement_TheoPropDetailed SET TheoProp_ID=#{i_theoProp_Id},Materials_ID=#{i_materials_Id},Weight=#{d_weight},Material_Origin=#{str_material_Origin},Manufacturer=#{str_Manufacturer}
+		
+		where Id =#{i_id}
+	
+	</update>
+	
+	<update id="deletCement_TheoPropDetailed" parameterType="cement_TheoPropDetailed" >
+	
+		UPDATE cement_TheoPropDetailed SET Valid_Flag=0 where id =#{i_id}
+	
+	</update>
+</mapper>

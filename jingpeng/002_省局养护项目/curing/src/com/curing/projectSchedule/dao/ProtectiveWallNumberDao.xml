@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.ProtectiveWallNumberDao">
+	<!-- 工程进度（防护墙工程数量表）List取得 -->
+	<select id="getProtectiveWallNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.ProtectiveWallNumberEntity">
+		SELECT
+		  pwn.Id
+		  , pwn.ProjectId                                 -- 项目id
+		  , pwn.PileNumber                                -- 起讫桩号
+		  , pwn.Position                                  -- 位置
+		  , pwn.Length                                    -- 修建长度（m）
+		  , pwn.Amount                                    -- 数量（个）
+		  , pwn.C25Concrete                               -- C25混凝土（m³）
+		  , pwn.Lacquer                                   -- 涂漆（㎡）
+		  , pwn.Remarks                                   -- 备注
+		  , pwn.IsDel
+		  , pwn.Creater
+		  , pwn.CreaterDate
+		  , pwn.Reviser
+		  , pwn.ReviserDate 
+		FROM
+		  ProtectiveWallNumber as pwn 
+		  left join V_EntryTree as ve 
+		    on pwn.ProjectId = ve.pid
+		WHERE
+		  pwn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pwn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pwn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pwn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and pwn.Position like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="length!=null and length!=''">
+		    and pwn.length like concat('%',#{length},'%') -- 根据长度
+		  </if>
+		   <if test="amount!=null and amount!=''">
+		    and pwn.amount like concat('%',#{amount},'%')-- 根据数量查询
+		  </if>
+		   order by pwn.CreaterDate desc
+	</select>
+	
+	<select id="getProtectiveWallNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   pwn.PileNumber                                -- 起讫桩号
+		  , pwn.Position                                  -- 位置
+		  , pwn.Length                                    -- 修建长度（m）
+		  , pwn.Amount                                    -- 数量（个）
+		  , pwn.C25Concrete                               -- C25混凝土（m³）
+		  , pwn.Lacquer                                   -- 涂漆（㎡）
+		  , pwn.Remarks                                   -- 备注
+		FROM
+		  ProtectiveWallNumber as pwn 
+		  left join V_EntryTree as ve 
+		    on pwn.ProjectId = ve.pid
+		WHERE
+		  pwn.IsDel = 0
+		   order by pwn.CreaterDate desc
+	</select>
+	
+	
+	<!-- 工程进度（防护墙工程数量表）合计 -->
+	<select id="getProtectiveWallNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.ProtectiveWallNumberSum">
+		SELECT
+		  sum(pwn.Length) as LengthSum                    -- 修建长度（m）
+		  , sum(pwn.Amount) as AmountSum                  -- 数量（个）
+		  , sum(pwn.C25Concrete) as C25ConcreteSum        -- C25混凝土（m³）
+		  , sum(pwn.Lacquer) as LacquerSum                -- 涂漆（㎡）
+		FROM
+		  ProtectiveWallNumber as pwn 
+		  left join V_EntryTree as ve 
+		    on pwn.ProjectId = ve.pid
+		WHERE
+		  pwn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pwn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pwn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pwn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and pwn.Position like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="length!=null and length!=''">
+		    and pwn.length like concat('%',#{length},'%') -- 根据长度
+		  </if>
+		   <if test="amount!=null and amount!=''">
+		    and pwn.amount like concat('%',#{amount},'%')-- 根据数量查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（防护墙工程数量表） -->
+	<insert id="insertProtectiveWallNumber" parameterType="com.curing.projectSchedule.model.ProtectiveWallNumberEntity">
+		INSERT 
+		INTO ProtectiveWallNumber(
+			Id 
+		  , ProjectId
+		  , PileNumber
+		  , Position
+		  , Length
+		  , Amount
+		  , C25Concrete
+		  , Lacquer
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+			 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{Position}
+		  , #{Length}
+		  , #{Amount}
+		  , #{C25Concrete}
+		  , #{Lacquer}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  ,now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（防护墙工程数量表） -->
+	<update id="updateProtectiveWallNumber" parameterType="com.curing.projectSchedule.model.ProtectiveWallNumberEntity">
+		UPDATE ProtectiveWallNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , Position = #{Position}
+		  , Length = #{Length}
+		  , Amount = #{Amount}
+		  , C25Concrete = #{C25Concrete}
+		  , Lacquer = #{Lacquer}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（防护墙工程数量表） -->
+	<update id="deleteProtectiveWallNumber" parameterType="com.curing.projectSchedule.model.ProtectiveWallNumberEntity">
+		UPDATE ProtectiveWallNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

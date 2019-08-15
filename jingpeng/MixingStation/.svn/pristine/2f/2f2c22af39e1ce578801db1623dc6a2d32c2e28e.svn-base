@@ -1,0 +1,148 @@
+package com.mix.service.cement.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.mix.dao.cement.CementConstructionPropDao;
+import com.mix.model.Cement_ConsPropDetailed;
+import com.mix.model.Cement_ConstructionProportion;
+import com.mix.model.Cement_TheoryProportion;
+import com.mix.service.cement.CementConstructionPropService;
+@Service
+@Transactional
+public class CementConstructionPropServiceImpl implements CementConstructionPropService {
+
+	@Autowired
+	private CementConstructionPropDao cementConstructionPropDao;
+	
+	@Override
+	public List<Map<String, Object>> getCementConstructionProportionByTheoPropID(Map<String, Object> map) {
+		return cementConstructionPropDao.getCementConstructionProportionByTheoPropID(map);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getMainById(
+			Cement_ConstructionProportion cement_ConstructionProportion) {
+		return cementConstructionPropDao.getMainById(cement_ConstructionProportion);
+	}
+
+	@Override
+	public List<Map<String, Object>> getMainByIdGrid(Cement_ConstructionProportion cement_ConstructionProportion) {
+		return cementConstructionPropDao.getMainByIdGrid(cement_ConstructionProportion);
+	}
+
+	@Override
+	public List<Cement_ConsPropDetailed> getC_ConstructionDeatlByid(Cement_ConsPropDetailed cement_ConsPropDetailed) {
+		return cementConstructionPropDao.getC_ConstructionDeatlByid(cement_ConsPropDetailed);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getCementConstructionProp(Map<String, Object> map) {
+		return cementConstructionPropDao.getCementConstructionProp(map);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getPropCode(String str_prop_Code) {
+		return cementConstructionPropDao.getPropCode(str_prop_Code);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getMaterNameAndModel(
+			Cement_ConstructionProportion cement_ConstructionProportion) {
+		return cementConstructionPropDao.getMaterNameAndModel(cement_ConstructionProportion);
+	}
+
+	@Override
+	public List<Map<String, Object>> getCementConstructionPropbypid(Map<String, Object> map) {
+		return cementConstructionPropDao.getCementConstructionPropbyPid(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getSgpbNo(Map<String, Object> map) {
+		return cementConstructionPropDao.getSgpbNo(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getCementConstructionPropbypidList(Map<String, Object> map) {
+		return cementConstructionPropDao.getCementConstructionPropbyPid(map);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getCementConstructionPropbypids(Map<String, Object> map) {
+		return cementConstructionPropDao.getCementConstructionPropbyPids(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getTheory(Map<String, Object> map) {
+		return cementConstructionPropDao.getTheory(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> getTheoryList(Map<String, Object> map) {
+		return cementConstructionPropDao.getTheoryList(map);
+	}
+
+	@Override
+	public int addSgpbXx(Cement_ConstructionProportion cement_ConstructionProportion) {
+		return cementConstructionPropDao.addSgpbXx(cement_ConstructionProportion);
+	}
+
+	@Override
+	public int addSgpbXxList(List<Cement_ConsPropDetailed> list) {
+		return cementConstructionPropDao.addSgpbXxList(list);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getC_ConstructionByid(
+			Cement_ConstructionProportion cement_ConstructionProportion) {
+		return cementConstructionPropDao.getC_ConstructionByid(cement_ConstructionProportion);
+	}
+
+	@Override
+	public List<Cement_ConstructionProportion> getCement_ConstructionByid(HashMap<String, Object> map) {
+		return cementConstructionPropDao.getCement_ConstructionByid(map);
+	}
+
+	@Override
+	public int addCementConstructionPro(Map<String, Object> map) {
+		return cementConstructionPropDao.addCementConstructionPro(map);
+	}
+
+	@Override
+	public List<Cement_TheoryProportion> getTheoProp(int i_id) {
+		return cementConstructionPropDao.getTheoProp(i_id);
+	}
+
+	@Override
+	public int addCementConsPropDetailed(List<Cement_ConsPropDetailed> cement_ConsPropDetailedList) {
+		return cementConstructionPropDao.addCementConsPropDetailed(cement_ConsPropDetailedList);
+	}
+
+	@Override
+	public int updateCementConstructionPro(Map<String, Object> map) {
+		return cementConstructionPropDao.updateCementConstructionPro(map);
+	}
+
+	@Override
+	public int delCementConstructionPro(Cement_ConstructionProportion cement_ConstructionProportion) {
+		return cementConstructionPropDao.delCementConstructionPro(cement_ConstructionProportion);
+	}
+
+	@Override
+	public List<Map<String, Object>> getgetTheoryProportionCode(Map<String, Object> map) {
+		return cementConstructionPropDao.getgetTheoryProportionCode(map);
+	}
+
+	@Override
+	public List<Cement_ConsPropDetailed> select_Asph_TargetPropDetailed(
+			Cement_ConsPropDetailed cement_ConsPropDetailed) {
+		return cementConstructionPropDao.select_Asph_TargetPropDetailed(cement_ConsPropDetailed);
+	}
+
+}

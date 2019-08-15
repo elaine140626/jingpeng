@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="blindSampleInfo">
+
+	<insert id="addBlindSampleInfo" useGeneratedKeys="true" keyProperty="id" parameterType="blindSampleInfo">
+	
+	    INSERT INTO BlindSampleInfo(	    
+           UnitCode,
+		   Org_Id,
+		   ConstructionUnit,
+		   EngineeringName,
+		   SampeCode, 
+		   Purpose ,  
+		   TestName  ,
+		   DesignStrength,
+		   MoldDate , 
+		   Quantity  ,
+		   PlaceOrigin ,
+		   MaterialName,
+		   SPileNumber, 
+		   SamplingDate,  
+		   SamplingPerson, 
+		   Remarks,          
+		   QRCode,              
+		   IsQualifiedSamp,   
+		   Operator,             
+		   CreateDate,         
+		   Modifier,            
+		   ModifyDate,         
+		   IsValidData
+           )VALUES
+           (           
+           #{unitCode},
+		   #{orgId},
+		   #{constructionUnit},
+		   #{engineeringName},
+		   #{sampeCode}, 
+		   #{purpose},  
+		   #{testName},
+		   #{designStrength},
+		   #{moldDate}, 
+		   #{quantity},
+		   #{placeOrigin},
+		   #{materialName},
+		   #{sPileNumber}, 
+		   #{samplingDate},  
+		   #{samplingPerson}, 
+		   #{remarks},          
+		   #{qRCode},              
+		   #{isQualifiedSamp},   
+		   #{operator},             
+		   CONVERT(varchar(100),GETDATE(), 20),         
+		   #{modifier},            
+		   CONVERT(varchar(100),GETDATE(), 20),        
+		   1		   		   
+           )
+	    
+	</insert>
+	
+	
+	<select id="getBlindSampleInfo" parameterType="java.util.Map" resultType="blindSampleInfo" >
+		
+		
+		SELECT
+		     COUNT(d.Id) as detailId ,
+		      o.Org_Name,
+		   b.id  id,
+		   b.UnitCode unitCode,
+		   b.Org_Id  orgId,
+		   b.ConstructionUnit constructionUnit,
+		   b.EngineeringName engineeringName,
+		   b.SampeCode sampeCode, 
+		   b.Purpose purpose,  
+		   b.TestName  testName,
+		   b.DesignStrength designStrength,
+		   b.MoldDate moldDate, 
+		   b.Quantity quantity,
+		   b.PlaceOrigin placeOrigin,
+		   b.MaterialName materialName,
+		   b.SPileNumber sPileNumber, 
+		   b.SamplingDate samplingDate,  
+		   b.SamplingPerson samplingPerson, 
+		   b.Remarks remarks,          
+		   b.QRCode qRCode,              
+		   b.IsQualifiedSamp isQualifiedSamp,   
+		   b.Operator operator,             
+		   b.CreateDate createDate,         
+		   b.Modifier modifier,            
+		   b.ModifyDate modifyDate,         
+		   b.IsValidData isValidData,
+		   b.TargetDate targetDate,
+		   b.TestState testState
+		FROM
+		
+		  BlindSampleInfo b  left join Organization_Info o on o.Id = b.Org_Id  left join
+		  BlindSampDetailed d on b.Id = d.BlindSampleInfoId
+		WHERE 
+		
+		b.IsValidData = 1
+		<if test="QRCode != null and QRCode != ''">
+		AND b.QRCode = #{QRCode}
+		</if>
+		<if test="id != null and id != ''">
+		and b.id = #{id}
+		</if>
+	    <if test="orgId != null and orgId != '' and orgId !=1">
+		AND b.Org_Id = #{orgId}
+		</if>
+		  <if test="status != null and status != ''">
+		   <if test='status=="1"'>
+              and d.Id IS not null
+		  </if>
+		  <if test='status=="0"'>
+             and d.Id IS  null
+		  </if>
+		</if>
+		
+		group by  b.id,b.UnitCode,b.Org_Id,b.ConstructionUnit,b.EngineeringName,
+		   b.SampeCode,b.Purpose,b.TestName,b.DesignStrength,b.MoldDate,b.Quantity ,
+		   b.PlaceOrigin,b.MaterialName,b.SPileNumber,b.SamplingDate,b.SamplingPerson, 
+		   b.Remarks,b.QRCode,b.IsQualifiedSamp,b.Operator,b.CreateDate,b.Modifier,b.ModifyDate,b.IsValidData 
+		   ,o.Org_Name,b.TargetDate,b.TestState
+		   
+		   
+	</select>	
+	
+	<select id="getBlindSampleInfo1" parameterType="java.util.Map" resultType="java.util.Map" >
+		
+		
+		SELECT
+		     COUNT(d.Id) as detailId ,
+		      o.Org_Name,
+		      o.Parent_Id parent_Id,
+		   b.id  id,
+		   b.UnitCode unitCode,
+		   b.Org_Id  orgId,
+		   b.ConstructionUnit constructionUnit,
+		   b.EngineeringName engineeringName,
+		   b.SampeCode sampeCode, 
+		   b.Purpose purpose,  
+		   b.TestName  testName,
+		   b.DesignStrength designStrength,
+		   b.MoldDate moldDate, 
+		   b.Quantity quantity,
+		   b.PlaceOrigin placeOrigin,
+		   b.MaterialName materialName,
+		   b.SPileNumber sPileNumber, 
+		   b.SamplingDate samplingDate,  
+		   b.SamplingPerson samplingPerson, 
+		   b.Remarks remarks,          
+		   b.QRCode qRCode,          
+		   case when b.IsQualifiedSamp = 1 then '合格' else '不合格' end as isQualifiedSamp, 
+		   case when b.TestState = 1 then '已检' else '未检' end as  testState,
+		   b.Operator operator,             
+		   b.CreateDate createDate,         
+		   b.Modifier modifier,            
+		   b.ModifyDate modifyDate,         
+		   b.IsValidData isValidData,
+		   b.TargetDate targetDate
+		   
+		FROM
+		
+		  BlindSampleInfo b  left join Organization_Info o on o.Id = b.Org_Id  left join
+		  BlindSampDetailed d on b.Id = d.BlindSampleInfoId
+		WHERE 
+		
+		b.IsValidData = 1
+			<if test="str_start_Time != null and str_start_Time != ''">
+				<![CDATA[ AND b.samplingDate >= #{str_start_Time}   ]]>
+			</if>
+			<if test="str_end_Time != null and str_end_Time != ''">
+				AND b.samplingDate &lt; #{str_end_Time}
+			</if>
+			<if test="constructionUnit != null and constructionUnit != ''">
+				<!-- AND b.constructionUnit LIKE '%${constructionUnit}%' -->
+				AND b.constructionUnit = '${constructionUnit}'
+			</if>
+			<if test="engineeringName != null and engineeringName != ''">
+				<!-- AND b.engineeringName LIKE '%${engineeringName}%' -->
+				AND b.engineeringName = '${engineeringName}'
+			</if>
+
+			
+					<if test="oId != null and oId != ''">
+				  <foreach collection="org_Ids" index="index" item="item" open=" and b.Org_Id  IN (" separator="," close=")">
+        	              #{item}
+        	              
+                    </foreach>
+			</if>
+			
+			
+		<if test="QRCode != null and QRCode != ''">
+	
+		AND b.QRCode = #{QRCode}
+		
+		</if>
+		
+		<if test="orgId != 1 ">
+		AND o.Parent_Id = '${orgId}'
+		</if>
+		
+	    <if test="orgId != null and orgId != ''and orgId != 1">
+	
+		or b.Org_Id = #{orgId}
+		
+		</if>
+		
+		  <if test="status != null and status != ''">
+		  
+		   <if test='status=="1"'>
+		   
+              and d.Id IS not null
+		  		
+		  </if>
+		  
+		  <if test='status=="0"'>
+		   
+             and d.Id IS  null
+		  		
+		  </if>
+		  
+		  
+		  
+		</if>
+		
+		
+		<if test="id != null and id != ''">
+	
+		and b.id = #{id}
+		
+		</if>
+		
+		group by  b.id,b.UnitCode,b.Org_Id,b.ConstructionUnit,b.EngineeringName,
+		   b.SampeCode,b.Purpose,b.TestName,b.TestState,b.DesignStrength,b.MoldDate,b.Quantity ,
+		   b.PlaceOrigin,b.MaterialName,b.SPileNumber,b.SamplingDate,b.SamplingPerson, 
+		   b.Remarks,b.QRCode,b.IsQualifiedSamp,b.Operator,b.CreateDate,b.Modifier,b.ModifyDate,b.IsValidData 
+		   ,o.Org_Name,b.TargetDate,b.TestState,o.Parent_Id
+		   
+		   
+	</select>
+	
+	
+	<insert id="addBlindSampDetailed" parameterType="java.util.List">
+	
+		INSERT INTO BlindSampDetailed 
+		VALUES 
+		  <foreach collection="list" item="blindSampDetailedList" index="index" separator=",">
+		  		(
+		  		#{blindSampDetailedList.blindSampleInfoId},
+		  		#{blindSampDetailedList.detectionProject},
+		  		#{blindSampDetailedList.technicalIndicators},
+		  		#{blindSampDetailedList.detectionResult},
+		  		#{blindSampDetailedList.resultDetermination},
+		  		#{blindSampDetailedList.operator},
+		  		CONVERT(varchar(100),GETDATE(), 20)
+		  		)
+		  </foreach>
+		
+	</insert>
+	
+	
+	
+	<delete id="deleteBlindSampDetailed" parameterType="java.util.Map">
+	
+	    delete BlindSampDetailed  WHERE BlindSampleInfoId = #{id}
+	    
+	</delete>
+	
+	
+	<update id="updateblindSampleInfo" parameterType="java.util.Map">
+		
+	    UPDATE BlindSampleInfo SET IsQualifiedSamp=#{isQualifiedDate} ,targetDate = #{targetDate} WHERE id = #{id}
+	    
+	</update>
+	
+
+		
+	<select id="blindSampDetailed" parameterType="java.util.Map" resultType="blindSampDetailed" >
+	
+		SELECT
+		   CONVERT(varchar(100), i.targetDate, 23) as targetDate,
+		   b.id id,
+		   b.BlindSampleInfoId blindSampleInfoId,
+		   b.DetectionProject  detectionProject,
+		   b.TechnicalIndicators technicalIndicators,
+		   b.DetectionResult detectionResult,
+		   b.ResultDetermination resultDetermination 
+		  		
+		FROM
+		
+		    BlindSampDetailed b left join BlindSampleInfo i on i.Id = b.BlindSampleInfoId
+		  
+		WHERE
+			1=1
+				
+		 <if test="id != null and id != ''">
+	
+		  and BlindSampleInfoId = #{id}
+		
+		</if>
+		
+		<if test="Operator != null and Operator != ''">
+	
+		  and Operator = #{Operator}
+		
+		</if>
+				
+	</select>
+		<select id="getConstructionUnit"  resultType="java.util.Map">
+					select 
+					DISTINCT ConstructionUnit
+					 from BlindSampleInfo 
+<if test="orgId != null and orgId != 1">
+where Org_Id= #{orgId}
+</if>
+<if test="orgId == 1">
+</if>
+	   </select>
+	   
+	   <select id="getEngineeringName"  resultType="java.util.Map">
+					select 
+					DISTINCT EngineeringName
+					 from BlindSampleInfo 
+<if test="orgId != null and orgId != 1">
+where Org_Id= #{orgId}
+</if>
+<if test="orgId == 1">
+</if>
+	   </select>
+	   
+		<select id="getQrCodeInfo"  resultType="qrCodeInfo" >
+			
+            SELECT  Id id,
+                    Prefix Prefix,
+                    StartCode StartCode,
+                    endCode endCode
+
+                    FROM QRCodeInfo 
+				
+	   </select>
+	   
+	   
+	   	<select id="getypCode" parameterType="java.util.Map" resultType="java.util.Map">
+	
+		   SELECT
+		    count(*) as count1
+		FROM
+		
+		  BlindSampleInfo b 
+		WHERE
+		
+		b.IsValidData = 1  
+		
+		<if test="sampeCode != null and sampeCode != ''">
+	
+		AND b.sampeCode = #{sampeCode}
+		
+		</if>		
+	     </select>
+	
+</mapper>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/quality/out_detection_edit.js"></script>
+	    <script type="text/javascript" src="../../js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				#sider {
+					position: absolute;
+					top: 40px;
+					height: 150px;
+					/*width: 400px;*/
+					left: 5px;
+					right: 5px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				
+				#main {
+					position: absolute;
+					top: 195px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 255px;
+				}
+				#main1 {
+					position: absolute;
+					margin-top: 460px;
+					left: 5px;
+					right: 5px;
+					overflow: auto;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				#sider {
+					position: absolute;
+					top: 70px;
+					height: 130px;
+					/*width: 400px;*/
+					left: 25px;
+					right: 25px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				#main {
+					position: absolute;
+					top: 205px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					height: 260px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				#main1 {
+					position: absolute;
+					margin-top: 480px;
+					left: 25px;
+					right: 25px;
+					overflow: auto;
+				}
+			}
+			
+			.box_border {
+				/* position: absolute; */
+				bottom: 10px;
+				/* overflow-y: auto; */
+				height: 255px;
+				/* left: 0;
+				right: 0;
+				top: 0px; */
+			}
+			tr {
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.ui_text_rt {
+				text-align: right;
+				padding-left: 0px;
+			}
+			
+			.rtTop {
+				vertical-align: top;
+			}
+			
+			.row {
+				margin: 0 15px;
+			}
+			
+			.newLine {
+				padding: 5px 0;
+			}
+			
+			.ui_input_txt02,
+			.ui_select01,
+			.ui_area01 {
+				margin-left: 0px;
+				padding-left: 5px;
+			}
+			.ui_input_txt {
+				margin-left: 0;
+				margin-top: 4px;
+			}
+			.table tr td select{
+				width:80%;
+				border-radius:2px;
+			}
+			.table tr td input{
+				width:92%;
+			}
+		</style>
+
+	</head>
+
+	<body >
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<div id="container">
+				<div id="top_nav">
+					<span class="col-lg-6 col-sm-6" id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;质检管理&nbsp;>&nbsp;出库单检测&nbsp;>&nbsp;<span style="color:#1A5CC6">出库单检测报告单</span></span>
+					<span class="col-lg-6 col-sm-6" >
+						<span class="ui_text_rt">选择复制的报告：</span>
+						<select class="ui_select01" onchange="changeReportList(this.value);"  id="reportList"></select>
+					</span>
+				</div>
+				<div id="sider">
+					<div id="box_top"></div>
+					<div class="newLine col-lg-4 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">报告名头：</div>
+						<input type="text" id= "reportRenown" name="reportRenown"  class="ui_input_txt02 col-lg-8 col-sm-8" maxlength="30"/>	
+					</div>
+					<div class="newLine col-lg-4 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">产品名称-型号：</div>
+						<input type="text" id= "productModel" name="productModel"  class="ui_input_txt02 col-lg-8 col-sm-8" maxlength="30"/>	
+					</div>
+					<div class="newLine col-lg-4 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">使用地点：</div>
+						<input type="text" id= "usePlace" name="usePlace"  class="ui_input_txt02 col-lg-8 col-sm-8" maxlength="60"/>	
+					</div>
+					<div class="newLine col-lg-4 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">检测日期：</div>
+						<input type="text" class="ui_input_txt02 col-lg-8 col-sm-8" class="Wdate" id="testDate" name="testDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+						<input type="hidden" id= "testreportId" value = "0" />	
+					</div>
+					<div class="newLine col-lg-4 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">检测报告编号：</div>
+						<input type="text" id="testReportNumber" name="testReportNumber" class="ui_input_txt02 col-lg-8 col-sm-8" maxlength="30"/>
+					</div>
+					<div class="newLine col-lg-4 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">指标类型：</div>
+						<select class="ui_select01 col-lg-8 col-sm-8" onchange="changeDetectionIndex(this.value);" id="indexType" name="indexType"></select>
+					</div>
+				</div>
+				<div id="main">
+					<div class="ui_tb" id="details1" style="height: 235px;">
+						<div>
+							<div class="box_border">
+								<table id="tableList" class="table table-striped" cellspacing="0" cellpadding="0"  align="center" border="0">
+									<thead>
+										<tr>
+											<th class="col-lg-1">序号</th>
+											<th class="col-lg-1">操作</th>
+											<th class="col-lg-3">检测指标</th>
+											<th class="col-lg-1">单位</th>
+											<th class="col-lg-2">试验方法</th>
+											<th class="col-lg-2">技术要求</th>
+											<th class="col-lg-2">检测结果</th>
+										</tr>
+									</thead>
+									<tbody id="tableList1"></tbody>
+								</table>
+								<div style="width: 100%;text-align: center;">
+									<input type="button" value="再添加一条" class="ui_input_btnadd " id="addBtn" onclick="addTable()"/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="main1">
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">结论：</div>
+						<select class="ui_select01 col-lg-8 col-sm-8" id="conclusion" name="conclusion"></select>
+					</div>
+			    	 <div class="newLine col-lg-3 col-sm-6">
+				        <div class="ui_text_rt col-lg-4 col-sm-4">检测人：</div>
+				        <select class="ui_select01 col-lg-8 col-sm-8" id="testPersonnelId" name="testPersonnelId"></select>
+				     </div>
+				     <div class="newLine col-lg-3 col-sm-6">
+				        <div class="ui_text_rt col-lg-4 col-sm-4">复核：</div>
+				        <select class="ui_select01 col-lg-8 col-sm-8" id="reviewerId" name="reviewerId"></select>
+				     </div>
+				     <div class="newLine col-lg-3 col-sm-6">
+				        <div class="ui_text_rt col-lg-4 col-sm-4">检测负责人：</div>
+				        <select class="ui_select01 col-lg-8 col-sm-8" id="inspectionSupervisorId" name="inspectionSupervisorId"></select>
+				     </div>
+			    	 <div class="newLine col-lg-3 col-sm-6">
+				        <div class="ui_text_rt col-lg-4 col-sm-4">检测单位：</div>
+				        <select class="ui_select01 col-lg-8 col-sm-8" id="detectionUnitId" name="detectionUnitId"></select>
+				     </div>
+					<div class="newLine col-lg-12 col-sm-12">
+					     <div class="ui_text_rt col-lg-1 col-sm-2">报告备注：</div>
+					     <textarea id="reportRemarks" class="col-lg-11 col-sm-10" name="reportRemarks" style="height: 100px;resize:none" maxlength="255"></textarea>
+				    </div>
+				    <div class="newLine col-lg-12 col-sm-12">
+					     <div class="ui_text_rt col-lg-1 col-sm-2">内部备注：</div>
+					     <textarea id="insideRemarks" class="col-lg-11 col-sm-10" name="insideRemarks" style="height: 100px;resize:none" maxlength="255"></textarea>
+				    </div>
+				    <input type="button" id="saveBtn" onclick="save()" value="保存" class="ui_input_btnsave " /><input type="button" value="关闭" onclick="location.href='out_detection.html'" class="ui_input_btnclose "/>
+				</div>
+			</div>
+		</form>
+
+	</body>
+	<script type="text/javascript">
+		//tableList1下的 除了第一个
+		//给单元格注册鼠标点击事件
+		$("#tableList1 td:not(:first)").click(function() {
+			edit(this);
+		});
+	</script>
+
+</html>

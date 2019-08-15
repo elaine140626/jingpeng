@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>吉东公路智慧公路平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree.css"/>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+<style type="text/css">
+.pagination {
+	position: relative;
+    left: 50%;
+    transform: translate(-50%,0%);
+}
+
+</style>
+</head>
+
+<body>
+<div class="container-fluid top">
+	<div class="topleft">吉东公路智慧公路平台</div>
+        <div class="topright">
+            <span class="userid"></span><span>你好！</span>
+            <a href="../testUserInfo/userinfo.html?flag=true" target="_blank" class="shezhi">用户管理</a>
+            <a href="../testUserInfo/login.html" class="out">安全退出</a>
+        </div>
+
+</div>
+<div class="container-fluid">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="../testUserInfo/index.html" class="nav1">首页</a></li>
+                <li><a href="../TestCollection/shiyan_3.html" class="nav4">试验收样</a></li>
+                <li><a href="../testInfo/shiyan_1.html" class="nav2">试验汇总</a></li>
+                <li><a href="../TestSelect/shiyan_2.html" class="nav3">试验查询</a></li>
+                <li><a href="../TestAutoCollection/shiyan_4.html" class="nav5">自动采集</a></li>
+                <li><a href="../BlindSampleDetection/shiyan_5.html" class="nav6">盲样检测</a></li>
+                <li><a href="../BlindSample/shiyan_6.html" class="focus_g">指标维护</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置： 结果判定指标维护 > 沥青混合料马歇尔稳定度试验</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+				<ul id="myTab" class="nav nav-tabs">
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6.html');"><strong>水泥胶砂强度</strong></a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_2.html');">沥青三大指标</a></li>
+                     <li class="active"><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_3.html');"><strong>马歇尔</strong></a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_4.html');"><strong>钢筋抗拉强度、屈服强度、伸长率</strong></a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_5.html');"><strong>钢筋接头抗拉强度、冷弯</strong></a></li>
+                 </ul>
+                <div class="lq_main">
+                	<form id="addForm">
+                		<p class="jiance">稳定度下限
+                		<input name="stablowerlimit" type="text" id="stablowerlimit" placeholder="输入稳定度下限" required="required" maxlength="40" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                		<label>稳定度上限</label>
+                		<input name="stabupperlimit" type="text" id="stabupperlimit" placeholder="输入稳定度上限" required="required" maxlength="40" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                		
+                		<label>流值下限</label>
+                		<input name="flowlowerlimit" type="text" id="flowlowerlimit" placeholder="输入流值下限" required="required" maxlength="40" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                		<label>流值上限</label>
+                		<input name="flowupperlimit" type="text" id="flowupperlimit" placeholder="输入流值上限" required="required" maxlength="40" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                		
+                		<input id="button" name="button" type="button" value="保  存" class="btncha" onclick="add();">
+                		</p>               	
+                	</form>
+  
+                    <div class="lq_biao">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="marshall">
+	                        <thead>
+		                      <tr>
+	                            <th width="6%" class="xh" scope="col">序号</th>
+	                            <th width="15%" scope="col">马歇尔</th>
+	                            <th width="13%" scope="col">流值</th>
+	                            <th width="17%" scope="col">操作</th>
+	                          </tr>
+	                        </thead>                        
+                        </table>
+					</div>
+                    
+          		</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于 我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/js/indexMaintenanceMarshall.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+</body>
+</html>

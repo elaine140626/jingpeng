@@ -1,0 +1,82 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/product_analysis.js" type="text/javascript" charset="utf-8"></script>
+
+<ul id="myTab" class="nav nav-tabs">
+	<li class="active">
+		<a href="#productivity" data-toggle="tab"><strong>产能分析</strong></a>
+	</li>
+	<li>
+		<a href="#material-consumption" data-toggle="tab"><strong>材料消耗分析</strong></a>
+	</li>
+	<li>
+		<a href="#asphalt-aggregate" data-toggle="tab"><strong>油石比波动</strong></a>
+	</li>
+</ul>
+<div id="TabContain" class="tab-content">
+	<!-- 产能分析 -->
+	<div class="tab-pane fade in active" id="productivity">
+		<div style="margin-top: 10px;margin-left: 100px;">查询条件：
+			<input type="radio" name="date" value="day" checked="checked"/>天
+			<input type="radio" name="date" value="month"/>月
+			<input type="radio" name="date" value="year"/>年
+		</div>
+		<div class="chartcol" id="productivity_echar"></div>
+	</div>
+	<!-- 材料消耗分析 -->
+	<div class="tab-pane fade" id="material-consumption">
+		<div class="charttt" id="materials_echar"></div>
+		<div class="lq_biao">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" id="ycl">
+				<thead>
+					<tr>
+						<th rowspan="2" scope="col">序号</th>
+						<th rowspan="2" scope="col">拌合站名称</th>
+						<th colspan="2" scope="col">原材料消耗</th>
+						<th rowspan="2" scope="col">明细</th>
+					</tr>
+					<tr>
+						<th scope="col">原材料名称</th>
+						<th scope="col">消耗量</th>
+					</tr>
+		
+				</thead>
+				<tbody id="tab"></tbody>
+			</table>
+		</div>
+		<div class="modal fade" id="loginModal">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="tan_dx_title">
+						<span><img src="../../image/images/chakan.png" width="16" height="16"></span>
+						<h3>原材料消耗明细</h3>
+						<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+					</div>
+					<div class="tan_dx_txt">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" id="ma">
+							<thead>
+								<tr>
+									<th scope="col">序号</th>
+									<th scope="col">日期</th>
+									<th colspan="2" scope="col">原材料消耗</th>
+								</tr>
+							</thead>
+							<tbody id="wtb"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 油石比波动 -->
+	<div class="tab-pane fade" id="asphalt-aggregate">
+		<select id="AsphaltMaterialList" onchange="onchangeEchar()">
+			<option value="">查询全部</option>
+		</select>
+		
+		<div class="charttt" id="shiYou_echar"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#myTab li').click(function() {
+		var tabName = $(this).find('a').attr('href');
+	})
+</script>

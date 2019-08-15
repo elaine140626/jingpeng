@@ -1,0 +1,92 @@
+<!-- 沥青原材料管理 -->
+<script src="../../js/mixStation/pitch/mesh_size.js" type="text/javascript" charset="utf-8"></script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 筛孔管理</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<!-- <div class="shu_btn">
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+				<div class="dtree_Tree">
+					<div class="dTreeNode rootNode">
+						<a>吉东公路盲样试验室</a>
+					</div>
+					<div id="dd0-1" class="clip" style="display:block;">
+						<div class="dTreeNode"><img src="../../image/img/joinbottom.gif" alt="">
+							<a id="sd1" class="node" href="#" onmouseover="window.status='authority';return true;" onmouseout="window.status='';return true;">
+								<input type="checkbox" desc="ZS1中心试验室" name="authority" id="authority_2" cshow="ZS1中心试验室" value="ZS1" onclick="javascript: d.checkNode(2,0,false,&quot;ZS1中心试验室&quot;,this.checked);"
+								 checked="checked">
+								<span class="dtree_node" node_id="2">ZS1中心试验室</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="show()">新增筛孔</a></div>
+			<div class="table-a-right table-b-right">
+				<div id="materialList_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+					<table width="100%" class="table table-hover" id="meshSizeTable">
+						<!-- <thead>
+							<tr role="row">
+								<th scope="col" width="10%">序号</th>
+								<th scope="col" width="70%">筛孔型号</th>
+								<th scope="col" width="20%">操作</th>
+							</tr>
+						</thead> -->
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>新增筛孔信息</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt">
+				<form id="addForm">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+						<tbody>
+							<tr>
+								<td width="37%" align="right">筛孔型号：<br></td>
+								<td width="63%">
+									<input name="meshSize" type="text" id="meshSize" placeholder="输入筛孔规格" required="required"
+									 maxlength="40"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr style="height:1px">
+								<td><input type="hidden" id="orgId" name="orgId"></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center">
+									<input type="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="saveOrUpdate()">
+								 </td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#toggle').on('click', function(event) {
+		event.stopPropagation();
+		$(this).siblings('#content').toggle();
+		var tag = $(this).siblings('#content');
+		var flag = true;
+		$(document).bind("click", function(e) {
+			var target = $(e.target);
+			if (target.closest(tag).length == 0 && flag == true) {
+				$(tag).hide();
+				flag = false;
+			}
+		});
+	});
+</script>

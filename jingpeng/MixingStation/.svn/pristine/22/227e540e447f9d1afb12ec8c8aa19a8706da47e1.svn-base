@@ -1,0 +1,93 @@
+package com.mix.service.cement.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.mix.dao.cement.Cement_TheoryProportionDao;
+import com.mix.model.Cement_ConsPropDetailed;
+import com.mix.model.Cement_TheoPropDetailed;
+import com.mix.model.Cement_TheoryProportion;
+import com.mix.model.V_MaterialInfo;
+import com.mix.service.cement.Cement_TheoryProportionService;
+@Service
+@Transactional
+public class Cement_TheoryProportionServiceImpl implements Cement_TheoryProportionService {
+
+	@Autowired
+	private Cement_TheoryProportionDao cement_TheoryProportionDao;
+	
+	//查询水泥理论配比
+	@Override
+	public List<Cement_TheoryProportion> getCement_TheoryProportion(HashMap<String, Object> map) {
+		return cement_TheoryProportionDao.getCement_TheoryProportion(map);
+	}
+
+	//查询水泥施工理论配比明细
+	@Override
+	public List<Cement_ConsPropDetailed> getCement_TheoryDetailByProporId(
+			Cement_ConsPropDetailed cement_ConsPropDetailed) {
+		return cement_TheoryProportionDao.getCement_TheoryDetailByProporId(cement_ConsPropDetailed);
+	}
+
+	//通过施工配比编号获取所有的物料id
+	@Override
+	public List<Map<String, Object>> getAllMaterials_id(Map<String, Object> map) {
+		return cement_TheoryProportionDao.getAllMaterials_id(map);
+	}
+
+	//材料名称
+	@Override
+	public List<Map<String, Object>> getYclList(Cement_ConsPropDetailed cement_ConsPropDetailed) {
+		return cement_TheoryProportionDao.getYclList(cement_ConsPropDetailed);
+	}
+
+	//材料类型
+	@Override
+	public List<Map<String, Object>> getYclModelList(Map<String, Object> map) {
+		return cement_TheoryProportionDao.getYclModelList(map);
+	}
+
+	//通过id查询水泥理论配比
+	@Override
+	public List<Cement_TheoryProportion> getCement_TheoryProportionById(
+			Cement_TheoryProportion cement_TheoryProportion) {
+		return cement_TheoryProportionDao.getCement_TheoryProportionById(cement_TheoryProportion);
+	}
+
+	@Override
+	public List<Cement_TheoPropDetailed> select_Asph_TargetPropDetailed(
+			Cement_TheoPropDetailed cement_TheoPropDetailed) {
+		return cement_TheoryProportionDao.select_Asph_TargetPropDetailed(cement_TheoPropDetailed);
+	}
+
+	//获取水泥配比编号
+	@Override
+	public List<Cement_TheoryProportion> getCementProportionCode(Cement_TheoryProportion cement_TheoryProportion) {
+		return cement_TheoryProportionDao.getCementProportionCode(cement_TheoryProportion);
+	}
+
+	@Override
+	public int addCement_TheoryProportion(Map<String, Object> map) {
+		return cement_TheoryProportionDao.addCement_TheoryProportion(map);
+	}
+
+	@Override
+	public int updateCement_TheoryProportion(Map<String, Object> map) {
+		return cement_TheoryProportionDao.updateCement_TheoryProportion(map);
+	}
+
+	@Override
+	public int deletCement_TheoryProportion(Cement_TheoryProportion cement_TheoryProportion) {
+		return cement_TheoryProportionDao.deletCement_TheoryProportion(cement_TheoryProportion);
+	}
+
+	@Override
+	public List<V_MaterialInfo> getRawMaterial(Map<String, Object> map) {
+		return cement_TheoryProportionDao.getRawMaterial(map);
+	}
+}

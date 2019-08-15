@@ -1,0 +1,104 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/mix_proportion.js" type="text/javascript" charset="utf-8"></script>
+<div class="luru" data-toggle="modal" onclick="getSelect()">
+	<a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn">配比设定</a>
+</div>
+<div class="lq_biao">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="Deviation_Asphalt">
+		<thead>
+			<tr>
+				<th scope="col" class="xh" width="5%">序号</th>
+				<th scope="col" width="10%">操作</th>
+				<th scope="col" width="15%">拌和站名称</th>
+				<th scope="col" width="10%">生产配合比编号</th>
+				<th scope="col" width="15%">混合料名称/型号</th>
+				<th scope="col" width="5%">执行状态</th>
+				<th scope="col" width="13%">最后一次执行时间</th>
+				<th scope="col" width="6%">录入人</th>
+				<th scope="col" width="13%">录入时间</th>
+				<th scope="col" width="10%">备注</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div class="modal fade" id="loginModal" >
+	<div class="modal-dialog modal-lg" >
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>配比设定</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt3" style="padding: 0 20px;">
+			<form id="addForm">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fazhi">
+					<tr>
+						<td width="30%" align="right">拌和站名称：</td>
+						<td width="70%" align="left">
+							<select name="Org_Id" id="Org_Id" style="width: 348px">
+							</select>
+							<span style="color:red;">*</span>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">混合料名称/型号：</td>
+						<td align="left">
+						<input name="Material_Name" type="text" id="Material_Name" placeholder="请输入混合料名称" maxlength="15" style="width:168px;">
+						<span>&nbsp;</span>
+						<input name="Material_Model" type="text" id="Material_Model" placeholder="请输入混合料型号" maxlength="15" style="width:168px;">
+						<span style="color:red;">*</span>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">生产配合比编号：</td>
+						<td align="left">
+						<input name="mix_Number" type="text" id="mix_Number" placeholder="请输入生产配合比编号" maxlength="15" style="width:348px;">
+						<span style="color:red;">*</span>
+						</td>
+					</tr>
+						<tr>
+						<td align="right">备注：</td>
+						<td align="left">
+						<input name="remarks" type="text" id="remarks" placeholder="" maxlength="150" style="width:348px;">
+						</td>
+					</tr>
+				</table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fazhi" style="text-align:center">
+					<tr style="background:#31708f;color:#fff;">
+						<td width="8%" style="border: 1px solid #dadada;border-collapse: collapse;">料仓名称</td>
+						<td width="8%"style="border: 1px solid #dadada;border-collapse: collapse;">沥青</br>(油石比%)</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">1#仓</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">2#仓</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">3#仓</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">4#仓</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">5#仓</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">6#仓</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">热粉</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">冷粉1</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">冷粉2</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">外掺剂1</td>
+						<td width="7%"style="border: 1px solid #dadada;border-collapse: collapse;">外掺剂2</td>
+					</tr>
+					<tr>
+						<td style="background:#31708f;color:#fff;border: 1px solid #dadada;border-collapse: collapse;">比例</br>(%)</td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_1" id="str_material_1" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_2" id="str_material_2" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_3" id="str_material_3" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_4" id="str_material_4" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_5" id="str_material_5" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_6" id="str_material_6" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_7" id="str_material_7" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_8" id="str_material_8" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_9" id="str_material_9" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_10" id="str_material_10" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_11" id="str_material_11" onkeyup="checkPoint(this)"></td>
+						<td style="border: 1px solid #dadada;border-collapse: collapse;"><input style="width:100%;height:100%" name="str_material_12" id="str_material_12" onkeyup="checkPoint(this)"></td>
+					</tr>
+					<tr>
+						<td colspan="13" align="center"><input type="button" id="sdff" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addss()"></td>
+					</tr>
+				</table>
+			</form>
+			</div>
+		</div>
+	</div>
+</div>

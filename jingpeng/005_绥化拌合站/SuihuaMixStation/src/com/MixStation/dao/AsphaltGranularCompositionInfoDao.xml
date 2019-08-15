@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.AsphaltGranularCompositionInfoDao">
+	
+	<!-- 查询工区下启用的配合比 -->
+	<select id="getApshaltMixProportion" resultType="com.MixStation.model.ApshaltMixProportionEntity" parameterType="java.util.Map">
+		select 
+			Id             as id,-- 自增长id
+			Org_ID         as Org_Id,-- 组织机构id
+			Material_Name  as Material_Name,-- 混合料名称 
+			Material_Model as Material_Model,-- 混合料型号
+			Mix_Number     as Mix_Number,-- 生产配比编号
+			IsEnable       as IsEnable-- 0:未启用       1:启用
+		from 
+			Asphalt_Mix_Proportion -- 生产配比表
+		where 
+			Valid_Flag = 1
+			and IsEnable = 1
+			and Org_ID = #{orgId}
+			<if test="mixNumber != null and mixNumber != ''">
+				and Mix_Number = #{mixNumber}
+			</if>
+	</select>
+	
+	<!-- 查询工区下启用过的配合比 -->
+	<select id="getApshaltMixProportionUsed" resultType="com.MixStation.model.ApshaltMixProportionEntity" parameterType="java.util.Map">
+		select 
+			Id             as id,-- 自增长id
+			Org_ID         as Org_Id,-- 组织机构id
+			Material_Name  as Material_Name,-- 混合料名称 
+			Material_Model as Material_Model,-- 混合料型号
+			Mix_Number     as Mix_Number,-- 生产配比编号
+			IsEnable       as IsEnable-- 0:未启用       1:启用
+		from 
+			Asphalt_Mix_Proportion -- 生产配比表
+		where 
+			Valid_Flag = 1
+			and Modify_Date is not null
+			and Org_ID = #{orgId}
+			<if test="mixNumber != null and mixNumber != ''">
+				and Mix_Number = #{mixNumber}
+			</if>
+	</select>
+	
+	<!-- 查询所有筛孔 -->
+	<select id="getAllMeshSizeInfo" resultType="com.MixStation.model.MeshSizeInfoEntity" parameterType="java.util.Map">
+		select 
+			id        as id,-- 自增长id
+			mesh_size as meshSize-- 筛孔大小
+		from
+			mesh_size_info -- 筛孔信息表
+		where
+			Valid_Flag = 1
+			and org_id = #{orgId}
+		order by meshSize desc
+	</select>
+
+	<!-- 查询所有级配信息 -->
+	<select id="getAllAsphaltGradingInfo" resultType="com.MixStation.model.AsphaltGradingInfoEntity" parameterType="java.util.Map">
+		select 
+			agi.Id             as id,-- 自增长id
+			agi.Mp_Id          as mpId,-- 生产配比id
+			agi.Org_Id         as orgId,-- 拌合站id
+			agi.Material_Name  as materialName,-- 混合料名称
+			agi.Material_Model as materialModel,-- 混合料型号
+			agi.Grade_Code     as gradeCode,-- 级配编号
+			agi.Remarks        as remarks,-- 备注
+			agi.IsEnable       as isEnable,-- 是否启用：1启用，0未启用
+			agi.IsUsed         as isUsed,-- 是否启用过：1启用过，0未启用过
+			agi.Operator       as operator,-- 创建者
+			CONVERT(varchar (100), agi.Create_Date, 20)   as createDate,-- 创建时间
+			oi.Org_Name        as orgName,-- 拌合站名称
+			amp.Mix_Number     as mixNumber-- 生产配比编号
+		from 
+			Asphalt_Grading_Info agi
+			left join Asphalt_Mix_Proportion amp
+			on agi.Mp_Id = amp.Id
+			and amp.Valid_Flag = 1
+			left join Organization_Info oi
+			on agi.Org_Id = oi.Id
+			and oi.Valid_Flag = 1
+		where
+			agi.Valid_Flag = 1
+			<if test="id != '' and id != null">
+				and agi.Id = #{id}
+			</if>
+			<if test="orgId != '' and orgId != null">
+				and agi.Org_Id = #{org_Id}
+			</if>
+		order by agi.Create_Date desc
+	</select>
+
+	<!-- 新增级配 -->
+	<insert id="addAsphaltGradingInfo" parameterType="com.MixStation.model.AsphaltGradingInfoEntity">
+		insert into Asphalt_Grading_Info(
+			Org_Id,
+			Mp_Id,
+			Material_Name,
+			Material_Model,
+			Grade_Code,
+			Remarks,
+			Operator,
+			Create_Date,
+			Valid_Flag,
+			IsEnable,
+			IsUsed
+		)
+		values(
+			#{orgId},
+			#{mixNumber},
+			#{materialName},
+			#{materialModel},
+			#{gradeCode},
+			#{remarks},
+			#{operator},
+			CONVERT (VARCHAR(100), GETDATE(), 20),
+			1,
+			0,
+			0
+		)
+	</insert>
+	
+	<!-- 获取刚增加级配的id -->
+	<select id="getAsphaltGradingInfoId" resultType="int" parameterType="String">
+		select 
+			max(Id) as id -- 最大id值
+		from 
+			Asphalt_Grading_Info -- 级配信息表
+		where
+			Operator = #{operator}
+	</select>
+	
+	<!-- 新增筛孔通过率 -->
+	<insert id="insertAsphaltGradDetailed" parameterType="com.MixStation.model.AsphaltGradDetailedEntity">
+		insert into Asphalt_GradDetailed(
+			Grad_ID,
+			Ware1,
+			Ware2,
+			Ware3,
+			Ware4,
+			Ware5,
+			Ware6,
+			Cold_Powder1,
+			Cold_Powder2,
+			Hot_Powder,
+			Upper_Limit,
+			Lower_Limit,
+			Valid_Flag,
+			Mesh_Id,
+			Operator,
+			Create_Date
+		)
+		values(
+			#{gradId},
+			#{ware1},
+			#{ware2},
+			#{ware3},
+			#{ware4},
+			#{ware5},
+			#{ware6},
+			#{coldPowder1},
+			#{coldPowder2},
+			#{hotPowder},
+			#{upperLimit},
+			#{lowerLimit},
+			1,
+			#{meshId},
+			#{operator},
+			CONVERT (VARCHAR(100), GETDATE(), 20)
+		)
+	</insert>
+	
+	<!-- 通过级配id查询级配信息 -->
+	<select id="getAsphaltGradingInfoById" resultType="com.MixStation.model.AsphaltGradingInfoEntity" parameterType="java.util.Map">
+		select 
+			agi.Id             as id,-- 自增长id
+			agi.Mp_Id          as mpId,-- 生产配比id
+			agi.Org_Id         as orgId,-- 拌合站id
+			agi.Material_Name  as materialName,-- 混合料名称
+			agi.Material_Model as materialModel,-- 混合料型号
+			agi.Grade_Code     as gradeCode,-- 级配编号
+			agi.Remarks        as remarks,-- 备注
+			agi.IsEnable       as isEnable,-- 是否启用：1启用，0未启用
+			agi.IsUsed         as isUsed,-- 是否启用过：1启用过，0未启用过
+			agi.Operator       as operator,-- 创建者
+			CONVERT(varchar (100), agi.Create_Date, 20)   as createDate,-- 创建时间
+			oi.Org_Name        as orgName,-- 拌合站名称
+			amp.Mix_Number     as mixNumber-- 生产配比编号
+		from 
+			Asphalt_Grading_Info agi
+			left join Asphalt_Mix_Proportion amp
+			on agi.Mp_Id = amp.Id
+			and amp.Valid_Flag = 1
+			left join Organization_Info oi
+			on agi.Org_Id = oi.Id
+			and oi.Valid_Flag = 1
+		where
+			agi.Valid_Flag = 1
+			and agi.Id = #{id}
+	</select>
+	
+	<!-- 通过级配id查询筛孔通过率信息 -->
+	<select id="getAsphaltGradDetailedByGradId" resultType="com.MixStation.model.AsphaltGradDetailedEntity" parameterType="java.util.Map">
+		select
+			agd.Id           as id,-- 自增长id
+			agd.Grad_ID      as gradId,-- 生产配比id
+			agd.Ware1        as ware1,-- 1仓
+			agd.Ware2        as ware2,-- 2仓
+			agd.Ware3        as ware3,-- 3仓
+			agd.Ware4        as ware4,-- 4仓
+			agd.Ware5        as ware5,-- 5仓
+			agd.Ware6        as ware6,-- 6仓
+			agd.Cold_Powder1 as coldPowder1,-- 冷粉1
+			agd.Cold_Powder2 as coldPowder2,-- 冷粉2
+			agd.Hot_Powder   as hotPowder,-- 热粉
+			agd.Upper_Limit  as upperLimit,-- 级配上限
+			agd.Lower_Limit  as lowerLimit,-- 级配下限
+			agd.Mesh_Id      as meshId-- 筛孔id
+		from 
+			Asphalt_GradDetailed agd -- 筛孔通过率表
+		where
+			agd.Valid_Flag = 1
+			and agd.Grad_ID = #{id}
+	</select>
+	
+	<!-- 修改级配 -->
+	<insert id="upateAsphaltGradingInfo" parameterType="com.MixStation.model.AsphaltGradingInfoEntity">
+		update Asphalt_Grading_Info
+			set
+				Org_Id = #{orgId},
+				Mp_Id = #{mixNumber},
+				Material_Name = #{materialName},
+				Material_Model = #{materialModel},
+				Grade_Code = #{gradeCode},
+				Remarks = #{remarks},
+				Modifier = #{operator},
+				Modify_Date = CONVERT (VARCHAR(100), GETDATE(), 20),
+				Valid_Flag = 1
+			where
+				Id = #{id}
+	</insert>
+	
+	<!-- 删除筛孔通过率 -->
+	<delete id="deleteAsphaltGradDetailed" parameterType="String">
+		delete
+		from
+			Asphalt_GradDetailed
+		where
+			Grad_ID = #{id}
+	</delete>
+	
+	<!-- 删除通过率（逻辑删） -->
+	<update id="deleteAsphaltGradDetailedInfo" parameterType="java.util.Map">
+		update Asphalt_GradDetailed
+			set
+				Valid_Flag = 0,
+				Modifier = #{modifier}
+			where
+				Grad_ID = #{id}
+	</update>
+	
+	<!--删除级配信息） -->
+	<update id="deleteAsphaltGradingInfo" parameterType="java.util.Map">
+		update Asphalt_Grading_Info
+			set
+				Valid_Flag = 0,
+				Modifier = #{modifier}
+			where
+				Id = #{id}
+	</update>
+	
+	<!-- 启用级配 -->
+	<update id="enableAsphaltGradingInfo" parameterType="java.util.Map">
+		update Asphalt_Grading_Info
+			set
+				IsEnable = 1,
+				IsUsed = 1
+			where
+				Id = #{id}
+	</update>
+	
+	<!-- 同一配比下只能有一个启动的级配 -->
+	<update id="updateOtherEnable" parameterType="java.util.Map">
+		update Asphalt_Grading_Info
+			set
+				IsEnable = 0
+			where
+				Id != #{id}
+				and Mp_Id = #{mpId}
+	</update>
+	
+	<!-- 级配编号去重 -->
+	<select id="selectGradeCode" resultType="String">
+		select
+		  count(*) as count
+		from 
+		  Asphalt_Grading_Info 
+		WHERE
+		  Valid_Flag = 1
+		  and Grade_Code = #{gradeCode}
+		  and Org_Id = #{orgId}
+		  <if test="id!=null and id!=''">
+		  and Id != #{id}
+		  </if>	
+	</select>
+</mapper>

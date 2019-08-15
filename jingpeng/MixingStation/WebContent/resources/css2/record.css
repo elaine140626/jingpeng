@@ -1,0 +1,163 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+	margin: 0;
+	padding: 0;
+}
+/*body {
+	font-family: "宋体", Arial, "宋体";
+	font-size: 10pt;
+}*/
+.clear{
+	clear:both;
+}
+label {
+	font-weight: normal;
+	font-size:12px;
+}
+table {
+	width: 100%;
+	color:#000;
+}
+.jilu_main{
+	width:680px;
+	height:1068px;
+	margin: 10px auto 0;
+	font-family: "宋体", Arial;
+}
+.jilu_main_s{
+	width: 1068px;
+	height: 680px;
+	margin: 10px auto 0;
+	font-family: "宋体", Arial;
+}
+.table_1{
+	text-align:right;
+	font-size:12px;
+	font-family:"宋体";
+}
+.table_1 td{
+	height:80px;
+}
+.jilu_title{
+	height:44px;
+	font-size:16pt;
+	line-height:22px;
+	text-align:center;
+	font-weight:bold;
+}
+.table_2{
+	font-size:12px;
+	font-family:"宋体";
+	height:36px;
+}
+.table_3,.table_3 td,.table_4,.table_4 td,.table_5,.table_5 td,.table_6,.table_6 td,.table_7,.table_7 td{
+	text-align:center;
+	border:1px solid #000;
+	border-collapse:collapse;
+	border-bottom:none;
+}
+.table_5,.table_5 td{
+	text-align:left;
+	height:80px;
+}
+.table_3 td,.table_4 td,.table_5 td,.table_6 td,.table_7 td{
+	height:30px;
+	line-height:30px;
+	font-family:"宋体";
+	font-size:12px;
+}
+.table_3 td label,.table_4 td label,.table_5 td label,.table_6 td label{
+	font-family:"宋体";
+	font-size:12px;
+}
+.table_6,.table_6 td{
+	text-align:left;
+	height:66px;
+}
+.xbj1{
+	border-bottom:1px solid #000;
+}
+.table_footer,.table_footer_2{
+	height:24px;
+	line-height:24px;
+	font-family:"宋体";
+	font-size:12px;
+}
+.table_7{
+	height:60px;
+	text-align:center;
+}
+.table_footer span,.table_footer_2 span{width:60px; display:inline-block;}
+
+.dingwei{
+	position:absolute;
+	right:0;
+	top:0px;
+}
+.dingwei img{
+	width:100px;
+	height:100px;
+}
+
+
+.tubiao{
+	position:relative;
+	width:16px;
+	height:16px;
+	vertical-align:text-bottom;
+}
+.tubiao_c{
+	display:none;
+}
+.tubiao_c img{
+	width:auto;
+	height:280px;
+}
+/*.tubiao:hover img{
+	display:block;
+}
+	*/
+
+
+
+
+.tan_dx_title{
+	height:40px;
+	line-height:40px;
+	background:#2b86cd;
+	color:#fff;
+}
+.tan_dx_title span{
+	padding-left:15px;
+}
+.tan_dx_title h3{
+	font-size:14px;
+	display:inline;
+	font-weight:bold;
+	font-family:"微软雅黑";
+}
+.tan_close{
+	padding-right:10px;
+	font-size:30px;
+	padding-top:2px;
+}
+.tan_dx_txt{
+	padding:20px;
+	max-height: 450px;
+    overflow-y: auto;
+}
+.tan_dx_txt img{
+	width:545px;
+	height:auto;
+}
+.fanhui{
+	text-align:right;
+	padding:20px 0;
+	font-size:12px;
+}
+.fanhui a{
+	color:#06C;
+	text-decoration:underline;
+}

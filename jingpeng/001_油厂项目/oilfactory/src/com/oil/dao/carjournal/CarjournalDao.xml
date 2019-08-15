@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.carjournal.CarjournalDao">
+
+<select id="getCarjournalList" parameterType="java.util.Map" resultType="Carjournal">
+	SELECT  
+	Id as id
+	, CarNumber as carNumber
+	, VehicleCondition as vehicleCondition
+	, IsDel as isDel
+	, Creater as creater
+	, CreaterDate as createrDate
+	, Reviser as reviser
+	, ReviserDate as reviserDate
+	FROM carjournal
+	WHERE IsDel = 0 
+	<if test="id != null and id != ''">
+		AND Id = #{id}
+	</if>
+	<if test="carNumber != null and carNumber != ''">
+		AND CarNumber = #{carNumber}
+	</if>
+	ORDER BY CreaterDate desc
+</select>
+
+<insert id="addCarjournal" parameterType="Carjournal">
+	INSERT 
+	INTO carjournal(
+	CarNumber
+	,VehicleCondition
+	,IsDel
+	,Creater
+	,CreaterDate
+	) 
+	VALUES (
+	   #{carNumber} 
+	  , #{vehicleCondition}
+	  , 0
+	  , #{creater}
+	  , now()
+	  )
+</insert>
+
+<!-- 合同明细更新删除 -->
+<delete id="deleteCarjournal" parameterType="Carjournal">
+	delete 
+	from
+	  carjournal 
+	WHERE
+	  Id = #{id} 
+</delete>
+
+	<!-- 查询 皮重或者净重不为空或者出厂时间为空 -->
+	<select id="getExportmeasureFactoryTime" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+	  e.Id as id,
+		e.TareWeight as tareWeight,
+		e.Suttle as suttle,
+		e.FactoryTime as factoryTime,
+		e.PlateNumber as PlateNumber
+	FROM exportmeasure e
+	WHERE e.IsDel = 0 and suttle is not null and tareWeight is not null and factoryTime is null
+	<if test="plateNumber!=null and plateNumber!=''">
+		and PlateNumber = #{plateNumber}
+	</if>
+	</select>
+	
+	<!-- 添加出厂时间 -->
+	<update id="addExportmeasureFactoryTime" parameterType="java.util.Map">
+		UPDATE exportmeasure 
+		SET
+		  FactoryTime = now()
+		WHERE
+		  Id = #{id}
+	</update>
+
+</mapper>

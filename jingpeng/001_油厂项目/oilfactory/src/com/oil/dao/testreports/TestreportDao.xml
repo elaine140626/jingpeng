@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.testreports.TestreportDao">
+
+	<!-- 客户名称 -->
+	<select id="getTestreportName" resultType="java.util.Map">
+		select
+		  id            -- id
+		  , userName    -- 用户名称
+		  , telephone   -- 用户电话
+		from
+		  userinfo 
+		where
+		  isDel = 0
+		  AND roleCode = "3" 
+		order by
+		id desc
+	</select>
+	<!-- 客户名称 -->
+	<select id="getUserinfo" parameterType="java.util.Map" resultType="Userinfo">
+		select
+		  id            -- id
+		  , userName    -- 用户名称
+		  , telephone   -- 用户电话
+		from
+		  userinfo 
+		where
+		  isDel = 0
+		  AND roleCode = "3"
+		  AND id = #{testPersonnelId} 
+		order by
+		id desc
+	</select>
+	
+	<!-- 检测员信息(电话检索) -->
+	<select id="getTestreportNameInfo" resultType="java.util.Map">
+		select
+		  id
+		  , userName    -- 用户名称
+		  , telephone   -- 用户电话
+		from
+		  userinfo 
+		where
+		  isDel = 0
+		  AND roleCode = "3"
+		  <if test="telephones != null and telephones != ''">
+				AND telephone like concat('%',#{telephones},'%') 
+			</if> 
+		order by
+		id desc
+	</select>
+	
+	<!-- 查询出库单表数据 -->
+	<select id="getExportmeasure" parameterType="java.util.Map" resultType="Exportmeasure">
+		select
+		  ex.id
+		  , ex.Serial_ID as SerialID-- 用户名称
+		  , ex.IDCode -- 用户电话
+		  , ex.WeighType
+		  , ex.SalesOrderId
+		  , ex.PlateNumber
+		  , ex.Client
+		  , c.CustomerName
+		  , ex.CustomerAlias
+		  , ex.Address
+		  , ex.Consignee
+		  , ex.ConsigneePhone
+		  , ex.ProductID
+		  , ex.LbsMaterialName
+		  , ex.LbsOutputName
+		  , ex.DeliveryMan
+		  , ex.DeliveryManPhone
+		  , ex.CarOwner
+		  , ex.CarOwnerTelephone
+		  , ex.Remarks
+		  , ex.TestReportId
+		  , ex.TechniqueSpecification
+		  , ex.TareWeight
+		  , ex.TareOperator
+		  , ex.TareMeasureTime
+		  , ex.GrossWeight
+		  , ex.FactoryTime
+		  , ex.GrossMeasureTime
+		  , te.ExportStorageId as aftExportStorageId
+		  , te1.ExportStorageId as befExportStorageId
+		  , CASE  
+			WHEN te.IsQualified=1 THEN
+				"不合格"
+			WHEN ex.TestReportId is NULL THEN
+				"不合格"
+			ELSE
+				"合格"
+			END flag
+		  , sd.IsExchange as isExchange                     -- 是否兑换
+		  , m.MaterielName         as exchangeMaterielName  -- 物料名称后
+		  , m.MaterielModel        as exchangeMaterielModel -- 规格型号后
+		  , m1.MaterielName        as materielName          -- 物料名称前
+		  , m1.MaterielModel       as materielModel         -- 规格型号前
+		from
+		  exportmeasure ex
+		  left join customerinfo c on c.CustomerCode = ex.Client AND c.IsDel = 0       -- 客户名称表
+		  LEFT JOIN testreport te ON ex.Id = te.ExportStorageId AND te.IsDel = 0 and te.Exchange = 0    -- 兑换后
+		  LEFT JOIN testreport te1 ON ex.Id = te1.ExportStorageId AND te1.IsDel = 0 and te1.Exchange = 1 -- 兑换前
+		  left join salesorderdetailed sd on ex.OrderDetailedId = sd.Id and sd.IsExchange = 0        -- 兑换
+		  LEFT JOIN materielinfo m1 ON sd.MaterielId = m1.Id and m1.IsDel = 0                        -- 兑换前
+		  LEFT JOIN materielinfo m ON ex.ProductID = m.Id and m.IsDel = 0                            -- 兑换后
+		where
+		  ex.isDel = 0
+		  <if test="id != null and id != ''">
+		  	AND ex.id = #{id}
+		  </if>
+		  <if test="conclusion != null and conclusion != ''">
+		  	AND (te.Conclusion = #{conclusion}
+		  	or te1.Conclusion = #{conclusion})
+		  </if>
+		  <if test="materielName != null and materielName != ''">
+			AND m1.MaterielName like concat('%',#{materielName},'%') 
+		  </if>
+		  <if test="materielModel != null and materielModel != ''">
+			AND m1.MaterielModel like concat('%',#{materielModel},'%') 
+		  </if>
+		  <if test="exchangeMaterielName != null and exchangeMaterielName != ''">
+			AND m.MaterielName like concat('%',#{exchangeMaterielName},'%') 
+		  </if>
+		  <if test="exchangeMaterielModel != null and exchangeMaterielModel != ''">
+			AND m.MaterielModel like concat('%',#{exchangeMaterielModel},'%') 
+		  </if>
+		order by
+		ex.id desc
+	</select>
+	
+	<!-- 查询入库单表数据 -->
+	<select id="getStoragemeasure" parameterType="java.util.Map" resultType="Storagemeasure">
+		select
+		  st.id
+		  , st.SerialID 
+		  , st.IDCode 
+		  , st.WeighType
+		  , st.ContractId
+		  , st.Client
+		  , st.CustomerAlias
+		  , st.ProductID
+		  , st.PlateNumber
+		  , st.DeliveryMan
+		  , st.DeliveryManPhone
+		  , st.CarOwner
+		  , st.CarOwnerTelephone
+		  , st.Remarks
+		  , st.PurchaseContractId
+		  , st.SupplierId
+		  , st.SupplierDeviation
+		  , st.SupplierSuttle
+		  , st.TareWeight
+		  , st.TareOperator
+		  , st.TareMeasureTime
+		  , st.GrossWeight
+		  , st.GrossOperator
+		  , st.GrossMeasureTime
+		  , st.Suttle
+		  , st.RealityDeviation
+		  , st.RealityDeviationType
+		  , st.SkillExplain
+		  , st.Amount
+		  , st.DeviationMark
+		  , st.LbsNetWeight
+		  , st.IsPrint
+		  , st.FilingPerson
+		  , st.IsManualFiling
+		  , st.FileCause
+		  , st.AbnormalFlag
+		  , st.AbnormalRemarks
+		  , st.AbnormalOperator
+		  , st.AbnormalDatetime
+		  , st.AbnormalPhone
+		  , st.CarType
+		  , st.Priority
+		  , st.Yardman
+		  , st.CancellationCause
+		  , st.EnterTypeMark
+		  , st.OutWarehouseId
+		  , st.TestReportId
+		  , st.TransportListId
+		  , st.LbsNumber
+		  , st.Upload
+		  , st.ValidFlag
+		  , st.IsHeavyCar
+		  , st.EnterDate
+		  , st.IsDel
+		  , st.Creater
+		  , st.CreaterDate
+		  , st.Reviser
+		  , st.ReviserDate
+		  , CASE  
+			WHEN te.IsQualified=1 THEN
+				"不合格"
+			WHEN st.TestReportId is NULL THEN
+				"不合格"
+			ELSE
+				"合格"
+			END flag
+		  , m.MaterielName
+		  , m.MaterielModel
+		from
+		  storagemeasure st
+		  LEFT JOIN testreport te ON st.TestReportId = te.id 
+		  LEFT JOIN materielinfo m ON st.ProductID = m.Id and m.IsDel = 0   
+		where
+		  st.isDel = 0
+		  <if test="id != null and id != ''">
+		  	AND st.id = #{id}
+		  </if>
+		  <if test="fyZldz != null and fyZldz != ''">
+			AND ( 
+			  st.Client like concat('%',#{fyZldz},'%') 
+			  or st.PlateNumber like concat('%',#{fyZldz},'%') 
+			)
+		</if>
+		order by
+		st.id desc
+	</select>
+	
+	<!-- 检测报告单表插入 -->
+	<insert id="insertTestreport" parameterType="Testreport" useGeneratedKeys="true" keyProperty="id">
+		INSERT 
+		INTO testreport( 
+		 SaleOrOut
+		  , ExportStorageId
+		  , ReportRenown
+		  , ProductModel
+		  , UsePlace
+		  , TestDate
+		  , TestReportNumber
+		  , IndexType
+		  , Conclusion
+		  , ReportRemarks
+		  , InsideRemarks
+		  , TestPersonnelId
+		  , ReviewerId
+		  , InspectionSupervisorId
+		  , DetectionUnitId
+		  , IsQualified
+		  , Exchange
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{saleOrOut}
+		  , #{exportStorageId}
+		  , #{reportRenown}
+		  , #{productModel}
+		  , #{usePlace}
+		  , #{testDate}
+		  , #{testReportNumber}
+		  , #{indexType}
+		  , #{conclusion}
+		  , #{reportRemarks}
+		  , #{insideRemarks}
+		  , #{testPersonnelId}
+		  , #{reviewerId}
+		  , #{inspectionSupervisorId}
+		  , #{detectionUnitId}
+		  , #{isQualified}
+		  , #{exchange}
+		  , 0
+		  , #{creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 检测报告单明细表插入 -->
+	<insert id="insertTestreportsaledetailed" parameterType="Testreportsaledetailed">
+		INSERT 
+		INTO testreportsaledetailed( 
+		 TestReportId
+		  , DetectionIndexId
+		  , SkillRequire
+		  , TestResult
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{testReportId}
+		  , #{detectionIndexId}
+		  , #{skillRequire}
+		  , #{testResult}
+		  , 0
+		  , #{creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 更新出库单的报告单号 -->
+	<update id="updateExportmeasure" parameterType="Exportmeasure">
+		UPDATE exportmeasure 
+		SET
+		  TestReportId = #{TestReportId}
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 更新入库单的报告单号 -->
+	<update id="updateStoragemeasure" parameterType="Storagemeasure">
+		UPDATE storagemeasure 
+		SET
+		  TestReportId = #{testReportId}
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}	
+	</update>
+	
+	<!-- 获取最新一条插入的数据id -->
+	<select id="getTestreportId" parameterType="Testreport" resultType="Integer">
+		select
+		  id
+		from
+		  testreport 
+		where
+		  isDel = 0 
+		order by
+		id desc
+		limit 1
+	</select>
+	
+	<!-- 空白报告单list -->
+	<select id="getTestreport" parameterType="java.util.Map" resultType="Testreport">
+		select
+		  t.id
+		 , t.SaleOrOut as saleOrOut
+		 , t.TestPersonnelId as testPersonnelId
+		 , cp.CachetName as testPersonnelName
+		 , t.ExportStorageId as exportStorageId
+		 , t.ReportRenown as reportRenown
+     	 , t.ProductModel as productModel
+     	 , t.UsePlace as usePlace
+         , t.TestReportNumber as testReportNumber
+		 , DATE_FORMAT(t.TestDate,'%Y-%m-%d') as TestDate
+		 , t.IndexType as indexType
+		 , getContentByCode('indexType', t.IndexType) as indexTypeName
+		 , t.Conclusion as conclusion
+		 , t.ReportRemarks as reportRemarks
+		 , t.InsideRemarks as insideRemarks
+		 , t.ReviewerId as reviewerId
+		 , t.InspectionSupervisorId as inspectionSupervisorId
+		 , t.DetectionUnitId as detectionUnitId
+		 , c.TestCompany as detectionUnitName
+		 , DATE_FORMAT(e.FactoryTime,'%Y年%m月%d日') as factoryTime
+		 , DATE_FORMAT(e.GrossMeasureTime,'%Y年%m月%d日') as grossMeasureTime
+		 , DATE_FORMAT(e.TareMeasureTime,'%Y年%m月%d日') as tareMeasureTime
+		 , t.Exchange as exchange
+		 , t.IsDel as isDel
+		 , t.Creater as creater
+		 , t.CreaterDate as createrDate
+		 , t.Reviser as reviser
+		 , t.ReviserDate as reviserDate
+		from
+		  testreport t
+			LEFT JOIN exportmeasure e ON t.ExportStorageId = e.Id and e.IsDel = 0
+			LEFT JOIN cachetcompany c on t.DetectionUnitId = c.Id and c.IsDel = 0
+			left join cachetpersonnel cp on t.TestPersonnelId = cp.Id  and cp.IsDel = 0
+		where
+		  1=1
+		  <if test="exportStorageId != null and exportStorageId != ''">
+		  	and t.ExportStorageId = #{exportStorageId}
+		  </if>
+		  <if test="exchange != null">
+		  	AND t.exchange = #{exchange}
+		  </if>
+		  <if test="id != null and id != ''">
+		  	and t.id = #{id}
+		  </if>
+		  AND t.isDel = 0 
+		order by
+		t.id desc
+	</select>
+	
+	<!-- 复制的报表list -->
+	<select id="getTestreports" parameterType="java.util.Map" resultType="Testreport">
+		select
+		  t.id
+     	 , t.ProductModel as productModel
+     	from
+		  testreport t
+		where t.isDel = 0 
+		order by
+		t.ProductModel desc
+	</select>
+	
+	<!-- 获取检测报告明细数据 -->
+	<select id="getTestreportsaledetailedList" parameterType="int" resultType="Testreportsaledetailed">
+		select
+		  id
+		 , TestReportId as testReportId
+		 , MaterielId  as materielId
+		 , TestProject as testProject
+		 , DetectionIndexId as detectionIndexId
+		 , SkillRequire as skillRequire
+		 , TestResult as testResult
+		 , ResultDetermine as resultDetermine
+		 , IsDel as isDel
+		 , Creater as creater
+		 , CreaterDate as createrDate
+		 , Reviser as reviser
+		 , ReviserDate as reviserDate
+		from
+		  testreportsaledetailed 
+		where
+		  TestReportId = #{id}
+		  AND isDel = 0 
+	</select>
+	
+	<!-- 获取检测报告明细数据 -->
+	<select id="getTestreportsaledetailed" parameterType="java.util.Map" resultType="Testreportsaledetailed">
+		select
+		  t.id
+		 , t.TestReportId as testReportId
+		 , t.MaterielId  as materielId
+		 , t.TestProject as testProject
+		 , t.DetectionIndexId as detectionIndexId
+		 , t.SkillRequire as skillRequire
+		 , t.TestResult as testResult                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+		 , t.ResultDetermine as resultDetermine
+		 , t.IsDel as isDel
+		 , t.Creater as creater
+		 , t.CreaterDate as createrDate
+		 , t.Reviser as reviser
+		 , t.ReviserDate as reviserDate
+		 , d.TestingItems as testingItems
+		 , d.IndexUnit as indexUnit
+		 , d.TestMethod as testMethod
+		from
+		  testreportsaledetailed t
+			LEFT JOIN detectionIndex d ON 
+			t.DetectionIndexId	= d.Id
+		where
+		  t.TestReportId = #{testReportId}
+		  AND t.IsDel = 0 
+			AND d.IsDel = 0
+	</select>
+	
+	<!-- 更新报告单数据 -->
+	<update id="updateTestreport" parameterType="Testreport">
+		UPDATE testreport 
+		SET
+		SaleOrOut = #{saleOrOut}
+		  , ExportStorageId = #{exportStorageId}
+		  , ReportRenown = #{reportRenown}
+		  , ProductModel = #{productModel}
+		  , UsePlace = #{usePlace}
+		  , TestDate = #{testDate}
+		  , TestReportNumber = #{testReportNumber}
+		  , IndexType = #{indexType} 
+		  , Conclusion = #{conclusion} 
+		  , ReportRemarks = #{reportRemarks} 
+		  , InsideRemarks = #{insideRemarks} 
+		  , TestPersonnelId = #{testPersonnelId} 
+		  , ReviewerId = #{reviewerId} 
+		  , InspectionSupervisorId = #{inspectionSupervisorId} 
+		  , DetectionUnitId = #{detectionUnitId} 
+		  , Exchange = #{exchange}
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}	
+	</update>
+	
+	<!-- 更新报告单明细数据 -->
+	<update id="updateTestreportsaledetailed" parameterType="Testreportsaledetailed">
+		UPDATE testreportsaledetailed 
+		SET
+		  TestReportId = #{testReportId}
+		  , DetectionIndexId = #{detectionIndexId}
+		  , SkillRequire = #{skillRequire}
+		  , TestResult = #{testResult}
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}	
+	</update>
+	
+	<!-- 删除报告单明细数据 -->
+	<update id="deleteTestreportsaledetailed" parameterType="Testreportsaledetailed">
+		UPDATE testreportsaledetailed 
+		SET
+		isDel = 1
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}	
+	</update>
+	
+	<!-- 查询空白报告单 -->
+	<select id="getTestreportList" parameterType="java.util.Map" resultType="Testreport">
+		SELECT
+		  t.Id
+		  , t.SaleOrOut
+		  , t.IsQualified
+		  , t.Remarks
+		  , t.ExportStorageId
+		  , t.ReportRenown
+		  , t.ProductModel
+		  , t.UsePlace
+		  , t.TestDate
+		  , t.TestReportNumber
+		  , t.IndexType
+		  , getContentByCode('indexType', t.IndexType) as indexTypeName
+		  , t.Conclusion
+		  , t.ReportRemarks
+		  , t.InsideRemarks
+		  , t.TestPersonnelId
+		  , cp.CachetName as testPersonnelName
+		  , t.ReviewerId
+		  , t.InspectionSupervisorId
+		  , t.DetectionUnitId
+		  , t.Exchange
+		  , t.IsDel
+		  , t.Creater
+		  , t.CreaterDate
+		  , t.Reviser
+		  , t.ReviserDate 
+		FROM
+		  testreport t 
+		  left join cachetpersonnel cp on t.TestPersonnelId = cp.Id  and cp.IsDel = 0
+		WHERE
+		  t.ExportStorageId is null           -- 没有关联的出库单id，既是空白报告
+		  <if test="reportRenown != null and reportRenown != ''">
+		  	and t.reportRenown like concat('%',#{reportRenown},'%') 
+		  </if>
+		  <if test="testReportNumber != null and testReportNumber != ''">
+		  	and t.testReportNumber like concat('%',#{testReportNumber},'%')
+		  </if>
+		ORDER BY
+		  t.Id desc
+	</select>
+	
+	<!-- 删除检测报告明细（彻底删除） -->
+	<delete id="deleteTestreportByTestReportId" parameterType="Testreportsaledetailed">
+		delete from testreportsaledetailed where TestReportId = #{testReportId}	
+	</delete>
+</mapper>

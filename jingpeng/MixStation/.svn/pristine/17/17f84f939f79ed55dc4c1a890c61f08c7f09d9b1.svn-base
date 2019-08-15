@@ -1,0 +1,445 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/style_sn.css">
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+    <script type="text/javascript" src="../resources/jedate/jedate1.js"></script>
+<script type="text/javascript" src="../resources/js/c_dtree.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript">
+$b = $("#shu_btn");
+$("#toggle").on({
+	"click": function(){
+		$b.toggle();
+		return false;
+	}
+});
+$(document).on({
+	"click": function(e){
+		var src = e.target;
+
+		if(src.id && src.id ==="toggle"){
+			return false;
+		}else{
+			$("#content").hide();
+		}
+	}
+});
+
+</script>
+ <script type="text/javascript" language=JavaScript charset="UTF-8">
+        document.onkeydown=function(event){
+              var e = event || window.event || arguments.callee.caller.arguments[0];
+              if(e && e.keyCode==27){ // 按 Esc 
+                  closes();
+                }
+             
+         }; 
+ </script>
+</head>
+
+<body>
+<div class="top">
+	<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+    <div class="topright">
+    	<a href="../User/userinfo.html" class="userid">wangdanwei</a><span>你好！</span>
+        <a href="../Common/out.html" class="out">安全退出</a>
+    </div>
+     <div class="top_btn">
+    	<span class="lq_btn"><a href="../AsphaltProduceStatistic/asphaltProduceStatistic.html" class="hvr-bounce-to-top">沥青</a></span>
+    	<span class="sn_btn"><a href="../cement_Production/cement_ProductionStatistic.html" class="hvr-bounce-to-top focusbtn">水泥</a></span>
+    </div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+            <ul>
+            	<li><a href="../cement_Production/cement_ProductionStatistic.html" class=nav1>生产统计</a></li>
+                <li><a href="../Material/snycmaterial.html" class="nav2">原材料管理</a></li>
+                <li>
+               	  <a href="../CementTheory/getCement_TheoryProportion.html" class="nav3">配比管理<span>></span></a>
+               	  <div class="down">
+                    	<a href="../CementTheory/getCement_TheoryProportion.html">理论配比信息</a>
+                        <a href="../CementConstructionProp/cementConstructionProp.html">施工配比信息</a>
+                    </div>
+              </li>
+              <li><a href="../cement_Production/silo_correspondence.html" class="nav4">料仓对应关系</a></li>
+                <li>
+               	  <a href="../cement_Production/c_productionplan.html" class="focus_a"">生产管理<span>></span></a>
+                    <div class="down">
+                       <a href="../cement_Production/c_productionplan.html">生产计划</a>
+                       <a href="../cement_Production/c_Productiondata.html">生产数据</a>
+                    </div>
+              </li>
+            </ul>
+        </div>
+        <!-- <div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                            <script type="text/javascript">
+                                var baseUrl= getContextPath();
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.html",
+        							async:false,
+        							data : {"mixStation_Type":"1"},
+        							dataType : "json",
+        							success : function(data) {
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                            </script>
+                        </div>
+                        </div> -->
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：水泥混合料拌合站（<span class="banhez"  id ="locationText">综合一标</span>） > 生产管理 > 生产计划</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            <div class="shunav">
+            <div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                            <script type="text/javascript">
+                                var baseUrl= getContextPath();
+                                var orgid = "";
+                                var orgname = "";
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.html",
+        							async:false,
+        							data : {"mixStation_Type":"1"},
+        							dataType : "json",
+        							success : function(data) {
+        							var flag = true;
+        								
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        										
+        										if(flag){
+        											orgid = data[i].i_id;
+        	        								orgname = data[i].str_org_Name;
+        											//默认指向列表中第一个
+        											$("#locationText").text(data[i].str_org_Name);
+        											flag = false;
+        										}
+        										
+        										
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                                </script>
+                        </div>
+                        </div>
+                    <form action="" method="get" class="sousuo">
+                      <label>施工配比编号：</label>
+                       <input name="" type="input" id="NumberOfConstructionRatio" class="search_input rightwbj" >
+                      <!-- <input type="text" value="输入编号" class="search_input rightwbj"> -->
+                      <label>产品名称：</label>
+                       <input name="" type="input" id="productName" class="search_input rightwbj" >
+                     <!--  <select name="select" size="1">
+                        <option>全部</option>
+                        <option>碎石</option>
+                        <option>水泥混合料</option>
+                      </select> -->
+                      <label>产品型号：</label>
+                       <input name="" type="input" id="productModel" class="search_input rightwbj" >
+                     <!--  <select name="select" size="1">
+                        <option>全部</option>
+                        <option>AC-25</option>
+                      </select> -->
+                      <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="getC_productionplanSelect()">
+                  </form>
+                    </div>
+            	<div class="table-b">
+                	<div class="luru"><a href="#" class="hvr-icon-forward globalLoginBtn" id="addLr" onclick="addName()">新增录入</a></div>
+            	  	<div class="table-a-right table-c-right">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="cementProductionPlan">
+                            <thead>
+                          <tr>
+                            <th scope="col" class="scgl_xh" style="text-align: center">序号</th>
+                            <th scope="col" style="text-align: center">生产计划编号</th>
+                            <th scope="col" class="xh5" style="text-align: center">拌合设备名称</th>
+                            <th scope="col" style="text-align: center">产品名称/型号</th>
+                            <th scope="col" style="text-align: center">施工配比编号</th>
+                            <th scope="col" style="text-align: center">料仓对应关系编号</th>
+                            <th scope="col" style="text-align: center">施工地点</th>
+                            <th scope="col" style="text-align: center">施工单位</th>
+                            <th scope="col" class="xh5" style="text-align: center">浇灌部位</th>
+                            <th scope="col" class="xh5" style="text-align: center">计划生产量(t)</th>
+                            <th scope="col" class="xh5" style="text-align: center">生产计划状态</th>
+                            <th scope="col" style="text-align: center">计划时间</th>
+                            <th scope="col" style="text-align: center">创建时间</th>
+                            <th scope="col" style="text-align: center">作废原因</th>
+                            <th scope="col" style="text-align: center" class="cz">操作</th>
+                          </tr>
+                            </thead>
+                          </table>
+
+</div>
+</div>
+          	</div>
+		</div>
+	</div>
+</div>
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+<div class="fud" id="mydiv1" style="position:absolute;display:none;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr class="mbphb_luru_dise">
+        <td class="xh10">序号</td>
+        <td>材料名称/型号</td>
+        <td>理论配比用量</td>
+        <td>施工配比用量</td>
+        <td>生产厂家</td>
+        <td>产地</td>
+      </tr>
+      <tbody id="nr_l_new"></tbody>
+    <!--   <tr>
+        <td>1</td>
+        <td>水泥材料AC-20</td>
+        <td>5000.00</td>
+        <td>48.0000</td>
+        <td>吉林长春什么公司</td>
+        <td>河北</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>水泥材料AC-20</td>
+        <td>4800.00</td>
+        <td>54500.00</td>
+        <td>长春吉林什么公司</td>
+        <td>北京</td>
+      </tr> -->
+    </table>
+</div>
+
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../resources/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>新增生产计划</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close" onclick="closes()">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                  <tr>
+                    <td width="37%" align="right">生产计划编号：</td>
+                    <td width="63%">
+                    <input name="textfield" type="text" id="str_plan_No" placeholder="输入生产计划编号"  maxlength="40"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td width="37%" align="right">拌合设备名称：</td>
+                    <td width="63%">
+                    <select size="1" id="i_equ_Id">
+
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品名称：</td>
+                    <td><select  size="1" id="str_material_Name" onfocus="cpName()" onchange="getModels()">
+					<option value="" selected="selected">
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品型号：</td>
+                    <td><select  size="1" id="str_material_Mold" onfocus="cpModel()" onchange="getSgpb()">
+					<option value="" selected="selected">
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工配比编号：</td>
+                    <td><select  size="1" id="consProp" onfocus="showSgpb()" onchange="getLcbh()"></select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">料仓对应关系编号：</td>
+                    <td><select  size="1" id="i_bunkerCor" onfocus="showLcbh()"></select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工地点：</td>
+                    <td><input  type="text" id="str_proj_Pos" placeholder="输入施工地点"  maxlength="40"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工单位：</td>
+                    <td><input type="text" id="str_construction_Unit" placeholder="输入施工单位"  maxlength="30"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">浇灌部位：</td>
+                    <td><input type="text" id="str_Watering_Site" placeholder="输入浇灌部位"  maxlength="100"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产量(t)：<br></td>
+                    <td><input  type="text" id="d_scheduled_Production" placeholder="输入计划生产量"  maxlength="15"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产时间：</td>
+                    <td>
+                      <input  name = "str_startTime" type="text" id="str_startTime" placeholder="选择日期" onckick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" align="center"><input type="button" name="button" id="planbtn"  data-dismiss="modal" value="保&nbsp;&nbsp;存" class="btn_bc"></td>
+                  </tr>
+                </table>
+          	</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="loginModal2">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../resources/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>新增生产计划修改</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                  <tr>
+                    <td width="37%" align="right">生产计划编号：</td>
+                    <td width="63%">
+                    <input name="textfield" type="text" id="textfield" placeholder="输入生产计划编号"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td width="37%" align="right">拌合设备名称：</td>
+                    <td width="63%">
+                    <select name="select2" size="1" id="select"  disabled="disabled">
+                        <option>拌合机1</option>
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品名称：</td>
+                    <td><select name="select2" size="1" id="select" disabled="disabled">
+                        <option>水泥混合料</option>
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品型号：</td>
+                    <td><select name="select2" size="1" id="select" disabled="disabled">
+                        <option>AC-20</option>
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工配比编号：</td>
+                    <td><select name="select2" size="1" id="select" disabled="disabled">
+                        <option>SC0001</option>
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">料仓对应关系编号：</td>
+                    <td><select name="select2" size="1" id="select" disabled="disabled">
+                        <option>SC0001</option>
+                      </select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工地点：</td>
+                    <td><input name="textfield" type="text" id="textfield" placeholder="输入施工地点" maxlength="100"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工单位：</td>
+                    <td><input name="textfield" type="text" id="textfield" placeholder="输入施工单位" maxlength="30"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">浇灌部位：</td>
+                    <td><input name="textfield" type="text" id="textfield" placeholder="输入浇灌部位" maxlength="100"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产量(t)：<br></td>
+                    <td><input name="textfield" type="text" id="textfield" placeholder="输入计划生产量" maxlength="15"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产时间：</td>
+                    <td>
+                      <input name="str_startTime" type="text" id="textfield" placeholder="选择日期"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" align="center"><input type="submit" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc"></td>
+                  </tr>
+                </table>
+          	</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="loginModal3">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../resources/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>作废原因</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru sbj">
+                  <tr>
+                   <td width="32%" align="right">作废原因：</td>
+                   <td width="68%">                    
+                   <textarea name="textarea" cols="25" rows="10" id="textarea" placeholder="输入作废原因"></textarea></td>
+                  </tr>
+                  <tr>
+                   <td colspan="2" align="center"><input type="submit" name="button"  value="保&nbsp;&nbsp;存" class="btn_bc"></td>
+                  </tr>
+                </table>
+          	</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+jeDate({
+	dateCell:"#str_startTime",
+	format:"YYYY-MM-DD hh:mm:ss",
+	isinitVal:false,
+	isTime:true, //isClear:false,
+	minDate:"2014-09-19 00:00:00",
+	okfun:function(val){alert(val)}
+})
+</script>
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/c_productionplan.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+</body>
+</html>

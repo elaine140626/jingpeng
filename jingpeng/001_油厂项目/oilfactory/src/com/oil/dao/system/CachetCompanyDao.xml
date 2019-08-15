@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.CachetCompanyDao">
+
+    <!-- 获取全部人员电子公章 -->
+	<select id="getCachetCompany" parameterType="java.util.Map" resultType="CachetCompany">
+		SELECT
+	        c.Id            as id
+	        , c.TestCompany as testCompany         
+			, c.ElectronicsName  as electronicsName
+			, c.IsDel      as isDel
+			, c.Creater    as creater
+			, c.CreaterDate as createrDate
+			, c.Reviser    as reviser
+			, c.ReviserDate as reviserDate
+		FROM cachetcompany c             
+		WHERE 
+			c.IsDel = 0
+			<if test="id != null and id != ''">
+			AND c.Id = #{id}
+			</if>
+	    ORDER BY c.CreaterDate DESC
+	</select>
+	<!-- 根据姓名模糊查询 -->
+	<select id="findCachetCompanyByName" parameterType="String" resultType="CachetCompany">
+		SELECT
+            c.Id            as id
+	        , c.TestCompany as testCompany         
+			, c.ElectronicsName  as electronicsName
+			, c.IsDel      as isDel
+			, c.Creater    as creater
+			, c.CreaterDate as createrDate
+			, c.Reviser    as reviser
+			, c.ReviserDate as reviserDate
+		FROM cachetcompany c             
+		WHERE 
+			c.IsDel = 0	
+		<if test="testCompany !=null  and testCompany != '' ">
+		AND c.TestCompany like '%${testCompany}%'
+		</if>
+		ORDER BY c.CreaterDate DESC
+	</select>
+	
+	<!-- 添加人员电子公章 -->
+	<insert id="addCachetCompany" parameterType="CachetCompany">
+		INSERT 
+		INTO cachetcompany( 
+		  `TestCompany`
+		  , `ElectronicsName`
+		  , `Creater`
+		  , `CreaterDate`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		   #{testCompany}
+		  , #{electronicsName}
+		  , #{creater}
+		  , now()
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!--修改人员电子公章 -->
+	<update id="updateCachetCompany" parameterType="CachetCompany">
+		update cachetcompany set
+		TestCompany = #{testCompany},
+		ElectronicsName = #{electronicsName},
+		Reviser = #{reviser},
+		ReviserDate = now()
+		WHERE Id= #{id}
+	</update>
+	
+	<!--删除人员电子公章 -->
+	<update id="delCachetCompany" parameterType="java.util.Map">
+		update cachetcompany set
+		Reviser = #{userId},
+		ReviserDate = now(),
+		IsDel = 1
+		WHERE Id= #{id}
+	</update>
+	
+	<!-- 电子签名 -->
+	<update id="updateElectronicsName" parameterType="java.util.Map">
+		update cachetcompany set ElectronicsName = null, 
+		Reviser = #{userId},
+		ReviserDate = now()
+		where Id = #{id}
+	</update>
+	</mapper>

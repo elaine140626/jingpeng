@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="../../js/html5shiv.js"></script>
+	<script type="text/javascript" src="../../js/respond.min.js"></script>
+	
+	<![endif]-->
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	
+	<!--[if IE 6]>
+	<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<title>空白页</title>
+	</head>
+	<body>
+	<div class="pd-20">
+	  <form class="form form-horizontal" id="form1" style="margin-top:-20px"  method="post">
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>设置桩号</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="pileNumber" name="pileNumber" maxlength="15">
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>桥梁过渡段（个）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="bridgePart" name="bridgePart" maxlength="11"  onkeyup='clearNoInteger(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>普通段（米）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="ordinaryPart" name="ordinaryPart" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>波形钢板L=4.32米（节）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="steelPlate432" name="steelPlate432" maxlength="11"  onkeyup='clearNoInteger(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>波形钢板L=4.17米（节)</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="steelPlate417" name="steelPlate417" maxlength="11"  onkeyup='clearNoInteger(this)'>
+				</div>
+			</div>
+						<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>立面标记（个）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="facadeMark" name="facadeMark" maxlength="11"  onkeyup='clearNoInteger(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="row cl">
+	  		 <div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>外展段</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="abductionPart" name="abductionPart" maxlength="11"  onkeyup='clearNoInteger(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>备注</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="remarks" name="remarks" maxlength="50">
+	  			</div>
+	  		</div>
+	  	</div>
+	  <div class="cl pd-5 bg-1 bk-gray mt-20">护栏长度 </div>
+	  	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>左侧</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="guardrailLeft" name="guardrailLeft" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>右</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="guardrailRight" name="guardrailRight" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	  <div class="cl pd-5 bg-1 bk-gray mt-20">φ140钢立柱 </div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>L=2.50米  立柱（根）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="steelColumn250" name="steelColumn250" maxlength="11"  onkeyup='clearNoInteger(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>L=2.50米  加强立柱（根）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="steelColumn250Strengthen" name="steelColumn250Strengthen" maxlength="11"  onkeyup='clearNoInteger(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>K=1.65米  立柱（根）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="steelColumn165" name="steelColumn165" maxlength="11"  onkeyup='clearNoInteger(this)'>
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>K=1.65米 加强立柱（根）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="steelColumn165Strengthen" name="steelColumn165Strengthen" maxlength="11"  onkeyup='clearNoInteger(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	  <div class="cl pd-5 bg-1 bk-gray mt-20">半圆形端头（个) </div>
+	  	  	  	<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>D-1(重10.8）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="endD1" name="endD1" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>RT1（重22.1）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="endRT1" name="endRT1" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">过渡段材料数量</div>
+	  	<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>板</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="transitionPlate" name="transitionPlate" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>柱</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="transitionColumn" name="transitionColumn" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>预埋板 </label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="transitionEmbedment" name="transitionEmbedment" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">普通段材料数量(Kg)</div>
+	  	<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>板</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="ordinaryPlate" name="ordinaryPlate" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>柱 </label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="ordinaryColumn" name="ordinaryColumn" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  <div class="cl pd-5 bg-1 bk-gray mt-20">外展段材料数量（Kg）</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>板</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="abductionPlate" name="abductionPlate" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>柱</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="abductionColumn" name="abductionColumn" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C20</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="abductionC20" name="abductionC20" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  		  	<div class="row cl">
+	  		<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-3">
+	  			<button id="saveButton" onclick="save();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+	  			<button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+	  		</div>
+	  	</div>
+	  </form>
+	</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script> 
+	<script type="text/javascript" src="../../js/systemJs/projectSchedule/steelGuardrail_add.js"></script> 
+	</body>
+</html>

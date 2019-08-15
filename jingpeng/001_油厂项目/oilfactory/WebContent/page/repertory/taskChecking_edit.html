@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../../js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/repertory/taskChecking_edit.js"></script>
+<title>瑞德公路管理系统</title>
+<style type="text/css">
+tr {
+	margin-top: 5px;
+}
+
+.ui_text_rt {
+	width: 15%;
+	text-align: left;
+}
+
+.ui_text_lt {
+	width: 35%;
+}
+
+.ui_input_txt01 {
+	width: 60%;
+}
+
+.ui_input_txt0 {
+	width: 30%;
+	height: 26px;
+	margin: 1px -9px 1px -5px;
+	outline: 0;
+	padding: 5px;
+	border: 1px solid;
+	border-color: #C0C0C0 #D9D9D9 #D9D9D9;
+	border-radius: 2px;
+	background: #FFF;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0
+		rgba(255, 255, 255, 0.2);
+	-webkit-transition: box-shadow, border-color .5s ease-in-out;
+}
+
+.ui_input_txt0:first-child {
+	margin: 1px 1px 1px 5px;
+}
+
+.ui_select01 {
+	width: 60%;
+}
+
+.showDetail {
+	position: relative;
+}
+
+.text {
+	height: 80px;
+	resize: none
+}
+</style>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<div id="container">
+			<div id="nav_links"
+				style="background-color: #02397F; color: white; font-size: 20px;">
+				核对原材料内容</div>
+			<div class="ui_content">
+				<table cellspacing="0" cellpadding="0" width="100%" align="left"
+					border="0">
+					<tr>
+						<td class="ui_text_rt">编号：</td>
+						<td class="ui_text_lt"><input type="text" readonly="readonly" style="background:#cccccc"
+							id="planNumber" name="planNumber" class="ui_input_txt01"/></td>
+						<td class="ui_text_rt">产品名称：</td>
+						<td class="ui_text_lt"><input type="text" readonly="readonly" style="background:#cccccc"
+							id="materielName" name="materielName" class="ui_input_txt01"
+							onchange="changePlanNumber(this.value)" />
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">产品规格：</td>
+						<td class="ui_text_lt"><input type="text" readonly="readonly" style="background:#cccccc"
+							id="materielModel" name="materielModel" class="ui_input_txt01"
+							onchange="changePlanNumber(this.value)" /></td>
+						<td class="ui_text_rt">计划生产量：</td>
+						<td class="ui_text_lt"><input type="text" readonly="readonly" style="background:#cccccc"
+							id="planWeight" name="planWeight" class="ui_input_txt01"
+							onchange="changePlanNumber(this.value)" /></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		</form>
+		<div id="container">
+			<div id="ui_content">
+					<div >
+						<div class="box_border">
+							<table id="" class="table table-striped" cellspacing="0"
+								cellpadding="0" align="center" border="0">
+								<thead>
+								<tr>
+									<th class="col-lg-1">原材料名称</th>
+									<th class="col-lg-1">规格型号</th>
+									<th class="col-lg-1">理论用量</th>
+									<th class="col-lg-1">单位</th>
+									<th class="col-lg-1">库存量</th>
+									<th class="col-lg-1">单位</th>
+									<th class="col-lg-1">是否满足生产</th>
+								</tr>
+								</thead>
+								<tbody id="tableList"></tbody>
+							</table>
+
+						</div>
+					</div>
+				</div>
+				<div style="width: 100%; text-align: right;">
+					<input id="submitbutton" type="button" value="确认"
+						class="ui_input_btnsave" onclick="save()" /> &nbsp; <input
+						id="cancelbutton" type="button" value="关闭"
+						class="ui_input_btnclose" onclick="colse()"/>
+				</div>
+		</div>
+</body>
+</html>

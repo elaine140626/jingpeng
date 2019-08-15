@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" type="text/css" href="../../css/scrollTable.css" />
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../DataTables/datatables.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../DataTables/datatables.css" /></link>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/quality/out_detection.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				.mshow {
+					position: absolute;
+					top: 40px;
+					left: 5px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 260px
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				.mshow {
+					position: absolute;
+					top: 70px;
+					left: 5px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 600px
+				}
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(document).ready(function() {
+					$('#ulList li').click(function() {
+						$('#ulList li').removeClass('click');
+						$('.sale').hide();
+						$('#saleDiv' + $(this).index()).show();
+						$(this).addClass('click');
+
+					})
+				})
+			});
+		</script>
+	</head>
+
+	<body class="container-fluid">
+		<div class="row">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;质检管理&nbsp;>&nbsp;<span style="color:#1A5CC6">出库单检测</span></span>
+			</div>
+		</div>
+		<div id="main" class="mshow">
+			<div class="ui_tb">
+				<div id="box_border">
+					<div id="box_top">出库单检测</div>
+					<div class="col-lg-12 col-sm-12">
+						<ul id="ulList">
+							<li class="click">出库单检测</li>
+							<li>空白检测报告</li>
+						</ul>
+						<div id="saleDiv0" class="sale">
+							<div id="box_center">
+								<div class="col-lg-12 col-sm-12">
+								           产品名称(兑换前)：&nbsp;&nbsp;<input type="text" id="materielName" class="ui_input_txt02" />&nbsp;&nbsp;
+									产品型号(兑换前)：&nbsp;&nbsp;<input type="text" id="materielModel" class="ui_input_txt02" />&nbsp;&nbsp;
+									产品名称(兑换后)：&nbsp;&nbsp;<input type="text" id="exchangeMaterielName" class="ui_input_txt02" />&nbsp;&nbsp;
+									产品型号(兑换后)：&nbsp;&nbsp;<input type="text" id="exchangeMaterielModel" class="ui_input_txt02" />&nbsp;&nbsp;
+									状态：&nbsp;&nbsp;<select class="ui_input_txt02" style="padding:0;" id="conclusion" name="conclusion" ></select>
+									<input type="button" onclick="search()" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" />
+								</div>
+							</div>
+							<div style="overflow-x: auto;" class="col-lg-12 col-sm-12">
+								<table id="exportmeasure" class="table table-striped" style="width: 2000px;" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr >
+											<th class="xuhao">序号</th>
+											<th class="caozuo1">操作(兑换前)</th>
+											<th class="caozuo1">操作(兑换后)</th>
+											<th class="hetongbianhao">出库单流水号</th>
+											<th class="hetongbianhao">车牌号码</th>
+											<th class="hetongbianhao">客户编号</th>
+											<th style="width:200px;">客户名称</th>
+											<th class="kehumingcheng">是否兑换</th>
+											<th class="kehumingcheng">产品名称(兑换前)</th>
+											<th class="kehumingcheng">产品型号(兑换前)</th>
+											<th class="kehumingcheng">产品名称(兑换后)</th>
+											<th class="kehumingcheng">产品型号(兑换后)</th>
+											<th class="xiaoshouyuan">送货地址</th>
+											<th class="dianhua">送货人</th>
+											<th class="xinghao">送货电话</th>
+											<th class="shijian">出厂时间</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+						<div id="saleDiv1" class="sale" style="display: none;">
+							<div id="box_center">
+								<div class="col-lg-12 col-sm-12">
+									报告名头：&nbsp;&nbsp;<input type="text" id="reportRenown" class="ui_input_txt02" />&nbsp;&nbsp;
+									检测报告编号：&nbsp;&nbsp;<input type="text" id="testReportNumber" class="ui_input_txt02" />&nbsp;&nbsp;
+									<input type="button" onclick="search1()" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" />
+									<input type="button" id="addBtn" style="float: right; margin-right: 20px;" value="新增空白检测报告" class="ui_input_btnadd" onclick="addBtn()" />
+								</div>
+							</div>
+							<div style="overflow-x: auto;" class="col-lg-12 col-sm-12">
+								<table id="testreportList" class="table table-striped" style="width: 1640px;" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr >
+											<th class="xuhao">序号</th>
+											<th class="caozuo1">操作</th>
+											<th class="hetongbianhao">报告名头</th>
+											<th class="hetongbianhao">产品型号</th>
+											<th class="hetongbianhao">检测报告编号</th>
+											<th class="hetongbianhao">指标类型</th>
+											<th class="kehumingcheng">检测人</th>
+											<th class="kehumingcheng">内部备注</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

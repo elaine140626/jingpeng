@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>瑞德公路管理系统</title>
+<link href="../../css/login_css.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/user/login.js"></script>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<script type="text/javascript" src="../../js/MD5/md5.js"></script>
+</head>
+<body>
+	<div id="login_center">
+		<div id="login_area">
+			<div id="login_box">
+				<div id="login_form">
+					<form id="submitForm" action="" method="post" enctype="multipart/form-data">
+						<div id="login_tip">
+							<span id="login_err" class="sty_txt2"></span>
+						</div>
+						<div>
+							用户名： <input type="text" name="username" class="username" value=''
+								id="username">
+						</div>
+						<div>
+							密&nbsp;&nbsp;&nbsp;&nbsp;码： <input type="password" value=''
+								name="password" class="pwd" id="password" onkeydown="EnterPress()">
+						</div>
+						<div id="btn_area">
+							<button type="button" class="login_btn" id="login_sub" onclick="login()">登  录</button>
+							<!-- <button type="button" class="login_btn" id="login_reg" >注册</button> -->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

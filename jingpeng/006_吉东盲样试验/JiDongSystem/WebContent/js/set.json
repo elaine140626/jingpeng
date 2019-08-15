@@ -1,0 +1,66 @@
+{
+    "projectName":"吉东公路智慧公路平台",
+    "projectItem":[ 
+		{	"name":"试验信息",
+			"project":[
+		    	{"itemName":"试验收样","itemUrl":"test_received.html","clickCLass":"focus_d","class":"nav4"},
+		    	{"itemName":"试验汇总","itemUrl":"test_summaryNew.html","clickCLass":"focus_b","class":"nav2"},
+		    	{"itemName":"试验查询","itemUrl":"test_query.html","clickCLass":"focus_c","class":"nav3"},
+		    	{"itemName":"自动采集","itemUrl":"automatic_collection.html","clickCLass":"focus_e","class":"nav5"},
+		    	{"itemName":"盲样检测","itemUrl":"blind_detection.html","clickCLass":"focus_f","class":"nav6"},
+		    	{"itemName":"指标维护","itemUrl":"maintenance.html","clickCLass":"focus_e","class":"nav7"}
+		    ],
+		    "index_block":"index_item_block/test_index_block.html"
+	    },
+	    {
+	    	"name":"拌合站信息",
+			"project":[
+				{
+					"item_name":"沥青拌合站",
+					"item_project":[
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "生产分析","itemUrl": "product_analysis.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+					],
+					"page_url":"asphalt/asphalt.html"
+				},
+				{
+					"item_name":"水泥混凝土",
+					"item_project":[
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "生产分析","itemUrl": "product_analysis.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+					],
+					"page_url":"cement/cement.html"
+					
+				},
+				{
+					"item_name":"水稳拌合站",
+					"item_project":[
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "原材料消耗","itemUrl": "materials_consumption.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+					],
+					"page_url":"cementStable/cementStable.html"
+					
+				}
+			],
+			"index_block":"index_item_block/mix_index_block.html"
+			
+	    }
+    
+    ],
+    "slides":[
+    	"../image/slides/img1.jpg",
+    	"../image/slides/img2.jpg",
+    	"../image/slides/img3.jpg"
+    ],
+    "index_block_img":"../image/images/about.jpg",
+    "index_block_text":"<div><h2>吉东公路</h2><p>国道丹阿公路吉黑省界（珲春）至东宁段改扩建工程位于东宁市中东部的腹心地区，该路段起自东宁市南部与吉林省交界处并与吉林省东防线（S201）顺接，路线自起点沿现状丹阿公路（元鸡图公路S206）向北布线，途径老爷岭、老黑山、太平川、闹枝沟、神洞、大肚川、新城子沟、丰顺村等地区，在东宁市城区附近路线自东宁市区西部绕行，向北跨越绥芬河后终于丹阿公路万鹿沟收费站南侧，与原绥满高速东宁连接线相接，该路段主线全长99.293km。</p><p>吉黑省界（珲春）至东宁段改扩建工程A3标段起止里程：主线K70+000—K96+123全长29.293km，连接线K0+000—K1+822全长1.822km（接于主线上行桩号K87+543）。本项目桥梁工程包含：大桥1245.3m/3座、中桥87.08m/2座、小桥102.72m/3座、分离桥319.8m/3座。</p></div>"
+}

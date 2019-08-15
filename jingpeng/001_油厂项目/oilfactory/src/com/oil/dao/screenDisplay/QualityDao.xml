@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.screenDisplay.QualityDao">
+	<!-- 查询待出厂检测数据 -->
+	<select id="getAllBeforeQuality" resultType="Exportmeasure">
+		select
+		    ex.id
+		  , ex.PlateNumber     -- 车牌号码
+		  , ex.Client          -- 客户编号
+		  , ex.Suttle          -- 净重（出库重量）
+		  , m.MaterielName     as MaterielNameId -- 物料名称
+		  , m.MaterielModel    as MaterielModelId -- 规格型号
+		from
+		  exportmeasure ex -- 出库单表
+		  LEFT JOIN testreport te ON ex.Id = te.ExportStorageId AND te.IsDel = 0 and te.Exchange = 1 -- 检测报告单
+		  LEFT JOIN materielinfo m ON ex.ProductID = m.Id and m.IsDel = 0 -- 物料信息表
+		where
+		    ex.isDel = 0
+		    and left(ex.CreaterDate,10) = left(now(),10)
+			and te.ExportStorageId is null
+		order by
+			ex.CreaterDate desc
+	</select>
+	<!-- 待下发生产工艺通知单 -->
+	<select id="getAllPlanQuality" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		SELECT
+		  * 
+		FROM
+		  v_planmeasure as vpm 
+		where
+		  vpm.IsLowerHair = 0
+		  and vpm.IsExamine = 1            -- 状态
+		  and left(vpm.CreaterDate,10) = left(now(),10)
+		order by
+		  vpm.CreaterDate desc
+	</select>
+</mapper>

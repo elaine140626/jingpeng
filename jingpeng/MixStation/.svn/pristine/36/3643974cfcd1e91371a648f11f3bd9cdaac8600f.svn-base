@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>黑龙江省高速公路管理局盲样检测管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree.css"/>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+</head>
+
+<body>
+<div class="container-fluid top">
+	<div class="topleft">黑龙江盲样试验展示平台</div>
+        <div class="topright">
+            <span class="userid">wangdanwei</span><span>你好！</span>
+            <a href="userinfo.html" target="_blank" class="shezhi">用户管理</a>
+            <a href="#" class="out">安全退出</a>
+        </div>
+</div>
+<div class="container-fluid">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="index.html" class="nav1">首页</a></li>
+                <li><a href="shiyan_3.html" class="nav4">试验收样</a></li>
+                <li><a href="shiyan_1.html" class="nav2">试验汇总</a></li>
+                <li><a href="shiyan_2.html" class="nav3">试验查询</a></li>
+                <li><a href="shiyan_4.html" class="nav5">自动采集</a></li>
+                <li><a href="shiyan_5.html" class="nav6">盲样检测</a></li>
+                <li><a href="shiyan_6.html" class="focus_g">指标维护</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室 > 结果判定指标维护</div>
+            </div>
+            <div class="rightcon_content">
+            	<ul id="myTab" class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#home" data-toggle="tab">
+                                 <strong>水泥胶砂强度</strong>
+                            </a>
+                        </li>
+                        <li><a href="#ios" data-toggle="tab"><strong>沥青三大指标</strong></a></li>
+                        <li><a href="#ma" data-toggle="tab"><strong>马歇尔</strong></a></li>
+                        <li><a href="#gang" data-toggle="tab"><strong>钢筋抗拉强度、屈服强度、伸长率</strong></a></li>
+                        <li><a href="#jin" data-toggle="tab"><strong>钢筋接头抗拉强度、冷弯</strong></a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="home">
+                    		<p class="jiance">水泥品种
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>硅酸盐水泥P.Ⅰ/P.Ⅱ</option>
+                                <option>普通硅酸盐水泥P.O</option>
+                                <option>矿渣硅酸盐水泥P.S</option>
+                                <option>火山灰硅酸盐水泥P.P</option>
+                                <option>粉煤灰硅酸盐水泥P.F</option>
+                                <option>复合普通硅酸盐水泥P.C</option>
+                                <option>高抗硫酸盐硅酸盐水泥P.HSR</option>
+                                <option>中抗硫酸盐硅酸盐水泥P.MSR</option>
+                            </select>
+                            <label>强度等级</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>42.5</option>
+                                <option>42.5R</option>
+                            </select>
+                            <label>抗压强度</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>3d</option>
+                                <option>28d</option>
+                            </select>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>>17.0</option>
+                                <option>>42.5</option>
+                            </select>
+                            <label>强度等级</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>3d</option>
+                                <option>28d</option>
+                            </select>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>>17.0</option>
+                                <option>>42.5</option>
+                            </select>
+                           <input name="input" type="submit" value="保  存" class="btncha">
+                           </p>
+                   		 <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr class="shuanghang">
+                                <th width="6%" class="xh" sope="col">序号</th>
+                                <th width="15%" scope="col">水泥品种</th>
+                                <th width="13%" scope="col">强度等级</th>
+                                <th width="13%" colspan="2" scope="col" class="neibj0">
+                                	<div class="div1">抗压强度</div>
+                                    <div>
+                                    	<ul class="tian3">
+                                        	<li>3d</li>
+                                            <li>28d</li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th width="12%" colspan="2" scope="col" class="neibj0">
+                                	<div class="div1">抗折强度</div>
+                                    <div>
+                                    	<ul class="tian3">
+                                        	<li>3d</li>
+                                            <li>28d</li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>硅酸盐水泥P.Ⅰ/P.Ⅱ</td>
+                                <td class="jiance_xx">
+                                	<div>42.5</div>
+                                    <div>42.5</div>
+                                    <div>42.5</div>
+                                </td>
+                                <td class="jiance_xx">
+                                	<div>42.5</div>
+                                    <div>42.5</div>
+                                    <div>42.5</div>
+                                </td>
+                                <td class="jiance_xx">
+                                	<div>42.5</div>
+                                    <div>42.5</div>
+                                    <div>42.5</div>
+                                </td>
+                                <td class="jiance_xx">
+                                	<div>42.5</div>
+                                    <div>42.5</div>
+                                    <div>42.5</div>
+                                </td>
+                                <td class="jiance_xx">
+                                	<div>42.5</div>
+                                    <div>42.5</div>
+                                    <div>42.5</div>
+                                </td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                            </table>
+                            <div class="page">
+                        		<a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	
+                            </div>
+                		</div>
+                		</div>
+                        <div class="tab-pane fade" id="ios">
+                    	<p class="jiance">沥青种类
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>黏稠沥青</option>
+                                <option>液体沥青</option>
+                                <option>固体沥青</option>
+                            </select>
+                            <label>针入度</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>1.2</option>
+                                <option>3.0</option>
+                            </select>
+                            <label>软化点</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>≥20</option>
+                            </select>
+                           <input name="input" type="submit" value="保  存" class="btncha"></p>
+                    	<div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th width="6%" class="xh" scope="col">序号</th>
+                                <th width="15%" scope="col">沥青种类</th>
+                                <th width="13%" scope="col">针入度</th>
+                                <th width="13%" scope="col">软化点</th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>黏稠沥青</td>
+                                <td>1.2</td>
+                                <td>≥20</td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                              <tr>
+                                <td>2</td>
+                                <td>黏稠沥青</td>
+                                <td>3.0</td>
+                                <td>≥20</td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                            </table>
+                            <div class="page">
+                        		<a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	
+                            </div>
+                            </div>
+          				</div>
+                        
+                        <div class="tab-pane fade" id="ma">
+                    	<p class="jiance">马歇尔
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>10</option>
+                                <option>50</option>
+                            </select>
+                            <label>流值</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>20</option>
+                                <option>50</option>
+                            </select>
+                           <input name="input" type="submit" value="保  存" class="btncha"></p>
+                    	<div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th width="6%" class="xh" scope="col">序号</th>
+                                <th width="15%" scope="col">马歇尔</th>
+                                <th width="13%" scope="col">流值</th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>10</td>
+                                <td>20</td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                            </table>
+                            <div class="page">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div>
+                            </div>
+                    	
+          				</div>
+                        
+                        <div class="tab-pane fade" id="gang">
+                    	<p class="jiance"><label>钢筋牌号</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>HPB235</option>
+                                <option>HPB300</option>
+                                <option>HRB335</option>
+                            </select>
+                            <label>直径</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>6-14</option>
+                            </select>
+                            <label>屈服强度</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>≥235</option>
+                            </select>
+                            <label>极限强度</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>≥365</option>
+                            </select>
+                           <input name="input" type="submit" value="保  存" class="btncha"></p>
+                    	<div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th width="6%" class="xh" scope="col">序号</th>
+                                <th width="15%" scope="col">钢筋牌号</th>
+                                <th width="13%" scope="col">直径</th>
+                                <th width="13%" scope="col">屈服强度</th>
+                                <th width="13%" scope="col">极限强度</th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>HPB235</td>
+                                <td>6-14</td>
+                                <td>≥235</td>
+                                <td>≥365</td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                            </table>
+                            <div class="page">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div>
+                            </div>
+          				</div>
+                        
+                        <div class="tab-pane fade" id="jin">
+                    	<p class="jiance"><label>钢筋牌号</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>HPB235</option>
+                                <option>HPB300</option>
+                                <option>HRB335</option>
+                            </select>
+                            <label>直径</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>6-14</option>
+                            </select>
+                            <label>极限强度</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>≥365</option>
+                            </select>
+                           <input name="input" type="submit" value="保  存" class="btncha"></p>
+                    	<div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th width="6%" class="xh" scope="col">序号</th>
+                                <th width="15%" scope="col">钢筋牌号</th>
+                                <th width="13%" scope="col">直径</th>
+                                <th width="13%" scope="col">极限强度</th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>HPB235</td>
+                                <td>6-14</td>
+                                <td>≥365</td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                            </table>
+                            <div class="page">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条)
+                    </div>
+                    </div>
+                    	
+          				</div>
+                        
+                  	</div>
+
+       		  		</div>
+        </div>
+     </div>
+    <div class="clear"></div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于 我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+				
+
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+</body>
+</html>

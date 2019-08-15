@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="app">
+
+<select id="getAppMaterialName" resultType="v_MaterialInfo" parameterType="v_MaterialInfo">
+        SELECT DISTINCT
+<!-- 		isnull(mateName_id,'') i_mateName_id, -->
+		isnull(Material_Name,'') str_material_Name
+		FROM
+		V_MaterialInfo
+		WHERE
+		Material_Type = #{str_material_Type}
+		AND Material_Mold = #{str_material_Mold}
+		AND Valid_Flag = 1
+		<!-- AND org_id = #{i_org_Id} -->
+		<foreach collection="orgids" index="index" item="item" open=" AND org_id IN (" separator="," close=")">
+           #{item}
+        </foreach>
+</select>
+
+<select id="getMaterialModel" resultType="v_MaterialInfo" parameterType="v_MaterialInfo">
+		SELECT
+	    id i_id,
+	    isnull(material_model,'') str_material_model
+        FROM
+	    V_MaterialInfo
+        WHERE
+	    Material_Type = #{str_material_Type}
+        AND Material_Mold = #{str_material_Mold}
+        AND Material_Name = #{str_material_Name}
+        <foreach collection="orgids" index="index" item="item" open=" AND org_id IN (" separator="," close=")">
+           #{item}
+        </foreach>
+ </select>
+ 
+ <select id="getAppOrgId" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		<!-- AND o.MixStation_Type = '0' -->
+		<if test="mixStation_Type == 0">
+		AND o.MixStation_Type = '0'
+		</if>
+		<if test="mixStation_Type == 1">
+		AND o.MixStation_Type = '1'
+		</if>
+		<if test="mixStation_Type == 2">
+		AND o.MixStation_Type = '2'
+		</if>
+		 <foreach collection="orgids" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach> 
+		<!-- AND o.id=cast(#{i_power_Org_Id} AS int) -->
+		<!-- UNION ALL
+		SELECT
+		a.Id,
+		a.Org_Name,
+		a.Parent_Id,
+		a.org_Type
+		FROM
+		Organization_Info a,
+		(
+		SELECT
+		o.Parent_Id
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '0'
+		<foreach collection="orgids" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach> 
+		<if test="mixStation_Type == 0">
+		AND o.MixStation_Type = '0'
+		</if>
+		<if test="mixStation_Type == 1">
+		AND o.MixStation_Type = '1'
+		</if>
+		<if test="mixStation_Type == 2">
+		AND o.MixStation_Type = '2'
+		</if>
+		) b
+		WHERE
+		a.Id = b.Parent_Id -->
+	</select>
+	
+</mapper>

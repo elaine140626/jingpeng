@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.asphalt.AsphaltProdProportionDao">
+	<!-- AsphaltProdProportion -->
+	<select id="getAllAsphaltProdProportion" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltProdProportion">
+		SELECT
+			a.Id                                     AS id,-- 自增长ID
+			a.Grad_Id                                AS gradId,-- 级配比ID
+			o.Org_Name                               AS orgName,-- 机构名称
+			a.Targ_PropID                            AS targPropId,-- 目标配比ID
+			a.Proportion_Code                        AS proportionCode,-- 生产配比编码
+			v.Material_Name                          AS materialName,-- 物料名称
+			v.Material_Model                         AS materialModel,-- 物料型号
+			a.Remarks                                AS remarks,-- 备注
+			a.Modify_Date                            AS modifyDate,-- 修改日期
+			CONVERT(varchar(20),a.Create_Date,120)   AS createDate,-- 创建日期
+			ag.Grade_Code                            AS gradeCode,-- 级配编码
+			pp.Proportion_Code                       AS mproportionCode,-- 目标配合比配比编码
+			v.Material_Name + '-' + v.Material_Model AS materNameAndModel,-- 材料信息
+			a.Operator                               AS operator -- 创建人
+		FROM
+			Asphalt_Prod_Proportion a -- 沥青生产配合比表
+			LEFT JOIN Organization_Info o ON a.Org_ID = o.Id -- 组织机构信息
+			LEFT JOIN V_MaterialInfo v ON v.Id = a.Product_ID -- 材料信息(视图)
+			LEFT JOIN Asphalt_Grading ag ON ag.Id = a.Grad_Id -- 沥青级配基本信息表
+			LEFT JOIN Asph_TargetProportion pp ON pp.Id = a.Targ_PropID -- 沥青目标配合比表
+		WHERE
+			1 = 1
+			AND a.Valid_Flag = 1
+			<if test="material_Name != null and material_Name != ''">
+				AND v.material_Name like '%${material_Name}%'
+			</if>
+			<if test="material_Model != null and material_Model != ''">
+				AND v.material_Model like '%${material_Model}%'
+			</if>
+			<if test="proportion_Code != null and proportion_Code != ''">
+				AND a.Proportion_Code like '%${proportion_Code}%'
+			</if>
+			<if test="orgId != null and orgId != 0">
+				AND a.Org_ID = #{orgId}
+			</if>
+			<if test="id != null and id != 0">
+				AND a.Id = #{id}
+			</if>
+		ORDER BY
+			a.id DESC
+	</select>
+	<!-- 获取产品名称 -->
+	<select id="getMaterialNameList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT DISTINCT
+			v.Material_Name AS mateName -- 物料名称
+		FROM
+			V_MaterialInfo v -- 材料信息（视图）
+		WHERE
+			v.Material_Type = #{materialType}
+			AND v.Material_Mold = #{materialMold}
+			AND v.org_id = #{orgId}
+			AND v.Valid_Flag = 1
+	</select>
+	<!-- 获取产品型号 -->
+	<select id="getMaterialModelList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT
+			a.Id             AS id,-- 自增长Id       
+			a.Material_Model AS mateModel -- 物料型号
+		FROM
+			V_MaterialInfo a -- 材料信息（视图）
+		WHERE
+			a.Material_Type = #{materialType}
+			AND a.Material_Mold = #{materialMold}
+			AND a.Material_Name = #{materialName}
+			AND a.Valid_Flag = 1
+			<if test="orgId != null and orgId != 0">
+				AND org_id = #{orgId}
+			</if>
+	</select>
+	<!-- 获取目标配合比编号 -->
+	<select id="getAsphTargetProCodeByProductId" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			Id              AS id,-- 自增长ID
+			Proportion_Code AS proportionCode,-- 目标配比编码
+			Product_ID      AS productId-- 产品Id
+		FROM
+			Asph_TargetProportion -- 沥青目标配合比表
+		WHERE
+			valid_Flag = 1
+		  	AND Org_id = #{orgId}
+		  	AND Product_ID = #{productId}
+	</select>
+	<!-- 获取级配编号 -->
+	<select id="getGradeCodeByIdByProductId" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			Id         AS id,-- 自增长ID
+			Grade_Code AS gradeCode,-- 级配编码
+			Product_ID AS productId-- 产品Id
+		FROM
+			Asphalt_Grading -- 沥青级配基本信息表
+		WHERE
+			valid_Flag = 1
+		  AND Org_id = #{orgId}
+		  AND Product_ID = #{productId}
+	</select>
+	<!-- 添加沥青生产配合比 -->
+	<insert id="addAsphaltProdProportion" parameterType="com.mixingStation.model.asphalt.AsphaltProdProportion">
+		INSERT INTO Asphalt_Prod_Proportion (	
+			Org_ID,
+			Proportion_Code,
+			Targ_PropID,
+			Grad_Id,
+			Product_ID,
+			No1_SetValue,
+			No2_SetValue,
+			No3_SetValue,
+			No4_SetValue,
+			No5_SetValue,
+			No6_SetValue,
+			Admixture1_SetValue,
+			Admixture2_SetValue,
+			HotPowder_SetValue,
+			ColdPowder_SetValue,
+			ColdPowder2_SetValue,
+			Asphalt_SetValue,
+			Remarks,
+			Operator,
+			Create_Date,
+			Valid_Flag
+		)
+		VALUES
+			(
+				#{orgId},
+				#{proportionCode},
+				#{targPropId},
+				#{gradId},
+				#{productId},
+				#{no1SetValue},
+				#{no2SetValue},
+				#{no3SetValue},
+				#{no4SetValue},
+				#{no5SetValue},
+				#{no6SetValue},
+				#{admixture1SetValue},
+				#{admixture2SetValue},
+				#{hotPowderSetValue},
+				#{coldPowderSetValue},
+				#{coldPowder2SetValue},
+				#{asphaltSetValue},
+				#{remarks},
+				#{operator},
+				CONVERT(varchar(100),GETDATE(),20),
+				1
+		)
+	</insert>
+	<!-- 修改沥青生产配合比 -->
+	<update id="updateAsphaltProdProportion" parameterType="com.mixingStation.model.asphalt.AsphaltProdProportion">
+		UPDATE Asphalt_Prod_Proportion
+			SET 
+				Targ_PropID=#{targPropId},
+				Grad_Id=#{gradId},
+				Product_ID=#{productId},
+				No1_SetValue=#{no1SetValue},
+				No2_SetValue=#{no2SetValue},
+				No3_SetValue=#{no3SetValue},
+				No4_SetValue=#{no4SetValue},
+				No5_SetValue=#{no5SetValue},
+				No6_SetValue=#{no6SetValue},
+				Admixture1_SetValue=#{admixture1SetValue},
+				Admixture2_SetValue=#{admixture2SetValue},
+				HotPowder_SetValue=#{hotPowderSetValue},
+				ColdPowder_SetValue=#{coldPowderSetValue},
+				ColdPowder2_SetValue=#{coldPowder2SetValue},
+				Asphalt_SetValue=#{asphaltSetValue},
+				Modifier=#{modifier},
+				Modify_Date=CONVERT(varchar(100),GETDATE(),20),
+				Remarks=#{remarks}
+		WHERE
+			Id=#{id}
+	</update>
+	<!-- 通过沥青生产配合比Id查询  -->
+	<select id="getAsphaltProdProportionById" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			a.Id                                     AS id,-- 自增长ID
+			a.Product_ID							 AS productId,-- 产品信息Id
+			a.Grad_Id                                AS gradId,-- 级配比ID
+			o.Org_Name                               AS orgName,-- 机构名称
+			a.Targ_PropID                            AS targPropId,-- 目标配比ID
+			a.Proportion_Code                        AS proportionCode,-- 生产配比编码
+			v.Material_Name                          AS materialName,-- 物料名称
+			v.Material_Model                         AS materialModel,-- 物料型号
+			a.Remarks                                AS remarks,-- 备注
+			a.Modify_Date                            AS modifyDate,-- 修改日期
+			a.Create_Date                            AS createDate,-- 创建日期
+			ag.Grade_Code                            AS gradeCode,-- 级配编码
+			pp.Proportion_Code                       AS mproportionCode,-- 目标配合比配比编码
+			v.Material_Name + '-' + v.Material_Model AS materNameAndModel,-- 材料信息
+			a.Operator                               AS operator, -- 创建人
+			a.No1_SetValue                           AS no1SetValue,-- 一号仓
+			a.No2_SetValue                           AS no2SetValue,-- 二号仓
+			a.No3_SetValue                           AS no3SetValue,-- 三号仓
+			a.No4_SetValue                           AS no4SetValue,-- 四号仓
+			a.No5_SetValue                           AS no5SetValue,-- 五号仓
+			a.No6_SetValue                           AS no6SetValue,-- 六号仓
+			a.Admixture1_SetValue                    AS admixture1SetValue,-- 一号外掺剂
+			a.Admixture2_SetValue                    AS admixture2SetValue,-- 二号外掺剂
+			a.Asphalt_SetValue                       AS asphaltSetValue,-- 油石比
+			a.ColdPowder_SetValue                    AS coldPowderSetValue,-- 冷粉仓
+			a.ColdPowder2_SetValue                   AS coldPowder2SetValue,-- 冷粉仓2
+			a.HotPowder_SetValue                     AS hotPowderSetValue-- 热粉仓
+		FROM
+			Asphalt_Prod_Proportion a -- 沥青生产配合比表
+			LEFT JOIN Organization_Info o ON a.Org_ID = o.Id -- 组织机构信息
+			LEFT JOIN V_MaterialInfo v ON v.Id = a.Product_ID -- 材料信息(视图)
+			LEFT JOIN Asphalt_Grading ag ON ag.Id = a.Grad_Id -- 沥青级配基本信息表
+			LEFT JOIN Asph_TargetProportion pp ON pp.Id = a.Targ_PropID -- 沥青目标配合比表
+		WHERE
+			1 = 1
+			AND a.Valid_Flag = 1
+			<if test="id != null and id != 0">
+				and a.Id = #{id}
+			</if>
+	</select>
+	<!-- 删除沥青生产配合比 -->
+	<update id="deleteAsphaltProdProportion" parameterType="java.util.Map">
+		UPDATE Asphalt_Prod_Proportion
+			SET
+				Valid_Flag = 0
+		WHERE
+				Id=#{id}
+	</update>
+	<!-- 查询生产计划是否调用沥青生产配合比 -->
+	<select id="getPlanByProdId" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from Production_Plan where Valid_Flag = 1 and IsCancel = 0 and Prod_ID = #{id}
+	</select>
+</mapper>

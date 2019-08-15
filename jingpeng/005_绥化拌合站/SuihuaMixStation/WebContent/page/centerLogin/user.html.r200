@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>绥化市公路智慧管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../../css/bootstrap.css">
+<link rel="stylesheet" href="../../css/systyle.css">
+<link rel="StyleSheet" href="../../css/dtree2.css"/>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<script src="../../js/common/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/common/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/common.js" type="text/javascript"></script>
+ <script type="text/javascript" src="../../js/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../../js/HighwayPlatform/user.js"></script>
+<script type="text/javascript" src="../../js/dtree2.js"></script>
+</head>
+
+<body>
+<div class="top">
+        <div class="topleft">绥化市公路智慧管理平台</div>
+        <div class="topright" id="rootUser">
+            <span class="userid"></span><span>你好！</span>
+            <a href="javascript:;" class="out" onclick="outLogin()"><span></span>安全退出</a>
+        </div>
+</div>
+<div class="container-fluid content">
+
+        <div class="rightcon" style="padding-left:0;">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：平台系统 > <span id="title"></span></div>
+            </div>
+            <div class="rightcon_content">
+            	<div class="lq_main">
+                	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+                    	<tr class="dise">
+                        <th colspan="2" align="left" scope="col"><span>用户注册</span></th>      
+	                      </tr>
+	                      <tr>
+	                        <td width="23%" align="right">用户名：</td>
+	                        <td width="77%">
+	                        <input type="hidden" id="i_id" value="">
+	                        <input type="text" name="textfield2" id="userName" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')" maxlength="40"></td>
+	                      </tr>
+	                      <tr>
+	                        <td align="right">密码：</td>
+	                        <td><input type="password" name="textfield2" id="password" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')" maxlength="40"></td>
+	                      </tr>
+	                      <tr>
+	                        <td align="right">确认密码：</td>
+	                        <td><input type="password" name="textfield2" id="repassword" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')" maxlength="40"></td>
+	                      </tr>
+	                      <tr>
+	                        <td align="right">姓名：</td>
+	                        <td><input type="text" name="textfield2" id="name" placeholder="请输入" class="zhuce_input" maxlength="40"></td>
+	                      </tr>
+	                       <tr>
+	                      	<td align="right">是否预警：</td>
+	                      	<td>
+	                      		&nbsp;&nbsp;<input id="isWarning" type="radio" value="0" name="isWarning" onclick="isWarningChange();"/>是
+								&nbsp;&nbsp;<input id="isWarning1" type="radio" value="1" name="isWarning" checked="checked" onclick="isWarningChange();">否
+	                      	</td>
+	                      </tr> 
+	                      <tr id="level" hidden="true">
+	                      	<td align="right">预警级别：</td>
+	                      	<td>
+                      			&nbsp;&nbsp;<input id="warningLevel" type="radio" value="0" name="warningLevel"/>初级预警
+								&nbsp;&nbsp;<input id="warningLevel1" type="radio" value="1" name="warningLevel">中级预警
+								&nbsp;&nbsp;<input id="warningLevel2" type="radio" value="2" name="warningLevel">高级级预警
+	                      	</td>
+	                      </tr>                         
+	                       <tr id="tree1">
+		                        <td align="right">拌合站权限：</td>
+		                        <td>
+		                        <div class="dtree2"></div>
+								<script type="text/javascript">
+									     d = new dTree('d', true);
+										 $.ajax({
+												type : "POST",
+												url : "../../UserInfo/getOrgInfoList.action",
+												async:false,
+												data : {},
+												dataType : "json",
+												success : function(data) {
+													for(var i = 0; i < data.data.length; i++) {
+														var org_Name = data.data[i].str_org_Name;
+														if(data.data[i].str_org_Type == "0" || data.data[i].str_org_Type == 0) {
+															d.add(data.data[i].i_id, -1, org_Name);
+														} else if(data.data[i].str_org_Type == "1" || data.data[i].str_org_Type == 1) {
+															d.add(data.data[i].i_id, data.data[i].i_parent_Id, 'authority1', org_Name, org_Name, true, false);
+														} else {
+                                                            if(org_Name.indexOf("水泥") == -1){
+														    	d.add(data.data[i].i_id, data.data[i].i_parent_Id, 'authority1', org_Name, org_Name ,false, false);
+                                                             }
+														}
+													}
+													document.write(d);
+							                        d.openAll();
+												}
+										});  
+			                        </script>
+		                        </td>
+	                        </tr>
+	                     <tr>
+	                       <td colspan="2" style="text-align: center"><input  type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="add()"></td>
+	                     </tr>
+                     </table>
+              	</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+</body>
+</html>

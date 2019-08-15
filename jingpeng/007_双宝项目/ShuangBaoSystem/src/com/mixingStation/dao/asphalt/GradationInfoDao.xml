@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.asphalt.GradationInfoDao">
+	<!-- 获取所有生产计划信息 -->
+	<select id="getAsphaltProductionPlanInfo" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltProductionPlan">
+		SELECT
+			p.id                                                     as id,-- 自增长ID
+			p.org_Id                                                 as orgId,-- 组织机构ID
+			pp.proportion_Code                                       as proportionCode,-- 目标配合比编号
+			pp.id                                                    as targPropId,-- 目标配比ID
+			ag.id                                                    as gradId,-- 级配比ID
+			app.id                                                   as i_prodId,-- 生产配比ID
+			isnull(p.plan_No,'')                                     as planNo,-- 生产计划编号
+			isnull(CONVERT(varchar(20),p.startTime,120),'')          as startTime,-- 生产计划开始时间
+			p.product_Id                                             as productId,-- 产品Id
+			p.prod_Id                                                as prodId,-- 生产配比ID
+			isnull(p.proj_Pos,'')                                    as projPos,-- 工程部位/用途
+			isnull(p.construction_Unit,'')                           as constructionUnit,-- 施工单位
+			p.scheduled_Production                                   as scheduledProduction,-- 计划生产量
+			p.isCancel                                               as isCancel,-- 计划是否作废
+			p.Equ_Id                                                 as equId,-- 拌和机Id
+			isnull(CONVERT(varchar(20),p.cancel_Time,120),'')        as cancelTime,-- 作废时间
+			isnull(p.invalid_Person,'')                              as invalidPerson,-- 作废人
+			isnull(p.cancel_Reason,'')                               as cancelReason,-- 作废原因
+			isnull(CONVERT(varchar(20),p.create_Date,120),'')        as createDate,-- 创建日期
+			isnull(mn.Material_Name,'')                              as materialName,-- 物料名称
+			isnull(mm.Material_Model,'')                             as materialModel,-- 物料型号
+			isnull(app.Proportion_Code,'')                           as proportion_Code,-- 生产配比编码
+			isnull(oi.org_name,'')                                   as orgName,-- 机构名称
+			isnull(ei.Equipment_Name,'')                             as equipmentName,-- 拌和机名称
+			isnull(mn.Material_Name+Material_Model,'')               as nameAndModel -- 物料和型号
+		FROM
+			Production_Plan p -- 沥青生产计划
+			LEFT JOIN Material_Info mi ON p.product_Id=mi.id -- 材料信息
+			LEFT JOIN MaterName_Info mn ON mi.MateName_ID=mn.id -- 材料名称表
+			LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID=mm.id -- 材料型号表
+			LEFT JOIN Asphalt_Prod_Proportion app ON p.prod_Id=app.id -- 沥青生产配合比表
+			LEFT JOIN Asph_TargetProportion pp ON pp.Id = app.Targ_PropID -- 沥青目标配合比表
+			LEFT JOIN Organization_Info oi ON p.org_id=oi.id -- 组织机构信息
+			LEFT JOIN Equipment_Info ei on ei.id=Equ_ID -- 拌和设备表
+			LEFT JOIN Asphalt_Grading ag on p.Grad_Id=ag.id -- 沥青级配基本信息表
+			<trim prefix="WHERE" prefixOverrides="AND | OR">
+				<if test="materialModel != null and materialModel != ''">
+				    AND mm.material_Model LIKE '%${materialModel}%'
+				</if>
+				<if test="materialName != null and materialName != ''">
+				    AND mn.material_Name LIKE '%${materialName}%'
+				</if>
+				<if test="planNo != null and planNo != ''">
+				    AND p.plan_No LIKE '%${planNo}%'
+				</if>
+				<foreach collection="orgIds" index="index" item="item" open=" AND p.org_Id IN (" separator="," close=")">
+	                #{item}
+	            </foreach>
+				AND p.valid_Flag=1 ORDER BY p.id DESC 
+			</trim>
+	</select>
+	<!-- 添加生产计划 -->
+	<insert id="addAsphaltProductionPlan" parameterType="com.mixingStation.model.asphalt.AsphaltProductionPlan">
+		INSERT INTO Production_Plan (
+			Org_ID,
+			Plan_No,
+			StartTime,
+			Product_ID,
+			Prod_ID,
+			Proj_Pos,
+			Construction_Unit,
+			Scheduled_Production,
+			IsCancel,
+			Operator,
+			Create_Date,
+			Valid_Flag,
+			Equ_ID,
+			Grad_Id
+		)
+		VALUES
+			(
+				#{orgId},
+				#{planNo},
+				#{startTime},
+				#{productId},
+				#{prodId},
+				#{projPos},
+				#{constructionUnit},
+				#{scheduledProduction},
+				0,
+				#{operator},
+				CONVERT (VARCHAR(100), GETDATE(), 20),
+				1,
+				#{equId},
+				#{gradId}
+			)
+	</insert>
+	<!-- 修改生产计划 -->
+	<update id="updateAsphaltProductionPlan" parameterType="com.mixingStation.model.asphalt.AsphaltProductionPlan">
+		UPDATE Production_Plan
+			SET 
+				Plan_No = #{planNo},
+				StartTime = #{startTime},
+				Product_ID = #{productId},
+				Prod_ID = #{prodId},
+				Construction_Unit = #{constructionUnit},
+				Scheduled_Production = #{scheduledProduction},
+				IsCancel = #{isCancel},
+				Cancel_Time = #{cancelTime},
+				Invalid_Person = #{invalidPerson},
+				Cancel_Reason = #{cancelReason},
+				Modifier = #{modifier},
+				Modify_Date = CONVERT (VARCHAR(100), GETDATE(), 20),
+				Equ_ID = #{equId},
+				Grad_Id = #{gradId},
+				Proj_Pos = #{projPos}
+		WHERE
+			id = #{id}
+	</update>
+	<!-- 删除修改计划 -->
+	<update id="deleteAsphaltProductionPlan" parameterType="java.util.Map">
+		UPDATE Production_Plan
+			SET
+				Valid_Flag = 0
+		WHERE
+			Id = #{id}		
+	</update>
+	<!-- 作废修改计划 -->
+	<update id="zfAsphaltProductionPlan" parameterType="java.util.Map">
+		UPDATE Production_Plan
+			SET
+				Cancel_Reason = #{cancelReason},
+				IsCancel = 1
+		WHERE
+			Id = #{id}	
+	</update>
+	<!-- 获取产品名称 -->
+	<select id="getMaterialNameList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT DISTINCT
+			v.Material_Name AS mateName -- 物料名称
+		FROM
+			V_MaterialInfo v -- 材料信息（视图）
+		WHERE
+			v.Material_Type = #{materialType}
+			AND v.Material_Mold = #{materialMold}
+			AND v.org_id = #{orgId}
+			AND v.Valid_Flag = 1
+	</select>
+	<!-- 获取产品型号 -->
+	<select id="getMaterialModelList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT
+			a.Id             AS id,-- 自增长Id       
+			a.Material_Model AS mateModel -- 物料型号
+		FROM
+			V_MaterialInfo a -- 材料信息（视图）
+		WHERE
+			a.Material_Type = #{materialType}
+			AND a.Material_Mold = #{materialMold}
+			AND a.Material_Name = #{materialName}
+			AND a.Valid_Flag = 1
+			<foreach collection="orgIds" index="index" item="item" open="and org_id in (" separator="," close=")">
+				#{item}
+			</foreach>
+	</select>
+	<!-- 获取拌和设备 -->
+	<select id="getEquipmentInfo" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.EquipmentInfo">
+		SELECT
+			Id             AS id,           -- 自增长id
+			Equipment_Name AS equipmentName -- 拌合站设备名称
+		FROM
+			Equipment_Info -- 拌和设备表
+		WHERE
+			Valid_Flag = 1
+			<foreach collection="orgIds" index="index" item="item" open="AND Org_ID in (" close=")" separator=",">
+				#{item}
+			</foreach>
+			AND Equipment_Type = #{equipmentType}
+	</select>
+	<!-- 获取生产配合比编号 -->
+	<select id="getProportionCodeList" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltProdProportion">
+		SELECT
+			Id              AS id, -- 自增长ID
+			Proportion_Code AS proportionCode -- 生产配比编码
+		FROM
+			Asphalt_Prod_Proportion -- 沥青生产配合比表
+		WHERE
+			Valid_Flag = 1
+		  	AND Org_ID = #{orgId}
+		  	AND Product_ID = #{productId}
+	</select>
+	<!-- 通过生产配合比Id查询级配编码 -->
+	<select id="getGradeCode" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltGrading">
+		SELECT
+			g.Id         AS id,-- 自增长ID
+			g.Grade_Code AS gradeCode -- 级配编码
+		FROM
+			Asphalt_Grading g -- 沥青级配基本信息表
+			LEFT JOIN Asphalt_Prod_Proportion p -- 沥青生产配合比表
+			ON g.id = p.grad_Id
+		WHERE
+			g.Valid_Flag = 1
+			AND g.Org_ID = #{orgId}
+			AND p.Id = #{id}
+	</select>
+	<!-- 通过生产计划id获取生产计划 -->
+	<select id="getProductionPlanById" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltProductionPlan">
+		SELECT
+			p.id                                                     as id,-- 自增长ID
+			p.org_Id                                                 as orgId,-- 组织机构ID
+			pp.proportion_Code                                       as proportionCode,-- 目标配合比编号
+			pp.id                                                    as targPropId,-- 目标配比ID
+			ag.id                                                    as gradId,-- 级配比ID
+			app.id                                                   as i_prodId,-- 生产配比ID
+			isnull(p.plan_No,'')                                     as planNo,-- 生产计划编号
+			isnull(CONVERT(varchar(20),p.startTime,120),'')          as startTime,-- 生产计划开始时间
+			p.product_Id                                             as productId,-- 产品Id
+			p.prod_Id                                                as prodId,-- 生产配比ID
+			isnull(p.proj_Pos,'')                                    as projPos,-- 工程部位/用途
+			isnull(p.construction_Unit,'')                           as constructionUnit,-- 施工单位
+			p.scheduled_Production                                   as scheduledProduction,-- 计划生产量
+			p.isCancel                                               as isCancel,-- 计划是否作废
+			p.Equ_Id                                                 as equId,-- 拌和机Id
+			isnull(CONVERT(varchar(20),p.cancel_Time,120),'')        as cancelTime,-- 作废时间
+			isnull(p.invalid_Person,'')                              as invalidPerson,-- 作废人
+			isnull(p.cancel_Reason,'')                               as cancelReason,-- 作废原因
+			isnull(CONVERT(varchar(20),p.create_Date,120),'')        as createDate,-- 创建日期
+			isnull(mn.Material_Name,'')                              as materialName,-- 物料名称
+			isnull(mm.Material_Model,'')                             as materialModel,-- 物料型号
+			isnull(app.Proportion_Code,'')                           as proportion_Code,-- 生产配比编码
+			isnull(oi.org_name,'')                                   as orgName,-- 机构名称
+			isnull(ei.Equipment_Name,'')                             as equipmentName,-- 拌和机名称
+			isnull(mn.Material_Name+Material_Model,'')               as nameAndModel, -- 物料和型号
+			isnull(ag.Grade_Code,'')                                 as gradeCode,-- 级配编码
+			(case p.Equ_Id when 0 then '已生效' else '已作废' end)       as str_isCancel -- 已生效/已作废
+		FROM
+			Production_Plan p -- 沥青生产计划
+			LEFT JOIN Material_Info mi ON p.product_Id=mi.id -- 材料信息
+			LEFT JOIN MaterName_Info mn ON mi.MateName_ID=mn.id -- 材料名称表
+			LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID=mm.id -- 材料型号表
+			LEFT JOIN Asphalt_Prod_Proportion app ON p.prod_Id=app.id -- 沥青生产配合比表
+			LEFT JOIN Asph_TargetProportion pp ON pp.Id = app.Targ_PropID -- 沥青目标配合比表
+			LEFT JOIN Organization_Info oi ON p.org_id=oi.id -- 组织机构信息
+			LEFT JOIN Equipment_Info ei on ei.id=Equ_ID -- 拌和设备表
+			LEFT JOIN Asphalt_Grading ag on p.Grad_Id=ag.id -- 沥青级配基本信息表
+		WHERE
+			p.Id = #{id}
+	</select>
+	<!-- 获取工程部位/用途 -->
+	<select id="getProjPos" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT
+			Proj_Pos AS projPos -- 工程部位/用途
+		FROM
+			Production_Plan -- 沥青生产计划
+		WHERE
+			Valid_Flag = 1 AND IsCancel = 0
+	</select>
+	<!-- 获取施工单位 -->
+	<select id="getConstructionUnit" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT
+			Construction_Unit AS cnstructionUnit -- 施工单位
+		FROM
+			Production_Plan -- 沥青生产计划
+		WHERE
+			Valid_Flag = 1 AND IsCancel = 0
+	</select>
+	<select id="queryList" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltGrading">
+		SELECT
+			a.Id,
+			a.Product_ID productID,
+			a.Operator operator,
+			CONVERT(varchar(20),a.Create_Date,120) createDate,
+			a.Grade_Code gradeCode,
+			a.Remarks remarks,
+			mn.Material_Name materialName,
+			mm.Material_Model materialModel
+		FROM
+			Asphalt_Grading a
+		LEFT JOIN Material_Info m ON a.Product_ID = m.Id
+		LEFT JOIN MaterName_Info mn ON mn.Id = m.MateName_ID
+		LEFT JOIN MaterModel_Info mm ON mm.Id = m.MateModel_ID
+		WHERE 
+			a.valid_flag = 1
+		<if test="gradeCode != null and gradeCode != ''">
+		    AND a.Grade_Code LIKE '%${gradeCode}%'
+		</if>
+		<if test="materialName != null and materialName != ''">
+		    AND mn.Material_Name LIKE '%${materialName}%'
+		</if>
+		<if test="materialModel != null and materialModel != ''">
+		    AND mm.Material_Model LIKE '%${materialModel}%'
+		</if>
+	</select>
+	<select id="queryDataById" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltGrading">
+		SELECT
+			a.Id,
+			a.Product_ID productID,
+			a.Operator operator,
+			a.Create_Date createDate,
+			a.Grade_Code gradeCode,
+			a.Remarks remarks,
+			m.MateName_ID materialName,
+			m.MateModel_ID materialModel
+		FROM
+			Asphalt_Grading a
+		LEFT JOIN Material_Info m ON a.Product_ID = m.Id
+		LEFT JOIN MaterName_Info mn ON mn.Id = m.MateName_ID
+		LEFT JOIN MaterModel_Info mm ON mm.Id = m.MateModel_ID
+		WHERE 
+			a.Id = #{id}
+	</select>
+	<select id="getColumnModel" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			m.id, 
+			m.mesh_size meshSize
+		FROM
+			mesh_size_data_analysis md
+		LEFT JOIN mesh_size_info m ON md.mesh_id = m.id AND m.valid_flag = 1
+		WHERE 
+			md.valid_flag = 1 
+		AND md.org_id = #{orgId}
+		AND md.analysis_id = #{id}
+	</select>
+	<insert id="insertGradationInfo" useGeneratedKeys="true" keyProperty="id" parameterType="com.mixingStation.model.asphalt.AsphaltGrading">
+		INSERT INTO Asphalt_Grading (
+			Org_Id, 
+			Grade_Code, 
+			Product_ID, 
+			Remarks, 
+			Operator, 
+			Create_Date, 
+			Valid_Flag
+		)
+		VALUES (
+			#{orgId},
+			#{gradeCode},
+			#{productId},
+			#{remarks},
+			#{operator},
+			getDate(),
+			1
+		)
+	</insert>
+	<update id="updateGradationInfo" parameterType="com.mixingStation.model.asphalt.AsphaltGrading">
+		UPDATE 
+			Asphalt_Grading 
+		SET 	
+			Grade_Code = #{gradeCode},
+			Product_ID = #{productId},
+			Remarks = #{remarks},
+			Modifier = #{modifier},
+			Modify_Date = getDate()
+		WHERE
+			Id = #{id} 
+	</update>
+	<update id="deleteGradationInfo" parameterType="com.mixingStation.model.asphalt.AsphaltGrading">
+		UPDATE 
+			Asphalt_Grading 
+		SET 	
+			Valid_Flag = 0,
+			Modifier = #{modifier},
+			Modify_Date = getDate()
+		WHERE
+			Id = #{id} 
+	</update>
+</mapper>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script type="text/javascript" src="../../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script src="../../js/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/procurementApplication/procurementApplication_edit.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: left;
+			}
+			
+			.ui_text_lt {
+				width: 35%;
+			}
+			
+			.ui_input_txt01 {
+				width: 60%;
+			}
+			
+			.ui_select01 {
+				width: 47%;
+			}
+			
+			.text {
+				height: 80px;
+				resize: none
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				};
+			});
+		</script>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					采购申请信息
+				</div>
+				<div class="ui_content">
+					<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+						<tr>
+							<td class="ui_text_rt">单据编号：</td>
+							<td class="ui_text_lt">
+								<input type="text" style="background:#CCCCCC;" readonly="readonly" class="ui_input_txt01" id="serialID" name="serialID" maxlength="50"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">采购物资：</td>
+							<td class="ui_text_lt">
+								<select class="ui_input_txt01" style="padding: 0;" id="goodsName" name="goodsName" onchange="changeMaterieName(this.value);">
+								</select>
+							</td>
+							<td class="ui_text_rt">规格型号：</td>
+							<td class="ui_text_lt">
+								<select class="ui_input_txt01" style="padding: 0;" id="model" name="model">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">申请数量：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="applyNumber"  onchange="count(this.value)" name="applyNumber" onkeyup="checkNumber(this)" onblur="checkPoint(this)"/>
+								<span style="color:red">*</span>
+							</td>
+							<td class="ui_text_rt">紧急状态：</td>
+							<td class="ui_text_lt">
+								<select class="ui_input_txt01" style="padding: 0;" id="isUrgentState" name="isUrgentState">
+								</select>
+							</td>
+
+						</tr>
+						<tr>
+							<td class="ui_text_rt">预计到位时间：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="estimatedTime" name="estimatedTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
+								<span style="color:red">*</span>
+							</td>
+							<td class="ui_text_rt">物料采购级别：</td>
+							<td class="ui_text_lt">
+								<select class="ui_input_txt01" style="padding: 0;" id="purchaseLevel" name="purchaseLevel">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">申请部门：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" id="applyDepartment" name="applyDepartment" maxlength="20"/>
+								<span style="color:red">*</span>
+							</td>
+							<td class="ui_text_rt">申请人：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="applicant" name="applicant" maxlength="20"/>
+								<span style="color:red">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">录入采购人：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="entryClerkPurchaser" name="entryClerkPurchaser" maxlength="20"/>
+								<span style="color:red">*</span>
+							</td>
+							<td class="ui_text_rt">申请日期：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="applyDate" name="applyDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
+								<span style="color:red">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">录入申请人：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="entryClerkApplicant" name="entryClerkApplicant" maxlength="20"/>
+								<span style="color:red">*</span>
+							</td>
+							<td class="ui_text_rt">录入时间：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="entryClerkDate" name="entryClerkDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="readonly"/>
+								<span style="color:red">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">-------------------------------------------</td>
+						</tr>
+						<tr>
+							<!-- <td class="ui_text_rt">询价人：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="inquirer" name="inquirer" maxlength="20"/>
+							</td> -->
+							<td class="ui_text_rt">询价方：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="inquirer1" name="inquirer1" maxlength="32"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">单价：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " onchange="count(this.value)" id="univalent1" name="univalent1" onkeyup="checkNumber(this)" onblur="checkPoint(this)" maxlength="10">
+							</td>
+							<td class="ui_text_rt">金额：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " onchange="count(this.value)" id="money1" name="money1" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="18"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">其他信息：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="otherInfo1" name="otherInfo1" maxlength="200"/>
+							</td>
+							<td class="ui_text_rt">评价：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="assess1" name="assess1" maxlength="200"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">-------------------------------------------</td>
+						</tr>
+						<tr>
+							<!-- <td class="ui_text_rt">询价人：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="" name="" maxlength=""/>
+							</td> -->
+							<td class="ui_text_rt">询价方：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="inquirer2" name="inquirer2" maxlength="32"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">单价：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="univalent2"  onchange="count(this.value)" name="univalent2" onkeyup="checkNumber(this)" onblur="checkPoint(this)" maxlength="10"/>
+							</td>
+							<td class="ui_text_rt">金额：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="money2"  onchange="count(this.value)" name="money2" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="18"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">其他信息：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="otherInfo2" name="otherInfo2" maxlength="200"/>
+							</td>
+							<td class="ui_text_rt">评价：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="assess2" name="assess2" maxlength="200"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="4">-------------------------------------------</td>
+						</tr>
+						<tr>
+							<!-- <td class="ui_text_rt">询价人：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="" name="" maxlength=""/>
+							</td> -->
+							<td class="ui_text_rt">询价方：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="inquirer3" name="inquirer3" maxlength="32"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">单价：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="univalent3"  onchange="count(this.value)" name="univalent3" onkeyup="checkNumber(this)" onblur="checkPoint(this)" maxlength="18"/>
+							</td>
+							<td class="ui_text_rt">金额：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="money3" name="money3"  onchange="count(this.value)" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="10"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">其他信息：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="otherInfo3" name="otherInfo3" maxlength="200"/>
+							</td>
+							<td class="ui_text_rt">评价：</td>	
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01 " id="assess3" name="assess3" maxlength="200"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">采购员备注：</td>
+							<td class="ui_text_lt" colspan="3">
+								<textarea style="width: 590px;height: 45px" draggable='false' rows='2' cols='20' id="buyerRemarks" name="buyerRemarks" maxlength="200"></textarea>
+							</td>
+						</tr>
+					</table>
+				</div>
+								<input id="submitbutton" type="button" value="保存" class="ui_input_btnsave" onclick="add()"/>  &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+				</div>
+		</form>
+	</body>
+</html>

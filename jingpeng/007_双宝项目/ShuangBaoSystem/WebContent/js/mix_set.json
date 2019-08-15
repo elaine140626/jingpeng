@@ -1,0 +1,13 @@
+
+{
+	"projectName": "国道集贤至当壁公路宝山至宝清段改扩建工程试验室信息化智能管控系统",
+	"projectItem1": {
+		"project_name": "沥青混合料",
+		"project_item": [{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+			{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+			{"itemName": "原材料消耗","itemUrl": "materials_consumption.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+			{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+			{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+		]
+	}
+}

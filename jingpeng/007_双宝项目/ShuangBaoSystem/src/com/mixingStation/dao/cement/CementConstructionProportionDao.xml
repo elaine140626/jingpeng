@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.cement.CementConstructionProportionDao">
+	<!-- 查询施工配比信息列表 -->
+	<select id="getAllCementConstructionProportion" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementConstructionProportion">
+		SELECT
+			cc.Id                  AS id,-- 自增长ID
+		  	cc.Org_ID              AS orgId,-- 组织机构ID
+			cc.TheoProp_ID         AS theoPropId,-- 理论配比ID
+			cc.Prop_Code           AS propCode,-- 配比编码
+			cc.Product_Id          AS productId,-- 产品Id
+			cc.Design_Strength     AS designStrength,-- 设计强度（单位：MPa）
+			cc.Water_Cement_Ratio  AS waterCementRatio,-- 水灰比
+			cc.Sand_Ratio          AS sandRatio,-- 砂率
+			cc.Slump_Low           AS slumpLow,-- 坍落度1（单位：mm）
+			cc.Slump_High          AS slumpHight,-- 坍落度2
+			cc.Remarks             AS remarks,-- 备注
+			cc.Operator            AS operator,-- 创建人
+			CONVERT(varchar(20),cc.Create_Date,120)         AS createDate,-- 创建日期
+			cast(cc.Slump_Low AS VARCHAR) + '-' + cast(cc.Slump_High AS VARCHAR) AS lowAndHight,-- 坍落度
+			lu.Prop_Code           AS lLPropCode,-- 理论配比编码
+			m.Material_Name        AS materialName,-- 产品名称
+			m.Material_Model       AS materialModel-- 产品型号
+		FROM
+			Cement_ConstructionProportion cc -- 水泥施工配比表
+			LEFT JOIN Cement_TheoryProportion lu ON lu.Id = cc.TheoProp_ID -- 水泥理论配比表
+			LEFT JOIN V_MaterialInfo m ON m.Id = cc.Product_ID -- 材料信息
+		WHERE
+			cc.Valid_Flag = 1
+			<if test="propCode != null and propCode != ''">
+				AND cc.Prop_Code like '%${propCode}%'
+			</if>
+			<if test="materialName != null and materialName != ''">
+				AND m.Material_Name like '%${materialName}%'
+			</if>
+			<if test="materialModel != null and materialModel != ''">
+				AND m.Material_Model like '%${materialModel}%'
+			</if>
+			<if test="orgId != null and orgId != 0">
+				AND cc.Org_ID = #{orgId}
+			</if>
+			<if test="productId != null and productId != ''">
+				AND cc.Product_ID = #{productId}
+			</if>
+		ORDER BY
+			cc.Id DESC
+	</select>
+	<!-- 获取产品名称 -->
+	<select id="getMaterialNameList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT DISTINCT
+			v.Material_Name AS mateName -- 物料名称
+		FROM
+			V_MaterialInfo v -- 材料信息（视图）
+		WHERE
+			v.Material_Type = #{materialType}
+			AND v.Material_Mold = #{materialMold}
+			AND v.org_id = #{orgId}
+			AND v.Valid_Flag = 1
+	</select>
+	<!-- 获取产品型号 -->
+	<select id="getMaterialModelList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT
+			a.Id             AS id,-- 自增长Id       
+			a.Material_Model AS mateModel -- 物料型号
+		FROM
+			V_MaterialInfo a -- 材料信息（视图）
+		WHERE
+			a.Material_Type = #{materialType}
+			AND a.Material_Mold = #{materialMold}
+			AND a.Material_Name = #{materialName}
+			AND a.Valid_Flag = 1
+			<if test="orgId != null and orgId != 0">
+				AND org_id = #{orgId}
+			</if>
+	</select>
+	<!-- 查询理论配比编号 -->
+	<select id="getCementTheoryProportion" resultType="com.mixingStation.model.cement.CementTheoryProportion" parameterType="java.util.Map">
+		SELECT
+			c.Id                 AS id,-- 自增长ID
+			c.Org_ID             AS orgId,-- 组织机构ID
+			v.Material_Model     AS materialModel,-- 产品型号
+			v.Material_Name      AS materialName,-- 产品名称
+			c.Prop_Code          AS propCode,-- 配比编码
+			c.Product_ID         AS productId,-- 产品Id
+			c.Design_Strength    AS designStrength,-- 设计强度（单位：MPa）
+			c.Water_Cement_Ratio AS waterCementRatio,-- 水灰比
+			c.Sand_Ratio         AS sandRatio,-- 砂率
+			c.Slump_Low          AS slumpLow,-- 坍落度1（单位：mm）
+			c.Slump_High         AS slumpHigh,-- 坍落度2
+			c.Remarks            AS remarks,-- 备注
+			c.Operator           AS operator,-- 创建人
+			c.Create_Date        AS createDate,-- 创建日期
+			c.Modifier           AS modifier,-- 修改人
+			c.Modify_Date        AS modifyDate,-- 修改日期
+			CAST(c.Slump_Low AS VARCHAR) + '-' + CAST(c.Slump_High AS VARCHAR) AS lowAndHight -- 坍落度
+		FROM
+			Cement_TheoryProportion c -- 水泥理论配比表
+			LEFT JOIN V_MaterialInfo v -- 材料信息系视图
+			ON v.Id = c.Product_ID
+		WHERE
+			1 = 1
+			AND c.Valid_Flag = 1
+			<if test="id != null and id != 0">
+				AND c.Id = #{id}
+			</if>
+			<if test="productId != null and productId != 0">
+				AND c.Product_ID = #{productId} 
+			</if>
+	</select>
+	<!-- 通过理论配比信息id查询明细 -->
+	<select id="getCementTheoPropDetailedById" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementTheoPropDetailed">
+		SELECT
+			c.Id               AS id,-- 自增长ID
+			c.TheoProp_ID      AS theoPropId,-- 理论配比ID
+			c.Materials_ID     AS materialsId,-- 材料Id
+			c.Weight           AS weight,-- 材料用量
+			c.Material_Origin  AS materialOrigin,-- 材料产地
+			c.Manufacturer     AS manufacturer,-- 生产厂家
+			v.Material_Model   AS materialModel,-- 产品型号
+			v.Material_Name    AS materialName-- 产品名称
+		FROM
+			Cement_TheoPropDetailed c -- 水泥理论配比明细表
+			LEFT JOIN V_MaterialInfo v -- 材料信息系视图
+			ON c.Materials_ID = v.Id
+		WHERE
+			c.Valid_Flag = 1
+			AND c.TheoProp_ID = #{id}
+	</select>
+	<!-- 施工配比信息的插入 -->
+	<insert id="addCementConstructionProportion" parameterType="com.mixingStation.model.cement.CementConstructionProportion">
+		INSERT INTO Cement_ConstructionProportion (
+			Org_ID,
+			Prop_Code,
+			TheoProp_ID,
+			Product_ID,
+			Design_Strength,
+			Water_Cement_Ratio,
+			Sand_Ratio,
+			Slump_Low,
+			Slump_High,
+			Remarks,
+			Operator,
+			Create_Date,
+			Valid_Flag
+		)
+		VALUES
+			(
+				#{orgId},
+				#{propCode},
+				#{theoPropId},
+				#{productId},
+				#{designStrength},
+				#{waterCementRatio},
+				#{sandRatio},
+				#{slumpLow},
+				#{slumpHigh},
+				#{remarks},
+				#{operator},
+				CONVERT (VARCHAR(100), GETDATE(), 20),
+				1
+			)
+	</insert>
+	<!-- 取得刚插入施工配比信息表id -->
+	<select id="getCementConstructionProportionInfoId" parameterType="String" resultType="int">
+		SELECT
+			MAX(Id) AS id
+		FROM
+			Cement_ConstructionProportion -- 水泥施工配比表
+		WHERE
+			Valid_Flag = 1
+			AND Operator = #{operator}
+	</select>
+	<!-- 施工配比明细信息的插入 -->
+	<insert id="addCementConsPropDetailed" parameterType="com.mixingStation.model.cement.CementConsPropDetailed">
+		INSERT INTO Cement_ConsPropDetailed (
+			ConsProp_ID,
+			Materials_ID,
+			Theory_Weight,
+			Construction_Weight,
+			Moisture_Content,
+			Material_Origin,
+			Manufacturer,
+			Valid_Flag
+		)
+		VALUES
+			(
+				#{consPropId},
+				#{materialsId},
+				#{theoryWeight},
+				#{constructionWeight},
+				#{moistureContent},
+				#{materialOrigin},
+				#{manufacturer},
+				1
+			)
+	</insert>
+	<!-- 通过id查询施工配比信息 -->
+	<select id="getCementConstructionProportionById" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementConstructionProportion">
+		SELECT
+			cc.Id                  AS id,-- 自增长ID
+		  	cc.Org_ID              AS orgId,-- 组织机构ID
+			cc.TheoProp_ID         AS theoPropId,-- 理论配比ID
+			cc.Prop_Code           AS propCode,-- 配比编码
+			cc.Product_Id          AS productId,-- 产品Id
+			cc.Design_Strength     AS designStrength,-- 设计强度（单位：MPa）
+			cc.Water_Cement_Ratio  AS waterCementRatio,-- 水灰比
+			cc.Sand_Ratio          AS sandRatio,-- 砂率
+			cc.Slump_Low           AS slumpLow,-- 坍落度1（单位：mm）
+			cc.Slump_High          AS slumpHigh,-- 坍落度2
+			cc.Remarks             AS remarks,-- 备注
+			cc.Operator            AS operator,-- 创建人
+			cc.Create_Date         AS createDate,-- 创建日期
+			cast(cc.Slump_Low AS VARCHAR) + '-' + cast(cc.Slump_High AS VARCHAR) AS lowAndHight,-- 坍落度
+			lu.Prop_Code           AS lLPropCode,-- 理论配比编码
+			m.Material_Name        AS materialName,-- 产品名称
+			m.Material_Model       AS materialModel-- 产品型号
+		FROM
+			Cement_ConstructionProportion cc -- 水泥施工配比表
+			LEFT JOIN Cement_TheoryProportion lu ON lu.Id = cc.TheoProp_ID -- 水泥理论配比表
+			LEFT JOIN V_MaterialInfo m ON m.Id = cc.Product_ID -- 材料信息
+		WHERE
+			cc.Valid_Flag = 1
+			AND cc.Id = #{id}
+	</select>
+	<!-- 通过id查询施工配比信息明细 -->
+	<select id="getCementConsPropDetailedById" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementConsPropDetailed">
+		SELECT
+			c.Id                    AS id,-- 自增长ID
+			c.ConsProp_ID           AS consPropId,-- 理论配比ID
+			c.Materials_ID          AS materialsId,-- 材料Id
+			c.Theory_Weight         AS theoryWeight,-- 理论配比用量
+			c.Construction_Weight   AS constructionWeight,-- 施工配比量
+			c.Material_Origin       AS materialOrigin,-- 材料产地
+			c.Manufacturer          AS manufacturer,-- 生产厂家
+			v.Material_Model        AS materialModel,-- 产品型号
+			v.Material_Name         AS materialName-- 产品名称
+		FROM
+			Cement_ConsPropDetailed c -- 水泥施工配比明细表
+			LEFT JOIN V_MaterialInfo v -- 材料信息系视图
+			ON c.Materials_ID = v.Id
+		WHERE
+			c.Valid_Flag = 1
+			AND c.ConsProp_ID = #{id}
+	</select>
+	<!-- 修改施工配比 -->
+	<update id="updateCementConstructionProportion" parameterType="com.mixingStation.model.cement.CementConsPropDetailed">
+		UPDATE Cement_ConstructionProportion
+			SET 
+				 Prop_Code = #{propCode},
+				 Product_ID = #{productId},
+				 TheoProp_ID = #{theoPropId},
+				 Design_Strength = #{designStrength},
+				 Water_Cement_Ratio = #{waterCementRatio},
+				 Sand_Ratio = #{sandRatio},
+				 Slump_Low = #{slumpLow},
+				 Slump_High = #{slumpHigh},
+				 Remarks = #{remarks},
+				 Modifier = #{modifier},
+				 Modify_Date = CONVERT (VARCHAR(100), GETDATE(), 20),
+				 Valid_Flag = 1
+			WHERE
+				Id = #{id}
+	</update>
+	<!-- 明细表更新删除 -->
+	<delete id="deleteCementConsPropDetailed" parameterType="String">
+		DELETE
+		FROM
+			Cement_ConsPropDetailed
+		WHERE
+			ConsProp_ID = #{id} 
+			AND Valid_Flag = 1
+	</delete>
+	<!-- 删除修改施工配比 -->
+	<update id="deleteCementConstructionProportionById" parameterType="java.util.Map">
+		UPDATE Cement_ConstructionProportion
+			SET
+				Valid_Flag = 0
+		WHERE 
+				Id = #{id}
+	</update>
+	<!-- 删除修改施工配比明细 -->
+	<update id="deleteCementConsPropDetailedById" parameterType="java.util.Map">
+		UPDATE Cement_ConsPropDetailed
+			SET
+				Valid_Flag = 0
+		WHERE 
+				ConsProp_ID = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>国道集贤至当壁公路宝山至宝清段改扩建工程试验室信息化智能管控系统</title>
+<script src="../../js/jquery3.3.1.min.js"
+	type="text/javascript" charset="utf-8"></script>
+<script src="../../js/bootstrap/bootstrap.min.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="../../js/swiper.min.js" type="text/javascript"
+	charset="utf-8"></script>
+<script type="text/javascript"
+	src="../../js/common.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="../../js/bootstrap/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../js/swiper.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../js/common.css" />
+<script src="../../js/HighwayPlatform/TestRoom/echarts.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="../../js/HighwayPlatform/TestRoom/chalk.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="../../js/HighwayPlatform/TestRoom/videoSurveillance.js"
+	type="text/javascript" charset="utf-8"></script>
+<script src="../../js/HighwayPlatform/TestRoom/chart.js" type="text/javascript"
+	charset="utf-8"></script>
+	<script type="text/javascript" src="../../js/common/json2.js"></script>
+<!-- 	<script src="../../js/HighwayPlatform/TestRoom/spjk2.js" type="text/javascript"
+	charset="utf-8"></script> -->
+	<script type="text/javascript" src="../../js/1.5/ezuikit.js"></script>
+		<script src="../../js/HighwayPlatform/TestRoom/spjk4.js" type="text/javascript"
+	charset="utf-8"></script>
+<!-- <script src="../../js/1.4/ckplayer/ckplayer.js"></script> -->
+<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js">
+	</script>
+<script type="text/javascript"
+	src="../../js/DataTables/datatables.js"></script>
+<script type="text/javascript">
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
+</script>
+<style type="text/css">
+#playWind {
+	width:100%;
+	height:90%;
+}
+#controllerPage {
+	width:100%;
+	height:10%;
+}
+#playWind .parent-wnd >div {
+	width:20% !important;
+	height:calc(100%/3) !important
+}
+.play-window {
+	width:calc(100% - 2px) !important;
+	height:calc(100% - 2px) !important
+}
+.draw-window {
+	width:100% !important;
+	height:100% !important
+}
+.pagination {
+	position: relative;
+	left: 50%;
+	transform: translate(-50%, 0%);
+}
+
+
+#chart111 {
+	width: 60%;
+	height: 85%;
+	padding: 30px 15px;
+	float: left;
+}
+
+#banhezhan {
+	float: left;
+	width: 40%;
+	height: 100%;
+	background: #ccc
+}
+
+#banhezhan h3 {
+	text-indent: 2em;
+	color: #fff !important;
+	margin-top: 12%;
+	font-size: 18px!important;
+}
+
+#banhezhan ul {
+	list-style: none;
+}
+
+#banhezhan ul li {
+	text-indent: 3em;
+	font-size: 14px;
+	color: #fff;
+	padding-top: 15px
+}
+
+#banhezhan>div ul li:nth-child(1) {
+	
+}
+
+#banhezhan>div ul li:nth-child(2) span {
+	color: #32e81f;
+}
+
+#banhezhan>div ul li:nth-child(3) span {
+	color: #d8f245;
+}
+
+#banhezhan>div ul li:nth-child(4) span {
+	color: #e04600;
+}
+.videoContain{
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow: hidden;
+}
+.getJpName {
+    width: 335px;
+    height: 40px;
+    border-radius: 5px;
+    margin: 10px;
+    padding-left: 5px;
+    float: left;
+}
+.chooseBtn {
+    width: 75px;
+    height: 40px;
+    display: block;
+    float: left;
+    line-height: 40px;
+    text-align: center;
+    background: #072167;
+    border-radius: 5px;
+    margin: 10px;
+    margin-left: 0;
+}
+</style>
+</head>
+<body>
+	<div id="contain">
+		<div id="blind" class="half mleft0 mbottom">
+			<h3 class="title">试验汇总展示</h3>
+			<div id="main"></div>
+			<div id="count"></div>
+		</div>
+		<div id="automatic" class="half mleft1 mbottom">
+			<h3 class="title">自动采集查询</h3>
+			<div class="swiper-container" id="swiper1">
+				<div class="swiper-wrapper" id="zdcj"></div>
+			</div>
+		</div>
+		<div id="mixing" class="half mleft0">
+		<h3 class="title">视频监控<a href="../../page/item_pages/Jqindex.html" style="float: right;font-size: 20px">重新选择</a></h3>
+	<div id="videoList" class="videoContain">
+	<!--  <button onclick=" playerVideo('playWind')">点击播放</button> -->
+	 <div id="playWind" style="float: left"></div>
+	 <button id="controllerPage" style="width: 100%;" onclick="controllerPage()">上一页</button>
+	 <!--  <button onclick=" playerVideo('playWind1')">点击播放</button> -->
+	 <!-- <div id="playWind1" style="float: left"></div>
+	 <button onclick=" playerVideo('playWind2')">点击播放</button>
+	 <div id="playWind2" style="float: left"></div>
+	 <div id="playWind3" style="float: left"></div>
+	 <div id="playWind4" style="float: left"></div>
+	 <div id="playWind5" style="float: left"></div>
+	 <div id="playWind6" style="float: left"></div>
+	 <div id="playWind7" style="float: left"></div>
+	 <div id="playWind8" style="float: left"></div>
+	 <div id="playWind9" style="float: left"></div>
+	 <div id="playWind10" style="float: left"></div>
+	 <div id="playWind11" style="float: left"></div>
+	 <div id="playWind12" style="float: left"></div>
+	 <div id="playWind13" style="float: left"></div>
+	 <div id="playWind14" style="float: left"></div> -->
+	</div>
+		</div>
+		<div id="camera" class="half mleft1">
+			<h3 class="title">拌合站数据汇总</h3>
+			<div id="chart111"></div>
+			<script type="text/javascript">
+				//拌合站数据汇展示图表
+				var myChart111 = echarts.init(document
+						.getElementById('chart111'), 'chalk');
+				// 指定图表的配置项和数据
+				option = {
+					tooltip : {},
+					dataset : {
+						dimensions : [ 'product', '总盘数', '合格盘数' ],
+						source : [ {
+							product : '拌合站1',
+							'总盘数' : 0,
+							'合格盘数' : 0,
+							
+						}, {
+							product : '拌合站2',
+							'总盘数' : 0,
+							'合格盘数' : 0,
+							
+						}, {
+							product : '拌合站3',
+							'总盘数' : 0,
+							'合格盘数' : 0,
+							
+						}, {
+							product : '拌合站4',
+							'总盘数' : 0,
+							'合格盘数' : 0,
+							
+						}]
+
+					},
+					xAxis: {
+						type: 'category',
+					},
+					yAxis: {},
+					series: [{
+							type: 'bar',
+						},
+						{
+							type: 'bar'
+						}
+					]
+				};
+				myChart111.setOption(option);
+			</script>
+		 	<div class="swiper-wrapper" id="banhezhan">
+				<div class='swiper-slide'>
+					<h3>拌合站</h3>
+					<ul>
+						<li>生产总数量（t）：<span>0</span></li>
+						<li>生产总盘数：<span>0</span></li>
+						<li>合格盘数：<span>0</span></li>
+						<li>合格率：<span>0%</span></li>
+					</ul>
+				</div>
+				<div class='swiper-slide'>
+					<ul>
+						<li>拌合站</li>
+						<li>生产总数量（t）：<span>0</span></li>
+						<li>生产总盘数：<span>0</span></li>
+						<li>合格盘数：<span>0</span></li>
+						<li>合格率：<span>0</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">详细数据</h4>
+				</div>
+				<div class="modal-body">
+					<div class="lq_main">
+						<div class="lq_biao">
+							<table id="autoCollection" width="100%" border="0"
+								cellpadding="0" cellspacing="0" class="bgcolor">
+								<thead>
+									<tr>
+										<th width="6%" class="xh" scope="col">序号</th>
+										<th width="9%" scope="col">试验室名称</th>
+										<th width="7%" scope="col">试验类别</th>
+										<th width="20%" scope="col">试验名称</th>
+										<th width="9%" scope="col">样品编号</th>
+										<th width="9%" scope="col">试件个数</th>
+										<th width="9%" scope="col">试验日期</th>
+										<th width="10%" scope="col">试验员</th>
+										<th width="9%" scope="col">结果判定</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+	<div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">详细数据</h4>
+				</div>
+				<div class="modal-body">
+					<div class="lq_main">
+						<div class="lq_biao">
+							<table id="blindInfo" width="100%" border="0" cellpadding="0"
+								cellspacing="0" class="bgcolor">
+								<thead>
+									<tr>
+										<th scope="col" class="xh">序号</th>
+										<th scope="col">试验室名称</th>
+										<th scope="col">试验类别</th>
+										<th scope="col">试验名称</th>
+										<th scope="col">试验状态</th>
+										<th scope="col">样品编号</th>
+										<th scope="col">施工单位</th>
+										<th scope="col">工程名称</th>
+										<th scope="col">样品名称</th>
+										<th scope="col">工程部位/用途</th>
+										<th scope="col">试验日期</th>
+										<th scope="col">试验员</th>
+										<th scope="col">结果判定</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+	</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.basicSetting.dao.FeedCompanyDao">	
+	<!-- 供料单位List取得 -->
+	<select id="getFeedCompanyList" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.FeedCompanyEntity">
+		SELECT
+		   f.Id                           
+		  , f.FeedCompanyNumber as feedCompanyNumber            
+		  , f.FeedCompanyName as feedCompanyName               
+		  , f.Contacts as contacts         
+		  , f.Telephone as telephone               
+		  , f.Remarks as remarks
+		  , f.IsDel as isDel
+		  , f.Creater as creater
+		  , f.CreaterDate as createrDate
+		  , f.Reviser as reviser
+		  , f.ReviserDate as reviserDate
+		FROM
+		  feedCompany f
+		where f.IsDel = 0
+		<if test="id != null and id != ''">
+			and f.Id = #{id}                       -- 主键id
+		</if>
+		<if test="ids != null and ids != 0">
+			and f.Id != #{ids}                     
+		</if>
+		<if test="feedCompanyName != null and feedCompanyName != ''">
+			and f.FeedCompanyName like CONCAT('%',CONCAT(#{feedCompanyName},'%'))    
+		</if>
+		ORDER BY  f.CreaterDate DESC
+	</select>
+	<select id="getFeedCompanyNumber" resultType="com.truckscale.basicSetting.model.FeedCompanyEntity">
+		SELECT
+		   f.Id                           
+		  , f.FeedCompanyNumber as feedCompanyNumber            
+		  , f.FeedCompanyName as feedCompanyName               
+		  , f.Contacts as contacts         
+		  , f.Telephone as telephone               
+		  , f.Remarks as remarks
+		  , f.IsDel as isDel
+		  , f.Creater as creater
+		  , f.CreaterDate as createrDate
+		  , f.Reviser as reviser
+		  , f.ReviserDate as reviserDate
+		FROM
+		  feedCompany f
+		where f.IsDel = 0
+		ORDER BY  f.CreaterDate DESC LIMIT 1
+	</select>
+	<select id="getExportmeasureList" resultType="map">
+		SELECT
+		   e.Id as id
+		FROM
+		  exportmeasure e
+		where e.IsDel = 0 
+		AND e.FeedCompanyId = #{id} LIMIT 1
+	</select>
+	<!-- 供料单位List取得 -->
+	<select id="getFeeddetailedcompanyList" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.FeeddetailedcompanyEntity">
+		SELECT
+		   f.Id                           
+		  , f.FeedCompanyId as feedCompanyId            
+		  , f.MaterielNameId as materielNameId               
+		  , f.UnitPrice as unitPrice         
+		  , f.MaterielPlace as materielPlace
+		  , f.Manufactor as manufactor               
+		  , f.Remarks as remarks
+		  , f.IsDel as isDel
+		  , f.Creater as creater
+		  , f.CreaterDate as createrDate
+		  , f.Reviser as reviser
+		  , f.ReviserDate as reviserDate
+		FROM
+		  feeddetailedcompany f
+		where f.IsDel = 0
+		<if test="id != null and id != ''">
+			and f.Id = #{id}                       -- 主键id
+		</if>
+		<if test="feedCompanyId != null and feedCompanyId != ''">
+			and f.FeedCompanyId = #{feedCompanyId}                    
+		</if>
+	</select>
+	<!-- 新增材料名称表 -->
+	<insert id="insertFeedCompany" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT 
+		INTO feedCompany
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  <if test="feedCompanyNumber != null">
+		    	FeedCompanyNumber,
+		  </if>
+		  <if test="feedCompanyName != null">
+		        FeedCompanyName,
+		  </if>
+		  <if test="contacts != null">
+		   		Contacts,
+		  </if>
+		  <if test="telephone != null">
+		   		Telephone,
+		  </if>
+		  <if test="remarks != null">
+		   		Remarks,
+		  </if>		
+	  		 	IsDel,	
+		  <if test="creater != null">
+		   		Creater,
+		  </if>		
+		   		CreaterDate,
+		</trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <if test="feedCompanyNumber != null">
+		    #{feedCompanyNumber},
+          </if>
+          <if test="feedCompanyName">
+            #{feedCompanyName},
+          </if>
+          <if test="contacts">
+            #{contacts},
+          </if>
+          <if test="telephone">
+            #{telephone},
+          </if>
+          <if test="remarks">
+            #{remarks},
+          </if>
+            0,
+		   <if test="creater">
+            #{creater},
+          </if>
+		    now()
+		</trim> 
+	</insert>
+	
+		<!-- 新增材料名称表 -->
+	<insert id="insertFeeddetailedcompany" parameterType="com.truckscale.basicSetting.model.FeeddetailedcompanyEntity" useGeneratedKeys="true" keyProperty="id">
+		INSERT 
+		INTO feeddetailedcompany
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  <if test="feedCompanyId != null">
+		    	FeedCompanyId,
+		  </if>
+		  <if test="materielNameId != null">
+		        MaterielNameId,
+		  </if>
+		  <if test="unitPrice != null">
+		   		UnitPrice,
+		  </if>
+		  <if test="materielPlace != null">
+		   		MaterielPlace,
+		  </if>
+		  <if test="manufactor != null">
+		   		Manufactor,
+		  </if>
+		  <if test="remarks != null">
+		   		Remarks,
+		  </if>		
+	  		 	IsDel,	
+		  <if test="creater != null">
+		   		Creater,
+		  </if>		
+		   		CreaterDate,
+		</trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <if test="feedCompanyId != null">
+		    #{feedCompanyId},
+          </if>
+          <if test="materielNameId">
+            #{materielNameId},
+          </if>
+          <if test="unitPrice">
+            #{unitPrice},
+          </if>
+          <if test="materielPlace">
+            #{materielPlace},
+          </if>
+          <if test="manufactor">
+            #{manufactor},
+          </if>
+          <if test="remarks">
+            #{remarks},
+          </if>
+            0,
+		   <if test="creater">
+            #{creater},
+          </if>
+		    now()
+		</trim> 
+	</insert>
+	<!-- 修改材料名称表 -->
+	<update id="updateFeedCompany" parameterType="com.truckscale.basicSetting.model.FeedCompanyEntity">
+		UPDATE feedCompany 
+		<set>
+		<if test="feedCompanyNumber != null">
+		    	FeedCompanyNumber = #{feedCompanyNumber},
+		  </if>
+		  <if test="feedCompanyName != null">
+		        FeedCompanyName = #{feedCompanyName},
+		  </if>
+		  <if test="contacts != null">
+		   		Contacts = #{contacts},
+		  </if>
+		  <if test="telephone != null">
+		   		Telephone = #{telephone},
+		  </if>
+		  <if test="remarks != null">
+		   		Remarks = #{remarks},
+		  </if>
+		  <if test="reviser">
+		  		Reviser = #{reviser},
+		  </if>		
+		   		ReviserDate = now(),
+		</set>
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 修改材料名称表 -->
+	<update id="updateFeedCompanyMap" parameterType="map">
+		UPDATE feedCompany 
+		<set>
+		<if test="feedCompanyNumber != null">
+		    	FeedCompanyNumber = #{feedCompanyNumber},
+		  </if>
+		  <if test="feedCompanyName != null">
+		        FeedCompanyName = #{feedCompanyName},
+		  </if>
+		  <if test="contacts != null">
+		   		Contacts = #{contacts},
+		  </if>
+		  <if test="telephone != null">
+		   		Telephone = #{telephone},
+		  </if>
+		  <if test="remarks != null">
+		   		Remarks = #{remarks},
+		  </if>
+		  <if test="reviser">
+		  		Reviser = #{reviser},
+		  </if>		
+		   		ReviserDate = now(),
+		</set>
+		WHERE
+		  Id = #{id}
+	</update>
+	<!-- 修改材料名称表 -->
+	<update id="updateFeeddetailedcompany" parameterType="com.truckscale.basicSetting.model.FeeddetailedcompanyEntity">
+		UPDATE feeddetailedcompany 
+		<set>
+		<if test="feedCompanyId != null">
+		    	FeedCompanyId = #{feedCompanyId},
+		  </if>
+		  <if test="materielNameId != null">
+		        MaterielNameId = #{materielNameId},
+		  </if>
+		  <!-- <if test="unitPrice != null"> -->
+		   		UnitPrice = #{unitPrice},
+		  <!-- </if> -->
+		  <!-- <if test="materielPlace != null"> -->
+		   		MaterielPlace = #{materielPlace},
+		  <!-- </if> -->
+		<!--   <if test="manufactor != null"> -->
+		   		Manufactor = #{manufactor},
+		 <!--  </if> -->
+		   		Remarks = #{remarks},
+		  <if test="reviser">
+		  		Reviser = #{reviser},
+		  </if>		
+		   		ReviserDate = now(),
+		</set>
+		WHERE
+		  Id = #{feeddetailedcompanyId}
+	</update>
+	<!-- 删除供料单位 -->
+	<update id="deleteFeedCompany" parameterType="com.truckscale.basicSetting.model.FeedCompanyEntity">
+		UPDATE feedCompany 
+		SET
+		    IsDel = 1
+		  , Reviser = #{reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{id}
+	</update>
+	<!-- 删除供料单位明细  -->
+	<delete id="deleteFeeddetailedcompanyById" parameterType="int">
+	    delete 
+		from
+		  feeddetailedcompany 
+		WHERE
+		  FeedCompanyId = #{feedCompanyId} 
+		  and IsDel = 0
+	</delete>
+	<!-- 删除供料单位明细  -->
+	<update id="deleteFeeddetailedcompany" parameterType="map">
+		UPDATE feeddetailedcompany 
+		SET
+		    IsDel = 1
+		  , Reviser = #{reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{feeddetailedcompanyId}
+	</update>
+</mapper>

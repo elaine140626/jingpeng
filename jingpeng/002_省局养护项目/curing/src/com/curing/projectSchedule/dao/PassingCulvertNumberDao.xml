@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.PassingCulvertNumberDao">
+	<!-- 工程进度（石砌边沟过路涵工程数量表）List取得 -->
+	<select id="getPassingCulvertNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PassingCulvertNumberEntity">
+		SELECT
+		  pcn.Id
+		  , pcn.ProjectId                                 -- 项目id
+		  , pcn.PileNumber                                -- 中心桩号
+		  , pcn.HoleCount                                 -- 孔数-孔径（孔-米）
+		  , pcn.Position                                  -- 位置
+		  , pcn.L                                         -- L（m）
+		  , pcn.CrossingRebar                             -- 工程数量过路板钢筋（Kg）
+		  , pcn.CrossingConcrete                          -- 工程数量过路板混凝土C30（m3）
+		  , pcn.Coating                                   -- 工程数量涂料（㎡）
+		  , pcn.SpreadRebar                               -- 工程数量涵面铺装钢筋（Kg）
+		  , pcn.SpreadConcrete                            -- 工程数量涵面铺装混凝土C30（m³）
+		  , pcn.ConcreteCap                               -- 工程数量C20混凝土台帽（m³）
+		  , pcn.RubbleBasics                              -- 工程数量M15浆砌片石涵台身及基础（㎡）
+		  , pcn.ThickFelt                                 -- 工程数量涵身顶面1cm厚油毛毡（㎡）
+		  , pcn.PermeableGranules                         -- 工程数量透水性砾料（m³）
+		  , pcn.Remarks                                   -- 备注
+		  , pcn.IsDel
+		  , pcn.Creater
+		  , pcn.CreaterDate
+		  , pcn.Reviser
+		  , pcn.ReviserDate 
+		FROM
+		  PassingCulvertNumber as pcn 
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid
+		WHERE
+		  pcn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pcn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pcn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pcn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and pcn.Position like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="holeCount!=null and holeCount!=''">
+		    and pcn.holeCount like concat('%',#{holeCount},'%')-- 根据孔数-孔径查询
+		  </if>
+		   order by pcn.CreaterDate desc
+	</select>
+	
+	<select id="getPassingCulvertNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   pcn.PileNumber                                -- 中心桩号
+		  , pcn.HoleCount                                 -- 孔数-孔径（孔-米）
+		  , pcn.Position                                  -- 位置
+		  , pcn.L                                         -- L（m）
+		  , pcn.CrossingRebar                             -- 工程数量过路板钢筋（Kg）
+		  , pcn.CrossingConcrete                          -- 工程数量过路板混凝土C30（m3）
+		  , pcn.Coating                                   -- 工程数量涂料（㎡）
+		  , pcn.SpreadRebar                               -- 工程数量涵面铺装钢筋（Kg）
+		  , pcn.SpreadConcrete                            -- 工程数量涵面铺装混凝土C30（m³）
+		  , pcn.ConcreteCap                               -- 工程数量C20混凝土台帽（m³）
+		  , pcn.RubbleBasics                              -- 工程数量M15浆砌片石涵台身及基础（㎡）
+		  , pcn.ThickFelt                                 -- 工程数量涵身顶面1cm厚油毛毡（㎡）
+		  , pcn.PermeableGranules                         -- 工程数量透水性砾料（m³）
+		  , pcn.Remarks                                   -- 备注
+		FROM
+		  PassingCulvertNumber as pcn 
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid
+		WHERE
+		  pcn.IsDel = 0
+		   order by pcn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（石砌边沟过路涵工程数量表）合计 -->
+	<select id="getPassingCulvertNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PassingCulvertNumberSum">
+		SELECT
+		  sum(pcn.L) as LSum                              -- L（m）
+		  , sum(pcn.CrossingRebar) as CrossingRebarSum    -- 工程数量过路板钢筋（Kg）
+		  , sum(pcn.CrossingConcrete) as CrossingConcreteSum -- 工程数量过路板混凝土C30（m3）
+		  , sum(pcn.Coating) as CoatingSum                -- 工程数量涂料（㎡）
+		  , sum(pcn.SpreadRebar) as SpreadRebarSum        -- 工程数量涵面铺装钢筋（Kg）
+		  , sum(pcn.SpreadConcrete) as SpreadConcreteSum  -- 工程数量涵面铺装混凝土C30（m³）
+		  , sum(pcn.ConcreteCap) as ConcreteCapSum        -- 工程数量C20混凝土台帽（m³）
+		  , sum(pcn.RubbleBasics) as RubbleBasicsSum      -- 工程数量M15浆砌片石涵台身及基础（㎡）
+		  , sum(pcn.ThickFelt) as ThickFeltSum            -- 工程数量涵身顶面1cm厚油毛毡（㎡）
+		  , sum(pcn.PermeableGranules) as PermeableGranulesSum -- 工程数量透水性砾料（m³）
+		FROM
+		  PassingCulvertNumber as pcn 
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid 
+		WHERE
+		  pcn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pcn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pcn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pcn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and pcn.Position like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="holeCount!=null and holeCount!=''">
+		    and pcn.holeCount like concat('%',#{holeCount},'%')-- 根据孔数-孔径查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（石砌边沟过路涵工程数量表） -->
+	<insert id="insertPassingCulvertNumber" parameterType="com.curing.projectSchedule.model.PassingCulvertNumberEntity">
+		INSERT 
+		INTO PassingCulvertNumber( 
+		 Id
+		  , ProjectId
+		  , PileNumber
+		  , HoleCount
+		  , Position
+		  , L
+		  , CrossingRebar
+		  , CrossingConcrete
+		  , Coating
+		  , SpreadRebar
+		  , SpreadConcrete
+		  , ConcreteCap
+		  , RubbleBasics
+		  , ThickFelt
+		  , PermeableGranules
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{HoleCount}
+		  , #{Position}
+		  , #{L}
+		  , #{CrossingRebar}
+		  , #{CrossingConcrete}
+		  , #{Coating}
+		  , #{SpreadRebar}
+		  , #{SpreadConcrete}
+		  , #{ConcreteCap}
+		  , #{RubbleBasics}
+		  , #{ThickFelt}
+		  , #{PermeableGranules}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（石砌边沟过路涵工程数量表） -->
+	<update id="updatePassingCulvertNumber" parameterType="com.curing.projectSchedule.model.PassingCulvertNumberEntity">
+		UPDATE PassingCulvertNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , HoleCount = #{HoleCount}
+		  , Position = #{Position}
+		  , L = #{L}
+		  , CrossingRebar = #{CrossingRebar}
+		  , CrossingConcrete = #{CrossingConcrete}
+		  , Coating = #{Coating}
+		  , SpreadRebar = #{SpreadRebar}
+		  , SpreadConcrete = #{SpreadConcrete}
+		  , ConcreteCap = #{ConcreteCap}
+		  , RubbleBasics = #{RubbleBasics}
+		  , ThickFelt = #{ThickFelt}
+		  , PermeableGranules = #{PermeableGranules}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（石砌边沟过路涵工程数量表） -->
+	<update id="deletePassingCulvertNumber" parameterType="com.curing.projectSchedule.model.PassingCulvertNumberEntity">
+		UPDATE PassingCulvertNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

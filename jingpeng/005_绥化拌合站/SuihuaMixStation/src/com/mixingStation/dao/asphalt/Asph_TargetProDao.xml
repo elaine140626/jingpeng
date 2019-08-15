@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.asphalt.Asph_TargetProDao">
+	<!-- 查询目标配合比 -->
+	<select id="getAsphTargetPro" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.Asph_TargetProportion">
+		SELECT
+			 pp.id
+			,pp.Org_ID														--组织id
+			,pp.Proportion_Code												--目标配合比编号
+			,pp.Product_Id													--产品id
+			,CONVERT(varchar(100),pp.Create_Date , 23)as Create_Date		--创建时间
+			,pp.Operator													--创建人
+			,mn.Material_Name												--产品名称
+			,mm.Material_Model												--产品型号
+			,mn.Material_Name+'-'+mm.Material_Model as MaterNameAndModel    --产品名称-产品型号
+			,pp.Remarks 
+		FROM
+			Asph_TargetProportion pp										--目标配合比表
+		LEFT JOIN Material_Info mi ON mi.Id = pp.product_Id					--物料信息表
+		LEFT JOIN MaterName_Info mn ON mn.Id = mi.MateName_ID				--物料名称表
+		LEFT JOIN MaterModel_Info mm ON mm.Id = mi.MateModel_ID				--物料型号表
+		where
+			pp.Valid_Flag = 1
+		<if test="org_Id != null and org_Id != '' and org_Id != 0">
+        AND pp.Org_ID = #{org_Id}											--组织id
+        </if>
+        <if test="proportion_Code != null and proportion_Code != ''">
+        AND pp.Proportion_Code like '%${proportion_Code}%'					--目标配合比编号
+        </if>
+        <if test="material_Name != null and material_Name != ''">
+        AND mn.Material_Name like '%${material_Name}%'						--产品名称
+        </if>
+        <if test="material_Model != null and material_Model != ''">
+        AND mm.Material_Model like '%${material_Model}%'					--产品型号
+        </if>
+	</select>
+	<!-- 新增目标配合比信息 -->
+	<insert id="addAsphTargetPro" useGeneratedKeys="true" keyProperty="i_id" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion">
+	    INSERT INTO Asph_TargetProportion (Operator,proportion_Code,product_Id,Remarks,create_Date,org_id) VALUES 
+	    (#{operator},#{proportion_Code},#{product_Id},#{remarks},CONVERT(varchar(100),GETDATE(), 20),#{org_Id})
+	</insert>
+	<!-- 新增目标配合比详细信息 -->
+	<insert id="addAsphTargetProD"  parameterType="java.util.List">
+	   INSERT INTO Asph_TargetPropDetailed (targ_Prop_Id,materials_Id,weight,Material_Origin,Manufacturer)
+       VALUES
+    <foreach collection="list" item="asphTargetProDList" index="index" separator=",">
+              (#{asphTargetProDList.i_targ_Prop_Id},#{asphTargetProDList.i_materials_Id},
+              #{asphTargetProDList.d_weight},#{asphTargetProDList.str_material_Origin},
+              #{asphTargetProDList.str_manufacturer})
+          </foreach>
+	</insert>
+	<!-- 修改目标配合比信息 -->
+	<update id="updateAsphTargetPro" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion">
+		UPDATE Asph_TargetProportion SET Remarks = #{remarks}, product_Id = #{product_Id},Modifier = #{modifier},modify_Date =getdate() WHERE id=#{id}
+	</update>
+	<!--删除目标配合比详细信息 -->
+	<update id="delAsph_TargetPropDetailed" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion">
+	    UPDATE Asph_TargetPropDetailed SET Valid_Flag=0 WHERE Targ_Prop_ID = #{id}
+	</update>
+	<!--删除目标配合比信息 -->
+	<update id="delAsphTargetPro" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion">
+		UPDATE Asph_TargetProportion SET valid_Flag = 0 WHERE id=#{id}
+	</update>
+	<!--修改目标配合比信息赋值 -->
+	<select id="getAsphTargetProById" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion" resultType="com.mixingStation.model.asphalt.Asph_TargetProportion">
+		SELECT
+		pp.id,
+		pp.proportion_Code,
+		pp.product_Id,
+		pp.create_Date,
+		pp.remarks,
+		mn.Material_Name,
+		mm.Material_Model
+		FROM
+		Asph_TargetProportion pp
+		LEFT JOIN Material_Info mi ON mi.Id = pp.product_Id
+		LEFT JOIN MaterModel_Info mm ON mm.Id = mi.MateModel_ID
+		LEFT JOIN MaterName_Info mn ON mn.Id = mi.MateName_ID
+		WHERE pp.id = #{id}
+	</select>
+	<!--根据目标配比id查询明细信息 -->
+	<select id="getAsphTargetProD" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion" resultType="java.util.Map" >
+		SELECT
+		p.id id,
+		p.targ_Prop_Id,
+	    p.materials_Id,
+		p.weight d_weight,
+		p.Material_Origin,
+		p.Manufacturer,
+		mn.Material_Name,
+		mm.Material_Model
+		FROM
+		Asph_TargetPropDetailed p
+		LEFT JOIN Material_Info mi ON mi.Id = p.materials_Id
+		LEFT JOIN MaterModel_Info mm ON mm.Id = mi.MateModel_ID
+		LEFT JOIN MaterName_Info mn ON mn.Id = mi.MateName_ID
+		WHERE
+		p.targ_Prop_Id = #{id}
+		AND p.valid_Flag = 1
+	</select>
+	<!--判断生产配合比是否调用目标配合比-->
+	<select id="getAsphTargetProRepeat" parameterType="com.mixingStation.model.asphalt.Asph_TargetProportion" resultType="int">
+	   SELECT 
+    		COUNT(*) as count
+    	FROM 
+    		Asphalt_Prod_Proportion 
+    	where 
+    		1=1
+    	and Targ_PropID = #{id}
+    	and Valid_Flag = 1
+	</select>
+	
+</mapper>

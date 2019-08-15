@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http#{}//mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.highwayPlatform.dao.UserInfoDao">
+	<!-- 获取登录账户 -->
+	<select id="getUserLogin" parameterType="java.util.Map" resultType="PtUserInfo">
+		SELECT
+		  * 
+		FROM
+		  PtUserInfo u 
+		where
+		  1=1
+		  <if test="userCode != null and userCode != ''">
+		      and u.UserCode = #{userCode} 
+		  </if>
+		  <if test="passWord != null and passWord != ''">
+		      and u.PassWord = #{passWord} 
+		  </if>
+		  and u.DelFlag = 0
+	</select>
+	<!-- 获取用户信息 -->
+	<select id="getUserInfo" parameterType="java.util.Map" resultType="PtUserInfo">
+		SELECT
+		  * 
+		FROM
+		  PtUserInfo u 
+		where
+		   1=1
+		  <if test="id != null and id != ''">
+		      and u.Id = #{id} 
+		  </if>
+		  and u.DelFlag = 0
+	</select>
+	<!-- 获取用户试验室权限信息 -->
+	<select id="getUserTestInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			distinct r.TestRoomName 
+			, t.UniqueIdentifier 
+			, t.PlatformUserInfoId
+		from PTestSetDetailed t
+			left join TestRoomInfo r on r.UniqueIdentifier=t.UniqueIdentifier 
+		where 1=1
+		<if test="user_id != null and user_id != ''">
+			and t.PlatformUserInfoId = #{user_id}
+		</if>
+	</select>
+	<!-- 获取用户拌合站权限信息 -->
+	<select id="getUserOrgInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			distinct r.Org_Name,
+			t.OrgId,
+			t.PlatformUserInfoId
+		from POrgSetDetailed t
+			left join Organization_Info r on r.id=t.OrgId 
+		where 1=1
+		<if test="user_id != null and user_id != ''">
+			and t.PlatformUserInfoId = #{user_id}
+		</if>
+	</select>
+	<!-- 注册用户 -->
+	<insert id="insertUserInfo" parameterType="PtUserInfo">
+		INSERT 
+		INTO PtUserInfo ( 
+		    UserCode
+		  , PassWord
+		  , Name
+		  , RoleType  
+		  , Operator
+		  , CreateDate
+		  , WarningLevel
+		  , IsWarning
+		  , IsMatching
+		)
+		VALUES (
+		    #{UserCode}
+		  , #{PassWord}
+		  , #{Name}
+		  , 0
+		  , #{UserCode}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		  , #{WarningLevel}
+		  , #{IsWarning}
+		  , #{IsMatching}
+		)
+	</insert>
+	<!-- 更新用户信息 -->
+	<update id="updateUserInfo" parameterType="PtUserInfo">
+		UPDATE PtUserInfo 
+		SET
+		    UserCode = #{UserCode}
+		  , PassWord = #{PassWord}
+		  , Name = #{Name}
+		  , Modifier = #{UserCode}
+		  , ModifyDate = CONVERT(varchar(100),GETDATE(), 20)
+		  , WarningLevel = #{WarningLevel}
+		  , IsWarning = #{IsWarning}
+		  , IsMatching = #{IsMatching}
+		  where Id = #{id}
+	</update>
+    <!-- 删除用户 -->
+	<update id="deleteUserInfo" parameterType="java.util.Map">
+		UPDATE PtUserInfo
+		SET
+		   DelFlag = 1
+		where Id = #{id}
+	</update>
+	<!-- 添加用户试验室权限 -->
+	<insert id="insertTestSetDetailed" parameterType="java.util.Map">
+		INSERT 
+		INTO PTestSetDetailed (
+			PlatformUserInfoId
+			, UniqueIdentifier) 
+		VALUES (
+			#{platformUserInfoId}
+			, #{uniqueIdentifier})
+	</insert>
+	<!-- 删除用户的试验室权限 -->
+	<delete id="delTestSetDetailed" parameterType="java.util.Map">
+	    delete from PTestSetDetailed where PlatformUserInfoId = #{id}
+	</delete>
+	<!-- 添加用户拌合站权限 -->
+	<insert id="insertOrgSetDetailed" parameterType="java.util.Map">
+		INSERT 
+		INTO POrgSetDetailed (
+			PlatformUserInfoId
+			, OrgId) 
+		VALUES (
+			#{platformUserInfoId}
+			, #{orgId})
+	</insert>
+	<!-- 删除用户的拌合站权限 -->
+	<delete id="delOrgSetDetailed" parameterType="java.util.Map">
+	    delete from POrgSetDetailed where PlatformUserInfoId = #{id}
+	</delete>
+	<!-- 试验室树形信息 -->
+	<select id="getTestRoomList" parameterType="java.util.Map" resultType="java.util.Map">
+    	select * from TestRoomInfo t     
+		<if test="testIds != null and testIds != ''">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+        	<foreach collection="testIds" index="index" item="item" open="AND t.id IN (" separator="," close=")">
+                #{item}
+        	</foreach>
+        	</trim>
+        </if> 
+	</select>
+	<!-- 拌合站树形信息 -->
+	<select id="getOrgInfoList" resultType="java.util.Map">
+    	select 
+    	  id        as i_id,
+    	  org_Name  as str_org_Name,
+    	  Parent_Id as i_parent_Id,
+    	  org_type  as str_org_Type 
+    	from Organization_Info
+    	order by org_Type
+	</select>
+	
+	<!-- 添加用户session登陆信息-->
+	<insert id="addUserSession" parameterType="java.util.Map">
+		INSERT 
+		INTO IsUserSession (
+			User_Id
+			, Create_Date) 
+		VALUES (
+			#{user_Id}
+			, CONVERT(varchar(100),GETDATE(), 20))
+	</insert>
+	
+	<!-- 查询session信息判断是否登陆 -->
+	<select id="getUserSession" parameterType="java.util.Map" resultType="com.highwayPlatform.model.IsSameUser">
+    	select id from IsUserSession where User_Id = #{user_Id}
+	</select>
+	
+	<!-- 删除用户session信息 -->
+	<delete id="delUserSession" parameterType="java.util.Map">
+	    delete from IsUserSession where User_Id = #{user_Id}
+	</delete>
+</mapper>	

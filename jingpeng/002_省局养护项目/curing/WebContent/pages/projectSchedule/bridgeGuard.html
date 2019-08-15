@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="Bookmark" href="/favicon.ico">
+		<link rel="Shortcut Icon" href="/favicon.ico" />
+		<!--[if lt IE 9]>
+<script type="text/javascript" src="../../js/html5shiv.js"></script>
+<script type="text/javascript" src="../../js/respond.min.js"></script>
+
+<![endif]-->
+		<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+		<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="../../js/zTree/v3/css/metroStyle/metroStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/search.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/datatable/datatables.css" /></link>
+
+		<!--[if IE 6]>
+<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+		<title>桥工程量(防护工程)</title>
+	</head>
+	<body>
+		<nav class="breadcrumb">
+			<i class="Hui-iconfont">&#xe67f;</i> 首页 
+			<span class="c-gray en">&gt;</span> 工程设计资料
+			<span class="c-gray en">&gt;</span> 桥工程量(防护工程)
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="Hui-iconfont">&#xe68f;</i>
+			</a>
+		</nav>
+		<div class="page-container">
+			<div class="col-xs-4 col-sm-2 mt-20">
+				<ul id="EntryTree" class="ztree" style="width: 240px;overflow: auto; min-height: 600px;"></ul>
+			</div>
+			<div class="col-xs-8 col-sm-10 ">
+				<form id="form1" method="post">	
+				<div class="text-c search-line">
+					<div class="col-xs-6 col-sm-4 mt-20">
+						中心桩号：<input type="text" name="coreNumber" id="coreNumber" placeholder="" style="width:250px;margin-right: 30px;" class="input-text">
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						桥名：<input type="text" name="bridgeName" id="bridgeName" placeholder="" style="width:250px;margin-right: 30px;" class="input-text">
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						<button name="" id="" class="btn btn-success search-btn" type="button" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						<button  name="" id="" class="btn btn-success search-btn" type="button" onclick="exportInfo()"><i class="Hui-iconfont">&#xe665;</i> 导出</button>
+					</div>										
+				</div>
+				</form>
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" onclick="add();"
+						 href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加桥工程量(防护工程)</a></span></div>
+				<div class="mt-20" style="width: 100%; overflow-x: scroll;">
+					<table id="table1" style="width: 1000px;" class="scoll-table table table-border table-bordered table-bg table-hover table-sort table-responsive">
+						<thead>
+							<tr class="text-c">
+								<th rowspan="3"><p style="width: 80px;">序号</p></th>
+								<th rowspan="3"><p style="width: 120px;">操作</p></th>
+								<th rowspan="3"><p style="width: 80px;">中心桩号</p></th>
+								<th rowspan="3"><p style="width: 80px;">桥名</p></th>
+								<th colspan="8"><p style="width: 80px;">防护工程</p></th>
+								<th colspan="2"><p style="width: 80px;">附属设施</p></th>
+								<th rowspan="2"><p style="width: 80px;">拆除圬工</p></th>
+								<th rowspan="2"><p style="width: 80px;">后台填筑</p></th>
+								<th rowspan="2"><p style="width: 80px;">挖基土方</p></th>
+								<th rowspan="3"><p style="width: 80px;">备注</p></th>
+							</tr>
+							<tr class="text-c">
+								<th colspan="2"><p style="width: 80px;">支撑梁</p></th>
+								<th colspan="4"><p style="width: 80px;">八字墙/一字墙</p></th>
+								<th><p style="width: 80px;">铺砌</p></th>
+								<th><p style="width: 80px;">隔水墙</p></th>
+								<th><p style="width: 80px;">砂砾</p></th>
+								<th><p style="width: 80px;">桥名碑</p></th>
+							</tr>
+							<tr class="text-c">
+								<th><p style="width: 80px;">C25混凝土（m3）	</p></th>
+								<th><p style="width: 80px;">钢筋（Kg）</p></th>
+								
+								<th><p style="width: 80px;">C15片石混凝土基础（m3）	</p></th>
+								<th><p style="width: 80px;">M10片石墙身（m3）</p></th>
+								<th><p style="width: 80px;">M10片石基础（m3）	</p></th>
+								<th><p style="width: 80px;">M10浆砌块石镶面（m3）</p></th>
+								
+								<th><p style="width: 80px;">M7.5片石铺砌（m3）</p></th>
+								
+								<th><p style="width: 80px;">M7.5号浆砌片石（m3）</p></th>
+								
+								<th><p style="width: 80px;">m3</p></th>
+								
+								<th><p style="width: 80px;">70×30×1</p></th>
+								
+								<th><p style="width: 80px;">m3</p></th>
+								
+								<th><p style="width: 80px;">m3</p></th>
+								
+								<th><p style="width: 80px;">m3</p></th>
+							
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+						<tfoot>
+							<tr class="text-c">
+								<th colspan="4"><p style="width: 80px;">合计</p></th>
+								<th><span id="supportingC25ConcreteSum"></span></th>
+								<th><span id="supportingRebarSum"></span></th>
+								<th><span id="aliformC15ConcreteSum"></span></th>
+								<th><span id="aliformM10WallSum"></span></th>
+								<th><span id="aliformM10BasicsSum"></span></th>
+								<th><span id="aliformM10VeneerSum"></span></th>
+								<th><span id="rubblePavingSum"></span></th>
+								<th><span id="rubbleSum"></span></th>
+								<th><span id="gravelSum"></span></th>
+								<th><span id="bridgeBrandSum"></span></th>
+								<th><span id="masonSum"></span></th>
+								<th><span id="backfillingSum"></span></th>
+								<th><span id="earthworkSum"></span></th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+		<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../js/zTree/v3/js/jquery.ztree.all-3.5.js"></script>
+		<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>
+		<!-- <script type="text/javascript" src="../../js/datatables/1.10.0/jquery.dataTables.min.js"></script> -->
+		<script type="text/javascript" src="../../js/datatable/datatables.js"></script>
+		
+		<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/entryTree.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/ajaxfileupload.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/projectSchedule/bridgeGuard.js"></script>
+		<script type="text/javascript">
+		</script>
+	</body>
+</html>

@@ -1,0 +1,51 @@
+package com.mix.controller.login;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mix.model.ResponseInfo;
+import com.mix.model.User_Info;
+import com.mix.service.login.LoginService;
+import com.mix.util.Consts;
+import com.mix.util.MessageUtil;
+@Controller
+@RequestMapping("/Login")
+public class LoginController{
+	@Autowired
+	private LoginService loginService;
+	
+	@RequestMapping("/login.action")
+	public String login() {
+		return "/view/lq/login";
+	}
+	
+	@RequestMapping("/userLogin.action")
+	public @ResponseBody ResponseInfo userLogin(HttpServletRequest request, User_Info user) {
+		ResponseInfo info = new ResponseInfo();
+		List list;
+		try {
+			list = loginService.userLogin(user);
+			if(list != null && list.size() == 1) {
+				user = (User_Info) list.get(0);
+				request.getSession().setAttribute(Consts.SESSION_USER_KEY, user);
+                request.getSession().setAttribute("user", user);
+			} else {
+				//服务器遇到错误 500
+				info.setCode(MessageUtil.SERVER_ERROR);
+				//账号或密码错误
+                info.setMessage(MessageUtil.ACCOUNT_PASSWORD_ERROR);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return info;
+	}
+}

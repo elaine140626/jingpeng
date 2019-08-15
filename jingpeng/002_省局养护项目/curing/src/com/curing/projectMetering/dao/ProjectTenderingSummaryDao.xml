@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectMetering.dao.ProjectTenderingSummaryDao">
+	<!-- 工程招标List取得 -->
+	<select id="getProjectTenderingSummaryList" parameterType="java.util.Map" resultType="com.curing.projectMetering.model.ProjectTenderingSummaryEntity">
+	      SELECT
+		    pts.Id                            -- id
+		  , pts.ProjectId                     -- 项目id
+		  , pts.ProjectInfo                   -- 工程信息id
+		  , ve.ProjectNumber                  -- 项目编号
+		  , ve.ProjectName                    -- 项目名称
+		  , ve.CityName                       -- 所属市
+		  , pis.LineName                      -- 路线名称
+		  , pis.Engineering                   -- 工程项目（数据字典） 0:路面工程 1:路基改造 2:桥梁工程 3:隧道工程 4:公路工程
+		  , dbo.getContentByCode('gcxm', pis.Engineering)         as EngineeringName         -- 工程项目名称
+		  , pis.AgoName                       -- 原线路名称
+		  , pts.TenderingNature               -- 招标性质 0:设计 1:监理 2:施工单位
+		  , dbo.getContentByCode('zbxz', pts.TenderingNature)   as TenderingNatureName         -- 招标性质
+		  , pts.TenderingCompany              -- 招标单位
+		  , pts.TenderingAgent                -- 招标代理
+		  , pts.TenderingRelease              -- 招标公告平台发布
+		  , pts.TenderingReleaseAddress       -- 招标公告发布平台地址
+		  , pts.WinningBidCompany             -- 中标单位公示
+		  , pts.WinningBidCompanyAddress      -- 中标单位公示地址
+		  , pts.ContractSign                  -- 合同签订 0:已签 1:未签
+		  , pts.UploadPicture                 -- 上传图片
+		  , pts.Remarks                       -- 备注
+		  , pts.IsDel
+		  , pts.Creater
+		  , pts.CreaterDate
+		  , pts.Reviser
+		  , pts.ReviserDate 
+		FROM
+		  ProjectTenderingSummary pts        -- 工程招标
+		LEFT JOIN V_EntryTree ve             -- 树形
+		  ON pts.ProjectId = ve.pid 
+		LEFT JOIN ProjectInfoSummary pis     -- 工程信息
+		  ON pts.ProjectInfo = pis.Id
+		  AND pis.IsDel = 0
+		WHERE
+		 pts.IsDel = 0
+		 <if test="id != null and id != ''">
+	       and pts.Id = #{id}                            -- 根据id查询
+	     </if>
+	     <if test="levels == 3">
+	       and pts.ProjectId = #{treeIds}                -- 根据项目id查询
+	     </if>
+	     <if test="levels == 2">
+	       and ve.couid = #{treeIds}                     -- 根据县id查询
+	     </if>
+	     <if test="levels == 1">
+	       and ve.ciid = #{treeIds}                      -- 根据市id查询
+	     </if>
+	     <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+	     <if test="TenderingCompany != null and TenderingCompany != ''">
+	       and pts.TenderingCompany like '%'+ #{TenderingCompany}+'%'   -- 招标单位
+	     </if>
+	     <if test="TenderingAgent != null and TenderingAgent != ''">
+	       and pts.TenderingAgent like '%'+ #{TenderingAgent}+'%'       -- 招标代理
+	     </if> 
+	     <if test="TenderingRelease != null and TenderingRelease != ''">
+	       and pts.TenderingRelease like '%'+ #{TenderingRelease}+'%'   -- 招标平台发布
+	     </if>
+	     <if test="WinningBidCompany != null and WinningBidCompany != ''">
+	       and pts.WinningBidCompany like '%'+#{WinningBidCompany}+'%' -- 中标单位公示 
+	     </if>
+	     <if test="ContractSign != null and ContractSign != ''">
+	       and pts.ContractSign = #{ContractSign}           -- 合同签订
+	     </if>
+	   order by pts.CreaterDate desc
+	</select>
+	
+	<!-- 更新工程招标 -->
+	<update id="updateProjectTenderingSummary" parameterType="com.curing.projectMetering.model.ProjectTenderingSummaryEntity">
+		UPDATE ProjectTenderingSummary 
+		SET
+		    TenderingNature = #{TenderingNature}
+		  , TenderingCompany = #{TenderingCompany}
+		  , TenderingAgent = #{TenderingAgent}
+		  , TenderingRelease = #{TenderingRelease}
+		  , TenderingReleaseAddress = #{TenderingReleaseAddress}
+		  , WinningBidCompany = #{WinningBidCompany}
+		  , WinningBidCompanyAddress = #{WinningBidCompanyAddress}
+		  , ContractSign = #{ContractSign}
+		  , UploadPicture = #{UploadPicture}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = getDate()
+		WHERE
+		  Id = #{Id} 
+	</update>
+	
+	<!-- 删除工程招标 -->
+	<update id="deleteProjectTenderingSummary" parameterType="com.curing.projectMetering.model.ProjectTenderingSummaryEntity">
+		UPDATE ProjectTenderingSummary
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = getdate()
+		WHERE
+		  Id = #{Id}
+	</update>	
+</mapper>

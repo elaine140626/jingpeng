@@ -1,0 +1,702 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.truckscale.weighingManagement.dao.WeighingQueryDao">
+	<!-- 查询称重列表 -->
+	<select id="getWeighingQuery"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		select
+		 e.Id
+		,e.SerialId
+		,c.CarNumber
+		,c.PlateNumber
+		,t.CarOwnerName
+        ,t.TransportCompanyName
+		,e.FeedCompanyId
+	    ,f.FeedCompanyName
+	    ,e.ReceiveUnitId
+        ,r.ReceiveUnitName
+		,e.MaterielNameId
+		,m.MaterielName
+		,e.MaterielNameId as MaterielModelId
+		,m.MaterielModel
+		,e.GrossWeight
+		,e.GrossWeightCount
+		,e.MeasurementMode
+		,e.Deduction
+		,e.NumericalValue
+		,e.DriverName
+		,e.TareWeight
+		,e.TareWeightCount
+		,e.NetWeight
+		,e.EndAddress
+		,e.StartAddress
+		,e.Temperature
+		,e.Route
+		,e.RatioOfOil
+		,e.OutOrEnter
+		,e.IsFile
+		,e.Remarks
+		,e.IsDel
+		,e.Creater
+		,DATE_FORMAT(e.CreaterDate,'%Y-%m-%d %H:%i:%s') as CreaterDate
+		,e.Reviser
+		,e.ReviserDate
+		from
+		exportmeasure e
+		left join materielnameinfo m on e.MaterielNameId = m.Id
+			and m.IsDel = 0
+        left join feedcompany f on e.FeedCompanyId = f.Id
+            and f.IsDel = 0
+        left join receiveunit r on e.ReceiveUnitId = r.Id
+       	    and r.IsDel = 0
+   	    left join carinfo c on e.CarId = c.Id
+             and c.IsDel = 0
+		left join transportcompany t on c.TransportUnitId = t.Id
+			 and t.IsDel = 0
+		WHERE 
+			e.IsDel = 0
+		<if test="id != null and id != ''"> 
+			and e.Id = #{id} 
+		</if> 
+		<if test = "startTime != null and startTime != ''" >
+			<![CDATA[ and e.CreaterDate >= #{startTime} ]]>
+		</if> 
+		<if test = "endTime != null and endTime != ''" >
+			<![CDATA[ and e.CreaterDate <= #{endTime} ]]> 
+		</if>
+		<if test="feedCompany != null and feedCompany != ''"> 
+			and f.FeedCompanyName= #{feedCompany} 
+		</if>
+		<if test="receiveUnit != null and receiveUnit != ''"> 
+			and r.ReceiveUnitName = #{receiveUnit} 
+		</if>
+		<if test="outOrEnter != null and outOrEnter != ''"> 
+			and e.OutOrEnter = #{outOrEnter} 
+		</if>
+		<if test="materielName != null and materielName != ''"> 
+			and m.MaterielName = #{materielName} 
+		</if>
+		<if test="materielModel != null and materielModel != ''"> 
+			and m.MaterielModel = #{materielModel} 
+		</if>
+		<if test="driverName != null and driverName != ''"> 
+			and e.DriverName = #{driverName} 
+		</if>
+		<if test="carDriverName != null and carDriverName != ''"> 
+			and t.CarOwnerName = #{carDriverName} 
+		</if>
+		<if test="PlateNumber != null and PlateNumber != ''"> 
+			and c.PlateNumber = #{PlateNumber} 
+		</if>
+		<if test="measurementMode != null and measurementMode != ''"> 
+			and e.MeasurementMode = #{measurementMode} 
+		</if>
+		order by e.CreaterDate desc
+	</select>
+	
+	<!-- 查询称重列表sum求和 -->
+	<select id="getWeighingQuerySum"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		select
+			SUM(e.NetWeight) as NetWeight
+		from
+		exportmeasure e
+		left join materielnameinfo m on e.MaterielNameId = m.Id
+			and m.IsDel = 0
+        left join feedcompany f on e.FeedCompanyId = f.Id
+            and f.IsDel = 0
+        left join receiveunit r on e.ReceiveUnitId = r.Id
+       	    and r.IsDel = 0
+   	    left join carinfo c on e.CarId = c.Id
+             and c.IsDel = 0
+		left join transportcompany t on c.TransportUnitId = t.Id
+			 and t.IsDel = 0
+		WHERE 
+			e.IsDel = 0
+		<if test="id != null and id != ''"> 
+			and e.Id = #{id} 
+		</if> 
+		<if test = "startTime != null and startTime != ''" >
+			<![CDATA[ and e.CreaterDate >= #{startTime} ]]>
+		</if> 
+		<if test = "endTime != null and endTime != ''" >
+			<![CDATA[ and e.CreaterDate <= #{endTime} ]]> 
+		</if>
+		<if test="feedCompany != null and feedCompany != ''"> 
+			and f.FeedCompanyName= #{feedCompany} 
+		</if>
+		<if test="receiveUnit != null and receiveUnit != ''"> 
+			and r.ReceiveUnitName = #{receiveUnit} 
+		</if>
+		<if test="outOrEnter != null and outOrEnter != ''"> 
+			and e.OutOrEnter = #{outOrEnter} 
+		</if>
+		<if test="materielName != null and materielName != ''"> 
+			and m.MaterielName = #{materielName} 
+		</if>
+		<if test="materielModel != null and materielModel != ''"> 
+			and m.MaterielModel = #{materielModel} 
+		</if>
+		<if test="driverName != null and driverName != ''"> 
+			and e.DriverName = #{driverName} 
+		</if>
+		<if test="carDriverName != null and carDriverName != ''"> 
+			and t.CarOwnerName = #{carDriverName} 
+		</if>
+		<if test="PlateNumber != null and PlateNumber != ''"> 
+			and c.PlateNumber = #{PlateNumber} 
+		</if>
+		<if test="measurementMode != null and measurementMode != ''"> 
+			and e.MeasurementMode = #{measurementMode} 
+		</if>
+		order by e.CreaterDate desc
+	</select>
+	<!-- 供料单位List -->
+	<select id="feedCompanyList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			f.FeedCompanyName
+		   ,f.Id
+		FROM
+			exportmeasure e
+		left join feedcompany f 
+		on 
+			e.FeedCompanyId = f.Id
+    	and 
+    		f.IsDel = 0
+		WHERE
+			e.IsDel = 0
+	</select>
+	<!-- 收料单位List -->
+	<select id="receiveUnitList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			r.ReceiveUnitName
+		FROM
+			exportmeasure e
+		left join receiveunit r 
+		on 
+			e.ReceiveUnitId = r.Id
+    	and 
+    		r.IsDel = 0
+		WHERE
+			e.IsDel = 0
+	</select>
+	<!-- 材料名称List -->
+	<select id="materielNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			m.MaterielName
+		FROM
+			exportmeasure e
+		left join
+			materielnameinfo m
+		on
+			e.MaterielNameId = m.Id
+		and
+			m.IsDel = 0
+		WHERE
+			e.IsDel = 0
+	</select>
+	<!-- 材料型号List -->
+	<select id="materielModelList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			m.MaterielModel
+		FROM
+			exportmeasure e
+		left join 
+			materielnameinfo m 
+		on 
+			e.MaterielNameId = m.Id
+		and
+			m.IsDel = 0
+		WHERE
+			e.IsDel = 0
+	</select>
+	<!-- 司机姓名List -->
+	<select id="driverNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			DriverName
+		FROM
+			exportmeasure
+		WHERE
+			IsDel = 0
+	</select>
+	<!-- 车主姓名List -->
+	<select id="carDriverNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			t.CarOwnerName
+		FROM
+		exportmeasure e
+		left join carinfo c  
+		on 
+			e.CarId = c.Id
+		and 
+			c.IsDel = 0
+   	    left join transportcompany t 
+   	    on 
+   	    	c.TransportUnitId = t.Id
+        and 
+       	 	t.IsDel = 0
+		WHERE
+		e.IsDel = 0
+	</select>
+	<!-- 车牌号码Listt -->
+	<select id="carNumberList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			c.PlateNumber
+		FROM
+			exportmeasure e 
+		left join carinfo c 
+		on 
+			e.CarId = c.Id
+   		and 
+   			c.IsDel = 0
+		WHERE
+			e.IsDel = 0
+	</select>
+	<!-- 赋值送料单位下拉列表 -->
+	<select id="getFeedcompanyList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT 
+			f.Id
+		   ,f.FeedCompanyName
+		FROM 
+			feedcompany f 
+		LEFT JOIN 
+			feeddetailedcompany fm 
+		on
+		 	f.Id = fm.FeedCompanyId
+		and 
+			fm.IsDel = 0
+		LEFT JOIN 
+			materielnameinfo m 
+		on 
+			fm.MaterielNameId = m.Id
+		and 
+			m.IsDel = 0
+		where 
+			f.IsDel = 0
+		<if test="materielName != null and materielName != ''">
+		and 
+			m.MaterielName = #{materielName}
+		</if>
+		<if test="materielModel != null and materielModel != ''">
+		and 
+			m.Id = #{materielModel}
+		</if>
+	</select>
+	<!-- 赋值材料名称下拉列表 -->
+	<select id="getMaterielNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		select 
+		DISTINCT 
+			m.MaterielName
+		from
+			 materielnameinfo m 
+		left join 
+			feeddetailedcompany fm 
+		on 
+			fm.MaterielNameId = m.Id
+		and 
+			fm.IsDel = 0
+		where 
+			m.IsDel = 0
+		<if test="feedCompanyId != null and feedCompanyId != ''">
+		and 
+			fm.FeedCompanyId = #{feedCompanyId}
+		</if>
+		<if test="materielModel != null and materielModel != ''">
+		and 
+			m.Id = #{materielModel}
+		</if>
+	</select>
+	<!-- 赋值规格型号下拉列表 -->
+	<select id="getMaterielModelList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		select 
+			m.MaterielModel
+		   ,m.Id
+		   ,m.MaterielName
+		   ,m.MaterielType
+		from 
+			materielnameinfo m 
+		left join 
+			feeddetailedcompany fm 
+		on 
+			fm.MaterielNameId = m.Id
+		and 
+			fm.IsDel = 0
+		WHERE 
+			m.IsDel = 0  
+		<if test="materielName != null and materielName != ''">
+		and m.MaterielName = #{materielName}
+		</if>
+		<if test="feedCompanyId != null and feedCompanyId != ''">
+		and 
+			fm.FeedCompanyId = #{feedCompanyId}
+		</if>
+	</select>
+	<!-- 编辑称重信息供料单位List -->
+	<select id="feedCompanyList_add" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			f.FeedCompanyName
+		   ,f.Id
+		FROM
+			feedcompany f 
+		WHERE
+			f.IsDel = 0
+	</select>
+	<!-- 编辑称重信息收料单位List -->
+	<select id="receiveUnitList_add" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			r.ReceiveUnitName
+		   ,r.Id
+		FROM
+			 receiveunit r 
+		WHERE
+			r.IsDel = 0
+		and 
+		   r.Purpose = #{outOrEnter}
+	</select>
+	<!-- 材料名称List -->
+	<select id="materielNameList_add" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			m.MaterielName
+		FROM
+			materielnameinfo m
+		WHERE
+			m.IsDel = 0
+	</select>
+	<!-- 编辑称重信息材料型号List -->
+	<select id="materielModelList_add" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		SELECT
+		DISTINCT
+			m.MaterielModel
+		   ,m.id
+		FROM
+			materielnameinfo m 
+		where
+			m.IsDel = 0
+	</select>
+	<!-- 编辑称重信息  -->
+	<update id="updateWeighingQuery" parameterType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		UPDATE exportmeasure
+		SET
+		  FeedCompanyId = #{feedCompanyId}
+		  ,ReceiveUnitId = #{receiveUnitId}
+		  ,MaterielNameId = #{materielNameId}
+		  ,GrossWeight = #{grossWeight}  
+		  ,TareWeight = #{tareWeight}
+		  ,NetWeight = #{netWeight}
+		  ,Temperature = #{temperature}
+		  ,DriverName = #{driverName}
+		  ,Deduction = #{deduction}
+		  ,EndAddress = #{endAddress}
+		  ,StartAddress = #{startAddress}
+		  ,NumericalValue = #{numericalValue}
+		  ,Remarks = #{remarks}
+		  ,Reviser = "称重员修改"
+		  ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 删除称重信息  -->
+	<update id="deleteWeighingQuery" parameterType="java.util.Map">
+		UPDATE exportmeasure
+		SET
+		    IsDel = 1               -- 删除标识
+		    ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 打印信息 -->
+	<select id="getPrintInfo" resultType="java.util.Map" parameterType="java.util.Map">
+		select
+		 e.Id -- 自增长id
+		,e.SerialId -- 流水号
+		,c.PlateNumber -- 车牌号码
+        ,t.TransportCompanyName -- 运输单位
+        ,t.CarOwnerName -- 车主姓名
+		,e.FeedCompanyId
+	    ,f.FeedCompanyName -- 供料单位
+	    ,e.ReceiveUnitId
+        ,r.ReceiveUnitName -- 收料单位i
+		,e.MaterielNameId
+		,m.MaterielName
+		,m.MaterielModel
+		,e.GrossWeight -- 毛重（t）
+		,e.GrossWeightCount
+		,e.MeasurementMode -- 计量方式
+		,e.Deduction -- 扣除量或扣除率（数据字典）
+		,e.DriverName -- 司机姓名
+		,e.TareWeight -- 皮重（t）
+		,e.TareWeightCount
+		,e.NetWeight -- 净重（t）
+		,e.EndAddress -- 止运地
+		,e.StartAddress -- 起运地
+		,e.Temperature -- 温度（℃）
+		,e.Route -- 路线，桩号
+		,e.RatioOfOil -- 油石比
+		,e.OutOrEnter -- 出/入库：0出 1入
+		,e.IsFile -- 是否归档0:是 1:否
+		,e.Remarks -- 备注
+		,e.IsDel
+		,e.Creater
+		,DATE_FORMAT(e.CreaterDate,'%Y-%m-%d %H:%i:%s') as CreaterDate
+		,e.Reviser
+		,e.ReviserDate
+		from
+		exportmeasure e -- 出库单表
+		left join materielnameinfo m on e.MaterielNameId = m.Id -- 物料信息
+			and m.IsDel = 0
+        left join feedcompany f on e.FeedCompanyId = f.Id -- 供料单位表
+            and f.IsDel = 0
+        left join receiveunit r on e.ReceiveUnitId = r.Id -- 收料单位表
+       	    and r.IsDel = 0
+   	    left join carinfo c on e.CarId = c.Id -- 车辆信息
+             and c.IsDel = 0
+		left join transportcompany t on c.TransportUnitId = t.Id -- 运输单位表
+			 and t.IsDel = 0
+		WHERE 
+			e.IsDel = 0
+			and e.Id = #{id} 
+	</select>
+	<!-- 获取供料单位的材料名称和型号（ygt） -->
+	<select id="getOutFeedCompanyInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			 f.Id                as id,
+			 f.FeedCompanyName   as feedCompanyName,   -- 供料单位名称
+			 fc.MaterielNameId   as materielNameId,    -- 材料id
+			 mi.MaterielName     as materielName,      -- 物料名称
+			 mi.MaterielModel    as materielModel      -- 物料型号
+		from FeedCompany f     -- 供料单位
+			left join FeedDetailedCompany fc  -- 供料单位明细表
+			on fc.FeedCompanyId = f.Id
+			and fc.IsDel = 0
+			left join MaterielNameInfo mi     -- 材料名称表
+			on mi.Id = fc.MaterielNameId
+			and mi.IsDel = 0
+		where 
+			f.IsDel = 0
+		order by f.FeedCompanyName, fc.MaterielNameId, mi.MaterielName
+	</select>
+	<!-- 获取入库供料单位的材料名称和型号（ygt） -->
+	<select id="getInFeedCompanyInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			 f.Id                as id,
+			 f.FeedCompanyName   as feedCompanyName,   -- 供料单位名称
+			 fc.MaterielNameId   as materielNameId,    -- 材料id
+			 mi.MaterielName     as materielName,      -- 物料名称
+			 mi.MaterielModel    as materielModel      -- 物料型号
+		from FeedCompany f     -- 供料单位
+			left join FeedDetailedCompany fc  -- 供料单位明细表
+			on fc.FeedCompanyId = f.Id
+			and fc.IsDel = 0
+			left join MaterielNameInfo mi     -- 材料名称表
+			on mi.Id = fc.MaterielNameId
+			and mi.IsDel = 0
+		where 
+			f.IsDel = 0
+		order by f.FeedCompanyName, fc.MaterielNameId, mi.MaterielName
+	</select>
+	<!-- 获取收料单位信息(ygt) -->
+	<select id="getOutReceiveUnitInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			r.Id                as id,
+			r.ReceiveUnitName   as receiveUnitName -- 收料单位名称
+		from receiveUnit r
+		where
+			r.IsDel = 0
+			and r.Purpose = #{purpose}
+	</select>
+	<!--  添加出库(ygt) -->
+	<insert id="addExportMeasureOut" parameterType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		INSERT 
+		INTO exportmeasure( 
+		  SerialId
+		  , CarId
+		  , FeedCompanyId
+		  , MaterielNameId
+		  , GrossWeight
+		  , TareWeight
+		  , NetWeight
+		  , ReceiveUnitId
+		  , Deduction
+		  , NumericalValue
+		  , DriverName
+		  , EndAddress
+		  , StartAddress
+		  , <if test="Temperature != 0">Temperature,</if>
+		   Route
+		  , RatioOfOil
+		  , OutOrEnter
+		  , IsKeepVehicle
+		  , MeasurementMode
+		  , IsFile
+		  , InOrTemporary
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{SerialId}
+		  , #{CarId}
+		  , #{FeedCompanyId}
+		  , #{MaterielModel}
+		  , #{GrossWeight}
+		  , #{TareWeight}
+		  , #{NetWeight}
+		  , #{ReceiveUnitId}
+		  , #{Deduction}
+		  , #{NumericalValue}
+		  , #{DriverName}
+		  , #{EndAddress}
+		  , #{StartAddress}
+		  , <if test="Temperature != 0">#{Temperature},</if>
+		  #{Route}
+		  , #{RatioOfOil}
+		  , 0
+		  , 0
+		  , 1
+		  , 0
+		  , 0
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , #{CreaterDate}
+		) 
+	</insert>
+	<!-- 称重信息出库编号自增(ygt) -->
+	<select id="getWeighingInfoCount" resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		select
+		 e.Id -- 自增长id
+		,e.SerialId -- 流水号
+		from
+		exportmeasure e -- 出库单表
+		WHERE 
+			e.IsDel = 0
+			and e.OutOrEnter = 0
+		ORDER BY e.Id 	DESC LIMIT 1
+	</select>
+	<!-- 称重信息入库编号自增(ygt) -->
+	<select id="getInWeighingInfoCount" resultType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		select
+		 e.Id -- 自增长id
+		,e.SerialId -- 流水号
+		from
+		exportmeasure e -- 出库单表
+		WHERE 
+			e.IsDel = 0
+			and e.OutOrEnter = 1
+		ORDER BY e.Id 	DESC LIMIT 1
+	</select>
+	<!-- 查询车量信息 -->
+	<select id="getOnlyCarInfo" resultType="com.truckscale.basicSetting.model.CarInfo" parameterType="java.util.Map">
+		SELECT
+			c.Id              AS id,-- 自增长id 
+			c.CarNumber       AS carNumber,-- 车辆编码
+			c.PlateNumber     AS plateNumber,-- 车牌号码
+			c.CarModel        AS carModel,-- 车辆型号
+			c.DriverName      AS driverName,-- 司机姓名
+			c.Telephone       AS telephone,-- 联系电话
+			c.TareWeight      AS tareWeight,-- 皮重
+			c.TransportUnitId AS transportUnitId,-- 运输单位id
+		  	t.CarOwnerName    AS carOwnerName,-- 车主姓名
+		  	t.TransportCompanyName AS transportCompanyName,-- 运输单位
+		  	c.InOrTemporary   AS inOrTemporary, -- 厂内车辆/临时车辆 0:厂内车辆 1:临时车辆
+			c.Remarks         AS remarks,-- 备注
+			c.IsDel           AS isDel,-- 删除标记
+			c.Creater         AS creater,-- 创建人
+			c.CreaterDate     AS createrDate,-- 创建日期
+			c.Reviser         AS reviser,-- 修改人
+			c.ReviserDate     AS reviserDate -- 修改日期
+		FROM
+			carinfo c
+			LEFT JOIN transportcompany t
+			ON t.Id = c.TransportUnitId AND t.IsDel = 0
+		WHERE
+			c.IsDel = 0
+			AND c.InOrTemporary = 0
+			AND c.PlateNumber = #{plateNumber}
+	</select>
+	<!-- 添加入库(ygt) -->
+	<insert id="addExportMeasureIn" parameterType="com.truckscale.weighingManagement.model.WeighingQueryEntity">
+		INSERT 
+		INTO exportmeasure( 
+		  SerialId
+		  , CarId
+		  , FeedCompanyId
+		  , MaterielNameId
+		  , GrossWeight
+		  , TareWeight
+		  , NetWeight
+		  , ReceiveUnitId
+		  , Deduction
+		  , NumericalValue
+		  , DriverName
+		  , EndAddress
+		  , StartAddress
+		  , <if test="Temperature != 0">Temperature,</if>
+		  Route
+		  , RatioOfOil
+		  , OutOrEnter
+		  , IsKeepVehicle
+		  , MeasurementMode
+		  , IsFile
+		  , InOrTemporary
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{SerialId}
+		  , #{CarId}
+		  , #{FeedCompanyId}
+		  , #{MaterielModel}
+		  , #{GrossWeight}
+		  , #{TareWeight}
+		  , #{NetWeight}
+		  , #{ReceiveUnitId}
+		  , #{Deduction}
+		  , #{NumericalValue}
+		  , #{DriverName}
+		  , #{EndAddress}
+		  , #{StartAddress}
+		  , <if test="Temperature != 0">#{Temperature},</if>
+		  #{Route}
+		  , #{RatioOfOil}
+		  , 1
+		  , 0
+		  , 1
+		  , 0
+		  , 0
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , #{CreaterDate}
+		) 
+	</insert>
+	
+</mapper>

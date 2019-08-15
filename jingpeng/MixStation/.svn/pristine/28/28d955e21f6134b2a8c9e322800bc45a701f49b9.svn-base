@@ -1,0 +1,93 @@
+package com.blindSample.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.blindSample.model.APPUserInfo;
+import com.blindSample.model.TestRoomInfo;
+import com.blindSample.model.TestSetDetailed;
+import com.userInfo.model.PtUserInfo;
+
+public interface TestUserInfoService {
+
+//	// 查询实验室名称
+//	List<Map<String, Object>> getTestRoomName(Map<String, Object> map);
+//	// 查询注册账号是否重复
+//	PtUserInfo getTestUserName(Map<String, Object> map);
+//	
+//	// 注册账号
+//	int addTestName(PtUserInfo ptUserInfo);
+//	// 注册账号增加权限
+//	int addTestRoot(Map<String, Object> map);
+//	// 登录
+//	PtUserInfo getUserLogin(Map<String, Object> map);
+//	// 查询当前用户的信息展示
+//	List<Map<String, Object>> getUserInformation(Map<String, Object> map);
+//	// 删除用户
+//	int testUserdel(Map<String, Object> map);
+//	// 获取用户信息
+//	PtUserInfo getTestNameUpdate(Map<String, Object> map);	
+//	// 修改用户信息
+//	int updateTestUser(PtUserInfo ptUserInfo);
+//	// 删除子表
+//	int deleteUserSubtable(TestSetDetailed testSetDetailed);
+	
+	// 登录验证
+	PtUserInfo getUserLogin (Map<String, Object> map);
+	
+	// 获取用户信息
+	PtUserInfo getUserInfo (Map<String, Object> map);
+	
+	// 获取用户的试验室权限
+	List<Map<String, Object>> getUserTestInfo(Map<String, Object> map);
+	
+	// 获取用户的拌合站权限
+	List<Map<String, Object>> getUserOrgInfo(Map<String, Object> map);
+	
+	// 用户注册
+	int insertUserInfo(PtUserInfo ptUserInfo);
+	
+	// 更新用户信息
+	int updateUserInfo(PtUserInfo ptUserInfo);
+	
+	// 删除用户
+	int deleteUserInfo(Map<String, Object> map);
+	
+	// 添加试验室权限
+	int insertTestSetDetailed(Map<String, Object> map);
+	
+	// 删除试验室权限
+	int delTestSetDetailed(Map<String, Object> map);
+	
+	// 添加拌合站权限
+	int insertOrgSetDetailed(Map<String, Object> map);
+	
+	// 删除拌合站权限
+	int delOrgSetDetailed(Map<String, Object> map);
+	
+	// 获取试验室树形信息
+	List<Map<String, Object>> getTestRoomList(Map<String, Object> map);
+	
+	// 获取拌合站树形信息
+	List<Map<String, Object>> getOrgInfoList();
+	
+	// 获取app用户信息
+	List<APPUserInfo> getAppUserList(Map<String, Object> map);
+	
+	// 更新app用户信息
+	int updateAppUser(Map<String, Object> map);
+	
+	// 删除app用户信息
+	int deleteAppUser(Map<String, Object> map);
+	
+	// 添加app用户信息
+	int addAppUser(Map<String, Object> map);
+	// 获取app用户信息
+	List<APPUserInfo> getAppUserList(Map<String, Object> map);
+	// 更新app用户信息
+	int updateAppUser(Map<String, Object> map);
+	// 删除app用户信息
+	int deleteAppUser(Map<String, Object> map);
+	// 添加app用户信息
+	int addAppUser(Map<String, Object> map);
+}

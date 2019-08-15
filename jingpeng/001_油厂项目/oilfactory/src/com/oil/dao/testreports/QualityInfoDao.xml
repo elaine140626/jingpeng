@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.testreports.QualityInfoDao">
+	<select id="queryQualityInfo" resultType="map">
+		SELECT
+			s.Id,
+			IFNULL(m.MaterielName, "") ProductID,
+			"in" flag ,
+			IFNULL(DATE_FORMAT(s.EnterDate, '%Y-%m-%d'), "") time
+		FROM
+			StorageMeasure s
+		LEFT JOIN TestReport t on s.TestReportId = t.Id and t.IsDel = 0 and t.Exchange = 1
+		LEFT JOIN materielnameinfo m ON m.Id = s.ProductID
+		WHERE t.IsQualified = 1
+		AND s.IsDel = 0
+		
+		UNION
+		
+		SELECT
+			e.Id,
+			IFNULL(m.MaterielName, "") ProductID,
+			"out" flag ,
+			IFNULL(DATE_FORMAT(e.FactoryTime, '%Y-%m-%d'), "") time
+		FROM
+			ExportMeasure e
+		LEFT JOIN testReport t on e.TestReportId = t.Id and t.IsDel = 0 and t.Exchange = 1
+		LEFT JOIN materielnameinfo m ON m.Id = e.ProductID
+		WHERE t.IsQualified = 1
+		AND e.IsDel = 0
+		
+		UNION
+		
+		SELECT
+			s.Id,
+			IFNULL(m.MaterielName, "") ProductID,
+			"in" flag ,
+			IFNULL(DATE_FORMAT(s.EnterDate, '%Y-%m-%d'), "") time
+		FROM
+			StorageMeasure s
+		LEFT JOIN materielnameinfo m ON m.Id = s.ProductID
+		WHERE s.TestReportId IS NULL
+		AND s.IsDel = 0
+		
+		UNION
+		
+		SELECT
+			e.Id,
+			IFNULL(m.MaterielName, "") ProductID,
+			"out" flag ,
+			IFNULL(DATE_FORMAT(e.FactoryTime, '%Y-%m-%d'), "") time
+		FROM
+			ExportMeasure e 
+		LEFT JOIN materielnameinfo m ON m.Id = e.ProductID
+		WHERE e.TestReportId IS NULL
+		AND e.IsDel = 0
+	</select>
+</mapper>

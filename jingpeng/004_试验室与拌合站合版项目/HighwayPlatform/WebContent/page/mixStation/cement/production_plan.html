@@ -1,0 +1,168 @@
+<!-- 水泥生产计划 -->
+<script type="text/javascript" src="../../js/mixStation/cement/production_plan.js"></script>
+<div class="rightcon_wz">
+       <div class="location">您的位置：水泥混合料拌合站（<span class="banhez"  id ="locationText">综合一标</span>） > 生产管理 > 生产计划</div>
+   </div>
+   <div class="rightcon_content">
+   <div class="shunav">
+           <form action="" method="get" class="sousuo">
+             <label>施工配比编号：</label>
+              <input name="propCode" type="text" id="propCode" class="search_input rightwbj" >
+             <label>产品名称：</label>
+              <input name="material_Name" type="text" id="material_Name" class="search_input rightwbj" >
+             <label>产品型号：</label>
+              <input name="material_Model" type="text" id="material_Model" class="search_input rightwbj" >
+             <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+         	</form>
+   </div>
+  	<div class="table-b">
+      	<div class="luru"><a href="#" class="hvr-icon-forward globalLoginBtn" id="addLr" onclick="addView();">新增录入</a></div>
+  	  	<div class="table-a-right table-c-right">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="cementProductionPlan">
+                  <thead>
+	                <tr>
+	                  <th scope="col" class="scgl_xh" style="text-align: center">序号</th>
+	                  <th scope="col" style="text-align: center">生产计划编号</th>
+	                  <th scope="col" class="xh5" style="text-align: center">拌合设备名称</th>
+	                  <th scope="col" style="text-align: center">产品名称/型号</th>
+	                  <th scope="col" style="text-align: center">施工配比编号</th>
+	                  <!-- <th scope="col" style="text-align: center">料仓对应关系编号</th> -->
+	                  <th scope="col" style="text-align: center">施工地点</th>
+	                  <th scope="col" style="text-align: center">施工单位</th>
+	                  <th scope="col" class="xh5" style="text-align: center">浇灌部位</th>
+	                  <th scope="col" class="xh5" style="text-align: center">计划生产量(t)</th>
+	                  <th scope="col" class="xh5" style="text-align: center">生产计划状态</th>
+	                  <th scope="col" style="text-align: center">计划时间</th>
+	                  <th scope="col" style="text-align: center">创建时间</th>
+	                  <th scope="col" style="text-align: center">作废原因</th>
+	                  <th scope="col" style="text-align: center" class="cz" width="10%">操作</th>
+	                 </tr>
+                   </thead>
+             </table>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>新增生产计划</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close" onclick="closes()">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<form id="tabForm">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru" id="tab">
+                  <tr>
+                    <td width="37%" align="right">生产计划编号：</td>
+                    <td width="63%">
+                    	<input name="planNo" type="text" id="planNo" placeholder="输入生产计划编号"  maxlength="20" onkeyup="value=value.replace(/[\W]/g,'')" onchange="changePlanNo(this.value)"><span style="color:red;padding-left: 10px">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="37%" align="right">拌合设备名称：</td>
+                    <td width="63%">
+	                    <select size="1" id="equId" name="equId">
+	                    </select>
+	                	<span style="color:red;padding-left: 10px">*</span>
+	                </td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品名称：</td>
+                    <td>
+                    	<select  size="1" id="materialName" name="materialName" onchange="getModels()">
+							<option value="" selected="selected">
+                      	</select>
+                      	<span style="color:red;padding-left: 10px">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品型号：</td>
+                    <td>
+                    	<select  size="1" id="materialModel" name="materialModel" onchange="getSgpb()">
+							<option value="" selected="selected">
+                      	</select>
+                      	<span style="color:red;padding-left: 10px">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工配比编号：</td>
+                    <td>
+                    	<select  size="1" id="consPropId" name="consPropId">
+                    	</select>
+                    	<span style="color:red;padding-left: 10px">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工地点：</td>
+                    <td>
+                    	<input  type="text" id="projPos" name="projPos" placeholder="输入施工地点"  maxlength="40" list="projPoList">
+                    	<datalist id="projPoList"></datalist>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工单位：</td>
+                    <td>
+                    	<input type="text" id="constructionUnit" name="constructionUnit" placeholder="输入施工单位"  maxlength="20" list="constructionUnitList">
+                    	<datalist id="constructionUnitList"></datalist>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">浇灌部位：</td>
+                    <td>
+                    	<input type="text" id="wateringSite" name="wateringSite" placeholder="输入浇灌部位"  maxlength="90" list="wateringSiteList">
+                    	<datalist id="wateringSiteList"></datalist>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产量(t)：<br></td>
+                    <td><input  type="text" id="scheduledProduction" name="scheduledProduction" placeholder="输入计划生产量"  maxlength="10" onkeyup="num(this);"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产时间：</td>
+                    <td>
+                      <input  name = "startTime" type="text" id="startTime" placeholder="选择日期" readonly="readonly"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <input id="id"  name="id" hidden="true">
+                  <tr>
+                    <td colspan="2" align="center"><input type="button" name="button" id="planbtn"  data-dismiss="modal" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addCementPlan();"></td>
+                  </tr>
+                </table>
+                </form>
+          	</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal2">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>作废原因</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru sbj">
+                  <tr>
+                   <td width="32%" align="right">作废原因：</td>
+                   <td width="68%">                    
+                   <textarea name="textarea" cols="25" rows="10" id="textarea" placeholder="输入作废原因"></textarea></td>
+                  </tr>
+                  <tr>
+                   <td colspan="2" align="center"><input type="submit" name="button"  value="保&nbsp;&nbsp;存" class="btn_bc" onclick="zFCementPlan();"></td>
+                  </tr>
+                </table>
+          	</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+jeDate({
+	dateCell:"#startTime",
+	format:"YYYY-MM-DD hh:mm:ss",
+	isinitVal:false,
+	isTime:true, //isClear:false,
+	minDate:"2014-09-19 00:00:00",
+	okfun:function(val){alert(val)}
+})
+</script>

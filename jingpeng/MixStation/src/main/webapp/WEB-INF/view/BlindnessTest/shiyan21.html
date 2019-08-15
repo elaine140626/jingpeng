@@ -1,0 +1,354 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>粗集料筛分试验</title>
+<link href="../resources/css2/record.css" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+<style type="text/css">
+.inputClass{
+	text-align: center;
+    width: 100%;
+    height:96%;
+    border: none;
+}
+.search_select {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+}
+</style>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei" style="position: relative;float:right;">	
+		</div>
+		<div id="istestcollection" class="jilu_title">
+			粗集料筛分试验自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">粗集料筛分试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="16%">试验依据</td>
+					<td width="34%"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td width="34%"><input class="inputClass" type="text" id="testDate"></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td><label id="sampleName"></label></td>
+					<td>试件数量</td>
+					<td><label id="sampleCount"></label></td>
+				</tr>
+				<tr>
+					<td>试验员</td>
+					<td><label id="testOperator"></label></td>
+					<td>直径</td>
+					<td><label id="diameter"></label></td>
+				</tr>
+				<tr>
+					<td>集料种类</td>
+					<td><label id="aggregate_Type"></label></td>
+					<td>集料规格</td>
+					<td><label id="aggregate_Specification"></label></td>
+				</tr>
+			</table>
+		</div>
+		 <div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_4">
+			  <tr>
+			    <td width="16%">施工单位</td>
+			    <td width="16%"><label id="constructionUnit"></label></td>
+			    <td width="18%">工程名称</td>
+			    <td width="16%"><label id="engineeringName"></label></td>
+			    <td width="18%">工程部位/用途</td>
+			    <td width="16%"><label id="purpose"></label></td>
+			  </tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_4">
+			  <tr>
+			    <td width="32%">小于0.075mm的含量（%）1</td>
+			    <td width="18%">
+			    <input onkeyup="keepNumOrDecimal1(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="rate1">
+			    </td>
+			    <td width="32%">小于0.075mm的含量（%）2</td>
+			    <td width="18%"><input onkeyup="keepNumOrDecimal1(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="rate2"></td>
+			  </tr>
+			</table>
+		</div>
+		<div>
+			<table id="list" width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="12%" rowspan="2">序号</td>
+						<td width="13%" rowspan="2">筛孔尺寸（mm）</td>
+						<td width="13%" rowspan="2">分计筛余（%）</td>
+						<td width="13%" rowspan="2">累计筛余（%）</td>
+						<td width="13%" rowspan="2">通过百分率（%）</td>
+						<td width="36%" colspan="3">规定通过百分率</td>
+					</tr>
+					<tr>
+						<td width="12%">上限</td>
+						<td width="12%">中值</td>
+						<td width="12%">下限</td>
+					</tr>
+				</thead>
+				<tbody>
+				   <tr>
+						<td>1</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size1"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi1"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi1"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate1"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate1"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate1"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate1"></td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size2"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi2"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi2"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate2"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate2"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate2"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate2"></td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size3"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi3"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi3"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate3"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate3"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate3"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate3"></td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size4"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi4"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi4"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate4"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate4"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate4"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate4"></td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size5"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi5"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi5"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate5"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate5"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate5"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate5"></td>
+					</tr>
+					<tr>
+						<td>6</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size6"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi6"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi6"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate6"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate6"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate6"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate6"></td>
+					</tr>
+					<tr>
+						<td>7</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size7"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi7"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi7"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate7"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate7"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate7"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate7"></td>
+					</tr>
+					<tr>
+						<td>8</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size8"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi8"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi8"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate8"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate8"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate8"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate8"></td>
+					</tr>
+					<tr>
+						<td>9</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size9"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi9"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi9"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate9"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate9"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate9"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate9"></td>
+					</tr>
+					<tr>
+						<td>10</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size10"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi10"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi10"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate10"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate10"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate10"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate10"></td>
+					</tr>
+					<tr>
+						<td>11</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size11"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi11"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi11"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate11"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate11"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate11"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate11"></td>
+					</tr>
+					<tr>
+						<td>12</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size12"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi12"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi12"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate12"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate12"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate12"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate12"></td>
+					</tr>
+					<tr>
+						<td>13</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size13"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi13"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi13"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate13"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate13"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate13"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate13"></td>
+					</tr>
+					<tr>
+						<td>14</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size14"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi14"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi14"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate14"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate14"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate14"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate14"></td>
+					</tr>
+					<tr>
+						<td>15</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size15"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi15"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi15"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate15"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate15"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate15"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate15"></td>
+					</tr>
+					<tr>
+						<td>16</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size16"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi16"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi16"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate16"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate16"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate16"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate16"></td>
+					</tr>
+					<tr>
+						<td>17</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size17"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi17"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi17"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate17"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate17"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate17"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate17"></td>
+					</tr>
+					<tr>
+						<td>18</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size18"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi18"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi18"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate18"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate18"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate18"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate18"></td>
+					</tr>
+					<tr>
+						<td>19</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size19"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi19"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16" class="inputClass" type="text" id="total_Sieve_Resi19"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate19"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate19"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate19"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate19"></td>
+					</tr>
+					<tr>
+						<td>20</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="sieve_Size20"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="sub_Sieve_Resi20"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="total_Sieve_Resi20"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="pass_Rate20"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Max_Pass_Rate20"></td>
+						<td><input onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)" maxlength="16"  class="inputClass" type="text" id="avg_Pass_Rate20"></td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" class="inputClass" type="text" id="set_Main_Pass_Rate20"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_7 xbj1">
+				<tr>
+					<td width="16%" align="center">结果判定</td>
+					<td width="84%">
+					<select class="search_select" id="isQualifiedTest">
+						<option value="">未判定</option>
+						<option value="0">不合格</option>
+						<option value="1">合格</option>
+					</select>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="saveBtnShow" class="fanhui" style="float:left;">
+			<input id="save" type="button" value="保&nbsp;&nbsp;存" class="btncha">
+		</div>
+		<div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div>
+	</div>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../resources/DataTables/datatables.js"></script>
+	<script type="text/javascript" src="../resources/js/shiyan21.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/jedate/jedate.js"></script>
+	<script type="text/javascript">
+	    jeDate({
+	        dateCell:"#testDate",
+	        format:"YYYY-MM-DD",
+	        isinitVal:false,
+	        isTime:true, 
+	   	 isClear:false,
+	    })
+	</script>
+</body>
+</html>

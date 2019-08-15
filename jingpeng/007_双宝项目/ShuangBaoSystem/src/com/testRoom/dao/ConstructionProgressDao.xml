@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http#{//mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.ConstructionProgressDao">
+<!-- 获取该用户权限标段下的桥梁明细信息-->
+<select id="getConstructionList" parameterType="java.util.Map" resultType="com.testRoom.model.ConstructionAuthorization">
+		SELECT 
+		     p.id                as id
+		     ,p.UniqueIdentifier as uniqueidentifier    -- 试验室唯一标识
+		     ,t.TestRoomName     as testroomname        -- 试验室名称
+		     ,p.Mileage          as mileage             -- 桩号
+		     ,p.Span             as span                -- 跨径
+		     ,p.BridgeName       as bridgeName          -- 桥梁名称
+		  FROM ParagraphsBridgeDetailed p               -- 桥梁标段明细表
+		  left join TestRoomInfo t                      -- 试验室名称表
+		  on p.UniqueIdentifier = t.UniqueIdentifier
+		where 1=1 
+		<if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and p.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+		</if>
+</select>
+<!-- 查询工程设计量内容 -->
+<select id="getEngineeringDesignContent" parameterType="java.util.Map" resultType="com.testRoom.model.EngineeringDesignContent">
+	SELECT
+	  e.Id
+	  , e.UniqueIdentifier                  -- 试验室唯一标识
+	  , e.Subgrade_Fill                     -- 路基_填方
+	  , e.Subgrade_FillUnit                 -- 路基_填方单位
+	  , e.Subgrade_Excavation               -- 路基_挖方
+	  , e.Subgrade_ExcavationUnit           -- 路基_挖方单位
+	  , e.Subgrade_Total                    -- 路基_总量
+	  , e.Subgrade_TotalUnit                -- 路基_总量单位
+	  , e.Cushion_LeftAmplitude             -- 垫层_左幅
+	  , e.Cushion_LeftAmplitudeUnit         -- 垫层_左幅单位
+	  , e.Cushion_RightAmplitude            -- 垫层_右幅
+	  , e.Cushion_RightAmplitudeUnit        -- 垫层_右幅单位
+	  , e.Subbase_LeftAmplitude             -- 底基层_左幅
+	  , e.Subbase_LeftAmplitudeUnit         -- 底基层_左幅单位
+	  , e.Subbase_RightAmplitude            -- 底基层_右幅
+	  , e.Subbase_RightAmplitudeUnit        -- 底基层_右幅单位
+	  , e.Substrate_LeftAmplitude           -- 基层_左幅
+	  , e.Substrate_LeftAmplitudeUnit       -- 基层_左幅单位
+	  , e.Substrate_RightAmplitude          -- 基层_右幅
+	  , e.Substrate_RightAmplitudeUnit      -- 基层_右幅单位
+	  , e.LowerLayer_LeftAmplitude          -- 下面层_左幅
+	  , e.LowerLayer_LeftAmplitudeUnit      -- 下面层_左幅单位
+	  , e.LowerLayer_RightAmplitude         -- 下面层_右幅
+	  , e.LowerLayer_RightAmplitudeUnit     -- 下面层_右幅单位
+	  , e.Mesosphere_LeftAmplitude          -- 中面层_左幅
+	  , e.Mesosphere_LeftAmplitudeUnit      -- 中面层_左幅单位
+	  , e.Mesosphere_RightAmplitude         -- 中面层_右幅
+	  , e.Mesosphere_RightAmplitudeUnit     -- 中面层_右幅单位
+	  , e.UpperLayer_LeftAmplitude          -- 上面层_左幅
+	  , e.UpperLayer_LeftAmplitudeUnit      -- 上面层_左幅单位
+	  , e.UpperLayer_RightAmplitude         -- 上面层_右幅
+	  , e.UpperLayer_RightAmplitudeUnit     -- 上面层_右幅单位
+	  , e.Isdel
+	  , e.Creater
+	  , CreaterDate
+	  , e.Reviser
+	  , e.ReviserDate 
+	FROM
+	  EngineeringDesignContent e   -- 工程设计量内容
+	WHERE
+	  1 = 1
+	  and e.Isdel = 0
+	  <if test="UniqueIdentifier != null and UniqueIdentifier != ''">
+	  and e.UniqueIdentifier = #{UniqueIdentifier}   -- id
+	  </if>
+	ORDER BY
+	  e.CreaterDate desc
+</select>
+<!-- 新增工程设计量内容 -->
+<insert id="addEngineeringDesignContent" parameterType="com.testRoom.model.EngineeringDesignContent">
+	INSERT 
+	INTO EngineeringDesignContent ( 
+	    UniqueIdentifier
+	  , Subgrade_Fill
+	  , Subgrade_FillUnit
+	  , Subgrade_Excavation
+	  , Subgrade_ExcavationUnit
+	  , Subgrade_Total
+	  , Subgrade_TotalUnit
+	  , Cushion_LeftAmplitude
+	  , Cushion_LeftAmplitudeUnit
+	  , Cushion_RightAmplitude
+	  , Cushion_RightAmplitudeUnit
+	  , Subbase_LeftAmplitude
+	  , Subbase_LeftAmplitudeUnit
+	  , Subbase_RightAmplitude
+	  , Subbase_RightAmplitudeUnit
+	  , Substrate_LeftAmplitude
+	  , Substrate_LeftAmplitudeUnit
+	  , Substrate_RightAmplitude
+	  , Substrate_RightAmplitudeUnit
+	  , LowerLayer_LeftAmplitude
+	  , LowerLayer_LeftAmplitudeUnit
+	  , LowerLayer_RightAmplitude
+	  , LowerLayer_RightAmplitudeUnit
+	  , Mesosphere_LeftAmplitude
+	  , Mesosphere_LeftAmplitudeUnit
+	  , Mesosphere_RightAmplitude
+	  , Mesosphere_RightAmplitudeUnit
+	  , UpperLayer_LeftAmplitude
+	  , UpperLayer_LeftAmplitudeUnit
+	  , UpperLayer_RightAmplitude
+	  , UpperLayer_RightAmplitudeUnit
+	  , Creater
+	  , CreaterDate
+	) 
+	VALUES ( 
+	    #{UniqueIdentifier}
+	  , #{Subgrade_Fill}
+	  , #{Subgrade_FillUnit}
+	  , #{Subgrade_Excavation}
+	  , #{Subgrade_ExcavationUnit}
+	  , #{Subgrade_Total}
+	  , #{Subgrade_TotalUnit}
+	  , #{Cushion_LeftAmplitude}
+	  , #{Cushion_LeftAmplitudeUnit}
+	  , #{Cushion_RightAmplitude}
+	  , #{Cushion_RightAmplitudeUnit}
+	  , #{Subbase_LeftAmplitude}
+	  , #{Subbase_LeftAmplitudeUnit}
+	  , #{Subbase_RightAmplitude}
+	  , #{Subbase_RightAmplitudeUnit}
+	  , #{Substrate_LeftAmplitude}
+	  , #{Substrate_LeftAmplitudeUnit}
+	  , #{Substrate_RightAmplitude}
+	  , #{Substrate_RightAmplitudeUnit}
+	  , #{LowerLayer_LeftAmplitude}
+	  , #{LowerLayer_LeftAmplitudeUnit}
+	  , #{LowerLayer_RightAmplitude}
+	  , #{LowerLayer_RightAmplitudeUnit}
+	  , #{Mesosphere_LeftAmplitude}
+	  , #{Mesosphere_LeftAmplitudeUnit}
+	  , #{Mesosphere_RightAmplitude}
+	  , #{Mesosphere_RightAmplitudeUnit}
+	  , #{UpperLayer_LeftAmplitude}
+	  , #{UpperLayer_LeftAmplitudeUnit}
+	  , #{UpperLayer_RightAmplitude}
+	  , #{UpperLayer_RightAmplitudeUnit}
+	  , #{Creater}
+	  , getDate()
+	); 
+</insert>
+<!-- 删除工程设计量内容 -->
+<delete id="delEngineeringDesignContent" parameterType="java.util.Map">
+	DELETE 
+	FROM
+	  EngineeringDesignContent 
+	WHERE
+	  UniqueIdentifier = #{UniqueIdentifier}
+</delete>
+<!-- 查询实际完成工程量 -->
+<select id="getActualCompletionQuantity" parameterType="java.util.Map" resultType="com.testRoom.model.ActualCompletionQuantity">
+	SELECT
+	  a.Id
+	  , a.UniqueIdentifier                            -- 试验室唯一标识
+	  , t.TestRoomName                                -- 试验室名称
+	  , a.Subgrade_Fill                               -- 路基_填方实际完成量
+	  , a.Subgrade_Excavation                         -- 路基_挖方实际完成量
+	  , a.Subgrade_Total                              -- 路基_总量实际完成量
+	  , dbo.GetSumTotal('Subgrade_Total', a.CreaterDate, a.UniqueIdentifier)             as sumSubgrade_Total
+	  , a.Cushion_LeftAmplitude                       -- 垫层_左幅实际完成量
+	  , dbo.GetSumTotal('Cushion_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)     as sumCushion_LeftAmplitude
+	  , a.Cushion_RightAmplitude                      -- 垫层_右幅实际完成量
+	  , dbo.GetSumTotal('Cushion_RightAmplitude', a.CreaterDate , a.UniqueIdentifier)    as sumCushion_RightAmplitude
+	  , a.Subbase_LeftAmplitude                       -- 底基层_左幅实际完成量
+	  , dbo.GetSumTotal('Subbase_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)     as sumSubbase_LeftAmplitude
+	  , a.Subbase_RightAmplitude                      -- 底基层_右幅实际完成量
+	  , dbo.GetSumTotal('Subbase_RightAmplitude', a.CreaterDate , a.UniqueIdentifier)    as sumSubbase_RightAmplitude
+	  , a.Substrate_LeftAmplitude                     -- 基层_左幅实际完成量
+	  , dbo.GetSumTotal('Substrate_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)   as sumSubstrate_LeftAmplitude
+	  , a.Substrate_RightAmplitude                    -- 基层_右幅实际完成量
+	  , dbo.GetSumTotal('Substrate_RightAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumSubstrate_RightAmplitude
+	  , a.LowerLayer_LeftAmplitude                    -- 下面层_左幅实际完成量
+	  , dbo.GetSumTotal('LowerLayer_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumLowerLayer_LeftAmplitude
+	  , a.LowerLayer_RightAmplitude                   -- 下面层_右幅实际完成量
+	  , dbo.GetSumTotal('LowerLayer_RightAmplitude', a.CreaterDate , a.UniqueIdentifier) as sumLowerLayer_RightAmplitude
+	  , a.Mesosphere_LeftAmplitude                    -- 中面层_左幅实际完成量
+	  , dbo.GetSumTotal('Mesosphere_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumMesosphere_LeftAmplitude
+	  , a.Mesosphere_RightAmplitude                   -- 中面层_右幅实际完成量
+	  , dbo.GetSumTotal('Mesosphere_RightAmplitude', a.CreaterDate , a.UniqueIdentifier) as sumMesosphere_RightAmplitude
+	  , a.UpperLayer_LeftAmplitude                    -- 上面层_左幅实际完成量
+	  , dbo.GetSumTotal('UpperLayer_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumUpperLayer_LeftAmplitude
+	  , a.UpperLayer_RightAmplitude                   -- 上面层_右幅实际完成量
+	  , dbo.GetSumTotal('UpperLayer_RightAmplitude', a.CreaterDate , a.UniqueIdentifier) as sumUpperLayer_RightAmplitude
+	  , a.PicturePath                                 -- 图片路径
+	  , e.Subgrade_Fill               as Subgrade_Fill_1              -- 路基_填方
+	  , e.Subgrade_FillUnit                                           -- 路基_填方单位
+	  , e.Subgrade_Excavation         as Subgrade_Excavation_1        -- 路基_挖方
+	  , e.Subgrade_ExcavationUnit                                     -- 路基_挖方单位
+	  , e.Subgrade_Total              as Subgrade_Total_1             -- 路基_总量
+	  , e.Subgrade_TotalUnit                                          -- 路基_总量单位
+	  , e.Cushion_LeftAmplitude       as Cushion_LeftAmplitude_1      -- 垫层_左幅
+	  , e.Cushion_LeftAmplitudeUnit                                   -- 垫层_左幅单位
+	  , e.Cushion_RightAmplitude      as Cushion_RightAmplitude_1     -- 垫层_右幅
+	  , e.Cushion_RightAmplitudeUnit                                  -- 垫层_右幅单位
+	  , e.Subbase_LeftAmplitude       as Subbase_LeftAmplitude_1      -- 底基层_左幅
+	  , e.Subbase_LeftAmplitudeUnit                                   -- 底基层_左幅单位
+	  , e.Subbase_RightAmplitude      as Subbase_RightAmplitude_1     -- 底基层_右幅
+	  , e.Subbase_RightAmplitudeUnit                                  -- 底基层_右幅单位
+	  , e.Substrate_LeftAmplitude     as Substrate_LeftAmplitude_1    -- 基层_左幅
+	  , e.Substrate_LeftAmplitudeUnit                                 -- 基层_左幅单位
+	  , e.Substrate_RightAmplitude    as Substrate_RightAmplitude_1   -- 基层_右幅
+	  , e.Substrate_RightAmplitudeUnit                                -- 基层_右幅单位
+	  , e.LowerLayer_LeftAmplitude    as LowerLayer_LeftAmplitude_1   -- 下面层_左幅
+	  , e.LowerLayer_LeftAmplitudeUnit                                -- 下面层_左幅单位
+	  , e.LowerLayer_RightAmplitude   as LowerLayer_RightAmplitude_1  -- 下面层_右幅
+	  , e.LowerLayer_RightAmplitudeUnit                               -- 下面层_右幅单位
+	  , e.Mesosphere_LeftAmplitude    as Mesosphere_LeftAmplitude_1   -- 中面层_左幅
+	  , e.Mesosphere_LeftAmplitudeUnit                                -- 中面层_左幅单位
+	  , e.Mesosphere_RightAmplitude   as Mesosphere_RightAmplitude_1  -- 中面层_右幅
+	  , e.Mesosphere_RightAmplitudeUnit                               -- 中面层_右幅单位
+	  , e.UpperLayer_LeftAmplitude    as UpperLayer_LeftAmplitude_1   -- 上面层_左幅
+	  , e.UpperLayer_LeftAmplitudeUnit                                -- 上面层_左幅单位
+	  , e.UpperLayer_RightAmplitude   as UpperLayer_RightAmplitude_1  -- 上面层_右幅
+	  , e.UpperLayer_RightAmplitudeUnit                               -- 上面层_右幅单位
+	  , a.Isdel
+	  , a.Creater
+	  , CONVERT(varchar (100), a.CreaterDate, 120) as CreaterDate
+	  , a.Reviser
+	  , a.ReviserDate 
+	FROM
+	  ActualCompletionQuantity a                      -- 实际完成工程量表
+	  LEFT JOIN TestRoomInfo t                        -- 试验室信息
+	    ON a.UniqueIdentifier = t.UniqueIdentifier 
+	  LEFT JOIN EngineeringDesignContent e            -- 工程设计量内容表
+	    ON a.UniqueIdentifier = e.UniqueIdentifier 
+	    AND e.Isdel = 0 
+	WHERE
+	  a.Isdel = 0
+	  <if test="id != null and id != ''">
+	  and a.Id = #{id}
+	  </if>
+	  <if test="UniqueIdentifier != null and UniqueIdentifier != ''">
+	  and a.UniqueIdentifier = #{UniqueIdentifier} -- 试验室唯一标识
+	  </if>
+	  <if test="startTime != null and startTime != ''">
+	  and CONVERT(varchar (100), a.CreaterDate, 23) >= #{startTime}      -- 开始时间
+	  </if>
+	   <if test="endTime != null and endTime != ''">
+	  and #{endTime} >= CONVERT(varchar (100), a.CreaterDate, 23)        -- 结束时间
+	  </if>
+	  <if test="uniqueIdentifierList != null and uniqueIdentifierList != ''">
+		   and a.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifierList" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+	</if>
+	ORDER BY
+	  a.CreaterDate DESC 
+</select>
+<!-- 新增实际完成工程量 -->
+<insert id="addActualCompletionQuantity" parameterType="com.testRoom.model.ActualCompletionQuantity">
+	INSERT 
+	INTO ActualCompletionQuantity ( 
+	    UniqueIdentifier
+	  , Subgrade_Fill
+	  , Subgrade_Excavation
+	  , Subgrade_Total
+	  , Cushion_LeftAmplitude
+	  , Cushion_RightAmplitude
+	  , Subbase_LeftAmplitude
+	  , Subbase_RightAmplitude
+	  , Substrate_LeftAmplitude
+	  , Substrate_RightAmplitude
+	  , LowerLayer_LeftAmplitude
+	  , LowerLayer_RightAmplitude
+	  , Mesosphere_LeftAmplitude
+	  , Mesosphere_RightAmplitude
+	  , UpperLayer_LeftAmplitude
+	  , UpperLayer_RightAmplitude
+	  , Creater
+	  , CreaterDate
+	) 
+	VALUES ( 
+	    #{UniqueIdentifier}
+	  , #{Subgrade_Fill}
+	  , #{Subgrade_Excavation}
+	  , #{Subgrade_Total}
+	  , #{Cushion_LeftAmplitude}
+	  , #{Cushion_RightAmplitude}
+	  , #{Subbase_LeftAmplitude}
+	  , #{Subbase_RightAmplitude}
+	  , #{Substrate_LeftAmplitude}
+	  , #{Substrate_RightAmplitude}
+	  , #{LowerLayer_LeftAmplitude}
+	  , #{LowerLayer_RightAmplitude}
+	  , #{Mesosphere_LeftAmplitude}
+	  , #{Mesosphere_RightAmplitude}
+	  , #{UpperLayer_LeftAmplitude}
+	  , #{UpperLayer_RightAmplitude}
+	  , #{Creater}
+	  , #{CreaterDate}
+	);
+</insert>
+<!-- 获取插入的实际工程量id -->
+<select id="getAddId" parameterType="com.testRoom.model.ActualCompletionQuantity" resultType="int">
+	select id from ActualCompletionQuantity where UniqueIdentifier = #{UniqueIdentifier} and Creater = #{Creater} and CreaterDate = #{CreaterDate}
+</select>
+<!-- 修改实际完成工程量 -->
+<update id="updateActualCompletionQuantity" parameterType="com.testRoom.model.ActualCompletionQuantity">
+	UPDATE ActualCompletionQuantity
+	SET
+	   <if test="Subgrade_Fill != null and Subgrade_Fill != ''">
+	   Subgrade_Fill = #{Subgrade_Fill},
+	   </if>
+	   <if test="Subgrade_Excavation != null and Subgrade_Excavation != ''">
+	   Subgrade_Excavation = #{Subgrade_Excavation},
+	   </if>
+	   <if test="Subgrade_Total != null and Subgrade_Total != ''">
+	   Subgrade_Total = #{Subgrade_Total},
+	   </if>
+	   <if test="Cushion_LeftAmplitude != null and Cushion_LeftAmplitude != ''">
+	   Cushion_LeftAmplitude = #{Cushion_LeftAmplitude},
+	   </if>
+	   <if test="Cushion_RightAmplitude != null and Cushion_RightAmplitude != ''">
+	   Cushion_RightAmplitude = #{Cushion_RightAmplitude},
+	   </if>
+	   <if test="Subbase_LeftAmplitude != null and Subbase_LeftAmplitude != ''">
+	   Subbase_LeftAmplitude = #{Subbase_LeftAmplitude},
+	   </if>
+	   <if test="Subbase_RightAmplitude != null and Subbase_RightAmplitude != ''">
+	   Subbase_RightAmplitude = #{Subbase_RightAmplitude},
+	   </if>
+	   <if test="Substrate_LeftAmplitude != null and Substrate_LeftAmplitude != ''">
+	   Substrate_LeftAmplitude = #{Substrate_LeftAmplitude},
+	   </if>
+	   <if test="Substrate_RightAmplitude != null and Substrate_RightAmplitude != ''">
+	   Substrate_RightAmplitude = #{Substrate_RightAmplitude},
+	   </if>
+	   <if test="LowerLayer_LeftAmplitude != null and LowerLayer_LeftAmplitude != ''">
+	   LowerLayer_LeftAmplitude = #{LowerLayer_LeftAmplitude},
+	   </if>
+	   <if test="LowerLayer_RightAmplitude != null and LowerLayer_RightAmplitude != ''">
+	   LowerLayer_RightAmplitude = #{LowerLayer_RightAmplitude},
+	   </if>
+	   <if test="Mesosphere_LeftAmplitude != null and Mesosphere_LeftAmplitude != ''">
+	   Mesosphere_LeftAmplitude = #{Mesosphere_LeftAmplitude},
+	   </if>
+	   <if test="Mesosphere_RightAmplitude != null and Mesosphere_RightAmplitude != ''">
+	   Mesosphere_RightAmplitude = #{Mesosphere_RightAmplitude},
+	   </if>
+	   <if test="UpperLayer_LeftAmplitude != null and UpperLayer_LeftAmplitude != ''">
+	   UpperLayer_LeftAmplitude = #{UpperLayer_LeftAmplitude},
+	   </if>
+	   <if test="UpperLayer_RightAmplitude != null and UpperLayer_RightAmplitude != ''">
+	   UpperLayer_RightAmplitude = #{UpperLayer_RightAmplitude},
+	   </if>
+	   <if test="PicturePath != null and PicturePath != ''">
+	   PicturePath = #{PicturePath},
+	   </if>
+	   Reviser = #{Reviser},
+	   ReviserDate = getDate()
+	WHERE
+	  Id = #{Id}
+</update>
+<!-- 删除实际完成工程量 -->
+<update id="delActualCompletionQuantity" parameterType="java.util.Map">
+    UPDATE ActualCompletionQuantity
+	SET
+	  Isdel = 1,
+	  Reviser = #{Reviser},
+	  ReviserDate = getDate()
+	WHERE
+	  Id = #{id}
+</update>
+<!-- 查询桥梁施工明细数据 -->
+<select id="getBridgeConstructionDetails" parameterType="java.util.Map" resultType="com.testRoom.model.BridgeConstructionDetails">
+	SELECT
+	    Id
+	  , UniqueIdentifier              -- 试验室唯一标识  
+	  , ActualCompletionId            -- 实际完成量id  
+	  , BridgeId                      -- 各标段桥梁明细id
+	  , Pile_Foundation               -- 桩基施工进度   
+	  , Pile_TiedBeam                 -- 桩系梁施工进度  
+	  , Abutment                      -- 桥台施工进度   
+	  , Caps                          -- 承台施工进度   
+	  , Platform_Body                 -- 台身施工进度   
+	  , Platform_Cap                  -- 台帽施工进度   
+	  , Ear_BackWall                  -- 耳背墙施工进度  
+	  , Bazi_Wall                     -- 八字墙施工进度  
+	  , Pier_Shaft                    -- 墩身施工进度   
+	  , Pier_TiedBeam                 -- 墩系梁施工进度  
+	  , Coping                        -- 盖梁施工进度   
+	  , Support_Cushion               -- 支座垫石施工进度 
+	  , Baffle_Block                  -- 挡块施工进度   
+	  , Beam_SlabPrefabrication       -- 梁板预制施工进度 
+	  , CastInPlace_Beam              -- 现浇梁施工进度  
+	  , Bearing                       -- 支座施工进度   
+	  , Diaphragm                     -- 横隔板施工进度  
+	  , Wet_Joint                     -- 湿接缝施工进度  
+	  , BridgeDeck_System             -- 桥面系施工进度  
+	  , Bridgehead_Slab               -- 桥头搭板施工进度 
+	  , Guardrail                     -- 护栏施工进度   
+	  , AntiCollision_Wall            -- 防撞墙施工进度  
+	  , Expansion_Joint               -- 伸缩缝施工进度  
+	  , Isdel
+	  , Creater
+	  , CreaterDate
+	  , Reviser
+	  , ReviserDate
+	FROM
+	  BridgeConstructionDetails
+	WHERE
+	  ActualCompletionId = #{id}
+	  and Isdel = 0
+	ORDER BY
+	  CreaterDate desc; 
+</select>
+<!-- 新增桥梁施工明细 -->
+<insert id="addBridgeConstructionDetails" parameterType="com.testRoom.model.BridgeConstructionDetails">
+	INSERT 
+	INTO BridgeConstructionDetails ( 
+	    UniqueIdentifier
+	  , ActualCompletionId
+	  , BridgeId
+	  , Pile_Foundation
+	  , Pile_TiedBeam
+	  , Abutment
+	  , Caps
+	  , Platform_Body
+	  , Platform_Cap
+	  , Ear_BackWall
+	  , Bazi_Wall
+	  , Pier_Shaft
+	  , Pier_TiedBeam
+	  , Coping
+	  , Support_Cushion
+	  , Baffle_Block
+	  , Beam_SlabPrefabrication
+	  , CastInPlace_Beam
+	  , Bearing
+	  , Diaphragm
+	  , Wet_Joint
+	  , BridgeDeck_System
+	  , Bridgehead_Slab
+	  , Guardrail
+	  , AntiCollision_Wall
+	  , Expansion_Joint
+	  , Creater
+	  , CreaterDate
+	) 
+	VALUES ( 
+	    #{UniqueIdentifier}
+	  , #{ActualCompletionId}
+	  , #{BridgeId}
+	  , #{Pile_Foundation}
+	  , #{Pile_TiedBeam}
+	  , #{Abutment}
+	  , #{Caps}
+	  , #{Platform_Body}
+	  , #{Platform_Cap}
+	  , #{Ear_BackWall}
+	  , #{Bazi_Wall}
+	  , #{Pier_Shaft}
+	  , #{Pier_TiedBeam}
+	  , #{Coping}
+	  , #{Support_Cushion}
+	  , #{Baffle_Block}
+	  , #{Beam_SlabPrefabrication}
+	  , #{CastInPlace_Beam}
+	  , #{Bearing}
+	  , #{Diaphragm}
+	  , #{Wet_Joint}
+	  , #{BridgeDeck_System}
+	  , #{Bridgehead_Slab}
+	  , #{Guardrail}
+	  , #{AntiCollision_Wall}
+	  , #{Expansion_Joint}
+	  , #{Creater}
+	  , getDate()
+	); 
+</insert>
+<!-- 修改桥梁明细数据 -->
+<update id="updateBridgeConstructionDetails" parameterType="com.testRoom.model.BridgeConstructionDetails">
+	UPDATE BridgeConstructionDetails 
+	SET
+	    Pile_Foundation = #{Pile_Foundation}
+	  , Pile_TiedBeam = #{Pile_TiedBeam}
+	  , Abutment = #{Abutment}
+	  , Caps = #{Caps}
+	  , Platform_Body = #{Platform_Body}
+	  , Platform_Cap = #{Platform_Cap}
+	  , Ear_BackWall = #{Ear_BackWall}
+	  , Bazi_Wall = #{Bazi_Wall}
+	  , Pier_Shaft = #{Pier_Shaft}
+	  , Pier_TiedBeam = #{Pier_TiedBeam}
+	  , Coping = #{Coping}
+	  , Support_Cushion = #{Support_Cushion}
+	  , Baffle_Block = #{Baffle_Block}
+	  , Beam_SlabPrefabrication = #{Beam_SlabPrefabrication}
+	  , CastInPlace_Beam = #{CastInPlace_Beam}
+	  , Bearing = #{Bearing}
+	  , Diaphragm = #{Diaphragm}
+	  , Wet_Joint = #{Wet_Joint}
+	  , BridgeDeck_System = #{BridgeDeck_System}
+	  , Bridgehead_Slab = #{Bridgehead_Slab}
+	  , Guardrail = #{Guardrail}
+	  , AntiCollision_Wall = #{AntiCollision_Wall}
+	  , Expansion_Joint = #{Expansion_Joint}
+	  , Reviser = #{Reviser}
+	  , ReviserDate =getDate()
+	WHERE
+	  UniqueIdentifier = #{UniqueIdentifier} 
+	  and ActualCompletionId = #{ActualCompletionId}
+	  and BridgeId = #{BridgeId}
+</update>
+<!-- 删除桥梁明细数据 -->
+<update id="delBridgeConstructionDetails" parameterType="java.util.Map">
+    UPDATE BridgeConstructionDetails
+	SET
+	  Isdel = 1,
+	  Reviser = #{Reviser},
+	  ReviserDate = getDate()
+	WHERE
+	  ActualCompletionId = #{id}
+</update>
+<!-- 上传图片功能-->
+<update id="uploadPictures" parameterType="com.testRoom.model.ActualCompletionQuantity">
+    UPDATE ActualCompletionQuantity
+	SET
+	  PicturePath = #{picUrl}
+	WHERE
+	  Id = #{iD}
+</update>
+<!-- 获取累计完成量 -->
+<select id="getSum" parameterType="java.util.Map" resultType="Double">
+    select top 1
+       <if test="name == 'Subgrade_Total'">
+       	   dbo.GetSumTotal('Subgrade_Total', a.CreaterDate, a.UniqueIdentifier)             as sumSubgrade_Total
+       </if>
+       <if test="name == 'Cushion_LeftAmplitude'">
+       	   dbo.GetSumTotal('Cushion_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)     as sumCushion_LeftAmplitudel
+       </if>
+	   <if test="name == 'Cushion_RightAmplitude'">
+	       dbo.GetSumTotal('Cushion_RightAmplitude', a.CreaterDate , a.UniqueIdentifier)    as sumCushion_RightAmplitude
+	   </if>
+	   <if test="name == 'Subbase_LeftAmplitude'">
+	   	   dbo.GetSumTotal('Subbase_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)     as sumSubbase_LeftAmplitude
+	   </if>
+	   <if test="name == 'Subbase_RightAmplitude'">
+	   	   dbo.GetSumTotal('Subbase_RightAmplitude', a.CreaterDate , a.UniqueIdentifier)    as sumSubbase_RightAmplitude
+	   </if>
+	   <if test="name == 'Substrate_LeftAmplitude'">
+	   	   dbo.GetSumTotal('Substrate_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)   as sumSubstrate_LeftAmplitude
+	   </if>
+	   <if test="name == 'Substrate_RightAmplitude'">
+	   	   dbo.GetSumTotal('Substrate_RightAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumSubstrate_RightAmplitude
+	   </if>
+	   <if test="name == 'LowerLayer_LeftAmplitude'">
+	   	   dbo.GetSumTotal('LowerLayer_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumLowerLayer_LeftAmplitude
+	   </if>
+	   <if test="name == 'LowerLayer_RightAmplitude'">
+	   	   dbo.GetSumTotal('LowerLayer_RightAmplitude', a.CreaterDate , a.UniqueIdentifier) as sumLowerLayer_RightAmplitude
+	   </if>
+	   <if test="name == 'Mesosphere_LeftAmplitude'">
+	   	   dbo.GetSumTotal('Mesosphere_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumMesosphere_LeftAmplitude
+	   </if>
+	   <if test="name == 'Mesosphere_RightAmplitude'">
+	   	   dbo.GetSumTotal('Mesosphere_RightAmplitude', a.CreaterDate , a.UniqueIdentifier) as sumMesosphere_RightAmplitude
+	   </if>
+	   <if test="name == 'UpperLayer_LeftAmplitude'">
+	   	   dbo.GetSumTotal('UpperLayer_LeftAmplitude', a.CreaterDate , a.UniqueIdentifier)  as sumUpperLayer_LeftAmplitude
+	   </if>
+	   <if test="name == 'UpperLayer_RightAmplitude'">
+	   	   dbo.GetSumTotal('UpperLayer_RightAmplitude', a.CreaterDate , a.UniqueIdentifier) as sumUpperLayer_RightAmplitude
+	   </if>
+	from ActualCompletionQuantity a
+	where a.UniqueIdentifier = #{UniqueIdentifier}
+	<if test="id != null and id != ''">
+	and a.Id = #{id}
+	</if>
+	order by a.CreaterDate desc
+</select>
+
+	<!-- App接口 路 -->
+	<select id="getAppRoadByUniqueIdentifier" parameterType="java.util.Map" resultType="AppRoadEntity">
+		select
+		  top 1 a.Id as id
+		  , e.Subgrade_FillUnit as unit1                  -- 单位_路基_填方
+		  , e.Subgrade_ExcavationUnit as unit2            -- 单位_路基_挖方
+		  , e.Subgrade_TotalUnit as unit3                 -- 单位_路基_总量
+		  , e.Cushion_LeftAmplitudeUnit as unit4          -- 单位_垫层_左幅
+		  , e.Cushion_RightAmplitudeUnit as unit5         -- 单位_垫层_右幅
+		  , e.Subbase_LeftAmplitudeUnit as unit6          -- 单位_底基层_左幅
+		  , e.Subbase_RightAmplitudeUnit as unit7         -- 单位_底基层_右幅
+		  , e.Substrate_LeftAmplitudeUnit as unit8        -- 单位_基层_左幅
+		  , e.Substrate_RightAmplitudeUnit as unit9       -- 单位_基层_右幅
+		  , e.LowerLayer_LeftAmplitudeUnit as unit10      -- 单位_下面层_左幅
+		  , e.LowerLayer_RightAmplitudeUnit as unit11     -- 单位_下面层_右幅
+		  , e.Mesosphere_LeftAmplitudeUnit as unit12      -- 单位_中面层_左幅
+		  , e.Mesosphere_RightAmplitudeUnit as unit13     -- 单位_中面层_右幅
+		  , e.UpperLayer_LeftAmplitudeUnit as unit14      -- 单位_上面层_左幅
+		  , e.UpperLayer_RightAmplitudeUnit as unit15     -- 单位_上面层_右幅
+		  , e.Subgrade_Fill as designquantity1            -- 设计量_路基_填方
+		  , e.Subgrade_Excavation as designquantity2      -- 设计量_路基_挖方
+		  , e.Subgrade_Total as designquantity3           -- 设计量_路基_总量
+		  , e.Cushion_LeftAmplitude as designquantity4    -- 设计量_垫层_左幅
+		  , e.Cushion_RightAmplitude as designquantity5   -- 设计量_垫层_右幅
+		  , e.Subbase_LeftAmplitude as designquantity6    -- 设计量_底基层_左幅
+		  , e.Subbase_RightAmplitude as designquantity7   -- 设计量_底基层_右幅
+		  , e.Substrate_LeftAmplitude as designquantity8  -- 设计量_基层_左幅
+		  , e.Substrate_RightAmplitude as designquantity9 -- 设计量_基层_右幅
+		  , e.LowerLayer_LeftAmplitude as designquantity10 -- 设计量_下面层_左幅
+		  , e.LowerLayer_RightAmplitude as designquantity11 -- 设计量_下面层_右幅
+		  , e.Mesosphere_LeftAmplitude as designquantity12 -- 设计量_中面层_左幅
+		  , e.Mesosphere_RightAmplitude as designquantity13 -- 设计量_中面层_右幅
+		  , e.UpperLayer_LeftAmplitude as designquantity14 -- 设计量_上面层_左幅
+		  , e.UpperLayer_RightAmplitude as designquantity15 -- 设计量_上面层_右幅
+		  , a.Subgrade_Fill as actualAccomplishment1      -- 实际完成量_路基_填方
+		  , a.Subgrade_Excavation as actualAccomplishment2 -- 实际完成量_路基_挖方
+		  , a.Subgrade_Total as actualAccomplishment3     -- 实际完成量_路基_总量
+		  , a.Cushion_LeftAmplitude as actualAccomplishment4 -- 实际完成量_垫层_左幅
+		  , a.Cushion_RightAmplitude as actualAccomplishment5 -- 实际完成量_垫层_右幅
+		  , a.Subbase_LeftAmplitude as actualAccomplishment6 -- 实际完成量_底基层_左幅
+		  , a.Subbase_RightAmplitude as actualAccomplishment7 -- 实际完成量_底基层_右幅
+		  , a.Substrate_LeftAmplitude as actualAccomplishment8 -- 实际完成量_基层_左幅实
+		  , a.Substrate_RightAmplitude as actualAccomplishment9 -- 实际完成量_基层_右幅实
+		  , a.LowerLayer_LeftAmplitude as actualAccomplishment10 -- 实际完成量_下面层_左幅
+		  , a.LowerLayer_RightAmplitude as actualAccomplishment11 -- 实际完成量_下面层_右幅
+		  , a.Mesosphere_LeftAmplitude as actualAccomplishment12 -- 实际完成量_中面层_左幅
+		  , a.Mesosphere_RightAmplitude as actualAccomplishment13 -- 实际完成量_中面层_右幅
+		  , a.UpperLayer_LeftAmplitude as actualAccomplishment14 -- 实际完成量_上面层_左幅
+		  , a.UpperLayer_RightAmplitude as actualAccomplishment15 -- 实际完成量_上面层_右幅
+		  , dbo.GetSumTotal( 
+		    'Subgrade_Total'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion3                      -- 累计完成量_路基_总量
+		  , dbo.GetSumTotal( 
+		    'Cushion_LeftAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion4                      -- 累计完成量_垫层_左幅
+		  , dbo.GetSumTotal( 
+		    'Cushion_RightAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion5                      -- 累计完成量_垫层_右幅
+		  , dbo.GetSumTotal( 
+		    'Subbase_LeftAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion6                      -- 累计完成量_底基层_左幅
+		  , dbo.GetSumTotal( 
+		    'Subbase_RightAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion7                      -- 累计完成量_底基层_右幅
+		  , dbo.GetSumTotal( 
+		    'Substrate_LeftAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion8                      -- 累计完成量_基层_左幅实
+		  , dbo.GetSumTotal( 
+		    'Substrate_RightAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion9                      -- 累计完成量_基层_右幅实
+		  , dbo.GetSumTotal( 
+		    'LowerLayer_LeftAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion10                     -- 累计完成量_下面层_左幅
+		  , dbo.GetSumTotal( 
+		    'LowerLayer_RightAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion11                     -- 累计完成量_下面层_右幅
+		  , dbo.GetSumTotal( 
+		    'Mesosphere_LeftAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion12                     -- 累计完成量_中面层_左幅
+		  , dbo.GetSumTotal( 
+		    'Mesosphere_RightAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion13                     -- 累计完成量_中面层_右幅
+		  , dbo.GetSumTotal( 
+		    'UpperLayer_LeftAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion14                     -- 累计完成量_上面层_左幅
+		  , dbo.GetSumTotal( 
+		    'UpperLayer_RightAmplitude'
+		    , a.CreaterDate
+		    , a.UniqueIdentifier
+		  ) as cumulativeCompletion15                     -- 累计完成量_上面层_右幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Subgrade_Total'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Subgrade_Total * 100
+		    , 0
+		  ) as constructionProgress3                      -- 施工进度_路基_总量
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Cushion_LeftAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Cushion_LeftAmplitude * 100
+		    , 0
+		  ) as constructionProgress4                      -- 施工进度_垫层_左幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Cushion_RightAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Cushion_RightAmplitude * 100
+		    , 0
+		  ) as constructionProgress5                      -- 施工进度_垫层_右幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Subbase_LeftAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Subbase_LeftAmplitude * 100
+		    , 0
+		  ) as constructionProgress6                      -- 施工进度_底基层_左幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Subbase_RightAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Subbase_RightAmplitude * 100
+		    , 0
+		  ) as constructionProgress7                      -- 施工进度_底基层_右幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Substrate_LeftAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Substrate_LeftAmplitude * 100
+		    , 0
+		  ) as constructionProgress8                      -- 施工进度_基层_左幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Substrate_RightAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Substrate_RightAmplitude * 100
+		    , 0
+		  ) as constructionProgress9                      -- 施工进度_基层_右幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'LowerLayer_LeftAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.LowerLayer_LeftAmplitude * 100
+		    , 0
+		  ) as constructionProgress10                     -- 施工进度_下面层_左幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'LowerLayer_RightAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.LowerLayer_RightAmplitude * 100
+		    , 0
+		  ) as constructionProgress11                     -- 施工进度_下面层_右幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Mesosphere_LeftAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Mesosphere_LeftAmplitude * 100
+		    , 0
+		  ) as constructionProgress12                     -- 施工进度_中面层_左幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'Mesosphere_RightAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.Mesosphere_RightAmplitude * 100
+		    , 0
+		  ) as constructionProgress13                     -- 施工进度_中面层_右幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'UpperLayer_LeftAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.UpperLayer_LeftAmplitude * 100
+		    , 0
+		  ) as constructionProgress14                     -- 施工进度_上面层_左幅
+		  , round( 
+		    dbo.GetSumTotal( 
+		      'UpperLayer_RightAmplitude'
+		      , a.CreaterDate
+		      , a.UniqueIdentifier
+		    ) / e.UpperLayer_RightAmplitude * 100
+		    , 0
+		  ) as constructionProgress15                     -- 施工进度_上面层_右幅
+		  , a.PicturePath as picturePath                  -- 图片路径 
+		FROM
+		  ActualCompletionQuantity a                      -- 实际完成工程量表
+		  LEFT JOIN TestRoomInfo t                        -- 试验室信息
+		    ON a.UniqueIdentifier = t.UniqueIdentifier 
+		  LEFT JOIN EngineeringDesignContent e            -- 工程设计量内容表
+		    ON a.UniqueIdentifier = e.UniqueIdentifier 
+		    AND e.Isdel = 0 
+		WHERE
+		  a.Isdel = 0 
+		  <if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		    and a.UniqueIdentifier = #{uniqueIdentifier} -- 试验室唯一标识
+		  </if>
+		  <if test="createrDate != null and createrDate != ''">
+		    and CONVERT(varchar(100), a.CreaterDate , 23)  &lt;= #{createrDate} -- 按时间查询
+		  </if>
+		ORDER BY
+		  a.CreaterDate DESC	  
+	</select>
+	
+	<!-- App接口 桥 -->
+	<select id="getAppBridgeByRoad" parameterType="java.util.Map" resultType="AppBridgeEntity">
+		SELECT
+		  Id as id
+		  , Pile_Foundation as bridge1                    -- 桩基施工进度
+		  , Pile_TiedBeam as bridge2                      -- 桩系梁施工进度
+		  , Abutment as bridge3                           -- 桥台施工进度
+		  , Caps as bridge4                               -- 承台施工进度
+		  , Platform_Body as bridge5                      -- 台身施工进度
+		  , Platform_Cap as bridge6                       -- 台帽施工进度
+		  , Ear_BackWall as bridge7                       -- 耳背墙施工进度
+		  , Bazi_Wall as bridge8                          -- 八字墙施工进度
+		  , Pier_Shaft as bridge9                         -- 墩身施工进度
+		  , Pier_TiedBeam as bridge10                     -- 墩系梁施工进度
+		  , Coping as bridge11                            -- 盖梁施工进度
+		  , Support_Cushion as bridge12                   -- 支座垫石施工进度
+		  , Baffle_Block as bridge13                      -- 挡块施工进度
+		  , Beam_SlabPrefabrication as bridge14           -- 梁板预制施工进度
+		  , CastInPlace_Beam as bridge15                  -- 现浇梁施工进度
+		  , Bearing as bridge16                           -- 支座施工进度
+		  , Diaphragm as bridge17                         -- 横隔板施工进度
+		  , Wet_Joint as bridge18                         -- 湿接缝施工进度
+		  , BridgeDeck_System as bridge19                 -- 桥面系施工进度
+		  , Bridgehead_Slab as bridge20                   -- 桥头搭板施工进度
+		  , Guardrail as bridge21                         -- 护栏施工进度
+		  , AntiCollision_Wall as bridge22                -- 防撞墙施工进度
+		  , Expansion_Joint as bridge23                   -- 伸缩缝施工进度
+		FROM
+		  BridgeConstructionDetails 
+		WHERE
+		  Isdel = 0   
+		  <if test="id != null and id != ''">                                    
+		    and ActualCompletionId = #{id}
+		  </if>
+		  <if test="bridgeId != null and bridgeId != ''">
+		    and BridgeId = #{bridgeId}
+		  </if>
+		ORDER BY
+		  CreaterDate desc	
+	</select>
+
+</mapper>

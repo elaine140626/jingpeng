@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http#{}//mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.highwayPlatform.dao.JpushDao">
+	<!-- 获取用户id -->
+	<select id="getAppUser" parameterType="java.util.Map" resultType="java.util.Map">
+		select distinct
+		  ptu.Id
+		  , ptu.UserCode 
+		from
+		  PtUserInfo as ptu 
+		  left join POrgSetDetailed as posd 
+		    on posd.PlatformUserInfoId = ptu.Id 
+		where
+		  ptu.DelFlag = 0		  
+	      and posd.OrgId = #{orgId}                  -- 拌合站工区
+	      and ptu.IsWarning = 0                      -- 是否预警 0 是 1 否
+	      <if test="WarningLevel != null and WarningLevel != '' and WarningLevel == 0">
+	      and ptu.WarningLevel in (0)                -- 初级预警
+	      </if>
+	      <if test="WarningLevel != null and WarningLevel != '' and WarningLevel == 1">
+	      and ptu.WarningLevel in (0,1)              -- 中级预警
+	      </if>
+	      <if test="WarningLevel != null and WarningLevel != '' and WarningLevel == 2">
+	      and ptu.WarningLevel in (0,1,2)            -- 高级预警
+	      </if>
+	</select>
+</mapper>	

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1185.5px" height="442.578px" viewBox="0 0 1185.5 442.578" enable-background="new 0 0 1185.5 442.578"
+	 xml:space="preserve">
+<desc>Created with Highcharts 6.1.0</desc>
+<rect fill="none" width="600" height="400"/>
+<rect x="88.318" y="59" fill="none" width="467.759" height="304"/>
+<g>
+	<path fill="none" d="M90.5,59v304"/>
+	<path fill="none" d="M190.5,59v304"/>
+	<path fill="none" d="M289.5,59v304"/>
+	<path fill="none" d="M389.5,59v304"/>
+</g>
+<g>
+	<path fill="none" stroke="#E6E6E6" d="M88.318,363.5H1154.5"/>
+	<path fill="none" stroke="#E6E6E6" d="M88.318,287.5H1154.5"/>
+	<path fill="none" stroke="#E6E6E6" d="M88.318,211.5H1154.5"/>
+	<path fill="none" stroke="#E6E6E6" d="M88.318,135.5H1154.5"/>
+	<path fill="none" stroke="#E6E6E6" d="M88.318,58.5H1154.5"/>
+</g>
+<rect x="88.318" y="59" fill="none" width="467.759" height="304"/>
+<g>
+	<path fill="none" stroke="#CCD6EB" d="M91.612,363v10"/>
+	<path fill="none" stroke="#CCD6EB" d="M223.375,363v10"/>
+	<path fill="none" stroke="#CCD6EB" d="M353.82,363v10"/>
+	<path fill="none" stroke="#CCD6EB" d="M485.584,363v10"/>
+	<path fill="none" stroke="#CCD6EB" d="M88.318,363.5h467.759"/>
+</g>
+<g>
+	
+		<text transform="matrix(-1.836970e-016 -1 1 -1.836970e-016 24 229.668)" fill="#666666" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="12">生产量</text>
+	<path fill="none" d="M88,59v304"/>
+</g>
+<g>
+	<g>
+		<g>
+			<defs>
+				<rect id="SVGID_1_" x="267.227" y="118" width="943.85" height="304"/>
+			</defs>
+			<clipPath id="SVGID_2_">
+				<use xlink:href="#SVGID_1_"  overflow="visible"/>
+			</clipPath>
+			<g transform="translate(88,59) scale(1 1)" clip-path="url(#SVGID_2_)">
+				<path fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.05" d="
+					M13.571,238.221l132.19-13.025l132.194-7.104l132.191-18.971l132.195-41.607l132.192-34.808l132.191-26.147l132.19-25.904"/>
+				<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.1" d="
+					M13.571,238.221l132.19-13.025l132.194-7.104l132.191-18.971l132.195-41.607l132.192-34.808l132.191-26.147l132.19-25.904"/>
+				<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.15" d="M13.571,238.221
+					l132.19-13.025l132.194-7.104l132.191-18.971l132.195-41.607l132.192-34.808l132.191-26.147l132.19-25.904"/>
+				<path fill="none" stroke="#F45B5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.913,237.221
+					l132.192-13.025l132.191-7.104l132.192-18.971l132.19-41.607l132.195-34.808l132.19-26.147l132.193-25.904"/>
+			</g>
+		</g>
+	</g>
+	<g transform="translate(88,59) scale(1 1)">
+		<path fill="#F45B5B" d="M20.27,237c0,2.209-4.762,4-10.636,4C3.76,241-1,239.209-1,237s4.762-4,10.636-4
+			c5.87,0,10.63,1.789,10.636,3.996V237H20.27z"/>
+		<path fill="#F45B5B" d="M153.207,224c0.002,2.209-4.756,4.001-10.63,4.002c-5.873,0.001-10.638-1.789-10.64-3.998
+			c-0.001-2.209,4.756-4.001,10.63-4.002c5.871-0.001,10.632,1.787,10.64,3.994V224z"/>
+		<path fill="#F45B5B" d="M283.485,217c-0.003,2.209-4.769,3.999-10.641,3.998c-5.87-0.001-10.631-1.793-10.629-4.002
+			c0.001-2.209,4.766-3.999,10.639-3.998c5.871,0.001,10.628,1.791,10.631,3.998V217z"/>
+		<path fill="#F45B5B" d="M416.421,198c-0.002,2.209-4.767,3.999-10.64,3.998c-5.874-0.001-10.632-1.793-10.63-4.002
+			s4.767-3.999,10.641-3.998c5.866,0.001,10.627,1.791,10.629,3.998V198z"/>
+		<path fill="#F45B5B" d="M549.358,157c-0.003,2.209-4.767,3.999-10.642,3.998c-5.869-0.001-10.63-1.793-10.628-4.002
+			s4.767-3.999,10.641-3.998c5.866,0.001,10.626,1.791,10.629,3.998V157z"/>
+		<path fill="#F45B5B" d="M682.295,122c-0.003,2.209-4.766,3.999-10.639,3.998c-5.872-0.001-10.635-1.793-10.631-4.002
+			c0.002-2.209,4.768-3.999,10.639-3.998c5.868,0.001,10.628,1.791,10.631,3.998V122z"/>
+		<path fill="#F45B5B" d="M812.572,96c-0.002,2.209-4.767,3.999-10.639,3.998c-5.874-0.001-10.633-1.793-10.631-4.002
+			c0.004-2.209,4.765-3.999,10.639-3.998c5.87,0.001,10.629,1.791,10.631,3.998V96z"/>
+		<path fill="#F45B5B" d="M945.51,70c-0.002,2.209-4.768,3.999-10.641,3.998c-5.872-0.001-10.631-1.793-10.629-4.002
+			s4.766-3.999,10.639-3.998c5.87,0.001,10.629,1.791,10.631,3.998V70z"/>
+	</g>
+	<g>
+		<g>
+			<defs>
+				<rect id="SVGID_3_" x="267.227" y="118" width="943.85" height="304"/>
+			</defs>
+			<clipPath id="SVGID_4_">
+				<use xlink:href="#SVGID_3_"  overflow="visible"/>
+			</clipPath>
+			<g transform="translate(88,59) scale(1 1)" clip-path="url(#SVGID_4_)">
+				<path fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.05" d="
+					M13.571,267.128l132.19,1.295l132.194-8.631l132.191-0.165l132.195-4.012l132.192,3.355l132.191-11.914l132.19-3.518"/>
+				<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.1" d="
+					M13.571,267.128l132.19,1.295l132.194-8.631l132.191-0.165l132.195-4.012l132.192,3.355l132.191-11.914l132.19-3.518"/>
+				<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.15" d="M13.571,267.128
+					l132.19,1.295l132.194-8.631l132.191-0.165l132.195-4.012l132.192,3.355l132.191-11.914l132.19-3.518"/>
+				<path fill="none" stroke="#8085E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.913,266.128
+					l132.192,1.295l132.191-8.631l132.192-0.165l132.19-4.012l132.195,3.355l132.19-11.914l132.193-3.518"/>
+			</g>
+		</g>
+	</g>
+	<g transform="translate(88,59) scale(1 1)">
+		<path fill="#8085E9" d="M9.636,262l10.636,4l-10.636,4L-1,266L9.636,262z"/>
+		<path fill="#8085E9" d="M142.571,263l10.636,4l-10.636,4l-10.636-4L142.571,263z"/>
+		<path fill="#8085E9" d="M272.85,255l10.636,4l-10.636,4l-10.636-4L272.85,255z"/>
+		<path fill="#8085E9" d="M405.787,255l10.636,4l-10.636,4l-10.636-4L405.787,255z"/>
+		<path fill="#8085E9" d="M538.722,251l10.637,4l-10.637,4l-10.635-4L538.722,251z"/>
+		<path fill="#8085E9" d="M671.66,254l10.635,4l-10.635,4l-10.637-4L671.66,254z"/>
+		<path fill="#8085E9" d="M801.938,242l10.637,4l-10.637,4l-10.635-4L801.938,242z"/>
+		<path fill="#8085E9" d="M934.875,239l10.637,4l-10.637,4l-10.635-4L934.875,239z"/>
+	</g>
+	<g>
+		<g>
+			<defs>
+				<rect id="SVGID_5_" x="267.227" y="118" width="943.85" height="304"/>
+			</defs>
+			<clipPath id="SVGID_6_">
+				<use xlink:href="#SVGID_5_"  overflow="visible"/>
+			</clipPath>
+			<g transform="translate(88,59) scale(1 1)" clip-path="url(#SVGID_6_)">
+				<path fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.05" d="
+					M13.571,287.148l132.19-9.086l132.194,2.608l132.191-5.724l132.195-0.631l132.192-6.371l132.191-11.811l132.19-11.005"/>
+				<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.1" d="
+					M13.571,287.148l132.19-9.086l132.194,2.608l132.191-5.724l132.195-0.631l132.192-6.371l132.191-11.811l132.19-11.005"/>
+				<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.15" d="M13.571,287.148
+					l132.19-9.086l132.194,2.608l132.191-5.724l132.195-0.631l132.192-6.371l132.191-11.811l132.19-11.005"/>
+				<path fill="none" stroke="#8D4654" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.913,286.148
+					l132.192-9.086l132.191,2.608l132.192-5.724l132.19-0.631l132.195-6.371l132.19-11.811l132.193-11.005"/>
+			</g>
+		</g>
+	</g>
+	<g transform="translate(88,59) scale(1 1)">
+		<path fill="#8D4654" d="M-1,282h21.27v8H-1V282z"/>
+		<path fill="#8D4654" d="M131.937,273h21.27v8h-21.27V273z"/>
+		<path fill="#8D4654" d="M262.216,276h21.27v8h-21.27V276z"/>
+		<path fill="#8D4654" d="M395.151,270h21.27v8h-21.27V270z"/>
+		<path fill="#8D4654" d="M528.089,269h21.27v8h-21.27V269L528.089,269z"/>
+		<path fill="#8D4654" d="M661.025,263h21.27v8h-21.27V263z"/>
+		<path fill="#8D4654" d="M791.303,251h21.27v8h-21.27V251z"/>
+		<path fill="#8D4654" d="M924.24,240h21.27v8h-21.27V240z"/>
+	</g>
+	<g>
+		<g>
+			<defs>
+				<rect id="SVGID_7_" x="267.227" y="118" width="943.85" height="304"/>
+			</defs>
+			<clipPath id="SVGID_8_">
+				<use xlink:href="#SVGID_7_"  overflow="visible"/>
+			</clipPath>
+			<g transform="translate(88,59) scale(1 1)" clip-path="url(#SVGID_8_)">
+				<path fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.05" d="
+					M277.955,292.857l132.191-6.354l132.195-4.474l132.192-11.156l132.191-18.161l132.19,0.263"/>
+				<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.1" d="
+					M277.955,292.857l132.191-6.354l132.195-4.474l132.192-11.156l132.191-18.161l132.19,0.263"/>
+				<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.15" d="M277.955,292.857
+					l132.191-6.354l132.195-4.474l132.192-11.156l132.191-18.161l132.19,0.263"/>
+				<path fill="none" stroke="#7798BF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M275.296,291.857
+					l132.192-6.354l132.19-4.474l132.195-11.156l132.19-18.161l132.193,0.263"/>
+			</g>
+		</g>
+	</g>
+	<g transform="translate(88,59) scale(1 1)">
+		<path fill="#7798BF" d="M272.85,288l10.636,8h-21.27L272.85,288z"/>
+		<path fill="#7798BF" d="M405.787,282l10.636,8h-21.27L405.787,282z"/>
+		<path fill="#7798BF" d="M538.722,277l10.637,8h-21.27L538.722,277z"/>
+		<path fill="#7798BF" d="M671.66,266l10.635,8h-21.27L671.66,266z"/>
+		<path fill="#7798BF" d="M801.938,248l10.637,8h-21.27L801.938,248z"/>
+		<path fill="#7798BF" d="M934.875,248l10.637,8h-21.27L934.875,248z"/>
+	</g>
+	<g>
+		<g>
+			<defs>
+				<rect id="SVGID_9_" x="267.227" y="118" width="943.85" height="304"/>
+			</defs>
+			<clipPath id="SVGID_10_">
+				<use xlink:href="#SVGID_9_"  overflow="visible"/>
+			</clipPath>
+			<g transform="translate(88,59) scale(1 1)" clip-path="url(#SVGID_10_)">
+				<path fill="none" stroke="#000000" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.05" d="
+					M13.571,285.38l132.19,10.579l132.194-3.279l132.191-4.777l132.195,3.436l132.192-4.298l132.191-9.815l132.19,0.248"/>
+				<path fill="none" stroke="#000000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.1" d="
+					M13.571,285.38l132.19,10.579l132.194-3.279l132.191-4.777l132.195,3.436l132.192-4.298l132.191-9.815l132.19,0.248"/>
+				<path fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.15" d="M13.571,285.38
+					l132.19,10.579l132.194-3.279l132.191-4.777l132.195,3.436l132.192-4.298l132.191-9.815l132.19,0.248"/>
+				<path fill="none" stroke="#AAEEEE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M10.913,284.38
+					l132.192,10.579l132.191-3.279l132.192-4.777l132.19,3.436l132.195-4.298l132.19-9.815l132.193,0.248"/>
+			</g>
+		</g>
+	</g>
+	<g transform="translate(88,59) scale(1 1)">
+		<path fill="#AAEEEE" d="M-1,280h21.27l-10.636,8L-1,280z"/>
+		<path fill="#AAEEEE" d="M131.937,291h21.27l-10.636,8L131.937,291z"/>
+		<path fill="#AAEEEE" d="M262.216,288h21.27l-10.636,8L262.216,288z"/>
+		<path fill="#AAEEEE" d="M395.151,283h21.27l-10.636,8L395.151,283z"/>
+		<path fill="#AAEEEE" d="M528.089,286h21.27l-10.637,8L528.089,286z"/>
+		<path fill="#AAEEEE" d="M661.025,282h21.27l-10.635,8L661.025,282z"/>
+		<path fill="#AAEEEE" d="M791.303,272h21.27l-10.637,8L791.303,272z"/>
+		<path fill="#AAEEEE" d="M924.24,272h21.27l-10.637,8L924.24,272z"/>
+	</g>
+</g>
+<g transform="translate(269,239)">
+	<path fill="none" stroke="#F45B5B" d="M0,0"/>
+	<text transform="matrix(1 0 0 1 0 12)" fill="#F45B5B" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="12">安装，实施人员</text>
+</g>
+<g transform="translate(269,298)">
+	<path fill="none" stroke="#8085E9" d="M0,0"/>
+	<text transform="matrix(1 0 0 1 0 12)" fill="#8085E9" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="12">工人</text>
+</g>
+<g transform="translate(411,285)">
+	<path fill="none" stroke="#8D4654" d="M102.913,0"/>
+	<text transform="matrix(1.3176 0 0 1 102.9131 12)" fill="#8D4654" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="12">销售</text>
+</g>
+<g transform="translate(380,318)">
+	<path fill="none" stroke="#7798BF" d="M93.066,0"/>
+	<text transform="matrix(1.3176 0 0 1 93.0664 12)" fill="#7798BF" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="12">项目开发</text>
+</g>
+<g transform="translate(411,338)">
+	<path fill="none" stroke="#AAEEEE" d="M102.913,0"/>
+	<text transform="matrix(1.3176 0 0 1 102.9131 12)" fill="#AAEEEE" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="12">其他</text>
+</g>
+<text transform="matrix(1 0 0 1 576.7227 38)" font-family="'MicrosoftYaHei'" font-size="16">沥青生产趋势图</text>
+<g transform="translate(455,150)">
+	<rect x="-347" y="256" fill="none" width="135" height="96"/>
+	<g>
+		<g>
+			<g transform="translate(8,3)">
+				<path fill="none" stroke="#F45B5B" stroke-width="2" d="M-347,264h16"/>
+				<path fill="#F45B5B" d="M-335,264c0,2.209-1.791,4-4,4s-4-1.791-4-4s1.791-4,4-4c2.208,0,3.998,1.789,4,3.996V264z"/>
+				<text transform="matrix(1 0 0 1 -326 268)" fill="#333333" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="13">生产总量</text>
+			</g>
+			<g transform="translate(8,20)">
+				<path fill="none" stroke="#8085E9" stroke-width="2" d="M-257.5,247h16"/>
+				<path fill="#8085E9" d="M-249.5,243l4,4l-4,4l-4-4L-249.5,243z"/>
+				<text transform="matrix(1 0 0 1 -236.5 251)" fill="#333333" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="13">生产总盘数</text>
+			</g>
+			<g transform="translate(8,37)">
+				<path fill="none" stroke="#8D4654" stroke-width="2" d="M-148.5,230h16"/>
+				<path fill="#8D4654" d="M-144.5,226h8v8h-8V226z"/>
+				<text transform="matrix(1 0 0 1 -127.5 234)" fill="#333333" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="13">合格盘数</text>
+			</g>
+			<g transform="translate(8,54)">
+				<path fill="none" stroke="#7798BF" stroke-width="2" d="M-53.139,213h16"/>
+				<path fill="#7798BF" d="M-45.139,209l4,8h-8L-45.139,209z"/>
+				<text transform="matrix(1 0 0 1 -32.1387 217)" fill="#333333" font-family="'AdobeSongStd-Light-GBpc-EUC-H'" font-size="13">不合格盘数</text>
+			</g>
+		</g>
+	</g>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 80.4805 382)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">2010</text>
+	<text transform="matrix(1 0 0 1 179.9199 382)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">2012</text>
+	<text transform="matrix(1 0 0 1 279.3599 382)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">2014</text>
+	<text transform="matrix(1 0 0 1 378.7998 382)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">2016</text>
+</g>
+<g>
+	<text transform="matrix(1 0 0 1 67.5 367)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">0</text>
+	<text transform="matrix(1 0 0 1 42.75 291)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">50,000</text>
+	<text transform="matrix(1 0 0 1 37.25 215)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">100,000</text>
+	<text transform="matrix(1 0 0 1 37.25 139)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">150,000</text>
+	<text transform="matrix(1 0 0 1 37.25 63)" fill="#6E6E70" font-family="'TimesNewRomanPSMT'" font-size="11">200,000</text>
+</g>
+</svg>

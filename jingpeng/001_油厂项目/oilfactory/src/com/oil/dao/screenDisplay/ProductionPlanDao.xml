@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.screenDisplay.ProductionPlanDao">
+	<!-- 获取当天最新生产计划明细 -->
+	<select id="getProductionPlanList" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		select 
+			* 
+		from v_planmeasure v
+		where v.IsDel = 0
+		and left(v.CreaterDate,10) = left(now(),10)
+		order by v.CreaterDate desc
+	</select>
+	<!-- 获取计划完成情况 -->
+	<select id="getProductionPlanCount" resultType="java.util.Map">
+		select
+		  count(p.Id) as count
+		  ,count(p1.Id) as count1
+		from
+		  v_planmeasure v 
+		  left join planmeasure p                         -- 已经完成的
+		    on p.Id = v.Id 
+		    and p.IsComplete = 0 
+		  left join planmeasure p1                         -- 未完成的
+		    on p1.Id = v.Id 
+		    and p1.IsComplete = 1 
+		where
+		  v.IsDel = 0 
+		  and left (v.CreaterDate, 10) =  left (now(), 10) 
+		group by
+		  v.IsComplete
+	</select>
+</mapper>

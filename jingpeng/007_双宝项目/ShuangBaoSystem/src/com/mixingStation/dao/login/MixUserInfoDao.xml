@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.login.MixUserInfoDao">
+	<select id="queryUserInfo" parameterType="com.mixingStation.model.userInfo.UserInfo" resultType="com.mixingStation.model.userInfo.UserInfo">
+		SELECT
+			Id id,
+			User_Name userName,
+			Password password,
+			Name name,
+			Is_System isSystem,
+			Power_Org_ID powerOrgID,
+			Operator operator,
+			Create_Date createDate,
+			Modifier modifier,
+			Modif_Date modifDate,
+			Valid_Flag validFlag,
+			Upload upload
+		FROM
+			User_Info
+		WHERE 
+			Valid_Flag = 1 
+			AND user_Name COLLATE Chinese_PRC_CS_AS = #{userName} 
+			AND password COLLATE Chinese_PRC_CS_AS = #{password}
+	</select>
+	
+	<!-- 添加用户信息-->
+	<insert id="addUser" parameterType="com.mixingStation.model.userInfo.UserInfo">
+		INSERT INTO User_Info ( 
+			User_Name, 
+			Password, 
+			Name, 
+			Power_Org_ID,
+			Operator, 
+			Create_Date, 
+			Valid_Flag
+		)
+		VALUES ( 
+			#{userName},
+			#{password},
+			#{name},
+			#{powerOrgID},
+			#{name},
+			CONVERT(varchar(100), GETDATE(),20),
+			'1'
+		)
+	</insert>
+	
+	<!-- 添加用户session登陆信息-->
+	<insert id="addUserSession" parameterType="java.util.Map">
+		INSERT INTO 
+		IsUserSession (
+			User_Id, 
+			Create_Date
+		) VALUES (
+			#{userId} ,
+			CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	
+	<!-- 查询session信息判断是否登陆 -->
+	<select id="getUserSession" parameterType="java.util.Map" resultType="com.mixingStation.model.userInfo.IsSameUser">
+    	select id from IsUserSession where User_Id = #{userId}
+	</select>
+	
+	<!-- 删除用户session信息 -->
+	<delete id="delUserSession" parameterType="java.util.Map">
+	    delete from IsUserSession where User_Id = #{userId}
+	</delete>
+	
+	<!-- 查询所有组织机构信息 -->
+	<select id="getOrg" resultType="com.mixingStation.model.userInfo.OrganizationInfo">
+	    SELECT
+	    	Id id,
+	    	Parent_Id parentId,
+	    	Org_Name orgName
+    	FROM 
+    		Organization_Info 
+   		WHERE 
+   			Valid_Flag = 1 
+			AND Org_Type = '1'
+	</select>
+	<!-- 查询所有组织机构信息 -->
+	<select id="getUser" resultType="com.mixingStation.model.userInfo.OrganizationInfo" parameterType="java.util.Map">
+	    	select 
+		    	o.Id,
+		    	o.Org_Name OrgName,
+		    	o.MixStation_Type
+	    	from 
+	    		User_Info u 
+	    	left join 
+	    		Organization_Info o 
+	    	on 
+	    		u.Power_Org_ID = o.Parent_Id 
+	    	where 
+	    		o.Parent_Id = #{parentId}
+			and 
+				u.Id = #{userId}
+	</select>
+</mapper>

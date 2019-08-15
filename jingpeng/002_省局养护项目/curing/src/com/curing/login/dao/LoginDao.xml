@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.login.dao.LoginDao">
+	<!-- 获取用户信息  -->
+	<select id="getUserInfo" parameterType="java.util.Map" resultType="com.curing.login.model.UserInfo">
+		SELECT
+		  Id                   -- id
+		  , UserName           -- 用户名
+		  , PassWord           -- 用户密码
+		  , RoleCode           -- 用户角色
+		  , CityId
+		  , CountyId
+		  , Name               -- 姓名
+		  , Age                -- 年龄
+		  , Sex                -- 性别
+		  , DATE_FORMAT(Birthday, '%Y-%m-%d') as Birthday    -- 出生年月
+		  , Address            -- 地址
+		  , Telephone          -- 电话
+		  , OtherNumbers       -- 其他联系方式
+		  , IsDel              -- 删除标识
+		  , Creater            -- 创建人
+		  , CreaterDate        -- 创建时间
+		  , Reviser            -- 更新人
+		  , ReviserDate        -- 更新时间
+		FROM
+		  UserInfo 
+		WHERE
+		  1 = 1	 
+		    and IsDel = 0 
+		  <if test="id != null and id != ''">
+		  	and Id = #{id}
+		  </if>
+		  <if test="userName != null and userName != ''">
+		  	and UserName = #{userName}
+		  </if>
+		  <if test="passWord != null and passWord != ''">
+		  	and PassWord = #{passWord}
+		  </if>
+	</select>
+
+	<!-- 添加用户信息  -->
+	<insert id="insertUserInfo" parameterType="com.curing.login.model.UserInfo">
+		INSERT 
+		INTO UserInfo ( 
+		  Id 
+		  , UserName
+		  , PassWord
+		  , RoleCode
+		  , CityId
+		  , CountyId
+		  , Name
+		  , Age
+		  , Sex
+		  , Birthday
+		  , Address
+		  , Telephone
+		  , OtherNumbers
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES (
+	      REPLACE(UUID(),'-','')
+		  , #{UserName}
+		  , #{PassWord}
+		  , #{RoleCode}
+		  , #{CityId}
+		  , #{CountyId}
+		  , #{Name}
+		  , #{Age}
+		  , #{Sex}
+		  , #{Birthday}
+		  , #{Address}
+		  , #{Telephone}
+		  , #{OtherNumbers}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		); 
+	</insert>
+	
+	<!-- 更新用户信息  -->
+	<update id="updateUserInfo" parameterType="com.curing.login.model.UserInfo">
+		UPDATE UserInfo 
+		SET
+		    PassWord = #{PassWord}         
+		  , RoleCode = #{RoleCode}
+		  , CityId = #{CityId}
+		  , CountyId = #{CountyId}
+		  , Name = #{Name}
+		  , Age = #{Age}
+		  , Sex = #{Sex}
+		  , Birthday = #{Birthday}
+		  , Address = #{Address}
+		  , Telephone = #{Telephone}
+		  , OtherNumbers = #{OtherNumbers}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+			Id = #{Id}
+	</update>
+
+	<!-- 删除用户信息  -->
+	<update id="deleteUserInfo" parameterType="com.curing.login.model.UserInfo">
+		UPDATE UserInfo 
+		SET
+		    IsDel = 1               -- 删除标识
+		    ,Reviser = #{Reviser}
+		    ,ReviserDate = NOW()
+		WHERE
+			Id = #{Id}
+	</update>
+		
+</mapper>

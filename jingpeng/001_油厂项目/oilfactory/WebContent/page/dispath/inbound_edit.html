@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/dispath/inbound_edit.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: left;
+			}
+			
+			.ui_text_lt {
+				width: 35%;
+			}
+			
+			.ui_input_txt01 {
+				width: 60%;
+			}
+			
+			.ui_input_txt0 {
+				width: 30%;
+				height: 26px;
+				margin: 1px -9px 1px -5px;
+				outline: 0;
+				padding: 5px;
+				border: 1px solid;
+				border-color: #C0C0C0 #D9D9D9 #D9D9D9;
+				border-radius: 2px;
+				background: #FFF;
+				box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.2);
+				-webkit-transition: box-shadow, border-color .5s ease-in-out;
+			}
+			
+			.ui_input_txt0:first-child {
+				margin: 1px 1px 1px 5px;
+			}
+			
+			.ui_select01 {
+				width: 60%;
+			}
+			.showDetail {
+				position: relative;
+			}
+			.text {
+				height: 80px;
+				resize: none
+			}
+			#container {
+				overflow: inherit;
+			}
+			.fuchuang2 {
+			    position: absolute;
+			    width: 550px;
+			    height: auto;
+			    left: 0%;
+			    padding: 20px;
+			    top: 27%;
+			    background-color: rgba(255,255,255,1);
+			    border: 1px solid #104b8d;
+			    border-radius: 3px;
+			    z-index: 9999;
+			    margin-right: 25px;
+			    display: none;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				 * 取消
+				 */
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				}
+				//隐藏车辆信息
+				$('input[type=radio][name=radio]').change(function() {
+					if(this.value == '0') {
+						//随车带走
+						$('.showUp').show();
+					} else if(this.value == '1') { //不随车带走
+						$('.showUp').hide();
+					}
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<input type="hidden" id="enterTypeMark" name="enterTypeMark" value='2'/>
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					新增来料加工
+				</div>
+				<div class="ui_content">
+					<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+					    <tr id="serialIDFlag">
+							<td class="ui_text_rt">入库单编号：</td>
+							<td class="ui_text_lt">
+								<input type="text" style="background:#cccccc" id="serialID" name="serialID" class="ui_input_txt01" readonly="readonly"/>
+							</td>
+							<td class="ui_text_rt">物料名称/型号：</td>
+							<td class="ui_text_lt">
+								<select id="materielName" name="materielName" class="ui_input_txt0" onchange="changeMaterieName(this.value);"></select>
+								<select id="materielModel" name="materielModel" class="ui_input_txt0"></select>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">销售合同编号：</td>
+							<td class="ui_text_lt" >
+								<select class="ui_select01" id="contractId" name="contractId" onmouseover='mouseover()'  onmouseout ='mouseout()' onchange="changeOrderNumber(this.value)">
+								</select>
+								<div class="fuchuang2" style="margin-top: 23px;">
+									<table class="table" style="margin-bottom: 0;" border="" cellspacing="" cellpadding="">
+											<tr>
+		    									<td class='hetongzhuangtai'>合同名称：</td>
+		    									<td class='hetongzhuangtai' colspan="3"><input type="text" id="contractName" name="contractName" readonly="readonly" style="width: 350px;border: none;" /></td>
+		    								</tr>
+		    								<tr>
+		    									<td class='hetongzhuangtai'>客户名称：</td>
+		    									<td class='hetongzhuangtai' colspan="3"><input type="text" id="customerName" name="customerName" readonly="readonly" style="width: 350px;border: none;" /></td>
+		    								</tr>
+		    								<tr>
+		    									<td class='hetongzhuangtai'>销售公司名称：</td>
+		    									<td class='hetongzhuangtai'><input type="text" id="salesCompanyName" name="salesCompanyName" readonly="readonly" style="width: 100px;border: none;" /></td>
+		    									<td class='hetongzhuangtai'>合同日期：</td>
+		    									<td class='hetongzhuangtai'><input type="text" id="contractDate" name="contractDate" readonly="readonly" style="width: 100px;border: none;" /></td>
+		    								</tr>
+		    								<tr>
+		    									<td class='hetongzhuangtai'>销售数量(t)：</td>
+		    									<td class='hetongzhuangtai'><input type="text" id="saleNumber" name="saleNumber" readonly="readonly" style="width: 100px;border: none;" /></td>
+		    									<td class='hetongzhuangtai'>是否来料加工：</td>
+		    									<td class='hetongzhuangtai'><input type="text" id="isIncoming" name="isIncoming" readonly="readonly" style="width: 100px;border: none;" /></td>
+		    								</tr>
+									</table>
+								</div>
+							</td>
+							<td class="ui_text_rt showUp">车牌号码：</td>
+							<td class="ui_text_lt showUp">
+								<input class="ui_select01" maxlength="7" id="plateNumber" name="plateNumber" list="plateNumberList" onchange="changePlateNumber(this.value);"/>
+								<dataList class="ui_select01" id="plateNumberList"></dataList>
+							</td>
+						</tr>
+<!-- 						<tr>
+							<td class="ui_text_rt">车主：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="carOwner" name="carOwner" maxlength="8" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+							<td class="ui_text_rt">车主电话：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="carOwnerTelephone" name="carOwnerTelephone" onchange="changeTelephone(this.value,0);" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr> -->
+						<tr>
+							<td class="ui_text_rt">客户名称：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="client" name="client" class="ui_input_txt01" readonly="readonly"/><span style="color:red;">*</span>
+							</td>
+							<td class="ui_text_rt">客户别称：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="customerAlias" name="customerAlias" maxlength="25" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">送货人：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="deliveryMan" name="deliveryMan" maxlength="8" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+							<td class="ui_text_rt">送货电话：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="deliveryManPhone" name="deliveryManPhone" onkeyup="value=value.replace(/[^\d-]/g,'')" maxlength="14" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">车辆称重类型：</td>
+							<td class="ui_text_lt">
+								<select class="ui_select01" id="cartWeighType" name="cartWeighType">
+								</select>
+							</td>
+							<td class="ui_text_rt">备注：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="remark" name="remark" maxlength="100" class="ui_input_txt01" />
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">起运地：</td>
+							<td class="ui_text_lt">
+								<select class="ui_select01" id="startAddress" onchange="(changeStartAddress(this.value))" name="startAddress"></select>
+							</td>
+							<td class="ui_text_rt">允许偏差：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="deviation" name="deviation" style="background:#cccccc" readonly="readonly" class="ui_input_txt01" />
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt" >&nbsp;</td>
+							<td class="ui_text_lt"></td>
+							<td class="ui_text_rt" >&nbsp;</td>
+							<td class="ui_text_lt">
+								&nbsp;<input id="submitbutton" type="button" value="保存" class="ui_input_btnsave" onclick="add()"/> &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SubgradeEarthworkNumberDao">
+	<!-- 工程进度（路基土石方数量表）List取得 -->
+	<select id="getSubgradeEarthworkNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SubgradeEarthworkNumberEntity">
+		SELECT
+		  sen.Id
+		  , sen.ProjectId                                 -- 项目id
+		  , sen.PileNumber                                -- 起讫桩号
+		  , sen.EarthRock                                 -- 横断面积挖土石（㎡）
+		  , sen.OldRoad                                   -- 横断面积挖旧路（㎡）
+		  , sen.MountainFillStone                         -- 横断面积填山皮石（㎡）
+		  , sen.PlantingSoil                              -- 横断面积填种植土（㎡）
+		  , sen.Distance                                  -- 距离（m）
+		  , sen.ExcavationAllAmount                       -- 挖方分类及数量总数量（m³）
+		  , sen.ExcavationAmount                          -- 挖方分类及数量Ⅰ（挖方）数量（m³）
+		  , sen.ExcavationOldAmount                       -- 挖方分类及数量Ⅲ（挖旧路）数量（m³）
+		  , sen.ExcavationRockAmount                      -- 挖方分类及数量Ⅴ（挖石方）数量（m³）
+		  , sen.FillAllAmount                             -- 填方总数量（m³）
+		  , sen.FillStoneAmount                           -- 填方填山皮石数量（m³）
+		  , sen.FillSoilAmount                            -- 填方填种植土数量（m³）
+		  , sen.Remarks                                   -- 备注
+		  , sen.IsDel
+		  , sen.Creater
+		  , sen.CreaterDate
+		  , sen.Reviser
+		  , sen.ReviserDate 
+		FROM
+		  SubgradeEarthworkNumber as sen 
+		  left join V_EntryTree as ve 
+		    on sen.ProjectId = ve.pid
+		WHERE
+		  sen.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sen.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sen.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sen.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  order by sen.CreaterDate desc
+	</select>
+	
+	<!-- 导出 -->
+	
+		<select id="getSubgradeEarthworkNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  sen.PileNumber                                -- 起讫桩号
+		  , sen.EarthRock                                 -- 横断面积挖土石（㎡）
+		  , sen.OldRoad                                   -- 横断面积挖旧路（㎡）
+		  , sen.MountainFillStone                         -- 横断面积填山皮石（㎡）
+		  , sen.PlantingSoil                              -- 横断面积填种植土（㎡）
+		  , sen.Distance                                  -- 距离（m）
+		  , sen.ExcavationAllAmount                       -- 挖方分类及数量总数量（m³）
+		  , sen.ExcavationAmount                          -- 挖方分类及数量Ⅰ（挖方）数量（m³）
+		  , sen.ExcavationOldAmount                       -- 挖方分类及数量Ⅲ（挖旧路）数量（m³）
+		  , sen.ExcavationRockAmount                      -- 挖方分类及数量Ⅴ（挖石方）数量（m³）
+		  , sen.FillAllAmount                             -- 填方总数量（m³）
+		  , sen.FillStoneAmount                           -- 填方填山皮石数量（m³）
+		  , sen.FillSoilAmount                            -- 填方填种植土数量（m³）
+		  , sen.Remarks                                   -- 备注
+		FROM
+		  SubgradeEarthworkNumber as sen 
+		  left join V_EntryTree as ve 
+		    on sen.ProjectId = ve.pid
+		WHERE
+		  sen.IsDel = 0
+		  order by sen.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（路基土石方数量表）合计 -->
+	<select id="getSubgradeEarthworkNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SubgradeEarthworkNumberSum">
+		SELECT
+		  sum(sen.EarthRock) as EarthRockSum              -- 横断面积挖土石（㎡）
+		  , sum(sen.OldRoad) as OldRoadSum                -- 横断面积挖旧路（㎡）
+		  , sum(sen.MountainFillStone) as MountainFillStoneSum -- 横断面积填山皮石（㎡）
+		  , sum(sen.PlantingSoil) as PlantingSoilSum      -- 横断面积填种植土（㎡）
+		  , sum(sen.Distance) as DistanceSum              -- 距离（m）
+		  , sum(sen.ExcavationAllAmount) as ExcavationAllAmountSum -- 挖方分类及数量总数量（m³）
+		  , sum(sen.ExcavationAmount) as ExcavationAmountSum -- 挖方分类及数量Ⅰ（挖方）数量（m³）
+		  , sum(sen.ExcavationOldAmount) as ExcavationOldAmountSum -- 挖方分类及数量Ⅲ（挖旧路）数量（m³）
+		  , sum(sen.ExcavationRockAmount) as ExcavationRockAmountSum -- 挖方分类及数量Ⅴ（挖石方）数量（m³）
+		  , sum(sen.FillAllAmount) as FillAllAmountSum    -- 填方总数量（m³）
+		  , sum(sen.FillStoneAmount) as FillStoneAmountSum -- 填方填山皮石数量（m³）
+		  , sum(sen.FillSoilAmount) as FillSoilAmountSum  -- 填方填种植土数量（m³）
+		FROM
+		  SubgradeEarthworkNumber as sen 
+		  left join V_EntryTree as ve 
+		    on sen.ProjectId = ve.pid
+		WHERE
+		  sen.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sen.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sen.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sen.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（路基土石方数量表） -->
+	<insert id="insertSubgradeEarthworkNumber" parameterType="com.curing.projectSchedule.model.SubgradeEarthworkNumberEntity">
+		INSERT 
+		INTO SubgradeEarthworkNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , EarthRock
+		  , OldRoad
+		  , MountainFillStone
+		  , PlantingSoil
+		  , Distance
+		  , ExcavationAllAmount
+		  , ExcavationAmount
+		  , ExcavationOldAmount
+		  , ExcavationRockAmount
+		  , FillAllAmount
+		  , FillStoneAmount
+		  , FillSoilAmount
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{EarthRock}
+		  , #{OldRoad}
+		  , #{MountainFillStone}
+		  , #{PlantingSoil}
+		  , #{Distance}
+		  , #{ExcavationAllAmount}
+		  , #{ExcavationAmount}
+		  , #{ExcavationOldAmount}
+		  , #{ExcavationRockAmount}
+		  , #{FillAllAmount}
+		  , #{FillStoneAmount}
+		  , #{FillSoilAmount}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（路基土石方数量表） -->
+	<update id="updateSubgradeEarthworkNumber" parameterType="com.curing.projectSchedule.model.SubgradeEarthworkNumberEntity">
+		UPDATE SubgradeEarthworkNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , EarthRock = #{EarthRock}
+		  , OldRoad = #{OldRoad}
+		  , MountainFillStone = #{MountainFillStone}
+		  , PlantingSoil = #{PlantingSoil}
+		  , Distance = #{Distance}
+		  , ExcavationAllAmount = #{ExcavationAllAmount}
+		  , ExcavationAmount = #{ExcavationAmount}
+		  , ExcavationOldAmount = #{ExcavationOldAmount}
+		  , ExcavationRockAmount = #{ExcavationRockAmount}
+		  , FillAllAmount = #{FillAllAmount}
+		  , FillStoneAmount = #{FillStoneAmount}
+		  , FillSoilAmount = #{FillSoilAmount}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（路基土石方数量表） -->
+	<update id="deleteSubgradeEarthworkNumber" parameterType="com.curing.projectSchedule.model.SubgradeEarthworkNumberEntity">
+		UPDATE SubgradeEarthworkNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

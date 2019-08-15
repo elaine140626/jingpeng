@@ -1,0 +1,192 @@
+<!-- 水泥料仓对应关系 -->
+<script type="text/javascript" src="../../js/mixStation/cement/bin_correspondence.js"></script>
+<div class="rightcon_wz">
+    <div class="location">您的位置：水泥混合料拌合站（<span class="banhez"  id = "locationText"></span>） > 料仓对应关系</div>
+            </div>
+            <div class="rightcon_content">
+            <div class="shunav">
+          			    <div class="shu_btn">
+           	                <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                    	    </div>
+                        </div>
+	                    <form action="" method="get" class="zbj sousuo">
+	                      <label>料仓对应关系编号：</label>
+	                       <input name="" type="input" id="SiloCorrespondingRelationshipNumber" class="search_input rightwbj" >
+	                      <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search()">
+	                    </form>
+                    </div>
+				<div class="table-b">
+                	<div class="luru"><a href="#" class="hvr-icon-forward globalLoginBtn" onfocus="getEquipmentName()">新增录入</a></div>
+            	  	<div class="table-a-right table-c-right">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="bunk">
+                            <thead>
+                          <tr>
+                            <th scope="col" class="xh10" style="text-align: center">序号</th>
+                            <th scope="col" style="text-align: center">料仓对应关系编号</th>
+                            <th scope="col" style="text-align: center">拌和设备名称</th>
+                            <th scope="col" style="text-align: center">备注</th>
+                            <th scope="col" style="text-align: center">录入人</th>
+                            <th scope="col" style="text-align: center">创建时间</th>
+                          </tr>
+                            </thead>
+                      	</table>
+                      	<div class="fud">
+                        	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+                            </table>
+                        </div>
+				</div>
+          	</div>
+            <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>料仓关系数据修正</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close" onclick="closes()">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                  <tr>
+                    <td width="21%" align="right">料仓对应关系编号：</td>
+                    <td colspan="3"><input style="width:35%" name="textfield" type="text" onKeyUp="value=value.replace(/[\W]/g,'')"  id="Bunker_code" placeholder="输入料仓对应关系编号" class="input430"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">拌和设备名称：</td>
+                    <td><select style="width:35%" name="select3" size="1" id="equipmentName" onfocus="getShowName()" onchange="getStrNmae()"></select>
+                    <span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">备注：</td>
+                    <td colspan="3"><textarea name="textarea" cols="57" rows="3" id="str_remarks" placeholder="输入备注" class="sbj"></textarea></td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-gx jz sbj">
+                  <tr class="mbphb_luru_dise">
+                    <td colspan="8">水泥仓</td>
+                  </tr>
+                  <tr class="ziblue">
+                    <td width="25%" colspan="2">1#仓(材料)</td>
+                    <td width="25%" colspan="2">2#仓(材料)</td>
+                    <td width="25%" colspan="2">3#仓(材料)</td>
+                    <td width="25%" colspan="2">4#仓(材料)</td>
+                  </tr>
+                  <tr>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Name1" onfocus="getNameShow('str_material_Name1')" onchange='getStrModels("str_material_Mold1","str_material_Name1")'>
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Mold1" >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Name2"onfocus="getNameShow('str_material_Name2')" onchange="getStrModels('str_material_Mold2','str_material_Name2')">
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Mold2" >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Name3" onfocus="getNameShow('str_material_Name3')" onchange="getStrModels('str_material_Mold3','str_material_Name3')">
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Mold3" >
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Name4" onfocus="getNameShow('str_material_Name4')" onchange="getStrModels('str_material_Mold4','str_material_Name4')">
+
+                    </select></td>
+                    <td><select style="width:100%" size="1" id="str_material_Mold4" >
+                    </select></td>
+                  </tr>
+              </table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-gx jz sbj">
+                  <tr class="mbphb_luru_dise">
+                    <td colspan="8">骨料仓</td>
+                    </tr>
+                  <tr class="ziblue">
+                    <td width="25%" colspan="2">1#仓(材料)</td>
+                    <td width="25%" colspan="2">2#仓(材料)</td>
+                    <td width="25%" colspan="2">3#仓(材料)</td>
+                    <td width="25%" colspan="2">4#仓(材料)</td>
+                  </tr>
+                  <tr>
+                    <td width="12.5%"><select style="width:100%" size="1" id="str_material_Name5" onfocus="getNameShow('str_material_Name5')" onchange='getStrModels("str_material_Mold5","str_material_Name5")' >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select8" size="1" id="str_material_Mold5" >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select2" size="1" id="str_material_Name6" onfocus="getNameShow('str_material_Name6')" onchange='getStrModels("str_material_Mold6","str_material_Name6")'>
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select9" size="1" id="str_material_Mold6" >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select6" size="1" id="str_material_Name7" onfocus="getNameShow('str_material_Name7')" onchange='getStrModels("str_material_Mold7","str_material_Name7")'>
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select10" size="1" id="str_material_Mold7" >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select7" size="1" id="str_material_Name8" onfocus="getNameShow('str_material_Name8')" onchange='getStrModels("str_material_Mold8","str_material_Name8")'>
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select11" size="1" id="str_material_Mold8" >
+
+                    </select></td>
+                  </tr>
+                  <tr class="ziblue">
+                    <td width="25%" colspan="2">5#仓(材料)</td>
+                    <td width="25%" colspan="2">6#仓(材料)</td>
+                    <td colspan="4" rowspan="2">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="12.5%"><select style="width:100%"name="" size="1" id="str_material_Name9" onfocus="getNameShow('str_material_Name9')" onchange='getStrModels("str_material_Mold9","str_material_Name9")'>
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select8" size="1" id="str_material_Mold9" >
+
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select2" size="1" id="str_material_Name10" onfocus="getNameShow('str_material_Name10')" onchange='getStrModels("str_material_Mold10","str_material_Name10")'>
+                    </select></td>
+                    <td width="12.5%"><select style="width:100%"name="select9" size="1" id="str_material_Mold10" >
+                    </select></td>
+                  </tr>
+              </table>
+              	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-gx sbj jz">
+              <tr class="mbphb_luru_dise">
+                <td style="width:calc(100%/3)" colspan="2">水仓</td>
+                <td style="width:calc(100%/3)" colspan="2">外掺剂1</td>
+                <td style="width:calc(100%/3)" colspan="2">外掺剂2</td>
+              </tr>
+              <tr>
+                <td style="width:calc(100%/6)"><select style="width:100%"name="select12" size="1" id="str_material_Name11" onfocus="getNameShow('str_material_Name11')" onchange='getStrModels("str_material_Mold11","str_material_Name11")'>
+
+                </select></td>
+                <td style="width:calc(100%/6)"><select style="width:100%"name="select13" size="1" id="str_material_Mold11" >
+
+                </select></td>
+                <td style="width:calc(100%/6)"><select style="width:100%"name="select15" size="1"id="str_material_Name12" onfocus="getNameShow('str_material_Name12')" onchange='getStrModels("str_material_Mold12","str_material_Name12")'>
+
+                </select></td>
+                <td style="width:calc(100%/6)"><select style="width:100%"name="select14" size="1" id="str_material_Mold12">
+
+                </select></td>
+                <td style="width:calc(100%/6)"><select style="width:100%"name="select17" size="1"id="str_material_Name13" onfocus="getNameShow('str_material_Name13')" onchange='getStrModels("str_material_Mold13","str_material_Name13")'>
+
+                </select></td>
+                <td style="width:calc(100%/6)"><select style="width:100%"name="select16" size="1" id="str_material_Mold13" >
+                </select></td>
+              </tr>
+         	   </table>
+           	  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                  <tr>
+                    <td align="center"><input type="button" name="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="add()"></td>
+                  </tr>
+              </table>
+</div>
+</div>
+</div>
+</div>

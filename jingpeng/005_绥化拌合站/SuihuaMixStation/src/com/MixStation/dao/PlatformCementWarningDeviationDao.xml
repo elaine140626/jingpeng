@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformCementWarningDeviationDao">
+
+	<!-- 查询水泥预警偏差 -->
+	<select id="getPlatformCementWarningDeviation" parameterType="java.util.Map" resultType="PlatformCementWarningDeviationEntity">
+	SELECT
+		  Org_Name
+		  , Aggregate_Deviation
+		  , Cement_Deviation
+		  , Water_Deviation
+		  , Admixture_Deviation
+		  , Aggregate_DeviationDown
+		  , Cement_DeviationDown
+		  , Water_DeviationDown
+		  , Admixture_DeviationDown
+		  , Min_MixTime
+		FROM
+		  Cement_Deviation as da 
+		  left join Organization_Info as oi 
+		    on da.Org_ID = oi.Id
+		    where oi.Id = 11
+		order by
+  		  da.Create_Date desc
+	</select>
+	
+	<!-- 插入水泥阀值设定 -->
+	<insert id="insertPlatformCementWarningDeviation" parameterType="PlatformCementWarningDeviationEntity">
+	 insert 
+		into Cement_Deviation( 
+		  Org_ID
+		  , Aggregate_Deviation
+		  , Cement_Deviation
+		  , Water_Deviation
+		  , Admixture_Deviation
+		  , Operator
+		  , Aggregate_DeviationDown
+		  , Cement_DeviationDown
+		  , Water_DeviationDown
+		  , Admixture_DeviationDown
+		  , Min_MixTime
+		) 
+		values (
+		  #{Org_ID}
+		  , #{Aggregate_Deviation}
+		  , #{Cement_Deviation}
+		  , #{Water_Deviation}
+		  , #{Admixture_Deviation}
+		  , #{Operator}
+		  , #{Aggregate_DeviationDown}
+		  , #{Cement_DeviationDown}
+		  , #{Water_DeviationDown}
+		  , #{Admixture_DeviationDown}
+		  , #{Min_MixTime}
+		)
+	</insert>
+</mapper>

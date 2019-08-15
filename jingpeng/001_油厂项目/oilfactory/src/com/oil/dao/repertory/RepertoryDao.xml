@@ -1,0 +1,1143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.repertory.RepertoryDao">
+    <!-- 根据用户名称获取对应的销售订单  -->
+    <select id="getSalesOrderList" parameterType="java.util.Map" resultType="SalesOrderEntity">
+		select distinct
+		  d.id                                            -- 未称重出库单id
+		  , d.SalesOrderId as salesOrderId                -- 销售订单id
+		  , s.OrderNumber as orderNumber                  -- 订单编号
+		  , cus.CustomerCode as customerCode              -- 客户编号
+		  , CONCAT( 
+		    pi.Province
+		    , '-'
+		    , ci.CityName
+		    , '-'
+		    , cus.CustomerName
+		  ) as customerName                               -- 客户别名称
+		from
+		  noweighoutwarehouse d                           -- 调度出库表
+		  left join salesorder s                          -- 销售订单表
+		    on d.SalesOrderId = s.Id                      -- 订单id
+		  left join contractinfo c                        -- 合同信息表
+		    on s.ContractId = c.Id                        -- 合同id
+		    and c.IsDel = 0 
+		  left join customerinfo cus                      -- 客户信息表
+		    on c.CustomerId = cus.Id                      -- 客户id
+		    and cus.IsDel = 0 
+		  left join userinfo as ui 
+		    on c.UserInfoId = ui.Id 
+		  left join cityinfo as ci 
+		    on cus.CityId = ci.Id 
+		  left join provinceinfo as pi 
+		    on ci.ProvinceId = pi.Id 
+		where
+		  1 = 1 
+		  and d.IsDel = 0 
+		  and s.IsDel = 0 
+		  and d.Type = 0
+		<if test="keyword != null and keyword != ''">
+			and (cus.CustomerName like concat('%',#{keyword},'%') or s.OrderNumber like concat('%',#{keyword},'%'))
+		</if>
+		order by 
+		  cus.CustomerName, d.SalesOrderId 
+	</select>
+	
+	<!-- app下拉框销售订单查询  -->
+    <select id="getAppSalesOrderList" resultType="SalesOrderEntity">
+		SELECT DISTINCT
+		  d.SalesOrderId AS salesOrderId                  -- 销售订单id
+		  , s.OrderNumber AS orderNumber                  -- 订单编号
+		from
+		  noweighoutwarehouse d                           -- 调度出库表
+		  left join salesorder s                          -- 销售订单表
+		    on d.SalesOrderId = s.Id                      -- 订单id
+		  left join contractinfo c                        -- 合同信息表
+		    on s.ContractId = c.Id                        -- 合同id
+		    and c.IsDel = 0 
+		  left join customerinfo cus                      -- 客户信息表
+		    on c.CustomerId = cus.Id                      -- 客户id
+		    and cus.IsDel = 0 
+		where
+		  1 = 1 
+		  and d.IsDel = 0 
+		  and s.IsDel = 0 
+		ORDER BY
+		  d.SalesOrderId desc
+	</select>
+	
+	<!-- app树形结构用户名称下拉框查询 -->
+	<select id="getAppTreeCustomerName" resultType="SalesOrderEntity">
+		SELECT DISTINCT
+		  d.id                                            -- 未称重出库单id
+		  , cus.CustomerName AS customerName              -- 客户别名称
+		from
+		  noweighoutwarehouse d                           -- 调度出库表
+		  left join salesorder s                          -- 销售订单表
+		    on d.SalesOrderId = s.Id                      -- 订单id
+		  left join contractinfo c                        -- 合同信息表
+		    on s.ContractId = c.Id                        -- 合同id
+		    and c.IsDel = 0 
+		  left join customerinfo cus                      -- 客户信息表
+		    on c.CustomerId = cus.Id                      -- 客户id
+		    and cus.IsDel = 0 
+		where
+		  1 = 1 
+		  and d.IsDel = 0 
+		  and s.IsDel = 0 
+		ORDER BY
+		  cus.CustomerName
+	</select>
+	
+	<!-- app页面数据 -->
+	<select id="getAppNoWeighList" resultType="NoWeighOutWarehouse">
+		SELECT
+		  * 
+		FROM
+		  ( 
+		    select DISTINCT
+		      n.id
+		      , n.SalesOrderId as salesOrderId
+		      , n.SerialID as serialID
+		      , n.AllotWeight as allotWeight
+		      , n.SaleNumber as saleNumber
+		      , n.SalePrice as salePrice
+		      , n.SaleMoney as saleMoney
+		      , CONCAT( 
+		        pi.Province
+		        , '-'
+		        , ci.CityName
+		        , '-'
+		        , u.CustomerName
+		      ) as client
+		      , n.CustomerAlias as customerAlias
+		      , n.TaxRate as taxRate
+		      , n.Address as address
+		      , n.Type as type
+		      , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') as factoryTime -- 出库时间
+		      , n.Consignee as consignee
+		      , n.ConsigneePhone as consigneePhone
+		      , n.MaterielInfoId as materielInfoId        -- 物料id
+		      , m.MaterielName as materielName            -- 物料名称
+		      , m.MaterielModel as materielModel          -- 规格型号
+		      , n.TransportBalance as transportBalance
+		      , n.IsCarryOff as isCarryOff
+		      , n.CarName as carName
+		      , n.CustomerCarName as customerCarName
+		      , n.Deliverer as deliverer
+		      , n.DeliveryPhone as deliveryPhone
+		      , n.CarOwner as carOwner
+		      , n.CarOwnerTelephone as carOwnerTelephone
+		      , n.Remarks as remarks
+		      , n.IsTesting as isTesting
+		      , n.DispatchOutWarehouseId as dispatchOutWarehouseId -- 出库单id
+		      , t.IsQualified as isQualified              -- 是否全部合格（出厂检测报告）
+		      , n.IsSelfLifting as isSelfLifting
+		      , n.OtherDelivery as otherDelivery
+		      , n.PostNumber as postNumber
+		      , n.OtherRemarks as otherRemarks
+		      , n.IsDel as isDel
+		      , n.Creater as creater
+		      , n.CreaterDate as createrDate
+		      , n.Reviser as reviser
+		      , n.ReviserDate as reviserDate
+		      , s.ContractId as contractId                -- 合同id
+		      , c.ContractNumber as contractNumber        -- 合同编号
+		      , s.OrderNumber as orderNumber              -- 销售订单编号
+		      , n.OrderDetailedNumber as orderDetailedNumber -- 销售订单明细编号
+		      , u.CustomerName as customerName
+		      , t1.IsActualDelivery as state              -- 是否空发
+		    from
+		      noweighoutwarehouse n                       -- 未称重出库表
+		      left join salesorder s                      -- 销售订单表
+		        on n.SalesOrderId = s.Id                  -- 销售订单id
+		        and s.IsDel = 0 
+		      left join salesorderdetailed t1             -- 销售订单明细表
+		        on s.Id = t1.SalesOrderId 
+		        and t1.IsDel = 0 
+		        and t1.Id = n.OrderDetailedNumber 
+		      left join contractinfo c                    -- 合同信息表
+		        on s.ContractId = c.Id                    -- 合同id
+		        and c.IsDel = 0 
+		      left join userinfo as ui 
+		        on c.UserInfoId = ui.Id 
+		      left join customerinfo u                    -- 用户信息表
+		        on u.Id = c.CustomerId                    -- 客户的id
+		        and u.IsDel = 0 
+		      left join cityinfo as ci 
+		        on u.CityId = ci.Id 
+		      left join provinceinfo as pi 
+		        on ci.ProvinceId = pi.Id 
+		      left join materielinfo m                    -- 物料信息表
+		        on n.MaterielInfoId = m.Id                -- 物料id
+		        and m.IsDel = 0 
+		      left join exportmeasure e 
+		        on e.Id = n.DispatchOutWarehouseId 
+		        and e.IsDel = 0 
+		      left join testreport t 
+		        on e.TestReportId = t.Id 
+		        and t.IsDel = 0 
+		        and t.Exchange = 1            -- 兑换后检测报告
+		    where
+		      n.IsDel = 0 
+		      and n.Type = 0
+		      <if test="id != null and id != 0">
+		      and n.id = #{id}
+		      </if>
+	          <if test="salesOrderId != null and salesOrderId != 0">
+	          and n.SalesOrderId = #{salesOrderId}
+	          </if>
+	          <if test="orderNumber != null and orderNumber != ''">
+      	      and orderNumber = #{orderNumber}    
+      	      </if>
+		    order by
+		      n.id
+		  ) t 
+		WHERE
+		  1 = 1
+		<if test="client != null and client != ''">
+   		  and t.client like concat('%',#{client},'%')
+   		</if>
+	</select>
+	
+	<!-- 获取页面list信息 -->
+	<select id="getInfoList" parameterType="java.util.Map" resultType="NoWeighOutWarehouse">
+		SELECT
+		  * 
+		FROM
+		  ( 
+		    select DISTINCT
+		      n.id
+		      , n.SalesOrderId as salesOrderId
+		      , n.SerialID as serialID
+		      , n.AllotWeight as allotWeight
+		      , n.SaleNumber as saleNumber
+		      , n.SalePrice as salePrice
+		      , n.SaleMoney as saleMoney
+		      , u.CustomerCode as customerCode
+		      , CONCAT(pi.Province, '-', ci.CityName, '-', u.CustomerName) as client
+		      , n.CustomerAlias as customerAlias
+		      , n.TaxRate as taxRate
+		      , n.Address as address
+		      , n.Type as type
+		      , n.IsExamine as isExamine                  -- 是否审核合格 0:是 1:否
+		      , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') as factoryTime -- 出库时间
+		      , n.Consignee as consignee
+		      , n.ConsigneePhone as consigneePhone
+		      , n.ConsigneeAddress as consigneeAddress
+		      , n.MaterielInfoId as materielInfoId       -- 物料id
+		      , m.MaterielName as materielName           -- 物料名称
+		      , m.MaterielModel as materielModel         -- 规格型号
+		      , n.TransportBalance as transportBalance
+		      , n.IsCarryOff as isCarryOff
+		      , n.CarName as carName
+		      , n.CustomerCarName as customerCarName
+		      , n.Deliverer as deliverer
+		      , n.DeliveryPhone as deliveryPhone
+		      , n.CarOwner as carOwner
+		      , n.CarOwnerTelephone as carOwnerTelephone
+		      , n.Remarks as remarks
+		      , n.IsTesting as isTesting
+		      , n.DispatchOutWarehouseId as dispatchOutWarehouseId -- 出库单id
+		      , t.IsQualified as isQualified              -- 是否全部合格（出厂检测报告）
+		      , n.IsSelfLifting as isSelfLifting
+		      , n.OtherDelivery as otherDelivery
+		      , n.PostNumber as postNumber
+		      , n.OtherRemarks as otherRemarks
+		      , n.IsDel as isDel
+		      , n.Creater as creater
+		      , DATE_FORMAT(n.CreaterDate, '%Y-%m-%d') as createrDate
+		      , n.Reviser as reviser
+		      , n.ReviserDate as reviserDate
+		      , s.ContractId as contractId                -- 合同id
+		      , c.ContractNumber as contractNumber        -- 合同编号
+		      , s.OrderNumber as orderNumber              -- 销售订单编号
+		      , n.OrderDetailedNumber as orderDetailedNumber -- 销售订单明细编号
+		      , u.CustomerName as customerName
+		      , t1.IsActualDelivery as state              -- 是否空发
+		      , t1.Transports as transports               -- 止运地
+		      , t1.ExpectedDeliveryDate as expectedDeliveryDate -- 预计发货时间
+		      , t1.Id as orderDetailedId                  -- 销售订单明细id
+		      , ui.UserName as userName                   -- 销售员
+		    from
+		      noweighoutwarehouse n                       -- 未称重出库表
+		      left join salesorder s                      -- 销售订单表
+		        on n.SalesOrderId = s.Id                  -- 销售订单id
+		        and s.IsDel = 0 
+		      left join salesorderdetailed t1             -- 销售订单明细表
+		        on s.Id = t1.SalesOrderId 
+		        and t1.IsDel = 0 
+		        and t1.Id = n.OrderDetailedNumber 
+		      left join contractinfo c                    -- 合同信息表
+		        on s.ContractId = c.Id                    -- 合同id
+		        and c.IsDel = 0 
+		      left join userinfo as ui 
+		        on c.UserInfoId = ui.Id 
+		      left join customerinfo u                    -- 用户信息表
+		        on u.Id = c.CustomerId                    -- 客户的id
+		        and u.IsDel = 0 
+		      left join cityinfo as ci 
+		        on u.CityId = ci.Id 
+		      left join provinceinfo as pi 
+		        on ci.ProvinceId = pi.Id 
+		      left join materielinfo m                    -- 物料信息表
+		        on n.MaterielInfoId = m.Id                -- 物料id
+		        and m.IsDel = 0 
+		      left join exportmeasure e 
+		        on e.Id = n.DispatchOutWarehouseId 
+		        and e.IsDel = 0 
+		      left join testreport t 
+		        on e.TestReportId = t.Id 
+		        and t.IsDel = 0 
+		        and t.Exchange = 1            -- 兑换后检测报告
+		    where
+		      n.IsDel = 0 
+		      and n.Type = 0
+		      <if test="id != null and id != 0">
+		      and n.id = #{id}
+		      </if>
+			  <if test="dispatchOutWarehouseId != null and dispatchOutWarehouseId != ''">
+			  and n.DispatchOutWarehouseId = #{dispatchOutWarehouseId}
+			  </if>
+	 		  <if test="type != null and type != ''">
+			  AND c.IsApproval = 0
+			  AND n.IsExamine is null 
+			  </if> 
+		      <if test="salesOrderId != null and salesOrderId != 0">
+		      and n.SalesOrderId = #{salesOrderId}
+		      </if>
+		      <if test="orderNumber != null and orderNumber != ''">
+	      	  and orderNumber = #{orderNumber}    
+	      	  </if>
+	   		  <if test="customerName != null and customerName != ''">
+	   		  and u.CustomerName = #{customerName} 
+	   		  </if>
+	   		  <if test="startTime != null and startTime != ''">
+		      and <![CDATA[ DATE_FORMAT(t1.ExpectedDeliveryDate, '%Y-%m-%d') >=  #{startTime}  ]]>
+		      </if>
+		      <if test="endTime != null and endTime != ''">
+		      and <![CDATA[ DATE_FORMAT(t1.ExpectedDeliveryDate, '%Y-%m-%d') <=  #{endTime}  ]]>
+		      </if>
+		      <if test="materialName != null and materialName != ''">
+		      and m.MaterielName like concat('%',#{materialName},'%')
+		      </if>
+		      <if test="materialModel != null and materialModel != ''">
+		      and m.MaterielModel like concat('%',#{materialModel},'%')
+		      </if>
+		    order by
+		      n.id desc
+		  ) t 
+		WHERE
+		  1 = 1
+		<if test="client != null and client != ''">
+   		and t.CustomerCode = #{client}
+   		</if>
+	</select>
+	
+	<!-- 新增页面获取销售订单编号 -->
+	<select id="getOrderNumberList" parameterType="java.util.Map" resultType="OrderNumberEntity">
+		SELECT DISTINCT
+		  s.Id as id                                      -- id
+		  , s.OrderNumber as orderNumbers                 -- 订单编号
+		  , s.ContractId as contractId                    -- 合同id
+		  , s.CustomerId as customerId                    -- 客户id
+		  , t1.CustomerName as customerName               -- 客户名称
+		  , s.CustomerAlias as customerAlias              -- 客户别称
+		  , case 
+		    when s.IsActualDelivery = 0 
+		    then "是" 
+		    else "否" 
+		    end as isActualDelivery                       -- 是否实际发货
+		  , s.Address as address                          -- 送货地址
+		  , s.Contacts as contacts                        -- 联系人
+		  , s.Telephone as telephone                      -- 联系电话
+		  , s.OrderState as orderState                    -- 订单状态
+		  , s.SalesCompanyName as salesCompanyName        -- 销售公司名称
+		  , s.UserInfoId as userInfoId                    -- 销售员id
+		  , s.Remarks as remarks                          -- 备注
+		  , t.UnitPrice as unitPrice                      -- 单价
+		  , t.SaleNumber as saleNumber                    -- 销售数量
+		  , t.SalePrice as salePrice                      -- 销售单价
+		FROM
+		  salesorder s                                    -- 销售订单表
+		  left join salesorderdetailed t                  -- 销售订单明细表
+		    on s.Id = t.SalesOrderId 
+		    and t.IsDel = 0 
+		  left join customerinfo t1 
+		    on t1.Id = s.CustomerId 
+		    and t1.IsDel = 0 
+		WHERE
+		  1 = 1 
+		  and s.OrderState in (0, 1, 4)                   -- 订单状态
+		  and s.IsDel = 0
+		  <if test="id != null and id != 0">
+		    and s.Id = #{id}
+		  </if>
+		  <if test="orderNumber != null and orderNumber != ''">
+		    and s.OrderNumber = #{orderNumber}
+		  </if>
+		  order BY s.Id
+	</select>
+	
+	<!-- 物料型号 -->
+	<select id="getMaterielinfoList" parameterType="java.util.Map" resultType="MaterielinfoEntity">
+		select
+		  mai.Id as id                                    -- 物料id
+		  , mai.MaterielName as materielName              -- 物料名称
+		  , mai.MaterielModel as materielModel            -- 规格型号
+		from
+		  materielinfo as mai                             -- 物料信息表
+		where
+		  mai.IsDel = 0
+		  <if test="id != null and id != 0">
+			and mai.Id = #{id}
+		  </if>
+		  <if test="materielName != null and materielName != ''">
+			and mai.MaterielName = #{materielName}
+		  </if>
+	</select>
+	
+	<!-- 获取所有车牌号码 -->
+	<select id="getAllPlateNumbers" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  s.Id
+		  , s.OrderNumber                                 -- 销售编号
+		  , s.Address                                     -- 收货地址
+		  , s.Contacts                                    -- 收货人
+		  , s.CustomerAlias                               -- 客户别称
+		  , s.Telephone                                   -- 联系电话
+		  , e.Id as id1                                   -- 出库单id
+		  , e.SalesOrderId as salesOrderId                -- 销售订单id
+		  , e.Serial_ID as serialId                       -- 出库单流水号
+		  , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') as factoryTime -- 出库时间
+		  , e.PlateNumber as plateNumber                  -- 车牌号
+		  , e.DeliveryMan as deliveryMan                  -- 送货人
+		  , e.DeliveryManPhone as deliveryManPhone        -- 送货电话
+		  , s.CustomerId                                  -- 客户信息表id
+		  , c.CustomerName as customername                -- 客户名称
+		  , c.Id as uuid
+		  , e.ProductID 
+		FROM
+		  salesorder s                                    -- 销售订单表
+		  LEFT JOIN exportmeasure e                       -- 出库单表
+		    ON e.SalesOrderId = s.Id                      -- 出库单的外键=销售订单表的主键
+		    AND e.IsDel = 0 
+		  LEFT JOIN customerinfo c                        -- 客户信息表
+		    ON c.Id = s.CustomerId                        -- 客户信息表的主键=销售订单表的外键
+		    AND c.IsDel = 0 
+		where
+		  s.IsDel = 0 
+		  AND s.OrderState in (0, 1, 4)                   -- 订单状态
+		  <if test="ckTime != null and ckTime != ''">
+			and <![CDATA[ DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') =  #{ckTime}  ]]>
+		  </if>
+		  <if test="Id != null and Id != 0">
+			and s.Id = #{Id}
+		  </if>
+		  <if test="id1 != null and id1 != 0">
+			and e.Id = #{id1}
+		  </if>
+		  <if test="customername != null and customername != ''">
+			and c.CustomerName = #{customername} 
+		  </if>
+		  <if test="plateNumber != null and plateNumber != ''">
+			and e.PlateNumber = #{plateNumber }
+		  </if>
+		  <if test="CustomerId != null and CustomerId != 0">
+			and s.CustomerId = #{CustomerId}
+		  </if>
+		order by e.PlateNumber 
+	</select>
+	
+	<!-- 获取所有的客户名称 -->
+	<select id="getAllCustomerName" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  s.Id
+		  , s.OrderNumber                                 -- 销售编号
+		  , s.Address                                     -- 收货地址
+		  , s.CustomerAlias                               -- 客户别称
+		  , s.Contacts                                    -- 收货人
+		  , s.Telephone                                   -- 联系电话
+		  , e.Id as id1                                   -- 出库单id
+		  , e.SalesOrderId as salesOrderId                -- 销售订单id
+		  , e.Serial_ID as serialId                       -- 出库单流水号
+		  , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') as factoryTime -- 出库时间
+		  , e.PlateNumber as plateNumber                  -- 车牌号
+		  , e.DeliveryMan as deliveryMan                  -- 送货人
+		  , e.DeliveryManPhone as deliveryManPhone        -- 送货电话
+		  , s.CustomerId                                  -- 客户信息表id
+		  , c.CustomerName as customername                -- 客户名称
+		  , c.Id as uuid
+		  , e.ProductID 
+		FROM
+		  salesorder s                                    -- 销售订单表
+		  LEFT JOIN exportmeasure e                       -- 出库单表
+		    ON e.SalesOrderId = s.Id                      -- 出库单的外键=销售订单表的主键
+		    AND e.IsDel = 0 
+		  LEFT JOIN contractinfo con                      -- 合同表
+		    ON s.ContractId = con.Id                      -- 合同id
+		    AND con.IsDel = 0 
+		  LEFT JOIN customerinfo c                        -- 客户信息表
+		    ON c.Id = con.CustomerId                      -- 客户信息表的主键=销售订单表的外键
+		    AND c.IsDel = 0 
+		where
+		  s.IsDel = 0 
+		  AND s.OrderState in (0, 1, 4)                   -- 订单状态
+		  <if test="ckTime != null and ckTime != ''">
+			and <![CDATA[ DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') =  #{ckTime}  ]]>
+		  </if>
+		  <if test="Id != null and Id != 0">
+			and s.Id = #{Id}
+		  </if>
+		  <if test="id1 != null and id1 != 0">
+			and e.Id = #{id1}
+		  </if>
+		  <if test="customername != null and customername != ''">
+			and c.CustomerName = #{customername} 
+		  </if>
+		  <if test="plateNumber != null and plateNumber != ''">
+			and e.PlateNumber = #{plateNumber }
+		  </if>
+		  <if test="CustomerId != null and CustomerId != 0">
+			and s.CustomerId = #{CustomerId}
+		  </if>
+		order by s.Id , customername
+	</select>
+	
+	<!-- 获取所有的出库单 -->
+	<select id="getAllOutbounds" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  e.Id as id                                      -- 出库单id
+		  , e.SalesOrderId as salesOrderId                -- 销售订单id
+		  , e.OrderDetailedId as orderDetailedId          -- 销售订单明细id
+		  , e.Serial_ID as serialId                       -- 出库单流水号
+		  , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') as factoryTime -- 出库时间
+		  , e.PlateNumber as plateNumber                  -- 车牌号
+		  , e.DeliveryMan as deliveryMan                  -- 送货人
+		  , e.DeliveryManPhone as deliveryManPhone        -- 送货电话
+		  , e.ProductID as productID                      -- 物料信息id
+		  , CONCAT(mi.MaterielName, "-", mi.MaterielModel) as MaterielInfo
+		  , s1.Transports 
+		FROM
+		  exportmeasure e                                 -- 出库单表
+		  LEFT JOIN salesorderdetailed s1                 -- 销售订单明细
+		    ON e.OrderDetailedId = s1.Id 
+		    AND s1.IsDel = 0 
+		  LEFT JOIN materielinfo mi 
+		    ON e.ProductID = mi.Id 
+		    AND mi.IsDel = 0 
+		where
+		  e.IsDel = 0 
+		  and e.OutType != '3'
+		  <if test="orderDetailedId != null and orderDetailedId != 0">
+			and s1.Id = #{orderDetailedId}
+		  </if>
+		  <if test="Transports != null and Transports != ''">
+			and s1.Transports = #{Transports} 
+		  </if>
+		order by e.Serial_ID desc
+	</select>
+	
+	<!-- 添加未称重出库单 -->
+	<insert id="addNoWeighOutWarehouse" parameterType="NoWeighOutWarehouse" useGeneratedKeys="true" keyProperty="id">
+		insert 
+		into noweighoutwarehouse( 
+		  SalesOrderId
+		  , SaleNumber
+		  , SalePrice
+		  , SaleMoney
+		  , Client
+		  , CustomerAlias
+		  , TaxRate
+		  , Address
+		  , Consignee
+		  , ConsigneePhone
+		  , ConsigneeAddress
+		  , MaterielInfoId
+		  , TransportBalance
+		  , IsCarryOff
+		  , CarName
+		  , Deliverer
+		  , DeliveryPhone
+		  , CarOwner
+		  , CarOwnerTelephone
+		  , Remarks
+		  , IsTesting
+		  , DispatchOutWarehouseId
+		  , IsSelfLifting
+		  , OtherDelivery
+		  , PostNumber
+		  , OtherRemarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		  , Reviser
+		  , ReviserDate
+		  , CustomerCarName
+		  , SerialID
+		  , Type
+		  , OrderDetailedNumber
+		) 
+		values ( 
+		  #{salesOrderId}
+		  ,#{saleNumber}
+		  ,#{salePrice}
+		  ,#{saleMoney}
+		  ,#{client}
+		  ,#{customerAlias}
+		  ,#{taxRate}
+		  ,#{address}
+		  ,#{consignee}
+		  ,#{consigneePhone}
+		  ,#{consigneeAddress}
+		  ,#{materielInfoId}
+		  ,#{transportBalance}
+		  ,#{isCarryOff}
+		  ,#{carName}
+		  ,#{deliverer}
+		  ,#{deliveryPhone}
+		  ,#{carOwner}
+		  ,#{carOwnerTelephone}
+		  ,#{remarks}
+		  ,#{isTesting}
+		  ,#{dispatchOutWarehouseId}
+		  ,#{isSelfLifting}
+		  ,#{otherDelivery}
+		  ,#{postNumber}
+		  ,#{otherRemarks}
+		  ,0
+		  ,#{creater}
+		  ,now()
+		  ,#{reviser}
+		  ,now()
+		  ,#{customerCarName}
+		  ,#{serialID}
+		  ,'0'
+		  ,#{orderDetailedNumber}
+		)	
+	</insert>
+	
+	<!-- 未称重出库单删除 -->
+	<update id="updateValidFlag" parameterType="java.util.Map">
+		UPDATE noweighoutwarehouse 
+		SET
+		  IsDel = 1
+		  , Reviser = #{userId}
+		  , ReviserDate = now() 
+		WHERE
+		  id = #{id}
+	</update>
+	
+	<!-- 更新未称重出库单信息  -->
+	<update id="updateNoWeighOutWarehouse" parameterType="NoWeighOutWarehouse">
+		update noweighoutwarehouse 
+		set
+		  SalesOrderId = #{salesOrderId}
+		  , SaleNumber = #{saleNumber}
+		  ,OrderDetailedNumber=#{orderDetailedNumber}
+		  ,SalePrice=#{salePrice}
+		  ,SaleMoney=#{saleMoney}
+		  ,Client=#{client}
+		  ,CustomerAlias=#{customerAlias}
+		  ,TaxRate=#{taxRate}
+		  <if test="allotWeight != null">
+			,AllotWeight=#{allotWeight}
+		  </if>
+		  ,Address=#{address}
+		  ,Consignee=#{consignee}
+		  ,ConsigneePhone=#{consigneePhone}
+		  ,ConsigneeAddress=#{consigneeAddress}
+		  ,MaterielInfoId=#{materielInfoId}
+		  ,TransportBalance=#{transportBalance}
+		  ,IsCarryOff=#{isCarryOff}
+		  ,CarName=#{carName}
+		  ,Deliverer=#{deliverer}
+		  ,DeliveryPhone=#{deliveryPhone}
+		  ,CarOwner=#{carOwner}
+		  ,CarOwnerTelephone=#{carOwnerTelephone}
+		  ,Remarks=#{remarks}
+		  ,OtherRemarks=#{otherRemarks}
+		  ,IsTesting=#{isTesting}
+		  ,DispatchOutWarehouseId=#{dispatchOutWarehouseId}
+		  ,IsSelfLifting=#{isSelfLifting}
+		  ,OtherDelivery=#{otherDelivery}
+		  ,PostNumber=#{postNumber}
+		  ,IsDel=0
+		  ,CreaterDate=now()
+		  ,ReviserDate=now()
+		  ,CustomerCarName=#{customerCarName}
+		  ,OrderDetailedNumber=#{orderDetailedNumber}
+		where
+		  id=#{id}
+	</update>
+	
+	<!-- 数据字典查询 -->
+	<select id="getAllDatadictionaty" resultType="Datadictionaty">
+		select
+		  * 
+		from
+		  datadictionary 
+		where
+		  Type in ('sl', 'ysjsqk', 'qtfhfs', 'lx')
+	</select>
+	 
+	<!-- 联动查询 -->
+	<select id="getOutboundEntitys" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  s.Id
+		  , s.OrderNumber                                 -- 销售编号
+		  , s.CustomerAlias                               -- 客户别称
+		  , s.Address                                     -- 收货地址
+		  , s.Contacts                                    -- 收货人
+		  , s.Telephone                                   -- 联系电话
+		  , e.Id as id1                                   -- 出库单id
+		  , e.SalesOrderId as salesOrderId                -- 销售订单id
+		  , e.Serial_ID as serialId                       -- 出库单流水号
+		  , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') as factoryTime -- 出库时间
+		  , e.PlateNumber as plateNumber                  -- 车牌号
+		  , e.DeliveryMan as deliveryMan                  -- 送货人
+		  , e.DeliveryManPhone as deliveryManPhone        -- 送货电话
+		  , s.CustomerId                                  -- 客户信息表id
+		  , c.CustomerName as customername                -- 客户名称
+		  , c.Id as uuid
+		  , e.ProductID 
+		FROM
+		  salesorder s                                    -- 销售订单表
+		  LEFT JOIN exportmeasure e                       -- 出库单表
+		    ON e.SalesOrderId = s.Id                      -- 出库单的外键=销售订单表的主键
+		    AND e.IsDel = 0 
+		  LEFT JOIN customerinfo c                        -- 客户信息表
+		    ON c.Id = s.CustomerId                        -- 客户信息表的主键=销售订单表的外键
+		    AND c.IsDel = 0 
+		where
+		  s.IsDel = 0 
+		  AND s.OrderState in (0, 1, 4)                   -- 订单状态
+		  <if test="ckTime != null and ckTime != ''">
+			and <![CDATA[ DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') =  #{ckTime}  ]]>
+		  </if>
+		  <if test="Id != null and Id != 0">
+			and s.Id = #{Id}
+		  </if>
+		  <if test="id1 != null and id1 != 0">
+			and e.Id = #{id1}
+		  </if>
+		  <if test="customername != null and customername != ''">
+			and c.CustomerName = #{customername} 
+		  </if>
+		  <if test="plateNumber != null and plateNumber != ''">
+			and e.PlateNumber = #{plateNumber }
+		  </if>
+		  <if test="CustomerId != null and CustomerId != 0">
+			and s.CustomerId = #{CustomerId}
+		  </if>
+		order by s.Id desc, s.OrderNumber
+	</select>
+	
+	<!-- 查询所选销售订单明细 -->
+	<select id="getOrderDetailInfo" parameterType="map" resultType="map">
+		SELECT
+		  s.Id
+		  , s.OrderDetailedNumber
+		  , s.Transports
+		  , s.SalesOrderId
+		  , s.TransportBalance
+		  , s.MaterielId
+		  , s.TaxRate
+		  , s.SalePrice
+		  , s.SaleNumber
+		  , s.SaleMoney
+		  , CONCAT(m.MaterielName, "-", m.MaterielModel) as MaterielInfo
+		  , c.CustomerCode
+		  , c.CustomerName
+		  , s1.CustomerAlias
+		  , s1.Address
+		  , s1.Contacts
+		  , s1.Telephone 
+		FROM
+		  salesorderdetailed s 
+		  left join salesorder s1 
+		    on s1.Id = s.SalesOrderId 
+		    AND s1.IsDel = 0 
+		  left join customerinfo c 
+		    ON c.Id = s1.CustomerId 
+		    AND c.IsDel = 0 
+		  left join materielinfo m 
+		    on s.MaterielId = m.Id 
+		    AND m.IsDel = 0 
+		WHERE
+		  s.IsDel = 0 
+		  AND s.IsActualDelivery = 0                      -- 是否实际发货
+		  AND s.IsExchange = 1                            -- 非兑换
+		  <if test="salesOrderId != null and salesOrderId != 0">
+			AND s.SalesOrderId = #{salesOrderId}
+		  </if>
+		  <if test="id != null and id != 0">
+			AND s.Id <![CDATA[<>]]> #{id}
+		  </if>
+		  <if test="orderDetailedNumber != null and orderDetailedNumber != 0">
+			AND s.Id = #{orderDetailedNumber}
+		  </if>
+	</select>
+	
+	<!-- 查询车辆信息 -->
+	<select id="getAllCarInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  Id
+		  , PlateNumber
+		  , Driver1
+		  , Telephone1 
+		from
+		  carinfo 
+		where
+		  IsDel = 0
+		<if test="plateNumber != null and plateNumber != ''">
+		  and PlateNumber = #{plateNumber}
+		</if>
+	</select>
+	
+	<!-- 查询调拨未称重信息 -->
+	<select id="getDiaoBoNoWeighList" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+		  * 
+		FROM
+		  noweighoutwarehouse 
+		WHERE
+		  IsDel = 0 
+		  AND Type = 1
+		<if test="salesOrderId != null and salesOrderId != 0">
+		  AND SalesOrderId = #{salesOrderId}
+		</if>
+	</select>
+	
+	<!-- 查询出库单列表 -->
+	<select id="getOutBoundInfoList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  e.Id id
+		  , e.Serial_ID serialId
+		  , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') factoryTime
+		  , e.SaleCompanyName saleCompanyName
+		  , e.PlateNumber plateNumber
+		  , e.ProductID productID
+		  , e.Client client
+		  , e.CustomerAlias customerAlias
+		  , e.Address address
+		  , m.MaterielName materielName
+		  , m.MaterielModel materielModel
+		  , e.Suttle suttle
+		  , e.Amount amount
+		  , e.Remarks remarks
+		  , getContentByCode('ckdzt', e.OutType) as outTypeName -- 出库单状态名称
+		  , e.OutTypeMark outTypeMark
+		  , p.OrderNumber purchaseContractId
+		  , p.Id salesOrderId
+		  , e.GoodsPrice goodsPrice
+		  , e.DeliveryMan deliveryMan
+		  , e.DeliveryManPhone deliveryManPhone
+		  , t.StartAddress startAddress
+		  , t.EndAddress endAddress
+		  , t.CollectWeigh collectWeigh
+		  , u.UserName userName
+		  , t.SettlementKilometre settlementKilometre
+		  , t.FreightPrice freightPrice
+		  , t.EscortDays escortDays
+		  , t.EscortPrice escortPrice
+		  , t.EscortMoney escortMoney
+		  , t.FreightMoney freightMoney
+		  , t.Remarks tRemarks
+		  , e.Consignee consignee
+		  , e.ConsigneePhone consigneePhone
+		  , e.TareWeight tareWeight
+		  , e.TareOperator tareOperator
+		  , e.TareMeasureTime tareMeasureTime
+		  , e.GrossWeight grossWeight
+		  , e.GrossOperator grossOperator
+		  , e.GrossMeasureTime grossMeasureTime
+		  , so.IsExchange isExchange
+		  , mi.MaterielName materielName2
+		  , mi.MaterielModel materielModel2
+		  , tp.TestReportNumber testReportNumber
+		  , e.FacingSlipNum facingSlipNum
+		  , c.Id contractId
+		  , c.ContractNumber contractNumber 
+		FROM
+		  exportmeasure e 
+		  LEFT JOIN materielinfo m 
+		    on e.ProductID = m.Id 
+		    AND m.IsDel = 0 
+		  LEFT JOIN salesorder p 
+		    on e.SalesOrderId = p.Id 
+		    AND p.IsDel = 0 
+		  LEFT JOIN salesorderdetailed so 
+		    on e.OrderDetailedId = so.Id 
+		    AND so.IsDel = 0 
+		  LEFT JOIN materielinfo mi 
+		    on so.MaterielId = mi.Id 
+		    AND mi.IsDel = 0 
+		  LEFT JOIN transportlist t 
+		    on e.Serial_ID = t.SerialID 
+		    AND t.IsDel = 0 
+		  LEFT JOIN userinfo u 
+		    on p.UserInfoId = u.Id 
+		    AND u.IsDel = 0 
+		  LEFT JOIN testreport tp 
+		    on e.TestReportId = tp.Id 
+		    and tp.IsDel = 0 
+		    and tp.Exchange = 1            -- 兑换后检测报告
+		  left join contractinfo c 
+		    on p.ContractId = c.Id 
+		    and c.IsDel = 0 
+		WHERE
+		  e.IsDel = 0 
+		  AND e.ValidFlag = 1
+		  <!-- AND (e.GrossWeight IS NOT NULL OR e.TareWeight IS NOT NULL OR e.suttle IS NOT NULL) -->
+		  AND e.suttle IS NOT NULL
+		  <if test='orderNumber != null and orderNumber != ""'>
+			and p.OrderNumber = #{orderNumber}
+		  </if>
+		  <if test='plateNumber != null and plateNumber != ""'>
+			and e.PlateNumber = #{plateNumber}
+		  </if>
+	</select>
+	
+	<!-- 查询未称重出库单列表 -->
+	<select id="getUnBoundInfoList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  n.id id
+		  , n.Type type
+		  , n.IsCarryOff isCarryOff
+		  , n.OtherDelivery otherDelivery
+		  , n.PostNumber postNumber
+		  , n.SerialID serialID
+		  , DATE_FORMAT(e.FactoryTime, '%Y-%m-%d') factoryTime
+		  , sc.CompanyName companyName
+		  , n.CarName carName
+		  , n.MaterielInfoId materielInfoId
+		  , m.MaterielName materielName
+		  , m.MaterielModel materielModel
+		  , e.Suttle suttle
+		  , e.Amount amount
+		  , n.Remarks remarks
+		  , s.OrderNumber orderNumber
+		  , n.SalePrice salePrice
+		  , u.UserName userName
+		  , n.Consignee consignee
+		  , n.ConsigneePhone consigneePhone 
+		FROM
+		  noweighoutwarehouse n 
+		  LEFT JOIN exportmeasure e 
+		    ON n.DispatchOutWarehouseId = e.Id 
+		    AND e.IsDel = 0 
+		  LEFT JOIN salesorder s 
+		    ON n.SalesOrderId = s.Id 
+		    AND s.IsDel = 0 
+		  LEFT JOIN salecompany sc 
+		    ON s.SalesCompanyId = sc.Id 
+		    AND sc.IsDel = 0 
+		  LEFT JOIN materielinfo m 
+		    on n.materielInfoId = m.Id 
+		    AND m.IsDel = 0 
+		  LEFT JOIN userinfo u 
+		    on s.UserInfoId = u.Id 
+		    AND u.IsDel = 0 
+		WHERE
+		  n.IsDel = 0
+		  <if test='orderNumber != null and orderNumber != ""'>
+			and s.OrderNumber = #{orderNumber}
+		  </if>
+		  <if test='plateNumber != null and plateNumber != ""'>
+			and n.CarName = #{plateNumber}
+		  </if>
+	</select>
+	
+	<!-- 查询入库单列表 -->
+	<select id="getInstoreInfoList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  s.Id id
+		  , DATE_FORMAT(s.EnterDate, '%Y-%m-%d') enterDate
+		  , "" supplierId
+		  , s.PlateNumber plateNumber
+		  , s.ProductID productID
+		  , m.MaterielName materielName
+		  , m.MaterielModel materielModel
+		  , s.LbsNetWeight lbsNetWeight
+		  , s.Suttle suttle
+		  , s.RealityDeviation realityDeviation
+		  , "" unitPrice
+		  , "" money
+		  , s.Remarks remarks
+		  , s.SerialID serialID
+		  , s.EnterTypeMark enterTypeMark
+		  , "--" freightBalance
+		  , s.DeliveryMan carOwner
+		  , t.StartAddress startAddress
+		  , t.EndAddress endAddress
+		  , t.FreightMoney freightMoney
+		  , t.SettlementKilometre settlementKilometre
+		  , t.EscortPrice escortPrice
+		  , t.FreightMoney freightMoney
+		  , c.ContractNumber pSerialId
+		  , c.Id contractId
+		  , t.RiseLoss riseLoss
+		  , s.LbsGrossWeight lbsGrossWeight
+		  , s.TareWeight tareWeight
+		  , s.SupplierDeviation supplierDeviation
+		  , s.RealityDeviation realityDeviation
+		  , s.AbnormalFlag abnormalFlag
+		  , s.AbnormalRemarks abnormalRemarks
+		  , s.AbnormalOperator abnormalOperator
+		  , s.AbnormalDatetime abnormalDatetime
+		  , us.UserName creater
+		  , DATE_FORMAT(s.CreaterDate, '%Y-%m-%d') createrDate 
+		FROM
+		  storagemeasure s 
+		  LEFT JOIN transportlist t 
+		    ON s.SerialID = t.SerialID 
+		    AND t.IsDel = 0 
+		  LEFT JOIN materielinfo m 
+		    on s.ProductID = m.Id 
+		    AND m.IsDel = 0 
+		  LEFT JOIN contractinfo c 
+		    ON s.ContractId = c.Id 
+		    AND c.IsDel = 0 
+		  LEFT JOIN userinfo us 
+		    on us.Id = s.Creater 
+		    AND us.IsDel = 0 
+		WHERE
+		  s.EnterTypeMark <![CDATA[<>]]> 0 
+		  AND s.IsDel = 0
+		  AND s.ValidFlag = 1
+		  AND (s.GrossWeight IS NOT NULL OR s.TareWeight IS NOT NULL OR s.suttle IS NOT NULL)
+		  <if test="id != null and id != 0">
+			and s.Id = #{id}
+		  </if>
+		  <if test='orderNumber != null and orderNumber != ""'>
+			and c.ContractNumber = #{orderNumber}
+		  </if>
+		  <if test='plateNumber != null and plateNumber != ""'>
+			and s.PlateNumber = #{plateNumber}
+		  </if>			
+		union 		
+		SELECT
+		  s.Id id
+		  , DATE_FORMAT(s.EnterDate, '%Y-%m-%d') enterDate
+		  , su.SupplierName supplierId
+		  , s.PlateNumber plateNumber
+		  , s.ProductID productID
+		  , m.MaterielName materielName
+		  , m.MaterielModel materielModel
+		  , s.LbsNetWeight lbsNetWeight
+		  , s.Suttle suttle
+		  , s.RealityDeviation realityDeviation
+		  , po.UnitPrice unitPrice
+		  , po.Money money
+		  , s.Remarks remarks
+		  , s.SerialID serialID
+		  , s.EnterTypeMark enterTypeMark
+		  , p.FreightBalance freightBalance
+		  , s.DeliveryMan carOwner
+		  , t.StartAddress startAddress
+		  , t.EndAddress endAddress
+		  , t.FreightMoney freightMoney
+		  , t.SettlementKilometre settlementKilometre
+		  , t.EscortPrice escortPrice
+		  , t.FreightMoney freightMoney
+		  , p.SerialID pSerialId
+		  , c.Id contractId
+		  , t.RiseLoss riseLoss
+		  , s.LbsGrossWeight lbsGrossWeight
+		  , s.TareWeight tareWeight
+		  , s.SupplierDeviation supplierDeviation
+		  , s.RealityDeviation realityDeviation
+		  , s.AbnormalFlag abnormalFlag
+		  , s.AbnormalRemarks abnormalRemarks
+		  , s.AbnormalOperator abnormalOperator
+		  , s.AbnormalDatetime abnormalDatetime
+		  , us.UserName creater
+		  , DATE_FORMAT(s.CreaterDate, '%Y-%m-%d') createrDate 
+		FROM
+		  storagemeasure s 
+		  LEFT JOIN transportlist t 
+		    ON s.SerialID = t.SerialID 
+		    AND t.IsDel = 0 
+		  LEFT JOIN materielinfo m
+		    on s.ProductID = m.Id 
+		    AND m.IsDel = 0 
+		  LEFT JOIN supplier su 
+		    ON s.supplierId = su.Id 
+		    AND su.IsDel = 0 
+		  LEFT JOIN purchasecontract p 
+		    ON s.purchaseContractId = p.Id 
+		    AND p.IsDel = 0 
+		  LEFT JOIN purchaseorderinfo po 
+		    ON p.Id = po.PurchaseOrderId 
+		    AND po.MaterielInfoId = s.ProductID 
+		    AND po.IsDel = 0 
+		  LEFT JOIN contractinfo c 
+		    ON s.ContractId = c.Id 
+		    AND c.IsDel = 0 
+		  LEFT JOIN userinfo us 
+		    on us.Id = s.Creater 
+		    AND us.IsDel = 0 
+		WHERE
+		  s.EnterTypeMark = 0 
+		  AND s.IsDel = 0 
+		  AND s.ValidFlag = 1 
+		  AND ( 
+		    s.GrossWeight IS NOT NULL 
+		    OR s.TareWeight IS NOT NULL 
+		    OR s.suttle IS NOT NULL
+		  ) 
+		  <if test='orderNumber != null and orderNumber != ""'>
+			and s.Id = #{orderNumber}
+		  </if>
+		  <if test='plateNumber != null and plateNumber != ""'>
+			and s.PlateNumber = #{plateNumber}
+		  </if>
+	</select>
+	
+	<update id="updateExamine" parameterType="map">
+		UPDATE noweighoutwarehouse 
+		SET
+		  IsExamine = #{isExamine}
+		WHERE
+		  Id = #{id}
+	</update>
+	<!-- 查询可选的车辆信息 -->
+	<select id="getCarNameList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  e.PlateNumber
+		  , CONCAT(m.MaterielName, "-", m.MaterielModel) MaterielInfo
+		  , e.Serial_ID
+		  , s.Transports 
+		FROM
+		  exportmeasure e 
+		  LEFT JOIN materielinfo m 
+		    ON m.IsDel = 0 
+		    AND e.ProductID = m.Id  
+		  LEFT JOIN salesorderdetailed s 
+		    on e.OrderDetailedId = s.Id 
+		    AND s.IsDel = 0 
+		WHERE
+		  e.ValidFlag = 1 
+		  AND e.IsDel = 0
+	</select>
+	
+ 	<!-- 查询未称重中的物料名称 -->
+ 	<select id="getMaterialNameSearcList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  mi.Id as id
+		  , mi.MaterielName as materielName
+		  , mi.MaterielModel as materielModel 
+		FROM
+		  noweighoutwarehouse n 
+		  LEFT JOIN materielinfo mi 
+		    ON n.MaterielInfoId = mi.Id 
+		    AND mi.IsDel = 0 
+		WHERE
+		  n.IsDel = 0 
+		  AND n.Type = 0 
+		order BY
+		  mi.MaterielName
+	</select>
+</mapper>

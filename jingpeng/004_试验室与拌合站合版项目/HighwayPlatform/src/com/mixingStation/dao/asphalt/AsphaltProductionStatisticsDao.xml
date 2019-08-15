@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.asphalt.AsphaltProductionStatisticsDao">
+	<!-- 查询所有的生产统计数据 -->
+	<select id="getAsphaltProductionStatistics" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			isnull(t.productInfo, '')       AS productInfo,-- 混合料种类
+			isnull(t.unqualified, '')       AS unqualified,-- 不合格盘数
+			isnull(t.constructionUnit, '')  AS constructionUnit,-- 施工单位
+			isnull(t.projPos, '')           AS projPos,-- 工程部位/用途
+			isnull(t.collectTime,'')        AS collectTime,-- 采集时间
+			isnull(t.sumasphaltMeter, 0)    AS sumasphaltMeter,-- 沥青用量
+			isnull(t.totalWeight, 0)        AS totalWeight,-- 生产总量
+			isnull(t.standard, 0)           AS standard,-- 合格盘数
+			isnull(t.total, 0)              AS total-- 生产总盘数
+		FROM
+			(
+				SELECT
+					CONVERT (VARCHAR (10),a.collect_Time,120) AS collectTime,-- 采集时间
+					m.Material_Name + '-' + m.Material_Model  AS productInfo,-- 物料名称-型号 
+					p.Construction_Unit                       AS constructionUnit,-- 施工单位
+					p.Proj_Pos                                AS projPos,-- 工程部位/用途
+					count(a.id)                               AS total,-- 生产数据采集表总条数
+					SUM(a.Asphalt_Meter)                      AS sumasphaltMeter,-- 沥青测量值和
+					SUM(a.Total_Weight)                       AS totalWeight,-- 拌和总量
+					(
+						SELECT
+							COUNT(d.id)
+						FROM
+							Asphalt_ProductionData d -- 沥青生产数据采集表
+						WHERE
+							d.Org_ID = a.Org_ID
+							AND d.Equ_ID = a.equ_Id
+							AND CONVERT (VARCHAR (10),d.collect_Time,120) = CONVERT (VARCHAR (10),a.collect_Time,120)
+							AND d.Product_ID = a.product_Id
+							AND d.ProdPlan_No = a.ProdPlan_No
+							AND d.Analysis_Result = '1'
+							<if test="orgId != null and orgId != 0">
+								AND a.org_Id = #{orgId}
+							</if>
+					) AS standard,-- 合格盘数
+					(
+						SELECT
+							COUNT(d.id)
+						FROM
+							Asphalt_ProductionData d -- 沥青生产数据采集表
+						WHERE
+							d.Org_ID = a.Org_ID
+							AND d.Equ_ID = a.equ_Id
+							AND CONVERT (VARCHAR (10),d.collect_Time,120) = CONVERT (VARCHAR (10),a.collect_Time,120)
+							AND d.Product_ID = a.product_Id
+							AND d.ProdPlan_No = a.ProdPlan_No
+							AND d.Analysis_Result not in ('0','1') 
+							<if test="orgId != null and orgId != 0">
+								AND a.org_Id = #{orgId}
+							</if>
+					) AS unqualified -- 不合格盘数
+				FROM
+					Asphalt_ProductionData a -- 沥青生产数据采集表
+					LEFT JOIN V_MaterialInfo m ON m.Id = a.Product_ID -- 材料信息
+					LEFT JOIN Production_Plan p ON p.Plan_No = a.ProdPlan_No -- 沥青生产计划
+				WHERE
+				    1=1
+					<if test="orgId != null and orgId != 0">
+					 and a.org_Id = #{orgId}
+					</if>
+				GROUP BY
+					a.Org_ID,
+					CONVERT (VARCHAR (10),a.collect_Time,120),
+					m.Material_Name,
+					m.Material_Model,
+					p.Construction_Unit,
+					p.Invalid_Person,
+					a.Product_ID,
+					a.ProdPlan_No,
+					a.equ_Id,
+					p.Proj_Pos
+			) t
+		WHERE
+			1 = 1 
+			<if test = "materialName != null and materialName != ''" >
+				AND t.productInfo LIKE '%${materialName}%' 
+			</if> 
+			<if test = "materialModel != null and materialModel != ''" >
+				AND t.productInfo LIKE '%${materialModel}%' 
+			</if> 
+			<if test = "startTime != null and startTime != ''" > 
+				<![CDATA[ and t.collectTime >=  #{startTime}  ]]>
+			</if> 
+			<if test = "endTime != null and endTime != ''" > 
+				<![CDATA[ and t.collectTime <=  #{endTime}  ]]>
+			</if> 
+			<if test = "projPos != null and projPos != ''" >
+				AND t.projPos LIKE '%${projPos}%' 
+			</if> 
+			<if test = "constructionUnit != null and constructionUnit != ''" >
+				AND t.constructionUnit LIKE '%${constructionUnit}%' 
+			</if>
+		ORDER BY
+			t.collectTime DESC
+	</select>
+	<!-- 树状图 -->
+	<select id="getBar" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			SUM(t.standard)    AS standard,-- 合格盘数
+			SUM(t.unqualified) AS unqualified,-- 不合格盘数
+			SUM(t.total)       AS total -- 总盘数
+		FROM
+			(
+				SELECT
+					(
+						SELECT
+							COUNT(a.id)
+						FROM
+							Asphalt_ProductionData a -- 沥青生产数据采集表
+						WHERE
+							a.Org_ID = va.Org_ID
+							AND a.Equ_ID = va.equ_Id
+							AND CONVERT (VARCHAR (10),a.collect_Time,120) = CONVERT (VARCHAR (10),va.collect_Time,120)
+							AND a.Product_ID = va.product_Id
+							AND a.ProdPlan_No = va.ProdPlan_No
+							AND a.Analysis_Result = '1'
+					) AS standard,-- 合格盘数
+					(
+						SELECT
+							COUNT(a.id)
+						FROM
+							Asphalt_ProductionData a -- 沥青生产数据采集表
+						WHERE
+							a.Org_ID = va.Org_ID
+							AND a.Equ_ID = va.equ_Id
+							AND CONVERT (VARCHAR (10),a.collect_Time,120) = CONVERT (VARCHAR (10),va.collect_Time,120)
+							AND a.Product_ID = va.product_Id
+							AND a.ProdPlan_No = va.ProdPlan_No
+							AND a.Analysis_Result not in ('0','1')
+					) 			 AS unqualified, -- 不合格盘数
+					COUNT(va.id) AS total,-- 总盘数
+					va.str_productInfo AS productInfo -- 混合料种类（材料信息）
+				FROM
+					V_Asphalt_ProductionData va -- 沥青生产数据采集表（视图）
+				WHERE
+					1 = 1 
+					<if test="orgId != null and orgId != 0">
+						AND va.org_Id = #{orgId}
+					</if>
+					AND va.valid_Flag = 1
+				GROUP BY
+					va.equipment_Name,
+					va.construction_Unit,
+					va.proj_Pos,
+					va.Org_ID,
+					va.ProdPlan_No,
+					va.product_Id,
+					va.str_productInfo,
+					va.equ_Id,
+					CONVERT (VARCHAR (10),va.collect_Time,120)
+			) t
+		WHERE
+			1 = 1 
+			<if test="materialName != null and materialName != ''">
+			AND t.productInfo like '%${materialName}%'
+	        </if>
+	        <if test="materialModel != null and materialModel != ''">
+	        AND t.productInfo like '%${materialModel}%'
+	        </if>
+	        <if test="startTime != null and startTime != ''">
+	        AND t.collectTime &gt; #{startTime}
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+	        AND t.collectTime &lt; #{endTime}
+	        </if>
+	        <if test="projPos != null and projPos != ''">
+	        AND t.projPos like '%${projPos}%'
+	        </if>
+	        <if test="constructionUnit != null and constructionUnit != ''">
+	        AND t.constructionUnit like '%${constructionUnit}%'
+	        </if>
+	</select>
+</mapper>

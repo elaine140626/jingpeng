@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.productionManagement.ConfirmProductionTaskDao">	
+	<!-- 计划调度表获取(生产任务确认) -->
+	<select id="getPlanMeasure" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		SELECT
+		  * 
+		FROM
+		  v_planmeasure as vpm 
+		where
+		  vpm.IsCheck = 0
+		  <if test="id!=null and id!=''">
+		  and vpm.Id = #{id}                              -- 按照id查询
+		  </if>	
+		  <if test="materielName!=null and materielName!=''">
+		  and vpm.MaterielName like '%${materielName}%'   -- 产品名称
+		  </if>	
+		  <if test="materielModel!=null and materielModel!=''">
+		  and vpm.MaterielModel like '%${materielModel}%' -- 产品规格
+		  </if>	
+		  <if test="isProduction!=null and isProduction!=''">
+		  and vpm.IsProduction = #{isProduction}          -- 状态
+		  </if>	  
+		 order by vpm.ReviserDate desc	   
+	</select>
+	<!-- 获取储位信息 -->
+	<select id="getWareHouseInfoList" resultType="com.oil.model.system.WareHouseInfo">
+		SELECT
+		*
+		FROM
+		  warehouseinfo 
+		WHERE
+		  IsDel = 0
+		ORDER BY
+		  CreaterDate desc 
+	</select>
+</mapper>

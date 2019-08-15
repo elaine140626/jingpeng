@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.materialInfo.MaterialInfoDao">
+<!-- 物料list -->
+	<select id="getMaterialList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+	 	SELECT
+			n.Id id,
+			n.Material_Code materialCode,
+			n.MateName_ID mateNameId,
+			n.Material_Name mateName,
+			n.MateModel_ID mateModelId,
+			n.Material_Model mateModel,
+			n.Density density,
+			n.Measure_Unit measureUnit,
+			n.Material_Mold materialMold,
+			n.Operator operator,
+			CONVERT ( VARCHAR ( 100 ), n.Create_Date, 120 ) createDate 
+		FROM
+			V_MaterialInfo n
+		WHERE 
+			1=1
+			AND n.Valid_Flag = 1
+			AND n.Org_ID = #{orgId}
+			<if test="materialMold != null and materialMold != ''">
+				AND n.Material_Mold = #{materialMold}
+			</if>
+			<if test="materialType != null and materialType != ''">
+				AND n.Material_Type = #{materialType} 
+			</if>
+			<if test="materialName != null and materialName != ''">
+				AND n.Material_Name like '%' + #{materialName} + '%'
+			</if>
+			<if test="materialModel != null and materialModel	!= ''">
+				AND n.Material_Model like '%' + #{materialModel} + '%' 
+			</if>
+			<if test="id != null and id != ''">
+				AND n.Id = #{id} 
+			</if>
+			ORDER BY n.Create_Date desc
+	</select>
+<!-- 获取已存在的物料名称 -->
+	<select id="getMaterialName" parameterType="java.util.Map" resultType="map">
+		SELECT * 
+		FROM MaterName_Info  
+		WHERE Material_Name = #{mateNameId}
+	</select>
+<!-- 获取已存在的物料型号 -->	
+	<select id="getMaterialModel" parameterType="java.util.Map" resultType="map">
+		SELECT * 
+		FROM MaterModel_Info  
+		WHERE Material_Model = #{mateModelId}
+	</select>
+<!-- 获取物料编码 -->
+	<select id="getMaterialCode" parameterType="java.util.Map" resultType="map">
+	 	SELECT
+			Material_Code
+		FROM
+			V_MaterialInfo
+		WHERE
+			Org_ID = #{orgId} 
+			AND Material_Code = #{materialCode}
+			AND Material_Type = #{materialType}
+			AND Valid_Flag = '1'
+	</select> 
+<!--  获取物料名称信息 -->
+	<select id="getMaterialNameList" parameterType="java.util.Map" resultType="map">
+	 	SELECT
+			max(m.Material_Code) materialCode,
+			max(m.MateName_ID ) mateNameId,
+			max(m.Material_Name ) mateName,
+			max(m.Material_Mold ) materialMold
+		FROM
+			V_MaterialInfo m
+		WHERE
+			m.Org_ID = #{orgId} 
+			AND m.Material_Type =#{materialType}
+		    <if test="materialMold != null and materialMold != ''">
+				AND m.Material_Mold = #{materialMold}
+			</if>
+			AND m.Valid_Flag = '1'
+		GROUP BY
+			m.Material_Name 
+	</select> 
+<!-- 获取物料型号信息 -->	
+	<select id="getMaterialModelList" parameterType="java.util.Map" resultType="map">
+	 	SELECT
+	 		max(n.Id) id,
+			max(n.Material_Model) mateModel
+		FROM
+			V_MaterialInfo n
+		WHERE
+			n.Org_ID = #{orgId} 
+			AND n.Material_Name = #{materialName}
+			<if test="materialMold != null and materialMold != ''">
+			AND n.Material_Mold = #{materialMold}
+			</if>
+			AND n.Valid_Flag = '1'
+		GROUP BY
+			n.Material_Model 
+	</select>
+<!-- 获取已存在的计量单位 -->
+	<select id="getMeasureUnitList" parameterType="java.util.Map" resultType="map">
+	 	SELECT
+			max(Measure_Unit) measureUnit
+		FROM
+			V_MaterialInfo
+		WHERE
+			Org_ID = #{orgId} 
+			AND Material_Type =#{materialType}
+			AND Valid_Flag = '1'
+		GROUP BY
+			Measure_Unit 
+	</select>
+<!-- 获取当前用户是否含有该物料型号 -->
+	<select id="getIsOrgMaterial" parameterType="java.util.Map" resultType="map">
+	 	SELECT
+			MateModel_ID
+		FROM
+			Material_Info
+		WHERE
+			Org_ID = #{orgId} 
+			AND MateModel_ID =#{mateModelId}
+			AND Material_Mold =#{materialMold}
+			AND Valid_Flag = '1'
+	</select>
+<!-- 新增物料信息 -->
+	<insert id="insertMaterialInfo" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO Material_Info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orgId != null">
+        Org_ID,
+      </if>
+      <if test="materialCode != null">
+        Material_Code,
+      </if>
+      <if test="mateNameId != null">
+        MateName_ID,
+      </if>
+      <if test="mateModelId != null">
+        MateModel_ID,
+      </if>
+      <if test="density != null">
+        Density,
+      </if>
+      <if test="measureUnit != null">
+        Measure_Unit,
+      </if>
+      <if test="materialType != null">
+        Material_Type,
+      </if>
+      <if test="materialMold != null">
+        Material_Mold,
+      </if>
+      <if test="remarks != null">
+        Remarks,
+      </if>
+      <if test="operator != null">
+        Operator,
+      </if>
+      <if test="createDate != null">
+        Create_Date,
+      </if>
+      <if test="modifier != null">
+        Modifier,
+      </if>
+      <if test="modifyDate != null">
+        Modify_Date,
+      </if>
+      <if test="validFlag != null">
+        Valid_Flag,
+        </if>
+      <if test="upload != null">
+        Upload,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orgId != null">
+        #{orgId},
+      </if>
+      <if test="materialCode != null">
+        #{materialCode},
+      </if>
+      <if test="mateNameId != null">
+        #{mateNameId},
+      </if>
+      <if test="mateModelId != null">
+        #{mateModelId},
+      </if>
+      <if test="density != null">
+        #{density},
+      </if>
+      <if test="measureUnit != null">
+        #{measureUnit},
+      </if>
+      <if test="materialType != null">
+        #{materialType},
+      </if>
+      <if test="materialMold != null">
+        #{materialMold},
+      </if>
+      <if test="remarks != null">
+        #{remarks},
+      </if>
+      <if test="operator != null">
+        #{operator},
+      </if>
+      <if test="createDate != null">
+        #{createDate},
+      </if>
+      <if test="modifier != null">
+        #{modifier},
+      </if>
+      <if test="modifyDate != null">
+        #{modifyDate},
+      </if>
+      <if test="validFlag != null">
+        #{validFlag},
+      </if>
+      <if test="upload != null">
+        #{upload},
+      </if>
+    </trim>
+  </insert>
+ <!-- 插入新的物料名称 --> 
+    <insert id="insertMaterialName" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="mateNameId">
+    INSERT INTO MaterName_Info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mateNameId != null">
+        Material_Name,
+      </if>
+      <if test="operator != null">
+        Operator,
+      </if>
+      <if test="createDate != null">
+        Create_Date,
+      </if>
+        Valid_Flag,
+      <if test="upload != null">
+        Upload,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mateNameId != null">
+        #{mateNameId},
+      </if>
+      <if test="operator != null">
+        #{operator},
+      </if>
+      <if test="createDate != null">
+        #{createDate},
+      </if>
+         1,
+      <if test="upload != null">
+        #{upload},
+      </if>
+    </trim>
+  </insert>
+<!-- 插入新的物料型号 -->
+   <insert id="insertMaterialModel" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="mateModelId">
+    INSERT INTO MaterModel_Info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="mateModelId != null">
+        Material_Model,
+      </if>
+      <if test="operator != null">
+        Operator,
+      </if>
+      <if test="createDate != null">
+        Create_Date,
+      </if>
+        Valid_Flag,
+      <if test="upload != null">
+        Upload,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="mateModelId != null">
+        #{mateModelId},
+      </if>
+      <if test="operator != null">
+        #{operator},
+      </if>
+      <if test="createDate != null">
+        #{createDate},
+      </if>
+         1,
+      <if test="upload != null">
+        #{upload},
+      </if>
+    </trim>
+  </insert>
+<!-- 删除物料信息 -->
+  <update id="delMaterial" parameterType="java.util.Map">
+    UPDATE Material_Info
+    <set>
+      <if test="orgId != null">
+        Org_ID = #{orgId},
+      </if>
+      <if test="operator != null">
+        Operator = #{operator},
+      </if>
+      <if test="validFlag != null">
+        Valid_Flag = #{validFlag},
+      </if>
+    </set>
+    where  Id = #{id}
+  </update>
+<!-- 修改物料信息 -->
+  <update id="updateMaterialInfo" parameterType="java.util.Map">
+    UPDATE Material_Info
+    <set>
+      <if test="orgId != null">
+        Org_ID = #{orgId},
+      </if>
+      <if test="materialCode != null">
+        Material_Code = #{materialCode},
+      </if>
+      <if test="mateNameId != null">
+        MateName_ID = #{mateNameId},
+      </if>
+      <if test="mateModelId != null">
+        MateModel_ID = #{mateModelId},
+      </if>
+      <if test="density != null">
+        Density = #{density},
+      </if>
+      <if test="measureUnit != null">
+        Measure_Unit = #{measureUnit},
+      </if>
+      <if test="materialType != null">
+        Material_Type = #{materialType},
+      </if>
+      <if test="materialMold != null">
+        Material_Mold = #{materialMold},
+      </if>
+      <if test="remarks != null">
+        Remarks = #{remarks},
+      </if>
+      <if test="operator != null">
+        Operator = #{operator},
+      </if>
+      <if test="createDate != null">
+        Create_Date = #{createDate},
+      </if>
+      <if test="modifier != null">
+        Modifier = #{modifier},
+      </if>
+      <if test="modifyDate != null">
+        Modify_Date = #{modifyDate},
+      </if>
+      <if test="validFlag != null">
+        Valid_Flag = #{validFlag},
+      </if>
+      <if test="upload != null">
+        Upload = #{upload},
+      </if>
+    </set>
+    where  Id = #{id}
+  </update>
+  
+<!-- 查询物料信息 -->
+	<select id="getMaterialModelByName" parameterType="java.util.Map" resultType="map">
+		SELECT
+			mm.* 
+		FROM
+			MaterModel_Info mm
+			LEFT JOIN Material_Info m ON mm.Id = m.MateModel_ID
+			LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id
+			where mn.Id =  #{materialName}
+	</select>
+	<select id="queryProductId" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT
+			* 
+		FROM
+			Material_Info 
+		where 
+			MateName_ID =  #{proNameId}
+		and MateModel_ID = #{proTypeId}
+	</select>
+
+</mapper>

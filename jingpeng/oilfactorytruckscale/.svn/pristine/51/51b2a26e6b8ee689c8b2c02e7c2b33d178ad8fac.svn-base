@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.common.dao.InitialInfoDao">	
+	<!-- 数据字典取得 -->
+	<select id="getDataDictionary" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  Id
+		  , Code
+		  , Content 
+		from
+		  datadictionary 
+		where
+		  Type = #{Type}
+	</select>
+		
+</mapper>

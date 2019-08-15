@@ -1,0 +1,267 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>黑龙江省高速公路管理局盲样检测管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="Shortcut Icon" href="../resources/img/favicon.ico"> 
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/style.css">
+<link rel="StyleSheet" href="../resources/css/dtree.css" />
+<link rel="StyleSheet" href="../resources/css/lqstyle.css" />
+<link rel="stylesheet" href="../resources/css/systyle.css">
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+<script type="text/javascript" src="../resources/js/echarts.min.js"></script>
+<script type="text/javascript" src="../resources/jedate/jedate.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/blindsampleinfo.js"></script>
+<style>
+.shu_ban {
+	float: left;
+    width: 180px;
+    position: relative;
+    height: 50px;
+    color: rgb(255, 255, 255);
+    margin-right: 20px;
+}
+.dTreeNode a {
+	background:none;
+}
+.lq_main ul li{
+	display:inline-block;
+	height: 29px;
+	line-height:46px;
+	padding: 0 5px;
+}   
+</style>
+</head>
+
+<body>
+	<div class="container-fluid top">
+		<div class="row">
+			<div class="topleft">黑龙江省高速公路管理局盲样检测管理平台</div>
+			<div class="topright">
+				<a href="javascript:;" class="userid"></a><span>你好！</span> <a
+					href="../TestUser/userinfo.html" class="shezhi">用户管理</a> <a
+					href="../TestUser/login.html" class="out">安全退出</a>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid">
+		<div class="row leftbj">
+			<div class="leftnav_g">
+				<ul>
+					<li><a href="../BlindSampleInfo/index.html" class="nav1">首页</a></li>
+					<li><a href="javascript:;" class="focus_f">盲样试验</a></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</ul>
+			</div>
+			<div class="rightcon">
+				<div class="rightcon_wz">
+					<div class="location">您的位置：试验室 > 盲样试验(<span id="position" class="banhez" style="color: #104b8d;font-weight:bold"></span>)</div>
+				</div>
+
+				<div class="rightcon_content">
+					<div class="shunav">
+						<div class="shu_btn">
+							<script type="text/javascript">
+							/* 	$(function() {
+									$("#toggle").click(function() {
+										$(this).text($("#content1").is(":hidden") ? "管理处名称": "管理处名称");
+										$("#content1").slideToggle();
+									});
+								});
+								 */
+								 $(function() {
+										$('#toggle').on('click',function (event) {
+				 						    event.stopPropagation();
+				 						    $(this).siblings('#content1').toggle();
+				 						    var tag = $(this).siblings('#content1');
+				 						    var flag = true;
+				 						    $(document).bind("click",function(e){
+				 						        var target = $(e.target);
+				 						        if(target.closest(tag).length == 0 && flag == true){
+				 						            $(tag).hide();
+				 						            flag = false;
+				 						        }
+				 						    });
+				 						});
+									});
+							</script>
+							<span class="shu_ban" id="toggle">管理处名称</span>
+							<div class="dtree" id="content1" style="display: none;">
+								<script type="text/javascript">
+									var baseUrl = getContextPath();
+									var orgName = new Array();
+									console.log(baseUrl);
+									var orgid = "";
+									var orgname = "";
+									$.ajax({
+										type : "POST",
+										url : baseUrl+ "/blindness/get/OrganizationInfo",
+										async : false,
+										data : {
+											roleType : 'search'
+										},
+										dataType : "json",
+										success : function(data) {
+											console.log(data);
+											var flag = true;
+											d = new dTree('d', true); //参数一: 树名称。参数二：单选多选 true多选  false单选  默认单选               
+											//var html = "";
+											 d.add(data.organizationInfoList[0].parentId, -1, data.organizationInfoList[0].orgName);
+											//d.add(1, -1, '鸡蛋饼项目'); 
+											for (var i = 0; i < data.organizationInfoList.length; i++) {										
+												if(data.organizationInfoList[i].id <5) {
+													d.add(data.organizationInfoList[i].id, //2,3,4
+													data.organizationInfoList[i].parentId,//1
+													'authority',
+													data.organizationInfoList[i].id,
+													data.organizationInfoList[i].orgName,true,false);
+												} else {
+													d.add(data.organizationInfoList[i].id, //2,3,4
+													data.organizationInfoList[i].parentId,//1
+													'authority',
+													data.organizationInfoList[i].id,
+													data.organizationInfoList[i].orgName,false,false);
+													
+												} 
+												
+											} 
+											
+											//$(data.organizationInfoMap).each(function(i,n){
+													//console.log(i);
+													//d.add(n[0].id, -1, n[0].orgName)
+												
+											
+											document.write(d);
+											d.openAll();
+									/* $.ajax({
+										type : "POST",
+										url : baseUrl+ "/blindness/get/OrganizationInfo",
+										async : false,
+										data : {
+											roleType : 'all'
+										},
+										dataType : "json",
+										success : function(data) {
+											console.log(data);
+											
+											for (var j = 0; j < data.organizationInfoList.length; j++) {
+												d.add(
+												data.organizationInfoList[j].id,
+												data.organizationInfoList[j].parentId,
+												'authority',
+												data.organizationInfoList[j].id,
+												data.organizationInfoList[j].orgName,false,false);
+												//html += "<span>"+data.organizationInfoList[j].orgName+"</span>";
+											}
+										} 
+												})*/
+											
+											
+										}
+									});
+											$('.dtree_Tree>.dTreeNode.rootNode:first-child').css('display','none');
+											$('#authority_1').css('display','none');
+											$('.dTreeNode>img:first-child').css('display','none');
+								</script>
+							</div>
+						</div>
+						 <form action="" method="get" class="sousuo">
+                   	  <label style="margin-left:6px;">工程项目名称</label>
+                   	  <input list="browsers" style="width:108px;height:23px;" id="engineeringName">
+						<datalist id="browsers">
+						</datalist> 
+                        <label>施工单位</label>
+                      <select name="" size="1" id="constructionUnit">
+                   	  <option></option>
+                   	  </select>
+                        <label>取样日期</label>
+                        <input type="text" value="2018-4-15" size="20" class="search_input" id="start_Time" readonly="readonly">--
+                        <input type="text" value="2018-4-18" size="20" class="search_input" id="end_Time" readonly="readonly">
+                   		<input name="input" type="button" value="查&nbsp;&nbsp;询" onclick="btncha()"  class="btncha">
+                    </form>
+		
+						
+						<div class="lq_main">
+							<div class="lq_biao">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0"
+									class="bgcolor" id="blind_1">
+									<thead>
+										<tr>
+											<th width="5%" scope="col">序号</th>
+											<th scope="col">样品编号</th>
+											<th scope="col">工程项目名称</th>
+											<th scope="col">管理处名称</th>
+											<th scope="col">施工部位</th>
+											<th scope="col">施工单位</th>
+											<th scope="col">检测项目</th>
+											<th scope="col">试验状态</th>
+											<th scope="col">是否合格</th>
+											<th scope="col">取样人</th>
+											<th scope="col">取样日期</th>
+											<th scope="col">材料名称</th>
+											<th scope="col">产地</th>
+											<th width="8%" scope="col">备注</th>
+											<th width="8%" scope="col">操作</th>
+										</tr>
+									<thead>
+									<tbody>
+									</tbody>
+								</table>
+
+							</div>
+							<div class="bottom">
+			<a href="javascript:;">关于我们</a>|<a href="javascript:;">联系方式</a>Copyright
+			(c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+		</div>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+		</div>
+
+<!-- 		<div class="bottom">
+			<a href="javascript:;">关于我们</a>|<a href="javascript:;">联系方式</a>Copyright
+			(c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+		</div> -->
+
+
+	<script type="text/javascript">
+		jeDate({
+			dateCell : "#start_Time",
+			format : "YYYY-MM-DD",
+			isinitVal : false,
+			isTime : true,
+			isClear : false,
+
+			okfun : function(val) {
+				console.log(val)
+				alert(val)
+			}
+		})
+
+		jeDate({
+			dateCell : "#end_Time",
+			format : "YYYY-MM-DD",
+			isinitVal : false,
+			isTime : true,
+			isClear : false,
+
+			okfun : function(val) {
+				console.log(val)
+				alert(val)
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/contract/contract_searchOrderAndDispatch.js"></script>	
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script src="../../js/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/layer/layer.js"></script>
+		<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			.clear{ clear:both}
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				#sider {
+					position: absolute;
+					top: 40px;
+					bottom:10px;
+					left: 5px;
+					right: 5px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				#toparea{
+					height:130px;
+					overflow:auto;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				#sider {
+					position: absolute;
+					top: 70px;
+					left: 25px;
+					right: 25px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+					bottom:10px;
+				}
+				#toparea{
+					height:150px;
+				}
+			}
+			.box_border {
+				height:600px;
+				position: absolute;
+				bottom: 10px;
+				overflow-y: auto;
+				left: 0;
+				right: 0;
+				top: 0px;
+			}
+			
+			tr {
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.ui_text_rt {
+				text-align: right;
+				padding-left: 0px;
+			}
+			
+			.rtTop {
+				vertical-align: top;
+			}
+			
+			.row {
+				margin: 0 15px;
+			}
+			
+			.newLine {
+				padding: 5px 0;
+			}
+			
+			.ui_input_txt02,
+			.ui_select01,
+			.ui_area01 {
+				margin-left: -10px;
+				padding-left: 5px;
+			}
+			
+			.ui_input_txt {
+				margin-left: 0;
+				margin-top: 4px;
+			}
+			.table tr td select{
+				width:60%;
+				border-radius:2px;
+			}
+			.table tr td input{
+				width:92%;
+			}
+			#tableList1 .td{
+			
+			border: 2px solid #708090;
+			
+			}
+			.box_middle{
+				height: 37px;
+				line-height: 37px;
+				color: #fff;
+				background: #044599;
+				padding-left: 20px;
+				margin-bottom:5px;
+			}
+		</style>
+	</head>
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="top_nav">
+					<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;合同管理&nbsp;>&nbsp;销售合同管理&nbsp;>&nbsp;<span style="color:#1A5CC6">查询销售合同关联信息</span></span>
+				</div>
+				<div id="sider">
+					<div id="toparea" class="col-lg-12 col-sm-12 " style="padding: 0;">
+						<div id="box_top">销售订单</div>
+						<div class="col-lg-3 col-sm-6 newLine ">
+							<div class="ui_text_rt col-lg-4 col-sm-4">订单编号：</div>
+							<select id="OrderNumber" name="OrderNumber" class="ui_select01 col-lg-8 col-sm-8" onchange="changeOrderNumber(this.value);">
+							</select>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine" >
+							<div class="ui_text_rt col-lg-4 col-sm-4">合同编号：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="ContractId" name="ContractId" maxlength="20" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">客户编号：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="CustomerId" name="CustomerId" maxlength="50" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">客户别称：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="CustomerAlias" name="CustomerAlias" maxlength="50" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">订单状态：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="OrderState" name="OrderState" maxlength="50" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">送货地址：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="Address" name="Address" maxlength="128" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">联系人：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="Contacts" name="Contacts" maxlength="20" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">联系方式：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="Telephone" name="Telephone" maxlength="15" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">销售公司名称：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="SalesCompanyId" name="SalesCompanyId" maxlength="15" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">销售员：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="UserInfoId" name="UserInfoId" maxlength="15" readonly="readonly"/>
+						</div>
+						<div class="col-lg-3 col-sm-6 newLine">
+							<div class="ui_text_rt col-lg-4 col-sm-4">备注：</div>
+							<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="Remarks" name="Remarks" maxlength="200" readonly="readonly"/>
+						</div>
+					</div>
+					<div class="col-lg-12 col-sm-12 box_middle">销售订单明细</div>
+					<div class="col-lg-12 col-sm-12" id="details1" style="height: 200px;overflow:auto">			
+						<div class="box_border" style="width:100%;overflow: auto;height: 100%;">
+							<div style="overflow-x: auto;">
+								<table id="tableList1" style="width: 2500px;" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr>
+											<th width="30">序号</th>
+											<th class="beizhu">订单明细编号</th>
+											<th class="shuilv"> 产品名称<br/>规格型号</th>
+											<th class="bangdanma">沥青含量(%)<br/>磅单显示</th>
+											<th class="yunshujiesuan" >是否实际发货<br/>运输结算情况</th>
+											<th class="yunshujiesuan">单价(元)<br/>预计发车时间</th>
+											<th class="shuilv"> 运输地点<br/>运距(公里)</th>	
+											<th class="danjiama">里程(公里)</th>	
+											<th class="danjiama">销售数量(吨)<br/>销售单价(元)</th>
+											<th class="danjiama">销售税率(%)<br/>销售金额(元)</th>	
+											<th class="duihuanma">是否<br/>兑换</th>
+											<th width="200" class="shuilv"> 产品名称<br/>规格型号</th>
+											<th class="danjiama">兑换比例(%)<br/>兑换重量(吨)</th>
+											<th class="duihuanma">是否作废<br/>作废人</th>
+											<th class="beizhu">备注</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="box_middle col-lg-12 col-sm-12">调度出库单</div>
+					<div class="col-lg-12 col-sm-12" style="padding:0;height: 200px;overflow:auto">
+						<div style="overflow-x: auto;">
+							<table id="listTable" class="table" style="width: 3150px;" cellspacing="0" cellpadding="0" align="center" border="0">
+								<thead>
+								   <tr>
+									<th class="xuhao">序号</th>
+									<th class="hetongbianhao">销售订单明细编号</th>
+									<th class="hetongbianhao">出库单编号</th>
+									<th class="dianhua">车牌号码</th>
+									<th class="xinghao">产品名称-型号</th>
+									<th class="kehumingcheng">客户编号</th>
+									<th class="kehumingcheng">客户别称</th>
+									<th class="hetongbianhao">合同编号</th>
+									<th class="hetongbianhao">销售订单编号</th>
+									<th class="zhuangtai">状态</th>
+									<th class="xiaoshouyuan">审核状态</th>
+									<th class="xiaoshouyuan">销售员</th>
+									<th class="xinghao">司机-联系电话</th>
+									<th class="beizhu">送货地址</th>
+									<th class="xinghao">联系人-电话</th>
+									<th class="yunshujiesuan">出厂检测报告</th>
+									<th class="shijian">出厂时间</th>
+									<th class="shijian">预计发货时间</th>
+									<th class="yunshujiesuan">净重</th>
+									<th class="caozuo1">是否检测</th>
+									<th class="zhuangtai">是否未入厂出库</th>
+									<th class="zhuangtai">是否关联空发出库单</th>
+									<th class="zhuangtai">关联空发出库单编号</th>
+									<th class="zhuangtai">作废原因</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>	
+				</div>
+				<input style="position: absolute;bottom: 20px;right: 20px;" type="button" value="关闭" onclick="location.href='contract_management.html'" class="ui_input_btnclose" />
+			</div>
+
+		</form>
+	</body>
+</html>

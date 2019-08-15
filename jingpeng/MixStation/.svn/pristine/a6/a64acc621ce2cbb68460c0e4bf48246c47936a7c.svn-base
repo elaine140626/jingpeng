@@ -1,0 +1,159 @@
+var Token;
+var baseUrl = "";
+$(function(){
+	$("#getAll").hide();
+	baseUrl = getContextPath();
+	$("#getJpNameAll").hide();
+	 var params = {
+		        "appKey": "7310dea0af7d4dceb69b84e1c850205e",
+		        "appSecret": "211e320d80534dcd5cd4574244004530"
+		    };
+		$.ajax({
+			url:'../FluorescentCloud/getAccessToken.action',
+		    async:false,
+			data:{},
+		    dataType: "json",
+			success:function(data){
+				var obj = JSON.parse(data);
+				Token =obj.data.accessToken;
+			},
+			error:function(e){
+				alert(e)
+			}
+		});
+		
+	var paramsToken = { "accessToken": Token };
+		$.ajax({
+			url:'../FluorescentCloud/getMonitorAll.action',
+		    async:false,
+			data:paramsToken,
+		    dataType: "json",
+			success:function(data){
+				var obj = JSON.parse(data);
+				$.each(obj.data,function (i,v) {
+					 $('<option></option>').attr("value", v.deviceSerial).html(v.deviceName).appendTo($("#getJpName"));
+				})
+				
+			}
+		});
+		
+		$.ajax({
+       		type: "post",
+       		url: "../testUserInfo/getTestUserName.html",
+       		data:{},
+        	async:false,
+        	dataType: "json",
+       		success: function (data) {
+        	//获取当前登录人做显示
+        	$(".userid").html(data.userName);
+        }
+    })
+})
+
+function JpisShow(){
+	$("#getJpNameAll").show();
+}
+
+function addJp(){
+	var deviceSerialAll = $("#JpList").children();
+	var isHave = true;
+	var code = $("#getJpName").val();
+	var deviceSerial = code+":1";
+	 var params = {
+		        "accessToken": Token,
+		        "source": deviceSerial
+		    };
+	 $.ajax({
+			url:'../FluorescentCloud/getMonitorUrl.action',
+		    async:false,
+			data:params,
+		    dataType: "json",
+			success:function(data){
+				var obj = JSON.parse(data);
+				var videoId = obj.data[0].deviceSerial;
+				for (var i = 0; i < deviceSerialAll.length; i++) {
+					if(deviceSerialAll[i]==code){
+						isHave = false;
+					} 
+				}
+				if(isHave){
+				var url = obj.data[0].rtmpHd;
+				$("#getJpNameAll").hide();
+	        	var vhtml =["<div>",
+	        		"<video id=\""+videoId+"\" poster=\"\" controls playsInline webkit-playsinline autoplay>",
+	        		"<source src=\""+url+"\" type=\"rtmp/flv\" />",
+	        		"</video>",
+	        		"<p onclick=\"Jpcontroller(0,\'"+videoId+"\')\">上</p>",
+	        		"<p onclick=\"Jpcontroller(1,\'"+videoId+"\')\">下</p>",
+	        		"<p onclick=\"Jpcontroller(2,\'"+videoId+"\')\">左</p>",
+	        		"<p onclick=\"Jpcontroller(3,\'"+videoId+"\')\">右</p>",
+	        		"<p onclick=\"Jpcontroller(4,\'"+videoId+"\')\">左上</p>",
+	        		"<p onclick=\"Jpcontroller(5,\'"+videoId+"\')\">左下</p>",
+	        		"<p onclick=\"Jpcontroller(6,\'"+videoId+"\')\">右上</p>",
+	        		"<p onclick=\"Jpcontroller(7,\'"+videoId+"\')\">右下</p>",
+	        		"<p onclick=\"Jpcontroller(8,\'"+videoId+"\')\">放大</p>",
+	        		"<p onclick=\"Jpcontroller(9,\'"+videoId+"\')\">缩小</p>",
+	        		"<p onclick=\"Jpcontroller(10,\'"+videoId+"\')\">近焦距</p>",
+	        		"<p onclick=\"Jpcontroller(11,\'"+videoId+"\')\">远焦距</p>",
+	        		"<p onclick=\"Jpstop(\'"+videoId+"\')\">停</p>",
+	        		"</div>"].join("");
+	        	$("#JpList").append(vhtml);
+	        	new EZUIPlayer(videoId);
+				}else{
+					alert("你已经添加该设备")
+				}
+			}
+		});
+}
+
+function Jpcontroller(id,deviceSerial){
+	
+	 var params = {
+		        "accessToken": Token,
+		        "deviceSerial": deviceSerial,
+		        "channelNo": 1,
+		        "direction": id,
+		        "speed": 1,
+		    };
+		$.ajax({
+			url:'../FluorescentCloud/controllerJp.action',
+		    async:false,
+			data:params,
+		    dataType: "json",
+			success:function(data){
+				var obj = JSON.parse(data);
+				//var code =obj.msg;
+				if(obj.code=='60000'){
+					alert("不支持云台设备")
+				}
+			},
+		});
+}
+
+function Jpstop(deviceSerial){
+	var params = {
+	        "accessToken":Token,
+	        "deviceSerial": deviceSerial,
+	        "channelNo": 1,
+	    };
+	$.ajax({
+		url:'../FluorescentCloud/controllerJpStop.action',
+	    async:false,
+		data:params,
+	    dataType: "json",
+		success:function(data){
+			var obj = JSON.parse(data);
+			var code =obj.msg;
+		},
+	});
+}
+
+function login(){
+	var password = $("#JpPassWord").val();
+	if(password==123){
+		$("#getAll").show();
+		$("#isLogin").hide();
+	}else{
+		alert("密码错误")
+	}
+}

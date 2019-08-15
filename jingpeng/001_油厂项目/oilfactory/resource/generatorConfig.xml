@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="context1">
+	<!--数据库地址、账号、密码-->
+    <jdbcConnection connectionURL="jdbc:mysql://localhost:3306/oilfactory" driverClass="com.mysql.jdbc.Driver" userId="root" password="123456"/>
+    <!--实体-->
+    <javaModelGenerator targetPackage="com.oil.model.client" targetProject="oilfactory" />
+    <!--mapper-->
+    <sqlMapGenerator targetPackage="com.oil.model.client" targetProject="oilfactory" />
+    <!--xml-->
+    <javaClientGenerator targetPackage="com.oil.model.client" targetProject="oilfactory" type="XMLMAPPER" />
+    <!--schema：数据库表名   tableName：生成的实体名-->
+    <table schema="userinfo" tableName="UserInfo"></table>
+  </context>
+</generatorConfiguration>

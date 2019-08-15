@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.WeighingCurveDao">
+	
+	<select id="getWeighingCurveEchar" parameterType="java.util.Map" resultType="java.util.Map">
+		
+		select 
+			p.Org_ID as org_ID,
+			o.Org_Name as orgName,
+			p.Weighing_Value as weighingValue,
+			CONVERT(varchar (100), p.Collection_Time, 20) as collectionTime
+		from Production_Curve p
+		left join 
+		Organization_Info o 
+		on o.id = p.Org_ID
+		where 1=1
+		<if test="startTime != null and startTime != ''">
+	        <![CDATA[ and CONVERT(varchar (100), p.Collection_Time, 20) >=  #{startTime}  ]]>
+	     </if>
+	    <if test="endTime != null and endTime != ''">
+	        <![CDATA[ and CONVERT(varchar (100), p.Collection_Time, 20) <=  #{endTime}  ]]>
+	    </if>
+		and p.Org_ID  = #{org_ID}
+		
+	</select>
+	
+	<select id="getOrganizationInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		
+		SELECT Id as id,Org_Name as orgName from Organization_Info  where 1=1 
+		  <foreach collection="org_ID" index="index" item="item" open=" AND Id IN (" separator="," close=")">
+			#{item}
+		  </foreach>
+	</select>
+	
+</mapper>

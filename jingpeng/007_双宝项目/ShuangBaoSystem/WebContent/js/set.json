@@ -1,0 +1,64 @@
+{
+    "projectName":"国道集贤至当壁公路宝山至宝清段改扩建工程试验室信息化智能管控系统",
+    "projectItem":[ 
+		{	"name":"试验信息",
+			"project":[
+		    	{"itemName":"试验汇总","itemUrl":"test_summaryNew.html","clickCLass":"focus_b","class":"nav2"},
+		    	{"itemName":"自动采集","itemUrl":"automatic_collection.html","clickCLass":"focus_e","class":"nav5"},
+		    	{"itemName":"指标维护","itemUrl":"maintenance.html","clickCLass":"focus_g","class":"nav7"},
+		    	{"itemName":"施工进度","itemUrl":"construction_schedule.html","clickCLass":"focus_c","class":"nav3"}
+		    ],
+		    "index_block":"index_item_block/test_index_block.html"
+	    },
+	    {
+	    	"name":"拌合站信息",
+			"project":[
+				{
+					"item_name":"沥青拌合站",
+					"item_project":[
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "生产分析","itemUrl": "product_analysis.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+					],
+					"page_url":"asphalt/asphalt.html"
+				},
+				{
+					"item_name":"水泥混凝土",
+					"item_project":[
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "生产分析","itemUrl": "product_analysis.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+					],
+					"page_url":"cement/cement.html"
+					
+				},
+				{
+					"item_name":"水稳拌合站",
+					"item_project":[
+						{"itemName": "生产统计","itemUrl": "production_statistics.html","clickCLass": "focus_d","class": "nav4","status": "statistic"},
+						{"itemName": "生产数据","itemUrl": "production_data.html","clickCLass": "focus_b","class": "nav2","status": "data"},
+						{"itemName": "原材料消耗","itemUrl": "materials_consumption.html","clickCLass": "focus_c","class": "nav3","status": "consumption"},
+						{"itemName": "预警信息查询","itemUrl": "warning_information.html","clickCLass": "focus_e","class": "nav5","status": "information"},
+						{"itemName": "预警偏差设置","itemUrl": "warning_deviation.html","clickCLass": "focus_f","class": "nav6","status": "deviation" }
+					],
+					"page_url":"cementStable/cementStable.html"
+					
+				}
+			],
+			"index_block":"index_item_block/mix_index_block.html"
+			
+	    }
+    
+    ],
+    "slides":[
+    	"../image/slides/img1.jpg",
+    	"../image/slides/img2.jpg",
+    	"../image/slides/img3.jpg"
+    ],
+    "index_block_img":"../image/images/about.jpg",
+    "index_block_text":"<div><h2 style='font-size:17px;color: #015eb1;margin-top:0;'>国道集贤至当壁公路宝山至宝清段改扩建工程试验室信息化智能管控系统</h2><p>国道集贤至当壁公路宝山至宝清段改扩建工程建设项目起点（K0+000）位于双鸭山市宝山区西侧城区规划边缘、宝山区交警队附近，即双七公路与乡道升宝公路交叉处，与在建的国道集贤至当壁公路尖山至宝山段终点位置相接；终点（K82+795.877）位于宝清县城的西南侧，现国道集当公路与饶盖公路交叉处（饶盖公路桩号K208+900）.路线全长84.567Km，其中新建45.77Km，利用旧路改扩建38.797Km。主线桥梁总长2494.16m/26座，其中大桥832.96/3座、中桥173.08m/3座、小桥513.88m/17座、分离式立交桥974.24m/3座，涵洞76道。路线设平面交叉95处、服务区1处、养护工区2处、七星泡连接线0.809Km/1处。本项目采用四车道一级集散公路标准，设计时速未80 Km/h，路基宽度22.5m，路面宽度19m，批复概算为22.58亿元人民币，建设工期为开工之日起24个月。</p><p>全线主要工程量：路基挖方327.9万m3，路基填方441.6万m3，特殊路基处理回填风化碎石92万m3、回填碎石15.6万m3；级配碎石垫层50.7万m2；4%水泥稳定级配碎石底基层：154.3万m2，4.5%水泥稳定级配碎石基层：189.4万m2；路面面层5cmAC-16（改性）沥青混凝土，6cmAC-20（改性）沥青混凝土，8cmATB-25沥青碎石，三层总面积520.9万m2.大桥832.96/3座、中桥173.08m/3座、小桥513.88m/17座（线下改移道路小桥27.54m/1座）、分离式立交桥974.24m/3座；圆管涵1759.82m/115道；盖板涵664.97m/31道；箱涵2505.1m/89道；防护圬工108549m3、排水圬工40724m3。</p></div>"
+}

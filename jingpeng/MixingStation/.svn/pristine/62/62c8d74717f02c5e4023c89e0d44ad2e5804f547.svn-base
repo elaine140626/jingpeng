@@ -1,0 +1,754 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../resources/css/style_sn.css">
+    <script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+	<script type="text/javascript" src="../resources/js/c_dtree.js"></script>
+	<script type="text/javascript" src="../resources/js/common.js"></script>
+	<script type="text/javascript">
+$b = $("#shu_btn");
+$("#toggle").on({
+	"click": function(){
+		$b.toggle();
+		return false;
+	}
+});
+$(document).on({
+	"click": function(e){
+		var src = e.target;
+
+		if(src.id && src.id ==="toggle"){
+			return false;
+		}else{
+			$("#content").hide();
+		}
+	}
+});
+
+</script>
+ <script type="text/javascript" language=JavaScript charset="UTF-8">
+        document.onkeydown=function(event){
+              var e = event || window.event || arguments.callee.caller.arguments[0];
+              if(e && e.keyCode==27){ // 按 Esc 
+                  closes();
+                }
+             
+         }; 
+ </script>
+</head>
+
+<body>
+<div class="top">
+	<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+    <div class="topright">
+    	<a href="../User/userinfo.action" class="userid">wangdanwei</a><span>你好！</span>
+        <a href="../Common/out.action" class="out">安全退出</a>
+    </div>
+     <div class="top_btn">
+    	<span class="lq_btn"><a href="../AsphaltProduceStatistic/asphaltProduceStatistic.action" class="hvr-bounce-to-top ">沥青</a></span>
+    	<span class="sn_btn"><a href="../cementProductionData/cement_ProductionStatistic.action" class="hvr-bounce-to-top focusbtn" >水泥</a></span>
+    </div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+            <ul>
+            	<li><a href="../cementProductionData/cement_ProductionStatistic.action" class="nav1">生产统计</a></li>
+                <li><a href="../cementMaterial/rawmaterial_manage.action" class="nav2">原材料管理</a></li>
+                <li>
+               	  <a href="../cementTheory/getCement_TheoryProportion.action" class="focus_c">配比管理<span>></span></a>
+               	  <div class="down">
+                    	<a href="../cementTheory/getCement_TheoryProportion.action">理论配比信息</a>
+                        <a href="../cementConstructionProp/cementConstructionProp.action">施工配比信息</a>
+                    </div>
+              </li>
+              <li><a href="../cement_Production/silo_correspondence.action" class="nav4">料仓对应关系</a></li>
+                <li>
+               	  <a href="../cementProductionPlan/c_productionplan.action" class="nav3">生产管理<span>></span></a>
+                    <div class="down">
+                       <a href="../cementProductionPlan/c_productionplan.action">生产计划</a>
+                       <a href="../cementProductionData/c_Productiondata.action">生产数据</a>
+                    </div>
+              </li>
+            </ul>
+        </div>
+        <!-- <div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                            <script type="text/javascript">
+                                var baseUrl= getContextPath();
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.html",
+        							async:false,
+        							data : {"mixStation_Type":"1"},
+        							dataType : "json",
+        							success : function(data) {
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                            </script>
+                        </div>
+                        </div> -->
+        <div class="rightcon">
+            <div class="rightcon_wz">
+                <div class="location">您的位置：水泥混合料拌合站（<span class="banhez"  id = "locationText">综合一标</span>） > 配比管理 > 理论配比信息</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            <div class="shunav">
+            <div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                           <script type="text/javascript">
+                                var baseUrl= getContextPath();
+                                var orgid = "";
+                                var orgname = "";
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.action",
+        							async:false,
+        							data : {"mixStation_Type":"2"},
+        							dataType : "json",
+        							success : function(data) {
+        								var flag = true;
+        								
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        										if(flag){
+        											orgid = data[i].i_id;
+        	        								orgname = data[i].str_org_Name;
+        											//默认指向列表中第一个
+        											$("#locationText").text(data[i].str_org_Name);
+        											flag = false;
+        										}
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                                </script>
+                        </div>
+                        </div>
+                    <form action="" method="get" class="zbj sousuo">
+                        <label>理论配比编号：</label>
+                         <input name="" type="input" id="theoreticalProportionNumber" class="search_input rightwbj" >
+                       <!--  <input type="text" value="输入编号" class="search_input rightwbj"> -->
+                        <label>产品名称：</label>
+                         <input name="" type="input" id="productName" class="search_input rightwbj" >
+                        <label>产品型号：</label>
+                        <input name="" type="input" id="productModel" class="search_input rightwbj" >
+                        <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="getPbgl_1Select()">
+                    </form>
+                    </div>
+                <div class="table-b">
+                    <div class="luru"><a href="#" class="hvr-icon-forward globalLoginBtn" onclick="getStrName()">新增录入</a></div>
+                    <div class="table-a-right table-c-right">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="llConstruction">
+                            <thead>
+                            <tr>
+                                <th scope="col" class="scsj_xh" style="text-align: center">序号</th>
+                                <th scope="col" class="llpb_bh10" style="text-align: center">理论配比编号</th>
+                                <th scope="col" class="llpb_xh12" style="text-align: center">产品名称/型号</th>
+                                <th scope="col" style="text-align: center">设计水灰比(%)</th>
+                                <th scope="col" style="text-align: center">坍落度(mm)</th>
+                                <th scope="col" style="text-align: center">设计强度(MPa)</th>
+                                <th scope="col" style="text-align: center">砂率(%)</th>
+                                <th scope="col" style="text-align: center">制定人</th>
+                                <th scope="col" style="text-align: center">制定时间</th>
+                                <th scope="col" style="text-align: center; width:10%;">操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <!-- <div class="fud">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                <tr class="mbphb_luru_dise">
+                                    <td class="xh10">序号</td>
+                                    <td>材料名称/型号</td>
+                                    <td>理论配比用量</td>
+                                    <td>生产厂家</td>
+                                    <td>产地</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>水泥材料AC-20</td>
+                                    <td>5000.00</td>
+                                    <td>吉林长春什么公司</td>
+                                    <td>河北</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>水泥材料AC-20</td>
+                                    <td>4800.00</td>
+                                    <td>长春吉林什么公司</td>
+                                    <td>北京</td>
+                                </tr>
+                            </table>
+
+                        </div> -->
+                        <!-- <div class="page">
+                            <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div> -->
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<div class="bottom">
+    <a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="tan_dx_title">
+                <span><img src="../resources/images/bi.png" width="16" height="16"></span>
+                <h3>理论配比信息</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+            </div>
+            <div class="tan_dx_txt" id="i_org_Id" value=3>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                    <tr>
+                        <td width="21%" align="right">理论配比编号：</td>
+                        <td colspan="3"><input name="textfield" type="text" onKeyUp="value=value.replace(/[\W]/g,'')" id="str_prop_Code" placeholder="输入理论配比编号" class="input430"  maxlength="40"><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">产品名称：</td>
+                        <td width="22%"><select name="select3" size="1" id="str_material_Name" onchange="getStrModel()"> <!--onFocus="getMaterialName();"-->
+                        </select><span style="color:red;padding-left: 10px">*</span></td>
+                        <td width="9%" align="right">规格型号：</td>
+                        <td width="48%"><select name="select4" size="1" id="str_material_Model"> <!--onFocus="getMaterialModel();"-->
+                        </select><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">设计水灰比(%)：</td>
+                        <td><input name="textfield2" type="text" id="d_water_Cement_Ratio" placeholder="输入设计水灰比"  /><span style="color:red;padding-left: 10px">*</span></td>
+                        <td align="right">砂率(%)：</td>
+                        <td><input name="textfield4" type="text" id="d_sand_Ratio" placeholder="输入砂率" /><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">设计强度(MPa)：</td>
+                        <td><input name="textfield3" type="text" id="str_design_Strength" placeholder="输入设计强度" /><span style="color:red;padding-left: 10px">*</span></td>
+                        <td align="right">&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td align="right">坍落度(mm)：</td>
+                        <td><input name="textfield5" type="text" id="i_slump_Low" placeholder="输入坍落度" />
+                            --</td>
+                        <td colspan="2"><input name="textfield6" type="text" id="i_slump_High" placeholder="输入坍落度" /><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">制定人：</td>
+                        <td colspan="3"><input name="textfield7" type="text" id="str_operator" placeholder="输入指定人"  maxlength="10"/><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">备注：</td>
+                        <td colspan="3"><textarea name="textarea" cols="57" rows="3" id="str_remarks" placeholder="输入备注" class="sbj" style="resize: none" maxlength="450"></textarea></td>
+                    </tr>
+                </table>
+                <form id="asph_TargetPropList">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="llpb_luru sbj mbphb_bg jz bk table2" id="detailedTab">
+                        <thead>
+                        <tr class="mbphb_luru_dise">
+                            <!-- <td width="5%" style="display: none">序号</td>
+                            <td width="17%">材料名称</td>
+                            <td width="16%">规格型号</td>
+                            <td width="19%">材料用量</td>
+                            <td width="23%">厂家</td>
+                            <td width="14%">产地</td> -->
+                            <td colspan="2" align="center"><strong>原材料</strong></td>
+                    		<td width="10%" align="center"><strong>原材料用量</strong></td>
+                   			<td width="16%" align="center">厂家</td>
+                   			<td width="16%" align="center">产地</td>
+                            <td width="6%" align="center"><a onclick="addrow();" href="javascript:void(0)"><img src="../resources/images/jia2.png" width="16" height="16"></a></td>
+                        </tr>
+
+                        </thead>
+                        <tbody id="tbIds">
+                        <tr class="h50">
+                            <td width="5%" style="display: none">1</td>
+                            <td width="17%"><select name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));">
+                            </select></td>
+                            <!-- onfocus="getGgModel($(this));" -->
+                            <td width="16%"><select   name="i_materials_Id" id="str_material_Model" >
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value="" maxlength="20"></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="" size="10" value="" maxlength="20"></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                        <tr class="h50">
+                            <td width="5%" style="display: none">2</td>
+                            <td width="17%"><select name="str_material_Name"  onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select name="i_materials_Id" id="str_material_Model">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value="" maxlength="20"></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="" size="10" value="" maxlength="20"></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                         <tr class="h50">
+                            <td width="5%" style="display: none">3</td>
+                            <td width="17%"><select name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select   name="i_materials_Id" id="str_material_Model"">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value="" maxlength="20"></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="" size="10" value="" maxlength="20"></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                         <tr class="h50">
+                            <td width="5%" style="display: none">4</td>
+                            <td width="17%"><select  name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select name="i_materials_Id" id="str_material_Model">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value="" maxlength="20"></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="" size="10" value=""  maxlength="20"></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                         <tr class="h50">
+                            <td width="5%" style="display: none">5</td>
+                            <td width="17%"><select  name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select  name="i_materials_Id" id="str_material_Model">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value=""  maxlength="20"></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="" size="10" value="" maxlength="20"></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+
+                   </tbody>
+                    </table>
+                </form>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                    <tr>
+                        <td align="center"><input type="button" name="button" value="保&nbsp;&nbsp;存" class="btn_bc" id="btnCementTheory" onclick="addCement_T(1)"></td>
+                    </tr>
+                </table>
+                <script type="text/javascript">
+
+                    var Flag = 1;
+                    var count = 1;
+                    /*function addrow(){
+
+                        var num = parseInt(100 * Math.random());
+                        $("#num").val(num);
+                        var tables = $('.table2');
+                        var tempTR = '<tr name="' + num + 'AfteRzsdtype"><td>' + (parseInt(count++) + 1) + '</td>' +
+                            '<td><select id="MateName' + num + '" name="MateName' + num + '"  onchange="ChangeMateModelOther(this)"></select></td> ' +
+                            '<td><select id="MateModel' + num + '"  name="MateModel' + num + '" ></select></td>' +
+                            '<td><input class="texta" type="text" id="' + num + 'Prop" name="' + num + 'Prop"   maxlength="18" ></input></td>' +
+                            '<td><select id="Manufacturer' + num + '"  name="Manufacturer' + num + '" ></select></td>' +
+                            '<td><select id="Material_Origin' + num + '"  name="Material_Origin' + num + '"  ></select></td>' +
+                            '<td><img src="../resources/images/del.png" onclick="RemoveMaterialAdd(this.parentElement.parentElement.rowIndex);"></td>' +
+                            '</tr>';
+                        tables.append(tempTR)
+
+
+                    }*/
+
+
+
+
+
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="loginModal2">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="tan_dx_title">
+          		<span><img src="../resources/images/bi.png" width="16" height="16"></span>
+                <h3>理论配比信息修改</h3>
+                <button type="button" id="upDatelogin_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close" onclick="closes()">×</span></button>
+            </div>
+            <div class="tan_dx_txt" id="upDatei_org_Id" value=3>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                	<tr>
+                		<td id="i_id" style="display: none"></td>
+                	</tr>
+                    <tr>
+                        <td width="21%" align="right">理论配比编号：</td>
+                        <td colspan="3"><input name="textfield" type="text" id="upDateStr_prop_Code" placeholder="输入理论配比编号" class="input430" onmouseout="getStrName()" disabled="disabled" ><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">产品名称：</td>
+                        <td width="22%"><select name="select3" size="1" id="upDateStr_material_Name" onchange="getStrModel()" disabled="disabled"> <!--onFocus="getMaterialName();"-->
+                        </select><span style="color:red;padding-left: 10px">*</span></td>
+                        <td width="9%" align="right">规格型号：</td>
+                        <td width="48%"><select name="select4" size="1" id="upDateStr_material_Model" disabled="disabled"> <!--onFocus="getMaterialModel();"-->
+                        </select><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">设计水灰比(%)：</td>
+                        <td><input name="textfield2" type="text" id="upDateD_water_Cement_Ratio" placeholder="输入设计水灰比" /><span style="color:red;padding-left: 10px">*</span></td>
+                        <td align="right">砂率(%)：</td>
+                        <td><input name="textfield4" type="text" id="upDateD_sand_Ratio" placeholder="输入砂率" /><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">设计强度(MPa)：</td>
+                        <td><input name="textfield3" type="text" id="upDateStr_design_Strength" placeholder="输入设计强度" /><span style="color:red;padding-left: 10px">*</span></td>
+                        <td align="right">&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td align="right">坍落度(mm)：</td>
+                        <td><input name="textfield5" type="text" id="upDateI_slump_Low" placeholder="输入坍落度" />
+                            --</td>
+                        <td colspan="2"><input name="textfield6" type="text" id="upDateI_slump_High" placeholder="输入坍落度" /><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">制定人：</td>
+                        <td colspan="3"><input name="textfield7" type="text" id="upDateStr_operator" placeholder="输入指定人"  maxlength="10"/><span style="color:red;padding-left: 10px">*</span></td>
+                    </tr>
+                    <tr>
+                        <td align="right">备注：</td>
+                        <td colspan="3"><textarea name="textarea" cols="57" rows="3" id="upDateStr_remarks" placeholder="输入备注" class="sbj" style="resize: none"  maxlength="450"></textarea></td>
+                    </tr>
+                </table>
+                <form id="asph_TargetPropList2">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="llpb_luru sbj mbphb_bg jz bk table2" id="upDateDetailedTab">
+                        <thead>
+                        <tr class="mbphb_luru_dise">
+                            <!-- <td width="5%" style="display: none">序号</td>
+                            <td width="17%">材料名称</td>
+                            <td width="16%">规格型号</td>
+                            <td width="19%">材料用量</td>
+                            <td width="23%">厂家</td>
+                            <td width="14%">产地</td> -->
+                             <td colspan="2" align="center"><strong>原材料</strong></td>
+                    		<td width="10%" align="center"><strong>原材料用量</strong></td>
+                   			<td width="16%" align="center">厂家</td>
+                   			<td width="16%" align="center">产地</td>
+                            <td width="6%" align="center"><a onclick="addrow();" href="javascript:void(0)"><img src="../resources/images/jia2.png" width="16" height="16"></a></td>
+                        </tr>
+
+                        </thead>
+                        <tbody id="tbIds2">
+                        <!-- <tr class="h50">
+                            <td width="5%" >1</td>
+                            <td width="17%"><select name="updateStr_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));">
+                            </select></td>
+                            onfocus="getGgModel($(this));"
+                            <td width="16%"><select   name="updateI_materials_Id" name="updateStr_material_Model" >
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="输入用量" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="输入厂家" size="15" value=""></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="产地" size="10" value=""></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed(this)"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                        <tr class="h50">
+                            <td width="5%" >2</td>
+                            <td width="17%"><select name="str_material_Name"  onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select name="updateI_materials_Id" name="str_material_Model">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="输入用量" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="输入厂家" size="15" value=""></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="产地" size="10" value=""></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed(this)"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                         <tr class="h50">
+                            <td width="5%" >3</td>
+                            <td width="17%"><select name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select   name="updateI_materials_Id" name="str_material_Model"">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="输入用量" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="输入厂家" size="15" value=""></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="产地" size="10" value=""></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed(this)"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                         <tr class="h50">
+                            <td width="5%" >4</td>
+                            <td width="17%"><select  name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select name="updateI_materials_Id" name="str_material_Model">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="输入用量" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="输入厂家" size="15" value=""></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="产地" size="10" value=""></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed(this)"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr>
+                        
+                         <tr class="h50">
+                            <td width="5%" >5</td>
+                            <td width="17%"><select  name="str_material_Name" onfocus="getMaterialName($(this));"  onchange="getMaterialModel($(this));" >
+                            </select></td>
+                            
+                            <td width="16%"><select  name="updateI_materials_Id" name="str_material_Model">
+                                <option value="" selected="selected"></option></select></td>
+
+                            <td width="19%" align="center"><input  name="d_weight" type="text" placeholder="输入用量" size="10" value="" onkeyup="numcn(this)"></td>
+
+                            <td width="23%" align="center"><input name="str_manufacturer" type="text" placeholder="输入厂家" size="15" value=""></td>
+
+                            <td width="14%" align="center"><input  name="str_material_Origin" type="text" placeholder="产地" size="10" value=""></td>
+                            <td width="6%" align="center"><a href="javascript:void(0)" onclick="delDetailed(this)"><img src="../resources/images/del.png" width="16" height="16"></a></td>
+                        </tr> -->
+
+                   </tbody>
+                    </table>
+                </form>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                    <tr>
+                        <td align="center"><input type="button" name="button" value="保&nbsp;&nbsp;存" class="btn_bc" id="btnCementTheory" onclick="addCement_T(2)"></td>
+                    </tr>
+                </table>
+                <script type="text/javascript">
+
+                    var Flag = 1;
+                    var count = 1;
+                    /*function addrow(){
+
+                        var num = parseInt(100 * Math.random());
+                        $("#num").val(num);
+                        var tables = $('.table2');
+                        var tempTR = '<tr name="' + num + 'AfteRzsdtype"><td>' + (parseInt(count++) + 1) + '</td>' +
+                            '<td><select id="MateName' + num + '" name="MateName' + num + '"  onchange="ChangeMateModelOther(this)"></select></td> ' +
+                            '<td><select id="MateModel' + num + '"  name="MateModel' + num + '" ></select></td>' +
+                            '<td><input class="texta" type="text" id="' + num + 'Prop" name="' + num + 'Prop"   maxlength="18" ></input></td>' +
+                            '<td><select id="Manufacturer' + num + '"  name="Manufacturer' + num + '" ></select></td>' +
+                            '<td><select id="Material_Origin' + num + '"  name="Material_Origin' + num + '"  ></select></td>' +
+                            '<td><img src="../resources/images/del.png" onclick="RemoveMaterialAdd(this.parentElement.parentElement.rowIndex);"></td>' +
+                            '</tr>';
+                        tables.append(tempTR)
+
+
+                    }*/
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="modal fade" id="loginModal2">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="tan_dx_title">
+                <span><img src="../resources/images/bi.png" width="16" height="16"></span>
+                <h3>编辑理论配比信息</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+            </div>
+            <div class="tan_dx_txt">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                    <tr>
+                        <td width="21%" align="right">理论配比编号：</td>
+                        <td colspan="3"><input name="textfield" type="text" id="textfield" placeholder="输入理论配比编号" class="input430"></td>
+                    </tr>
+                    <tr>
+                        <td align="right">产品名称：</td>
+                        <td width="22%"><select name="select3" size="1" id="select2">
+                            <option>水泥混合料</option>
+                        </select></td>
+                        <td width="9%" align="right">规格型号：</td>
+                        <td width="48%"><select name="select4" size="1" id="select3">
+                            <option>AC-20</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td align="right">设计水灰比(%)：</td>
+                        <td><input name="textfield2" type="text" id="textfield2" placeholder="输入设计水灰比" /></td>
+                        <td align="right">砂率(%)：</td>
+                        <td><input name="textfield4" type="text" id="textfield4" placeholder="输入砂率" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">设计强度(MPa)：</td>
+                        <td><input name="textfield3" type="text" id="textfield3" placeholder="输入设计强度" /></td>
+                        <td align="right">&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td align="right">坍落度(mm)：</td>
+                        <td><input name="textfield5" type="text" id="textfield5" placeholder="输入坍落度" />
+                            --</td>
+                        <td colspan="2"><input name="textfield6" type="text" id="textfield6" placeholder="输入坍落度" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">制定人：</td>
+                        <td colspan="3"><input name="textfield7" type="text" id="textfield7" placeholder="输入指定人" /></td>
+                    </tr>
+                    <tr>
+                        <td align="right">备注：</td>
+                        <td colspan="3"><textarea name="textarea" cols="57" rows="3" id="textarea" placeholder="输入备注" class="sbj"></textarea></td>
+                    </tr>
+                </table>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="llpb_luru sbj mbphb_bg jz bk table2" id="detailedTab2">
+                    <tr class="mbphb_luru_dise">
+                        <td width="5%">序号</td>
+                        <td width="17%">材料名称</td>
+                        <td width="16%">规格型号</td>
+                        <td width="19%">材料用量</td>
+                        <td width="23%">厂家</td>
+                        <td width="14%">产地</td>
+                        <td width="6%"><img src="../resources/images/jia2.png" width="16" height="16" class="button"  onclick="addrow();"></td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td><select name="select2" size="1" id="select">
+                            <option></option>
+                        </select></td>
+                        <td><select name="select2" size="1" id="select">
+                            <option></option>
+                        </select></td>
+                        <td><input name="textfield" type="text" id="textfield" placeholder="输入"></td>
+                        <td><select name="select2" size="1" id="select">
+                            <option></option>
+                        </select></td>
+                        <td><select name="select2" size="1" id="select">
+                            <option></option>
+                        </select></td>
+                        <td>&nbsp;</td>
+                    </tr>
+
+                </table>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                    <tr>
+                        <td align="center"><input type="submit" name="button" value="保&nbsp;&nbsp;存" class="btn_bc"></td>
+                    </tr>
+                </table>
+                <script type="text/javascript">
+
+                
+                    function addrow(){
+                        var tables = $('.table2');
+
+                        var num = parseInt(100 * Math.random());
+                        $("#num").val(num);
+                        var tempTR = '<tr name="' + num + 'AfteRzsdtype"><td>' + (parseInt(count++) + 1) + '</td>' +
+                            '<td><select id="MateName' + num + '" name="MateName' + num + '"  onchange="ChangeMateModelOther(this)"></select></td> ' +
+                            '<td><select id="MateModel' + num + '"  name="MateModel' + num + '" ></select></td>' +
+                            '<td><input class="texta" type="text" id="' + num + 'Prop" name="' + num + 'Prop"   maxlength="18" ></input></td>' +
+                            '<td><select id="Manufacturer' + num + '"  name="Manufacturer' + num + '" ></select></td>' +
+                            '<td><select id="Material_Origin' + num + '"  name="Material_Origin' + num + '"  ></select></td>' +
+                            '<td><img src="../resources/images/del.png" onclick="RemoveMaterialAdd(this.parentElement.parentElement.rowIndex);"></td>' +
+                            '</tr>';
+                        tables.append(tempTR)
+
+                    }
+
+                    //删除动态添加行
+                    function RemoveMaterialAdd(rowIndex) {
+
+                        var table = document.all['ZsdTable'];
+
+                        table.deleteRow(rowIndex);
+                        count = count - 1;
+                    }
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+ <div class="fud" id="mydiv1" style="position:absolute;display:none;margin-left:100px;">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+      <tr class="mbphb_luru_dise">
+        <td class="xh10">序号</td>
+        <td>理论配比用量</td>
+        <td>生产厂家</td>
+        <td>产地</td>
+      </tr>
+      <tbody id="nr_l_new"></tbody>
+    </table>
+</div>
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<!-- <script type="text/javascript" src="../resources/js/script.js"></script> -->
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/cement_target_ratio.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+
+
+</body>
+</html>

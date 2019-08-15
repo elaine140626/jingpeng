@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title>吉东公路盲样检测系统</title>
+		<script src="../resources/Jqjs/jquery-2.1.4.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/swiper.min.js" type="text/javascript" charset="utf-8"></script>	
+		<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/swiper.min.css" />
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/common.css" />
+		<script src="../resources/Jqjs/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/chalk.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/videoSurveillance.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/Jqjs/chart.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/1.4/ckplayer/ckplayer.js"></script>
+		<script type="text/javascript" src="../resources/1.4/ezuikit.js"></script>
+		<script type="text/javascript" src="../resources/Jqjs/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+		<script type="text/javascript"
+		src="../resources/DataTables/datatables.js"></script>
+		<style type="text/css">
+			#myPlayer,
+			#myPlayer2,
+			#myPlayer3 {
+				width: 100%;
+				position: absolute;
+				top: 30px;
+				height: calc(100% - 30px) !important;
+			}
+			#selectMyPlayer,#selectMyPlayer2,#selectMyPlayer3 {
+				width: 100%;
+				height: 30px;
+				position: absolute;
+				top: 0;
+				background:#293567;
+				font-weight: bold;
+				color: rgba(255, 255, 255, .7);
+			}
+			.pagination {
+				position: relative;
+			    left: 50%;
+			    transform: translate(-50%,0%);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="contain">
+			<div id="blind" class="half mleft0 mbottom">
+				<h3 class="title">试验汇总展示</h3>
+				<div id="main"></div>
+				<div id="count"></div>
+			</div>
+			<div id="automatic" class="half mleft1 mbottom">
+				<h3 class="title">自动采集查询</h3>
+				<div class="swiper-container" id="swiper1">
+					<div class="swiper-wrapper" id="zdcj">						
+					</div>
+				</div>
+			</div>
+			<div id="mixing" class="half mleft0">
+				<h3 class="title">盲样查询</h3>
+				<div class="swiper-container" id="swiper2">
+					<div class="swiper-wrapper" id="myjc">
+					</div>
+				</div>
+			</div>
+			<div id="camera" class="half mleft1">
+				<!--<h3 class="title">现场</h3>-->
+				<div id="mp4">
+					<div class="cameraDetai0">
+						<div class="cameraa">
+							<p style="text-align:center">监理1</p>
+							<div id="myPlayerDiv">
+							</div>
+						</div>
+						<div class="cameraa">
+							<p style="text-align:center">监理2</p>
+							<div id="myPlayerDiv2">
+							</div>
+						</div>
+					</div>
+					<div class="cameraDetai0">
+						<div class="cameraa">
+							<!-- <select id="selectMyPlayer3" onchange="VsById3()">
+								<option value="-1" selected="selected">选择监控区域</option>
+							</select> -->
+							<p style="text-align:center">中心试验室</p>
+							<div id="myPlayerDiv3">
+							</div>
+						</div>
+						<div class="cameraa last">
+							<div class="cameraText">实时监控区</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">详细数据</h4>
+					</div>
+					<div class="modal-body">
+						<div class="lq_main">
+							<div class="lq_biao">
+								<table id="autoCollection" width="100%" border="0" cellpadding="0"
+								cellspacing="0" class="bgcolor">
+								<thead>
+									<tr>
+										<th width="6%" class="xh" scope="col">序号</th>
+										<th width="9%" scope="col">试验室名称</th>
+										<th width="7%" scope="col">试验类别</th>
+										<th width="20%" scope="col">试验名称</th>
+										<th width="9%" scope="col">样品编号</th>
+										<th width="9%" scope="col">试件个数</th>
+										<th width="9%" scope="col">试验日期</th>
+										<th width="10%" scope="col">试验员</th>
+										<th width="9%" scope="col">结果判定</th>
+									</tr>
+								</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+		<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">详细数据</h4>
+					</div>
+					<div class="modal-body">
+						<div class="lq_main">
+							<div class="lq_biao">
+								<table id="blindInfo" width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+								   <thead>
+									<tr>
+										<th scope="col" class="xh">序号</th>
+										<th scope="col">试验室名称</th>
+										<th scope="col">试验类别</th>
+										<th scope="col">试验名称</th>
+										<th scope="col">试验状态</th>
+										<th scope="col">样品编号</th>
+										<th scope="col">施工单位</th>
+										<th scope="col">工程名称</th>
+										<th scope="col">样品名称</th>
+										<th scope="col">工程部位/用途</th>
+										<th scope="col">试验日期</th>
+										<th scope="col">试验员</th>
+										<th scope="col">结果判定</th>
+									</tr>
+									</thead>
+								</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal -->
+		</div>
+
+
+	</body>
+
+</html>

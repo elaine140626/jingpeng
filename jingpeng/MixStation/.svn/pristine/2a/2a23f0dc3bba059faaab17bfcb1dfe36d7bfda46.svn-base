@@ -1,0 +1,47 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.jingpeng.model.AsphaltGrad_DataAnalysis;
+import com.jingpeng.model.AsphaltProp_DataAnalysis;
+import com.jingpeng.model.Asphalt_ProductionDTO;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+
+@Repository
+public class TestInfoDao extends KDDaoSupport{
+	private final static String NAMESPACE = "testInfo";
+
+	public List<Map<String, Object>> getTestSummary(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getTestSummary", map);
+	}
+	
+	public List<Map<String, Object>> getTestSummaryDetailed(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getTestSummaryDetailed", map);
+	}
+	
+	public List<Map<String, Object>> getTestSummaryDetailedNumber(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getTestSummaryDetailedNumber", map);
+	}
+	
+	public List<Map<String, Object>> getCollection(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getCollection", map);
+	}
+	
+	public List<Map<String, Object>> getCollectionSubtable(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getCollectionSubtable", map);
+	}
+	
+	public List<Map<String, Object>> getChart(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getChart", map);
+	}
+}

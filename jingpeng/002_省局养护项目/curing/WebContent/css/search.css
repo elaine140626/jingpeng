@@ -1,0 +1,32 @@
+.search-line {
+	text-align: left;
+	overflow: hidden;
+}
+.search-btn {
+/* 	float: right;
+	margin-right: 50px; */
+}
+table tr p {
+	margin-bottom: 0px;
+	overflow: hidden;
+}
+table tr {
+	height:30px;
+}
+.table{
+	/* min-height: 600px; */
+}	
+.table tr td {
+    text-align: center;
+    border-left: 1px solid #ECECEC;
+    border-right: 1px solid #ECECEC;
+    border-bottom: 1px solid #ECECEC;
+    font-size: 15px;
+    color: #909090;
+    height: 37px;
+}
+
+.search-title {
+	overflow: hidden;
+	font-size: 24px;
+}

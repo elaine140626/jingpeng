@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>视频监控</title>
+<style>
+        body{margin:0;}
+        #myPlayer{max-width: 1200px;width: 100%;}
+        #myPlayer2{max-width: 500px;width: 100%;}
+        #myPlayer3{max-width: 800px;width: 100%;}
+</style>
+<script src="../resources/1.4/ckplayer/ckplayer.js"></script>
+</head>
+<body>
+<script type="text/javascript" src="../resources/1.4/ezuikit.js"></script>
+
+<video id="myPlayer" poster="" controls playsInline webkit-playsinline autoplay>
+    <source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />
+   <!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+</video>
+
+
+<video id="myPlayer2" poster="" controls playsInline webkit-playsinline autoplay>
+    <source src="rtmp://live.hkstv.hk.lxdns.com/live/hks" type="rtmp/flv" />
+   <!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+</video>
+
+<video id="myPlayer3" poster="" controls playsInline webkit-playsinline autoplay>
+    <source src="rtmp://pull-g.kktv8.com/livekktv/100987038" type="rtmp/flv" />
+   <!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+</video>
+
+<script type="text/javascript">
+
+new EZUIPlayer('myPlayer');
+new EZUIPlayer('myPlayer2');
+new EZUIPlayer('myPlayer3');
+
+//解除注释 监听事件信息
+/*	var player = new EZUIPlayer('myPlayer');
+	var player2 = new EZUIPlayer('myPlayer2');
+	var player3 = new EZUIPlayer('myPlayer3');
+	// 注册错误事件回调
+  player.on('error', function(){
+    console.log('error');
+});
+	//注册播放事件回调
+player.on('play', function(){
+    console.log('play');
+});
+	//注册暂停事件回调
+player.on('pause', function(){
+    console.log('pause');
+});
+player.on('waiting', function(){
+    console.log('waiting');
+}); 
+
+
+// 日志
+player.on('log', log); */
+
+function log(str){
+   var div = document.createElement('DIV');
+   div.innerHTML = (new Date()).Format('yyyy-MM-dd hh:mm:ss.S') + JSON.stringify(str);
+   document.body.appendChild(div);
+}
+
+
+
+</script>
+
+</body>
+</html>

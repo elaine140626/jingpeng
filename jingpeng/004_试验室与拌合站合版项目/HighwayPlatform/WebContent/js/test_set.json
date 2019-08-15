@@ -1,0 +1,14 @@
+
+{
+    "projectName":"吉东公路智慧公路平台",
+    "projectItem":[
+
+    	{"itemName":"试验收样","itemUrl":"test_received.html","clickCLass":"focus_d","class":"nav4"},
+    	{"itemName":"试验汇总","itemUrl":"test_summary.html","clickCLass":"focus_b","class":"nav2"},
+    	{"itemName":"试验查询","itemUrl":"test_query.html","clickCLass":"focus_c","class":"nav3"},
+    	{"itemName":"自动采集","itemUrl":"automatic_collection.html","clickCLass":"focus_e","class":"nav5"},
+    	{"itemName":"盲样检测","itemUrl":"blind_detection.html","clickCLass":"focus_f","class":"nav6"},
+    	{"itemName":"指标维护","itemUrl":"maintenance.html","clickCLass":"focus_e","class":"nav7"}
+    ]
+    
+}

@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SteelGuardrailDao">
+	<!-- 工程进度（钢护栏设置表）List取得 -->
+	<select id="getSteelGuardrailList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SteelGuardrailEntity">
+		SELECT
+		  sg.Id
+		  , sg.ProjectId                                 -- 项目id
+		  , sg.PileNumber                                -- 设置桩号
+		  , sg.BridgePart                                -- 桥梁过渡段（个）
+		  , sg.OrdinaryPart                              -- 普通段（米）
+		  , sg.AbductionPart                             -- 外展段（个）
+		  , sg.GuardrailLeft                             -- 护栏长度左侧（m） 
+		  , sg.GuardrailRight                            -- 护栏长度右侧（m）
+		  , sg.SteelPlate432                             -- 波形钢板L=4.32米（节）
+		  , sg.SteelPlate417                             -- 波形钢板L=4.17米（节）
+		  , sg.SteelColumn250                            -- φ140钢立柱L=2.50米立柱（根）
+		  , sg.SteelColumn250Strengthen                  -- φ140钢立柱L=2.50米立柱（根）
+		  , sg.SteelColumn165                            -- φ140钢立柱K=1.65米立柱（根）
+		  , sg.SteelColumn165Strengthen                  -- φ140钢立柱K=1.65米加强立柱（根）
+		  , sg.EndD1                                     -- 半圆形端头（个）D-1（重10.8）
+		  , sg.EndRT1                                    -- 半圆形端头（个）RT1（重22.1）
+		  , sg.FacadeMark                                -- 立面标记（个）
+		  , sg.TransitionPlate                           -- 过渡段材料数量（Kg）板
+		  , sg.TransitionColumn                          -- 过渡段材料数量（Kg）柱
+		  , sg.TransitionEmbedment                       -- 过渡段材料数量（Kg）预埋板
+		  , sg.OrdinaryPlate                             -- 普通段材料数量（Kg）板
+		  , sg.OrdinaryColumn                            -- 普通段材料数量（Kg）柱
+		  , sg.AbductionPlate                            -- 外展段材料数量（Kg）板
+		  , sg.AbductionColumn                           -- 外展段材料数量（Kg）柱
+		  , sg.AbductionC20                              -- 外展段材料数量（Kg）C20
+		  , sg.Remarks                                   -- 备注
+		  , sg.IsDel
+		  , sg.Creater
+		  , sg.CreaterDate
+		  , sg.Reviser
+		  , sg.ReviserDate 
+		FROM
+		  SteelGuardrail as sg 
+		  left join V_EntryTree as ve 
+		    on sg.ProjectId = ve.pid
+		WHERE
+		  sg.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sg.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sg.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sg.pileNumber like concat('%',#{pileNumber},'%') -- 根据中心桩号查询
+		  </if>
+		  order by sg.CreaterDate desc
+	</select>
+	
+		<select id="getSteelGuardrailListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   sg.PileNumber                                -- 设置桩号
+		  , sg.BridgePart                                -- 桥梁过渡段（个）
+		  , sg.OrdinaryPart                              -- 普通段（米）
+		  , sg.AbductionPart                             -- 外展段（个）
+		  , sg.GuardrailLeft                             -- 护栏长度左侧（m） 
+		  , sg.GuardrailRight                            -- 护栏长度右侧（m）
+		  , sg.SteelPlate432                             -- 波形钢板L=4.32米（节）
+		  , sg.SteelPlate417                             -- 波形钢板L=4.17米（节）
+		  , sg.SteelColumn250                            -- φ140钢立柱L=2.50米立柱（根）
+		  , sg.SteelColumn250Strengthen                  -- φ140钢立柱L=2.50米立柱（根）
+		  , sg.SteelColumn165                            -- φ140钢立柱K=1.65米立柱（根）
+		  , sg.SteelColumn165Strengthen                  -- φ140钢立柱K=1.65米加强立柱（根）
+		  , sg.EndD1                                     -- 半圆形端头（个）D-1（重10.8）
+		  , sg.EndRT1                                    -- 半圆形端头（个）RT1（重22.1）
+		  , sg.FacadeMark                                -- 立面标记（个）
+		  , sg.TransitionPlate                           -- 过渡段材料数量（Kg）板
+		  , sg.TransitionColumn                          -- 过渡段材料数量（Kg）柱
+		  , sg.TransitionEmbedment                       -- 过渡段材料数量（Kg）预埋板
+		  , sg.OrdinaryPlate                             -- 普通段材料数量（Kg）板
+		  , sg.OrdinaryColumn                            -- 普通段材料数量（Kg）柱
+		  , sg.AbductionPlate                            -- 外展段材料数量（Kg）板
+		  , sg.AbductionColumn                           -- 外展段材料数量（Kg）柱
+		  , sg.AbductionC20                              -- 外展段材料数量（Kg）C20
+		  , sg.Remarks                                   -- 备注 
+		FROM
+		  SteelGuardrail as sg 
+		  left join V_EntryTree as ve 
+		    on sg.ProjectId = ve.pid
+		WHERE
+		  sg.IsDel = 0
+		  order by sg.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（钢护栏设置表）合计 -->
+	<select id="getSteelGuardrailSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SteelGuardrailSum">
+		SELECT
+		  sum(sg.BridgePart)               as BridgePartSum                 -- 桥梁过渡段（个）
+		  , sum(sg.OrdinaryPart)           as OrdinaryPartSum               -- 普通段（米）
+		  , sum(sg.AbductionPart)          as AbductionPartSum              -- 外展段（个）
+		  , sum(sg.GuardrailLeft)          as GuardrailLeftSum              -- 护栏长度左侧（m） 
+		  , sum(sg.GuardrailRight)         as GuardrailRightSum             -- 护栏长度右侧（m）
+		  , sum(sg.SteelPlate432)          as SteelPlate432Sum              -- 波形钢板L=4.32米（节）
+		  , sum(sg.SteelPlate417)          as SteelPlate417Sum              -- 波形钢板L=4.17米（节）
+		  , sum(sg.SteelColumn250) + sum(sg.SteelColumn250Strengthen) + sum(sg.SteelColumn165) + sum(sg.SteelColumn165Strengthen) as SteelColumnSum -- φ140钢立柱L=2.50米立柱（根）
+		  , sum(sg.EndD1)                  as EndD1Sum                      -- 半圆形端头（个）D-1（重10.8）
+		  , sum(sg.EndRT1)                 as EndRT1Sum                     -- 半圆形端头（个）RT1（重22.1）
+		  , sum(sg.FacadeMark)             as FacadeMarkSum                 -- 立面标记（个）
+		  , sum(sg.TransitionPlate)        as TransitionPlateSum            -- 过渡段材料数量（Kg）板
+		  , sum(sg.TransitionColumn)       as TransitionColumnSum           -- 过渡段材料数量（Kg）柱
+		  , sum(sg.TransitionEmbedment)    as TransitionEmbedmentSum        -- 过渡段材料数量（Kg）预埋板
+		  , sum(sg.OrdinaryPlate)          as OrdinaryPlateSum              -- 普通段材料数量（Kg）板
+		  , sum(sg.OrdinaryColumn)         as OrdinaryColumnSum             -- 普通段材料数量（Kg）柱
+		  , sum(sg.AbductionPlate)         as AbductionPlateSum             -- 外展段材料数量（Kg）板
+		  , sum(sg.AbductionColumn)        as AbductionColumnSum            -- 外展段材料数量（Kg）柱
+		  , sum(sg.AbductionC20)           as AbductionC20Sum               -- 外展段材料数量（Kg）C20
+		FROM
+		  SteelGuardrail as sg 
+		  left join V_EntryTree as ve 
+		    on sg.ProjectId = ve.pid
+		WHERE
+		  sg.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sg.Id = #{id}                             -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sg.ProjectId = #{treeIds}                 -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sg.pileNumber like concat('%',#{pileNumber},'%') -- 根据中心桩号查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（钢护栏设置表） -->
+	<insert id="insertSteelGuardrail" parameterType="com.curing.projectSchedule.model.SteelGuardrailEntity">
+		INSERT 
+		INTO SteelGuardrail ( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , BridgePart
+		  , OrdinaryPart
+		  , AbductionPart
+		  , GuardrailLeft
+		  , GuardrailRight
+		  , SteelPlate432
+		  , SteelPlate417
+		  , SteelColumn250
+		  , SteelColumn250Strengthen
+		  , SteelColumn165
+		  , SteelColumn165Strengthen
+		  , EndD1
+		  , EndRT1
+		  , FacadeMark
+		  , TransitionPlate
+		  , TransitionColumn
+		  , TransitionEmbedment
+		  , OrdinaryPlate
+		  , OrdinaryColumn
+		  , AbductionPlate
+		  , AbductionColumn
+		  , AbductionC20
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{BridgePart}
+		  , #{OrdinaryPart}
+		  , #{AbductionPart}
+		  , #{GuardrailLeft}
+		  , #{GuardrailRight}
+		  , #{SteelPlate432}
+		  , #{SteelPlate417}
+		  , #{SteelColumn250}
+		  , #{SteelColumn250Strengthen}
+		  , #{SteelColumn165}
+		  , #{SteelColumn165Strengthen}
+		  , #{EndD1}
+		  , #{EndRT1}
+		  , #{FacadeMark}
+		  , #{TransitionPlate}
+		  , #{TransitionColumn}
+		  , #{TransitionEmbedment}
+		  , #{OrdinaryPlate}
+		  , #{OrdinaryColumn}
+		  , #{AbductionPlate}
+		  , #{AbductionColumn}
+		  , #{AbductionC20}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		);
+	</insert>
+	
+	<!-- 更新工程进度（钢护栏设置表） -->
+	<update id="updateSteelGuardrail" parameterType="com.curing.projectSchedule.model.SteelGuardrailEntity">
+		UPDATE SteelGuardrail 
+		SET
+		    PileNumber = #{PileNumber}
+		  , BridgePart = #{BridgePart}
+		  , OrdinaryPart = #{OrdinaryPart}
+		  , AbductionPart = #{AbductionPart}
+		  , GuardrailLeft = #{GuardrailLeft}
+		  , GuardrailRight = #{GuardrailRight}
+		  , SteelPlate432 = #{SteelPlate432}
+		  , SteelPlate417 = #{SteelPlate417}
+		  , SteelColumn250 = #{SteelColumn250}
+		  , SteelColumn250Strengthen = #{SteelColumn250Strengthen}
+		  , SteelColumn165 = #{SteelColumn165}
+		  , SteelColumn165Strengthen = #{SteelColumn165Strengthen}
+		  , EndD1 = #{EndD1}
+		  , EndRT1 = #{EndRT1}
+		  , FacadeMark = #{FacadeMark}
+		  , TransitionPlate = #{TransitionPlate}
+		  , TransitionColumn = #{TransitionColumn}
+		  , TransitionEmbedment = #{TransitionEmbedment}
+		  , OrdinaryPlate = #{OrdinaryPlate}
+		  , OrdinaryColumn = #{OrdinaryColumn}
+		  , AbductionPlate = #{AbductionPlate}
+		  , AbductionColumn = #{AbductionColumn}
+		  , AbductionC20 = #{AbductionC20}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（钢护栏设置表） -->
+	<update id="deleteSteelGuardrail" parameterType="com.curing.projectSchedule.model.SteelGuardrailEntity">
+		UPDATE SteelGuardrail 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

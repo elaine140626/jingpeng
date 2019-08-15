@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.systemInfo.dao.DataDictionarySystemInfoListDao">
+	<!-- 数据字典List取得 -->
+	<select id="getDataDictionarySystemInfoList" parameterType="java.util.Map" resultType="com.curing.systemInfo.model.DataDictionarySystemInfoListEntity">
+		SELECT
+		  Id
+		  , Type
+		  , Code
+		  , Content
+		  , ContentExplain
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		  , Reviser
+		  , ReviserDate
+		FROM
+		  DataDictionary
+		WHERE IsDel = 0
+		  AND Type =  #{Type}
+		  <if test="id != null and id != ''">
+			AND  id =  #{id}
+		  </if>
+	</select>
+	
+	<!-- 新增数据字典 -->
+	<insert id="insertDataDictionarySystemInfoList" parameterType="com.curing.systemInfo.model.DataDictionarySystemInfoListEntity">
+		INSERT 
+		INTO DataDictionary ( 
+		  Id
+		  ,Type
+		  , Code
+		  , Content
+		  , ContentExplain
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  ,	#{Type}
+		  , #{Code}
+		  , #{Content}
+		  , #{ContentExplain}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 更新数据字典 -->
+	<update id="updateDataDictionarySystemInfoList" parameterType="com.curing.systemInfo.model.DataDictionarySystemInfoListEntity">
+		UPDATE DataDictionary
+		SET
+		  Content = #{Content}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 删除数据字典-->
+	<delete id="deleteDataDictionarySystemInfoList"  parameterType="com.curing.systemInfo.model.DataDictionarySystemInfoListEntity">
+		DELETE FROM DataDictionary
+		WHERE Id = #{Id}
+	</delete>
+		
+</mapper>

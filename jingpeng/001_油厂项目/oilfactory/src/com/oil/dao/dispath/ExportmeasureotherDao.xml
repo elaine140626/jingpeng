@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.dispath.ExportmeasureotherDao">
+	<!-- 查询其它出库单列表 -->
+	<select id="getExportmeasureotherList" parameterType="java.util.Map"  resultType="com.oil.model.dispath.ExportmeasureotherEntity">
+		select
+			Id                          -- id
+	 		,PlateNumber		        -- 车牌号码
+			,Serial_ID		            -- 流水号
+		 	,Client			            -- 客户名称
+		 	,Unit			            -- 供料单位
+		 	,MaterielName	            -- 物料名称
+		 	,MaterielModel	            -- 规格型号
+			,TareWeight					-- 皮重
+			,GrossWeight			    -- 毛重	
+			,Suttle					    -- 净重		
+		 	,DeliveryMan		        -- 送货人
+		 	,DeliveryManPhone		    -- 送货电话
+		 	,FleetName				    -- 车队名称
+		 	,Consignee			        -- 收货人
+			,ConsigneePhone		        -- 收货人电话
+		 	,TestReport				    -- 检测报告编写
+			,Temperature				-- 温度（°C）
+			,QualityInspector	        -- 检斤员
+		 	,DATE_FORMAT(MeasureTime,'%Y-%m-%d %H:%i:%s') as MeasureTime  -- 称重时间		
+		 	,IsSelfMention	            -- 是否自提（默认否） 0:是 1:否		
+			,FacingSlipNum		        -- 封签号
+			,FacingSlipNum2		        -- 封签号
+			,FacingSlipNum3		        -- 封签号
+			,FacingSlipNum4		        -- 封签号
+			,Remarks			        -- 备注
+			,DriverAutograph		    -- 司机签名图片（路径）
+			,IsDel								
+			,Creater			
+		 	,CreaterDate						
+		 	,Reviser			
+			,ReviserDate			
+		from
+			exportmeasureother
+		WHERE 
+			IsDel = 0
+		<if test="id != null and id != ''"> 
+			and Id = #{id}    -- id
+		</if> 
+		<if test = "startTime != null and startTime != ''" >
+			and <![CDATA[  DATE_FORMAT(MeasureTime,'%Y-%m-%d')  >= #{startTime} ]]>  -- 称重时间
+		</if> 
+		<if test = "endTime != null and endTime != ''" >
+			and <![CDATA[  DATE_FORMAT(MeasureTime,'%Y-%m-%d')  <= #{endTime} ]]>    -- 称重时间
+		</if>
+		<if test="client != null and client != ''"> 
+			and Client= #{client}              -- 客户名称
+		</if>
+		<if test="plateNumber != null and plateNumber != ''"> 
+			and PlateNumber = #{plateNumber}   -- 车牌号码
+		</if>
+		<if test="fleetName != null and fleetName != ''"> 
+			and FleetName = #{fleetName}       -- 车队信息
+		</if>
+		<if test="deliveryMan != null and deliveryMan != ''"> 
+			and DeliveryMan = #{deliveryMan}   -- 送货人
+		</if>
+		<if test="materielName != null and materielName != ''"> 
+			and MaterielName = #{materielName} -- 产品名称
+		</if>
+		<if test="materielModel != null and materielModel != ''"> 
+			and MaterielModel = #{materielModel} -- 规格型号
+		</if>
+		order by Id desc
+	</select>
+	<!-- 新增其他出库单 -->
+	<insert id="insertExportmeasureother" parameterType="com.oil.model.dispath.ExportmeasureotherEntity">
+		INSERT 
+		INTO exportmeasureother( 
+			 PlateNumber		
+			,Serial_ID		
+		 	,Client			
+		 	,Unit			
+		 	,MaterielName	
+		 	,MaterielModel	
+			,TareWeight					
+			,GrossWeight				
+			,Suttle							
+		 	,DeliveryMan		
+		 	,DeliveryManPhone		
+		 	,FleetName				
+		 	,Consignee			
+			,ConsigneePhone		
+		 	,TestReport				
+			,Temperature				
+			,QualityInspector	
+		 	,MeasureTime			
+		 	,IsSelfMention			
+			,FacingSlipNum		
+			,FacingSlipNum2		
+			,FacingSlipNum3		
+			,FacingSlipNum4		
+			,Remarks			
+			,DriverAutograph
+			,IsDel		
+			,Creater			
+		 	,CreaterDate						
+		) 
+		VALUES ( 
+		 	  #{plateNumber}	
+			, #{serial_ID}
+		 	, #{client}
+		 	, #{unit}
+		 	, #{materielName}
+		 	, #{materielModel}
+			, #{tareWeight}			
+			, #{grossWeight}		
+			, #{suttle}				
+		 	, #{deliveryMan}
+		 	, #{deliveryManPhone}		
+		 	, #{fleetName}		
+		 	, #{consignee}	
+			, #{consigneePhone}	
+		 	, #{testReport}		
+			, #{temperature}		
+			, #{qualityInspector}	
+		 	, #{measureTime}	
+		 	, #{isSelfMention}		
+			, #{facingSlipNum}	
+			, #{facingSlipNum2}	
+			, #{facingSlipNum3}	
+			, #{facingSlipNum4}	
+			, #{remarks}		
+			, #{driverAutograph}
+			, 0 
+		    , #{creater}
+		    ,  now()
+		) 
+	</insert>
+	<!-- 编辑其他出库单信息  -->
+	<update id="updateExportmeasureother" parameterType="com.oil.model.dispath.ExportmeasureotherEntity">
+		UPDATE exportmeasureother
+		SET
+		 	 PlateNumber      = #{plateNumber}		
+			,Serial_ID        = #{serial_ID}		
+		 	,Client	          = #{client}		
+		 	,Unit             = #{unit}			
+		 	,MaterielName     = #{materielName}	
+		 	,MaterielModel    = #{materielModel}	
+			,TareWeight       = #{tareWeight}					
+			,GrossWeight      = #{grossWeight}				
+			,Suttle           = #{suttle}							
+		 	,DeliveryMan      = #{deliveryMan}		
+		 	,DeliveryManPhone = #{deliveryManPhone}		
+		 	,FleetName        = #{fleetName}				
+		 	,Consignee        = #{consignee}			
+			,ConsigneePhone   = #{consigneePhone}	
+		 	,TestReport       = #{testReport}				
+			,Temperature      = #{temperature}				
+			,QualityInspector = #{qualityInspector}	
+		 	,MeasureTime      = #{measureTime}			
+		 	,IsSelfMention    = #{isSelfMention}			
+			,FacingSlipNum    = #{facingSlipNum}		
+			,FacingSlipNum2   = #{facingSlipNum2}		
+			,FacingSlipNum3   = #{facingSlipNum3}		
+			,FacingSlipNum4   = #{facingSlipNum4}		
+			,Remarks          = #{remarks}			
+			,DriverAutograph  = #{driverAutograph}		
+		    ,Reviser          = #{reviser}			
+		    ,ReviserDate      = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 删除其它出库单信息  -->
+	<update id="deleteExportmeasureother" parameterType="java.util.Map">
+		UPDATE exportmeasureother
+		SET
+		    IsDel = 1    
+		    ,Reviser = #{reviser}			
+		    ,ReviserDate = NOW()            
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 客户名称检索list -->
+	<select id="getClientList" resultType="String">
+		select
+		DISTINCT
+			Client
+		from exportmeasureother   -- 其他出库单
+		where IsDel = 0
+	</select>
+	<!-- 车牌号码检索list -->
+	<select id="getPlateNumberList"  resultType="String">
+		select DISTINCT
+			PlateNumber
+		from exportmeasureother   -- 其他出库单
+		where IsDel = 0
+	</select>
+	<!-- 车队检索list -->
+	<select id="getFleetNameList"  resultType="String">
+		select DISTINCT
+			FleetName
+		from exportmeasureother   -- 其他出库单
+		where IsDel = 0
+	</select>
+	<!-- 送货人检索list -->
+	<select id="getDeliveryManList"  resultType="String">
+		select DISTINCT
+			DeliveryMan
+		from exportmeasureother   -- 其他出库单
+		where IsDel = 0
+	</select>
+	<!-- 产品名称检索list -->
+	<select id="getMaterielNameList" resultType="String">
+		select DISTINCT
+			MaterielName
+		from exportmeasureother  -- 其他出库单
+		where IsDel = 0
+	</select>
+	<!-- 规格型号检索list -->
+	<select id="getMaterielModelList" resultType="String">
+		select DISTINCT
+			MaterielModel
+		from exportmeasureother 
+		where IsDel = 0
+	</select>
+	<!-- 删除司机电子签名 -->
+	<update id="deleteElectronicsName" parameterType="java.util.Map">
+		update exportmeasureother set DriverAutograph = null
+		where Id = #{id}
+	</update>
+</mapper>

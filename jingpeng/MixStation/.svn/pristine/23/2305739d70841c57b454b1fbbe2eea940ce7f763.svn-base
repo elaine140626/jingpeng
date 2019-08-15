@@ -1,0 +1,176 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>吉东公路盲样检测系统</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree2.css"/>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree2.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+</head>
+
+<body>
+<div class="top">
+
+        <div class="topleft">吉东公路盲样检测系统</div>
+        <div class="topright" id="rootUser">
+            <span class="userid"></span><span>你好！</span>
+            <a href="../testUserInfo/userinfo.html?flag=true" target="_blank" class="shezhi">用户管理</a>
+            <a href="../testUserInfo/login.html" class="out">安全退出</a>
+        </div>
+</div>
+<div class="container-fluid content">
+
+        <div class="rightcon" style="padding-left:0;">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室 > <span id="title"></span></div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="lq_main">
+                	<table id="pingTaiZc"  width="100%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+                    	<tr class="dise">
+                        <th colspan="2" align="left" scope="col"><span>用户注册</span></th>      
+                      </tr>
+                      <tr>
+                        <td width="23%" align="right">用户名：</td>
+                        <td width="77%">
+                        <input type="hidden" id="i_id" value="">
+                        <input type="text" name="textfield2" id="userName" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">密码：</td>
+                        <td><input type="password" name="textfield2" id="password" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">确认密码：</td>
+                        <td><input type="password" name="textfield2" id="repassword" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">姓名：</td>
+                        <td><input type="text" name="textfield2" id="name" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">权限类型：</td>
+                        <td>
+                        	&nbsp;&nbsp;<input id="q1" type="radio" value="1" class="radioItem" name="radio" checked="checked">试验室</input>
+							&nbsp;&nbsp;<input id="q2" type="radio" value="2" class="radioItem" name="radio">指挥部</input>
+                        </td>
+                      </tr>
+                      <tr id="sfsy">
+                        <td align="right">是否是收样：</td>
+                        <td>
+                        	&nbsp;&nbsp;<input id="r1" type="radio" value="0" name="gender">是</input>
+							&nbsp;&nbsp;<input id="r2" type="radio" value="1" name="gender" checked="checked">否</input>
+                        </td>
+                      </tr>
+                      <tr id="tree">
+                      	<td></td>
+                      	<td align=left>
+                        <div  class="dtree2" id="dtree_div">
+						<script type="text/javascript">
+						    var parentNode = '';
+							d = new dTree('d', true);   //参数一: 树名称。参数二：单选多选 true多选  false单选  默认单选               
+	                        d.add(0, -1, ''); 
+	                        d.add(1, 0, 'authority', '吉东公路盲样检测系统', '吉东公路盲样检测系统', true, false);
+	                        /* d.add(1, -1, 'authority', '0001', '鸡蛋饼项目', true, false); */
+							$.ajax({
+						        type: "post",
+						        url: "../testUserInfo/getTestRoomName.html",
+						        data:{},
+						        async:false,
+						        dataType: "json",
+						        success: function (data) {
+						        	for (var i = 0; i < data.data.length; i++) {
+						        		// 父类节点
+										if(data.data[i].parentNode != null && data.data[i].parentNode != 0){
+											// 根据父类id区分子集
+											if(data.data[i].parentNode == parentNode){
+												d.add(data.data[i].id,
+														data.data[i].parentNode,
+														'children',
+														data.data[i].TestRoomName,
+														data.data[i].TestRoomName,
+														false,
+														false);
+											}
+										}else{
+											// 父类显示
+											d.add(data.data[i].id,
+													data.data[i].parentNode,
+													'authority',
+													data.data[i].TestRoomName,
+													data.data[i].TestRoomName,
+													false,
+													false);
+											// 父类节点
+											parentNode = data.data[i].id;
+										}
+									}
+						        }
+						    });
+							document.write(d);
+                            d.openAll();
+                        </script>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="right">&nbsp;</td>
+                        <td><input type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="add()"></td>
+                      </tr>
+                    </table>
+                    <table id="appZc" style="display:none;" width="100%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+                    	<tr class="dise">
+                        <th colspan="2" align="left" scope="col"><span>App用户注册</span></th>
+                      </tr>
+                      <tr>
+                        <td width="23%" align="right">用户名：</td>
+                        <td width="77%">
+                        <input type="hidden" id="Appid" value="">
+                        <input type="text" id="appUserName" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">密码：</td>
+                        <td><input type="password" id="appPassword" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">确认密码：</td>
+                        <td><input type="password" id="Apprepassword" placeholder="请输入" class="zhuce_input" onKeyUp="value=value.replace(/[\W]/g,'')"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">姓名：</td>
+                        <td><input type="text" id="appName" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">&nbsp;</td>
+                        <td><input type="button" name="button" id="saveApp" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addAppUser()"></td>
+                      </tr>
+                    </table>
+              </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+
+
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/js2/modal.js"></script>
+<script type="text/javascript" src="../resources/js2/script.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/user.js"></script>
+
+</body>
+</html>

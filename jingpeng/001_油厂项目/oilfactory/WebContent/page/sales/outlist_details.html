@@ -1,0 +1,549 @@
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" type="text/css"  href="../../DataTables/datatables.css" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../DataTables/datatables.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/sales/outlist_details.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			#container {
+				width:98%;
+			}
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				#sider {
+					position:absolute;
+					top: 40px;
+					height: 150px;
+					left: 5px;
+					right: 5px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				#main {
+					position: absolute;
+					top: 260px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 130px;
+				}
+				#main_table {
+					position: absolute;
+					top: 195px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 130px;
+					display:none;
+				}
+				#main_table1 {
+					position: absolute;
+					top: 330px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 200px;
+					display:none; 
+				}
+				.main_table2_title {
+					height: 26px;
+				    line-height: 25px;
+				    color: #fff;
+				    background: #044599;
+				    padding-left: 10px;
+				}
+				.main_table3_title {
+					height: 26px;
+				    line-height: 25px;
+				    color: #fff;
+				    background: #044599;
+				    padding-left: 10px;
+				}
+				#main_table2 {
+					position: absolute;
+					top: 535px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 200px;
+					display:none;
+								
+				}
+				.main_table2_top1{
+					top: 195px !important;
+				}
+				.main_table2_top2{
+					top: 330px !important;
+				}
+				.main_table2_top3{
+					top: 535px !important;
+				}
+				#main_table3 {
+					position: absolute;
+					top: 740px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 200px;
+					display:none;
+								
+				}
+				.box_border {
+					position: absolute;
+					bottom: 10px;
+					overflow-y: auto;
+					left: 0;
+					right: 0;
+					top: 0px;
+				}
+				#main_table2 tr th {
+				    background: #F3F3CC  no-repeat;
+				    text-align: center;
+				    border-left: 1px solid #F3F3CC ;
+				    border-right: 1px solid #F3F3CC ;
+				    border-bottom: 1px solid #F3F3CC ;
+				    border-top: 1px solid #F3F3CC ;
+				    letter-spacing: 2px;
+				    text-transform: uppercase;
+				    font-size: 12px;
+				    color: #000;
+				    height: 26px;
+				    border-top: none !important;
+				}
+				#main_table3 tr th {
+				    background: #F3F3CC  no-repeat;
+				    text-align: center;
+				    border-left: 1px solid #F3F3CC ;
+				    border-right: 1px solid #F3F3CC ;
+				    border-bottom: 1px solid #F3F3CC ;
+				    border-top: 1px solid #F3F3CC ;
+				    letter-spacing: 2px;
+				    text-transform: uppercase;
+				    font-size: 12px;
+				    color: #000;
+				    height: 26px;
+				    border-top: none !important;
+				}
+				tr {
+					height: 26px;
+					line-height: 26px;
+				}
+				.ui_input_btnclose {
+					height: 26px;
+	    			line-height: 26px;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				#sider {
+					position:absolute;
+					top: 70px;
+					height: 318px;
+					left: 25px;
+					right: 25px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				#main {
+					position: absolute;
+					top: 260px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 130px;
+				}
+				#main_table {
+					position: absolute;
+					top: 390px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 210px;
+					display:none;
+				}
+				#main_table1 {
+					position: absolute;
+					top: 605px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 200px;
+					display:none; 
+				}
+				.main_table2_title {
+					height: 37px;
+				    line-height: 37px;
+				    color: #fff;
+				    background: #044599;
+				    padding-left: 20px;
+				}
+				.main_table3_title {
+					height: 37px;
+				    line-height: 37px;
+				    color: #fff;
+				    background: #044599;
+				    padding-left: 20px;
+				}
+				#main_table2 {
+					position: absolute;
+					top: 805px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 400px;
+					display:none;
+								
+				}
+				.main_table2_top1{
+					 top: 390px !important;
+				}
+				.main_table2_top2{
+					top: 605px !important;
+				}
+				.main_table2_top3{
+					top: 805px !important;
+				}
+				#main_table3 {
+					position: absolute;
+					top: 1206px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					height: 400px;
+					display:none;
+								
+				}
+				.box_border {
+					position: absolute;
+					bottom: 10px;
+					overflow-y: auto;
+					left: 0;
+					right: 0;
+					top: 0px;
+				}
+				#main_table2 tr th {
+				    background: #F3F3CC  no-repeat;
+				    text-align: center;
+				    border-left: 1px solid #F3F3CC ;
+				    border-right: 1px solid #F3F3CC ;
+				    border-bottom: 1px solid #F3F3CC ;
+				    border-top: 1px solid #F3F3CC ;
+				    letter-spacing: 2px;
+				    text-transform: uppercase;
+				    font-size: 14px;
+				    color: #000;
+				    height: 37px;
+				    border-top: none !important;
+				}
+				#main_table3 tr th {
+				    background: #F3F3CC  no-repeat;
+				    text-align: center;
+				    border-left: 1px solid #F3F3CC ;
+				    border-right: 1px solid #F3F3CC ;
+				    border-bottom: 1px solid #F3F3CC ;
+				    border-top: 1px solid #F3F3CC ;
+				    letter-spacing: 2px;
+				    text-transform: uppercase;
+				    font-size: 14px;
+				    color: #000;
+				    height: 37px;
+				    border-top: none !important;
+				}
+				tr {
+					height: 40px;
+					line-height: 40px;
+				}
+			}
+			
+			
+			
+			.ui_text_rt {
+				text-align: right;
+				padding-left: 0px;
+			}
+			
+			.rtTop {
+				vertical-align: top;
+			}
+			
+			.row {
+				margin: 0 15px;
+			}
+			
+			.newLine {
+				padding: 5px 0;
+			}
+			
+			.ui_input_txt02,
+			.ui_select01,
+			.ui_area01 {
+				margin-left: -10px;
+				padding-left: 5px;
+			}
+			
+			.ui_input_txt {
+				margin-left: 0;
+				margin-top: 4px;
+			}
+			
+			.showInput{
+				border: none; 
+				text-align: center; 
+				background: transparent;
+			}		
+			
+		</style>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="fundId" id="fundId" value='${ fundInfo.fundId}'></input>
+			<div id="container">
+				<div id="top_nav">
+					<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;销售管理&nbsp;>&nbsp;销售出库单&nbsp;>&nbsp;<span style="color:#1A5CC6">销售出库单详情</span></span>
+				</div>
+				<div id="sider">
+					<div id="box_top">销售出库单<input type="button" value="关闭" onclick="location.href='outlist.html'" class="ui_input_btnclose " /></div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">单据编号：</div>
+						<input type="text" id="serialID" name ="serialId" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">出库时间：</div>
+						<input type="text" id="factoryTime" name ="factoryTime" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-3 col-sm-3">状态：</div>
+						<div class="ui_input_txt02 col-lg-9 col-sm-9">
+							<span>车辆信息</span><span>>出厂检测</span><span>>销售发货</span><span>>运费结算</span><span>>成本</span>
+						</div>
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">客户编号：</div>
+						<input type="text" id="client" name ="client" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">客户别称：</div>
+						<input type="text" id="customerAlias" name ="customerAlias" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">送货地址：</div>
+						<input type="text" id="address" name ="address" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售公司名称：</div>
+						<input type="text" id="salesCompanyName" name ="saleCompanyName" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">收货人：</div>
+						<input type="text" id="consignee" name ="consignee" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">联系方式：</div>
+						<input type="text" id="consigneePhone" name ="consigneePhone" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">货物结算情况：</div>
+						<input type="text" id="cargoBalance" name ="cargoBalance" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">运输结算情况：</div>
+						<input type="text" id="transportBalance" name ="transportBalance" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">是否未入厂出库：</div>
+						<input name="outTypeMark" type="radio" disabled="disabled" value="1" style="margin-bottom:9px; "/> 是
+						<input name="outTypeMark" style="margin-bottom:9px;margin-left: 20%; " value="0" checked="checked" disabled="disabled" type="radio" />否
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">合同编号：</div>
+						<input type="text" id="contractNumber" name ="contractNumber" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">车牌号码：</div>
+						<input type="text" id="plateNumber" name ="plateNumber" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">产品名称-型号：</div>
+						<input type="text" id="productID" name ="productID" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">皮重(吨)：</div>
+						<input type="text" id="tareWeight" name ="tareWeight" readonly="readonly" maxlength="13" onkeyup='clearNoDecimal(this,8,4)'onblur='checkPoint(this)' class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">毛重(吨)：</div>
+						<input type="text" id="grossWeight" name ="grossWeight" readonly="readonly" maxlength="13" onkeyup='clearNoDecimal(this,8,4)'onblur='checkPoint(this)' class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">物品净重(吨)：</div>
+						<input type="text" id="suttle" name ="suttle" readonly="readonly" maxlength="13" onkeyup='clearNoDecimal(this,8,4)'onblur='checkPoint(this)' class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">结算重量(吨)：</div>
+						<input type="text" id="amount" name ="amount" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售单价：</div>
+						<input type="text" id="salePrice" name ="salePrice" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售金额：</div>
+						<input type="text" id="saleMoney" name ="saleMoney" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">税率：</div>
+						<input type="text" id="taxRate" name ="taxRate" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">运费金额：</div>
+						<input type="text" id="freightMoney" name ="freightMoney" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">产品成本：</div>
+						<input type="text" id="goodsCost" name ="goodsCost" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div class="newLine col-lg-3 col-sm-6">
+						<div class="ui_text_rt col-lg-4 col-sm-4">出库类型：</div>
+						<input type="text" id="outTypeName" name ="outTypeName" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" />
+					</div>
+					<div id="outbound" class="col-lg-6 newLine col-sm-12">
+						<div class="ui_text_rt col-lg-1 col-sm-3" style="width: 80px;">出库单：</div>
+						<div class="ui_input_txt02 col-lg-11  col-sm-9">
+							<span id="outboundList"></span>
+						</div>
+					</div>
+				</div>
+				
+				<div id="main_table">
+					<div name="outTypes" id="box_top"></div>
+					<div id="tableList">
+					</div>
+					<div name="outTypesTwo" id="box_top2"></div>
+					<div id="tableListTwo">
+					</div>
+				</div>
+				<div id="main_table1">
+					<div name="outTypes1" id="box_top"></div>
+					<div id="tableList1">
+					</div>
+				</div>
+				<div id="main_table2">
+					<div class="ui_tb" id="details2">
+						<div class="main_table2_title" style="width:3400px;">出库单对应空发车辆</div>
+						<table id="tableList2" style="width:3400px;margin-left:-30px;margin-top: 0px !important;" class="table table-striped" cellspacing="0" cellpadding="0"  align="center" border="0">
+							<thead>
+							   <tr>
+									<th class="xuhao">序号</th>
+									<th class="hetongbianhao">合同编号</th>
+									<th class="hetongbianhao">销售订单编号</th>
+									<th class="xiaoshouyuan">销售员</th>
+									<th class="kehumingcheng">客户名称</th>
+									<th class="kehumingcheng">客户别称</th>
+									<th class="dianhua">车牌号码</th>
+									<th class="xinghao">产品名称-型号</th>
+									<th class="beizhu">送货地址</th>
+									<th class="xinghao">联系人-电话</th>
+									<th class="yunshujiesuan">出厂检测报告</th>
+									<th class="shijian">出厂时间</th>
+									<th class="shijian">预计发货时间</th>
+									<th class="yunshujiesuan">结算数量</th>
+									<th class="caozuo1">是否检测</th>
+									<th class="zhuangtai">状态</th>
+									<th class="zhuangtai">是否未入厂出库</th>
+									<th class="zhuangtai">是否关联空发出库单</th>
+									<th class="zhuangtai">关联空发出库单编号</th>
+									<th class="zhuangtai">作废原因</th>
+								</tr>
+							</thead>
+						</table>		
+					</div>
+				</div>
+				<div id="main_table3">
+					<div class="ui_tb" id="details3">
+						<div class="main_table3_title" style="width:3400px;">出库单对未称重车辆</div>
+						<table id="tableList3" style="width:3400px;margin-left:-30px;margin-top: 0px !important;" class="table table-striped" cellspacing="0" cellpadding="0"  align="center" border="0">
+							<thead>
+								<tr>
+									<th class="xuhao">序号</th>
+									<th class="hetongbianhao">未称重出库单编号</th>
+									<th class="dianhua">车牌号码</th>
+									<th class="xinghao">物料名称/型号</th>
+									<th class="kehumingcheng">客户名称</th>
+									<th class="kehumingcheng">客户别称</th>
+									<th class="kehumingcheng">审核状态</th>
+									<th class="hetongbianhao">合同编号</th>
+									<th class="hetongbianhao">销售订单号</th>
+									<th class="xiaoshouyuan">收货人</th>
+									<th class="dianhua">收货人电话</th>
+									<th class="beizhu">收货地址</th>
+									<th class="yunshujiesuan">运输结算情况</th>
+									<th class="hetongzhuangtai">是否随车带走</th>
+									<th class="shuilv">是否空发</th>
+									<th class="xiaoshouyuan">送货人</th>
+									<th class="dianhua">送货人电话</th>
+									<th class="shuilv">税率(%)</th>
+									<th class="caozuo1">类型</th>
+									<th class="caozuo1">是否检测</th>
+									<th class="beizhu">备注</th>
+									<th class="yunshujiesuan">出厂检测报告</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</form>
+	</body>
+	<script type="text/javascript">
+		/* //tableList1下的 除了第一个
+		//给单元格注册鼠标点击事件
+		$("#tableList1 td").click(function() {
+			edit(this);
+		});
+		$('input[type=radio][name=radio]').change(function() {
+			if(this.value == '0') {
+				
+			} else if(this.value == '1') {
+				
+			}
+		}); */
+	</script>
+
+</html>

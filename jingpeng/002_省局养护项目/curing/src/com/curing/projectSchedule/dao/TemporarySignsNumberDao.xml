@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.TemporarySignsNumberDao">
+	<!-- 工程进度（临时标志工程数量表）List取得 -->
+	<select id="getTemporarySignsNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.TemporarySignsNumberEntity">
+		SELECT
+		  tsn.Id
+		  , tsn.ProjectId                                 -- 项目id
+		  , tsn.PileNumber                                -- 中心桩号
+		  , tsn.Position                                  -- 设置位置
+		  , tsn.SignName                                  -- 临时标志名称
+		  , tsn.Size                                      -- 板面尺寸（高度cm×长度cm）
+		  , tsn.Amount                                    -- 数量
+		  , tsn.Remarks                                   -- 备注
+		  , tsn.IsDel
+		  , tsn.Creater
+		  , tsn.CreaterDate
+		  , tsn.Reviser
+		  , tsn.ReviserDate 
+		FROM
+		  TemporarySignsNumber as tsn 
+		  left join V_EntryTree as ve 
+		    on tsn.ProjectId = ve.pid
+		WHERE
+		  tsn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and tsn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and tsn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and tsn.pileNumber like concat('%',#{pileNumber},'%')-- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and tsn.Position like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="signName!=null and signName!=''">
+		    and tsn.signName like concat('%',#{signName},'%') -- 根据临时标志名称查询
+		  </if>
+		  order by tsn.CreaterDate desc
+	</select>
+	
+	
+	<select id="getTemporarySignsNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   tsn.PileNumber                                -- 中心桩号
+		  , tsn.Position                                  -- 设置位置
+		  , tsn.SignName                                  -- 临时标志名称
+		  , tsn.Size                                      -- 板面尺寸（高度cm×长度cm）
+		  , tsn.Amount                                    -- 数量
+		  , tsn.Remarks                                   -- 备注
+		FROM
+		  TemporarySignsNumber as tsn 
+		  left join V_EntryTree as ve 
+		    on tsn.ProjectId = ve.pid
+		WHERE
+		  tsn.IsDel = 0
+		  order by tsn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（临时标志工程数量表）合计 -->
+	<select id="getTemporarySignsNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.TemporarySignsNumberSum">
+		SELECT
+		  sum(tsn.Amount) as AmountSum                    -- 数量
+		FROM
+		  TemporarySignsNumber as tsn 
+		  left join V_EntryTree as ve 
+		    on tsn.ProjectId = ve.pid
+		WHERE
+		  tsn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and tsn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and tsn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and tsn.pileNumber like concat('%',#{pileNumber},'%')-- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and tsn.Position like concat('%',#{position},'%')     -- 根据位置查询
+		  </if>
+		  <if test="signName!=null and signName!=''">
+		    and tsn.signName like concat('%',#{signName},'%') -- 根据临时标志名称查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（临时标志工程数量表） -->
+	<insert id="insertTemporarySignsNumber" parameterType="com.curing.projectSchedule.model.TemporarySignsNumberEntity">
+		INSERT 
+		INTO TemporarySignsNumber(
+		 Id 
+		  , ProjectId
+		  , PileNumber
+		  , Position
+		  , SignName
+		  , Size
+		  , Amount
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{Position}
+		  , #{SignName}
+		  , #{Size}
+		  , #{Amount}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（临时标志工程数量表） -->
+	<update id="updateTemporarySignsNumber" parameterType="com.curing.projectSchedule.model.TemporarySignsNumberEntity">
+		UPDATE TemporarySignsNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , Position = #{Position}
+		  , SignName = #{SignName}
+		  , Size = #{Size}
+		  , Amount = #{Amount}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（临时标志工程数量表） -->
+	<update id="deleteTemporarySignsNumber" parameterType="com.curing.projectSchedule.model.TemporarySignsNumberEntity">
+		UPDATE TemporarySignsNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

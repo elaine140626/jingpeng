@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.asphalt.Asphalt_ProductionDataDao">
+	
+	<sql id="analysis">
+		CASE v.Analysis_Result
+		WHEN '1' THEN '合格'
+		ELSE '不合格' END
+	</sql>
+	
+	<select id="getAsphaltProductionData" parameterType="java.util.Map" resultType="asphalt_ProductionDTO">
+		<!-- select t.* from ( -->
+		SELECT
+		v.id i_id,
+		v.product_Id i_product_Id,
+		v.equ_Id i_equ_Id,
+		v.no1_MeterValue d_no1_MeterValue,
+		v.no2_MeterValue d_no2_MeterValue,
+		v.no3_MeterValue d_no3_MeterValue,
+		v.no4_MeterValue d_no4_MeterValue,
+		v.no5_MeterValue d_no5_MeterValue,
+		v.no6_MeterValue d_no6_MeterValue,
+		v.no7_MeterValue d_no7_MeterValue,
+		v.no8_MeterValue d_no8_MeterValue,
+		v.hotP_MeterValue d_hotP_MeterValue,
+		v.coldP_MeterValue d_coldP_MeterValue,
+		v.totalP_MeterValue d_totalP_MeterValue,
+		v.asphalt_Meter d_asphalt_Meter,
+		v.temperature_Meter d_temperature_Meter,
+		v.admixture1 d_admixture1,
+		v.admixture2 d_admixture2,
+	    v.construction_Unit str_construction_Unit,
+		v.proj_Pos str_proj_Pos,
+		v.equipment_Name str_equipment_Name,
+		v.str_productInfo,
+		v.proportion_Code str_proportion_Code,
+		v.grade_Code str_grade_Code,
+		v.org_name str_org_name,
+		CONVERT(varchar(20),v.collect_Time,120) str_collect_Time,
+		v.Total_Weight d_total_Weight,
+		v.Prod_ID as i_prod_Id,
+		<include refid="analysis"></include> str_analysis_Result,
+		apd.*
+		FROM
+		V_Asphalt_ProductionData v
+		LEFT JOIN AsphaltProp_DataAnalysis apd ON apd.Pro_Id = v.Id and apd.Data_Type = 9
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<foreach collection="org_Ids" index="index" item="item" open=" AND v.org_Id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+            <!-- AND apd.Data_Type = 9 -->
+            <if test="str_start_Time != null and str_start_Time != ''">
+				
+				<![CDATA[ AND v.collect_Time >= #{str_start_Time}   ]]>
+			</if>
+			<if test="str_end_Time != null and str_end_Time != ''">
+				AND v.collect_Time &lt; #{str_end_Time}
+			</if>
+			<if test="str_equipment_Name != null and str_equipment_Name != ''">
+				AND v.equipment_Name LIKE '%${str_equipment_Name}%'
+			</if>
+			<if test="str_proj_Pos != null and str_proj_Pos != ''">
+				AND v.proj_Pos LIKE '%${str_proj_Pos}%'
+			</if>
+			<if test="str_construction_Unit != null and str_construction_Unit != ''">
+				AND v.construction_Unit LIKE '%${str_construction_Unit}%'
+			</if>
+			<if test="str_analysis_Result != null and str_analysis_Result != '' and str_analysis_Result == 1">
+				AND v.analysis_Result = '1'
+			</if>
+			<if test="str_analysis_Result != null and str_analysis_Result != '' and str_analysis_Result != 1">
+				AND v.analysis_Result != '1'
+			</if>
+			<if test="str_material_Name != null and str_material_Name != ''">
+				AND v.str_productInfo LIKE '%${str_material_Name}%' or v.str_productInfo LIKE '%${str_material_Name}%'
+			</if>
+			<!-- <if test="str_material_Model != null and str_material_Model != ''">
+				AND v.str_productInfo LIKE '%${str_material_Model}%'
+			</if> -->
+			AND v.valid_Flag = 1 
+		    ORDER BY v.id DESC
+            
+		</trim>
+			
+	</select>
+	
+	<select id="getAsphaltProductionDataNew" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.* from (SELECT
+		v.id i_id,
+		v.product_Id i_product_Id,
+		v.equ_Id i_equ_Id,
+		v.no1_MeterValue d_no1_MeterValue,
+		v.no2_MeterValue d_no2_MeterValue,
+		v.no3_MeterValue d_no3_MeterValue,
+		v.no4_MeterValue d_no4_MeterValue,
+		v.no5_MeterValue d_no5_MeterValue,
+		v.no6_MeterValue d_no6_MeterValue,
+		v.no7_MeterValue d_no7_MeterValue,
+		v.no8_MeterValue d_no8_MeterValue,
+		v.hotP_MeterValue d_hotP_MeterValue,
+		v.coldP_MeterValue d_coldP_MeterValue,
+		v.totalP_MeterValue d_totalP_MeterValue,
+		v.asphalt_Meter d_asphalt_Meter,
+		v.temperature_Meter d_temperature_Meter,
+		v.admixture1 d_admixture1,
+		v.admixture2 d_admixture2,
+	    v.construction_Unit str_construction_Unit,
+		v.proj_Pos str_proj_Pos,
+		v.equipment_Name str_equipment_Name,
+		v.str_productInfo,
+		v.proportion_Code str_proportion_Code,
+		v.grade_Code str_grade_Code,
+		v.org_name str_org_name,
+		CONVERT(varchar(20),v.collect_Time,120) str_collect_Time,
+		v.Total_Weight d_total_Weight,
+		<include refid="analysis"></include> str_analysis_Result,
+		apd.*
+		FROM
+		V_Asphalt_ProductionData v
+		LEFT JOIN AsphaltProp_DataAnalysis apd ON apd.Pro_Id = v.Id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<foreach collection="org_Ids" index="index" item="item" open=" AND org_Id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+            AND apd.Data_Type = 9
+            AND v.valid_Flag = 1 
+		</trim>
+			) t
+			where 1=1
+			<if test="str_start_Time != null and str_start_Time != ''">
+				AND t.str_collect_Time &gt; #{str_start_Time} 
+			</if>
+			<if test="str_end_Time != null and str_end_Time != ''">
+				AND t.str_collect_Time &lt; #{str_end_Time}
+			</if>
+			<if test="str_equipment_Name != null and str_equipment_Name != ''">
+				AND t.str_equipment_Name LIKE '%${str_equipment_Name}%'
+			</if>
+			<if test="str_proj_Pos != null and str_proj_Pos != ''">
+				AND t.str_proj_Pos LIKE '%${str_proj_Pos}%'
+			</if>
+			<if test="str_construction_Unit != null and str_construction_Unit != ''">
+				AND t.str_construction_Unit LIKE '%${str_construction_Unit}%'
+			</if>
+			<if test="str_analysis_Result != null and str_analysis_Result != '' and str_analysis_Result != '0'">
+				AND t.str_analysis_Result = #{str_analysis_Result}
+			</if>
+			<if test="str_material_Name != null and str_material_Name != ''">
+				AND t.str_material_Name LIKE '%${str_productInfo}%'
+			</if>
+			<if test="str_material_Model != null and str_material_Model != ''">
+				AND t.str_material_Model LIKE '%${str_productInfo}%'
+			</if>
+		ORDER BY t.id DESC
+	</select>
+	
+	
+	<select id="getAsphaltProductionDataByID" parameterType="asphalt_ProductionDTO"
+		resultType="asphalt_ProductionDTO">
+		SELECT
+		id i_id,
+		str_productInfo,
+		proportion_Code str_proportion_Code,
+		grade_Code str_grade_Code,
+		total_Weight d_total_Weight
+		FROM
+		V_Asphalt_ProductionData
+		WHERE id=#{i_id}
+	</select>
+
+	<select id="getAsphaltPropDataAnalysis" parameterType="asphalt_ProductionDTO"
+		resultType="AsphaltProp_DataAnalysis">
+		SELECT
+		id i_id,
+		data_Type str_data_Type,
+		no1 d_no1,
+		no2 d_no2,
+		no3 d_no3,
+		no4 d_no4,
+		no5 d_no5,
+		no6 d_no6,
+		no7 d_no7,
+		no8 d_no8,
+		hotPowder d_hotPowder,
+		coldPowder d_coldPowder,
+		totalPowder d_totalPowder,
+		asphalt d_asphalt,
+		temperature d_temperature,
+		admixture1 d_admixture1,
+		admixture2 d_admixture2
+		FROM
+		AsphaltProp_DataAnalysis
+		WHERE Pro_Id=#{i_id}
+		AND Valid_Flag=1 ORDER BY data_Type
+	</select>
+
+	<select id="asphaltGradDataAnalysis" parameterType="asphalt_ProductionDTO" resultType="AsphaltGrad_DataAnalysis">
+		SELECT
+		id i_id,
+		curve_Type str_curve_Type,
+		a0_075 d_a0_075,
+		a0_15 d_a0_15,
+		a0_3 d_a0_3,
+		a0_6 d_a0_6,
+		a1_18 d_a1_18,
+		a2_36 d_a2_36,
+		a4_75 d_a4_75,
+		a9_5 d_a9_5,
+		a13_2 d_a13_2,
+		a16 d_a16,
+		a19 d_a19,
+		a26_5 d_a26_5,
+		a31_5 d_a31_5,
+		a37_5 d_a37_5,
+		a37_5 d_a53
+		FROM
+		AsphaltGrad_DataAnalysis 
+		WHERE Pro_Id=#{i_id}
+		AND Valid_Flag=1 ORDER BY curve_Type
+	</select>
+	
+	<select id="getMaterialConsumption" parameterType="asphalt_ProductionDTO" resultType="java.util.Map">
+		select V.Material,V.MaterialConsumption
+		from V_MaterialConsumption V
+		where V.Id = 18
+	</select>
+
+</mapper>

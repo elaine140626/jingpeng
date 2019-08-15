@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Interior-Design-Responsive-Website-Templates-Edge">
+	<meta name="author" content="">
+	<title>黑龙江省高速公路管理局盲样检测管理平台</title>
+	<link rel="Shortcut Icon" href="../resources/img/favicon.ico"> 
+	<link rel="stylesheet" href="../resources/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../resources/assets/css/font-awesome.min.css"> 
+	<link rel="stylesheet" href="../resources/assets/css/bootstrap-theme.css" media="screen"> 
+	<link rel="stylesheet" href="../resources/assets/css/style.css">
+    <link rel='stylesheet' id='camera-css'  href='../resources/assets/css/camera.css' type='text/css' media='all'> 
+</head>
+<body>
+	<!-- Fixed navbar -->
+	<div id="header-top">       
+		<!--  HEADER TOP -->
+        <div class="container">
+        	<div class="row">
+				<div class="col-md-6"> 
+                    
+                        <div class="text">
+                            
+							<p>Toll Free : (002) 124 2548</p>
+                            
+                        </div>      
+                </div><!-- end -->
+            	<div class="col-md-6">              	
+                   <div class="social text-center pull-right">
+				<a href="#"><i class="fa fa-twitter"></i></a>
+				<a href="#"><i class="fa fa-facebook"></i></a>
+				<a href="#"><i class="fa fa-dribbble"></i></a>
+				<a href="#"><i class="fa fa-flickr"></i></a>
+				<a href="#"><i class="fa fa-github"></i></a>
+			</div>
+                    
+                </div><!-- end -->
+            </div><!-- end .row -->
+           </div> 
+		</div>
+	<div class="navbar navbar-inverse">
+		<img src="../resources/images/logo.jpg" style="width:4%;margin-top:-10px;margin-left:200px;float:left">
+		<div class="container">
+			<div class="col-lg-7">
+			
+			<div class="navbar-header logo_hei">黑龙江省高速公路管理局盲样检测管理平台</div></div>
+			<div class="col-lg-5" style="padding:0;"><div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav pull-right mainNav">
+				  <li class="active"><a href="index.html">首页</a></li>
+					<li><a href="../BlindSampleInfo/blindSampleInfo.html">盲样试验</a></li>
+					
+				</ul>
+			</div>
+            </div>
+			<!--/.nav-collapse -->	
+		</div>
+		<a style="margin-right:25px;float:right;margin-top:-50px" href="../TestUser/login.html">退出登录</a>
+	</div>
+	<!-- /.navbar -->
+
+	<!-- Header -->
+	<header id="head">
+		<div class="container">
+					<div class="fluid_container">
+                    <div class="camera_wrap camera_emboss pattern_1" id="camera_wrap_4">
+                        <div data-thumb="../resources/assets/images/slides/thumbs/img1.jpg" data-src="../resources/assets/images/slides/img1.jpg">
+                        </div> 
+                        <div data-thumb="../resources/assets/images/slides/thumbs/img2.jpg" data-src="../resources/assets/images/slides/img2.jpg">
+                        </div>
+                        <div data-thumb="../resources/assets/images/slides/thumbs/img3.jpg" data-src="../resources/assets/images/slides/img3.jpg">
+                        </div> 
+                    </div><!-- #camera_wrap_3 -->
+                </div><!-- .fluid_container -->
+		</div>
+	</header>
+	<section class="container">
+			
+			<div class="row">
+			<div class="section-heading">
+							<h2>试验信息</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+						</div>
+				 
+			</div>
+			<div class="row">
+				<div class="col-md-4" style="margin-left:35%">
+                	<a href="../BlindSampleInfo/blindSampleInfo.html">
+					<div class="featured-box">
+						<i class="fa fa-eye fa-2x"></i>
+						<div class="text">
+							<h3>盲样试验</h3>
+							盲样试验盲样试验盲样试验盲样试验盲样试验盲样试验盲样试验盲样试验盲样试验盲样试验
+						</div>
+					</div>
+                    </a>
+				</div>
+			<!-- 	<div class="col-md-4">
+                	<a href="javascript:;">
+					<div class="featured-box">
+						<i class="fa fa-calendar fa-2x"></i>
+						<div class="text">
+							<h3>试验汇总</h3>
+							试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总试验汇总
+						</div>
+					</div>
+                    </a>
+				</div>
+				<div class="col-md-4">
+                	<a href="javascript:;">
+					<div class="featured-box">
+						<i class="fa fa-align-right fa-2x"></i>
+						<div class="text">
+							<h3>试验查询</h3>
+							试验查询试验查询试验查询试验查询试验查询试验查询试验查询试验查询试验查询试验查询试验查询试验查询
+						</div>
+					</div>
+                    </a>
+				</div> -->
+            </div>
+
+		</section>
+   <section class="aboutUs">
+	<div class="container">
+		<div class="row">
+		<div class="col-md-6" style="height:458px;"><img src="../resources/images/gaosu.jpg" class="img-center" alt=""style="margin-top:60px;" ></div>
+			<div class="col-md-6 about_p">
+					<div><h2>黑龙江省高速公路管理局</h2>
+				<p>我省收费公路共4997公里，收费公路网络遍布全省13个市(地),连通41个县(市)，打通与吉林和内蒙的6个高速出口，连通绥芬河、东宁、同江、黑河、抚远等国家一类口岸，服务五大连池、亚布力、镜泊湖、兴凯湖等著名旅游录区，基本形成除加格达奇外以哈尔滨为中心的4小时经济圈，成为我省经济社会发展的重要基础保障。其中，髙速公路4512公里，覆盖除大兴安岭地区以外的12个地级市，连通36个县，髙速公路总里程在全国排名第20左右。</p>
+				<p>全省收费公路分为省直管政府还贷收费公路、地市管政府还贷收费公路和经营性收费公路三类。其中，省直管收费公路(3974公里)，由省髙速公路管理局负贵运营管理，下辖哈尔滨、方正、尚志、五常、齐齐哈尔、牡丹江、佳木斯、大庆、鸡西、伊春、北安、嫩江、绥化、抚远等14个髙速公路管理处，1个应急救援处置中心，实行区域化管理；地市管收费公路(818.4公里)，分别是依七高速(117.4公里)由七台河市交通运输局负责运营管理，鸡虎高速(182.6公里)由鸡西市交通运输局负贵运营管理，建虎、建抚髙速(371.6公里)由省农垦总局交通运输. </p>
+				</div>
+				<br>
+			</div>
+		</div> 
+	
+	</div>
+	</section>
+     <footer id="footer">
+		<!-- <div class="container">
+			<div class="social text-center">
+				<a href="javascript:;"><i class="fa fa-twitter"></i></a>
+				<a href="javascript:;"><i class="fa fa-facebook"></i></a>
+				<a href="javascript:;"><i class="fa fa-dribbble"></i></a>
+				<a href="javascript:;"><i class="fa fa-flickr"></i></a>
+				<a href="javascript:;"><i class="fa fa-github"></i></a>
+			</div>
+
+			<div class="clear"></div>
+		</div> -->
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+
+					<div class="col-md-6 panel">
+						<div class="panel-body">
+							<p class="simplenav">
+								<a href="index.html">首页</a> | 
+								<a href="javascript:;">关于我们</a> |
+								<a href="javascript:;">我们的服务</a> |
+								
+								<a href="javascript:;">我们的客户</a> |
+								<a href="javascript:;">联系我们</a>
+							</p>
+						</div>
+					</div>
+
+					<div class="col-md-6 panel">
+						<div class="panel-body">
+							<p class="text-right">
+								Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="javascript:;" target="_blank" title="京澎科技">京澎科技</a> 
+							</p>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script type='text/javascript' src='../resources/assets/js/jquery.min.js'></script>
+	<script src="../resources/assets/js/modernizr-latest.js"></script> 
+    <script type='text/javascript' src='../resources/assets/js/fancybox/jquery.fancybox.pack.js'></script>
+    
+    <script type='text/javascript' src='../resources/assets/js/jquery.mobile.customized.min.js'></script>
+    <script type='text/javascript' src='../resources/assets/js/jquery.easing.1.3.js'></script> 
+    <script type='text/javascript' src='../resources/assets/js/camera.min.js'></script> 
+    <script src="../resources/assets/js/bootstrap.min.js"></script> 
+	<script src="../resources/assets/js/custom.js"></script>
+    <script>
+		jQuery(function(){
+			
+			jQuery('#camera_wrap_4').camera({
+				height: '600',
+				loader: 'bar',
+				pagination: false,
+				thumbnails: false,
+				hover: false,
+				opacityOnGrid: false,
+				imagePath: 'assets/images/'
+			});
+
+		});
+	</script>
+<script type="text/javascript" src="../resources/js/mouse.js"></script>    
+</body>
+</html>

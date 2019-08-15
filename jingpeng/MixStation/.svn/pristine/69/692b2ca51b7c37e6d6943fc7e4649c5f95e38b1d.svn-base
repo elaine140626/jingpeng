@@ -1,0 +1,135 @@
+//接收项目路径
+var baseUrl = "";
+var TestRoomName = "";
+var source = "";
+$(function() {
+	
+	$.ajax({
+        type: "post",
+        url: "../testUserInfo/getTestUserName.html",
+        data:{},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	//获取当前登录人做显示
+        	$(".userid").html(data.userName);
+        }
+    });
+	//转码解析跳页参数
+	var afterUrl =  decodeURI(window.location.search.substring(1));
+	if(afterUrl != "") {
+		//按 ‘&’ 分割成数组
+		var store =  afterUrl.toString().split("&");
+		//查询 ‘=’ 号位置
+		var index1 = store[0].indexOf('=');
+		//通过位置来截取传过来的值
+		TestRoomName = store[0].substring(index1+1,store[0].length);
+		//同上
+		var index2 = store[1].indexOf('=');
+		source = store[1].substring(index2+1,store[1].length);
+	}
+	getList();
+	//获取路径
+	baseUrl = getContextPath();
+});
+//初始化
+function getList() {
+	$('#list').DataTable({
+		"paging" : true,
+		"lengthChange" : false,
+		"pageLength" : 14,
+		"searching" : false,
+		"ordering" : false,
+		"info" : true,
+		"sInfo" : true,
+		"autoWidth" : false,
+		"language" : {
+			"lengthMenu" : "每页 _MENU_ 条记录",
+			"zeroRecords" : "没有找到记录",
+			"info" : "第 _PAGE_ 页,共 _PAGES_ 页 (显示_END_ 条，共 _TOTAL_ 项)",
+			"infoEmpty" : "无记录",
+			"sSearch" : "在结果中查找：",
+			"infoFiltered" : "(从 _MAX_ 条记录过滤)",
+			"oPaginate" : {
+				"sFirst" : "第一页",
+				"sPrevious" : "上一页",
+				"sNext" : "下一页",
+				"sLast" : "最后一页"
+			},
+		},
+		"ajax" :"../testInfo/getTestSummaryDetailedNumber.html?TestRoomName="+TestRoomName+"&source="+source,//拼接日期
+		"deferRender" : true,
+		"columns" : [ 
+			{"data" : "no"}, 
+			{"data" : "testRoomName"},
+			{"data" : "testClassification_Name"},
+			{"data" : "testName"}, 
+			{"data" : "sampleCode"}, 
+			{"data" : "sampleCount"}, 
+			{"data" : "testDate"} ,
+			{"data" : "testOperator"},
+			{
+				"data" : "isQualifiedTest1",
+				render: function(data, type, row, meta) {
+					 if (data == '合格') {
+			                data = "合格";
+			            }else if (data == '不合格'){
+			            	data = '<span style="color: red;">不合格</span>';
+			            }else{
+			            	data = '<span style="color: red;">未判定</span>';
+			            }
+			            return data;
+			        }
+			
+			},
+			{"data" : "isTestCollection1"},
+			{"data" : "isTestBlind1"},
+			{"data" : "select"}
+			],
+		"createdRow" : function(row, data, dataIndex) {
+			var date = new Date(data.testDate);
+			var dateTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+			$(row).children("td").eq(6).html(dateTime);
+			
+			var html = '';
+			if(data.testTable == 'Test04006T0'){
+				html ="<span><a href='../ShiYan/shiyan01.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else if(data.testTable == 'Test0500101T0'){
+				// 水泥混凝土抗压强度试验（立方体）
+				html ="<span><a href='../ShiYan/shiyan02.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else if(data.testTable == 'Test0500102T0'){
+				// 砂浆抗压强度试验
+				html ="<span><a href='../testInfo/shiyan03.html?serialNumber="+data.serialNumber+"&TestRoomName="+data.testRoomName+"'>查看</a></span>";
+			}else if(data.testTable == 'Test07003T0'){
+				// 无机结合料稳定材料无侧限抗压强度试验
+				html ="<span><a href='../ShiYan/shiyan04.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else if(data.testTable == 'Test08001T0'){
+				// 沥青三大指标试验
+				html ="<span><a href='../ShiYan/shiyan05.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else if(data.testTable == 'Test0900101T0'){
+				// 沥青混合料马歇尔稳定度试验
+				html ="<span><a href='../ShiYan/shiyan06.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else if(data.testTable == 'Test1000101T0'){
+				// 钢筋抗拉强度、屈服强度、伸长率、冷弯试验
+				html ="<span><a href='../ShiYan/shiyan07.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else if(data.testTable == 'Test1000201T0'){
+				// 钢筋接头抗拉强度、冷弯试验
+				html ="<span><a href='../ShiYan/shiyan08.html?id="+data.id +"&istestcollection="+data.isTestCollection+"&istestblind="+data.isTestBlind+"'>查看</a></span>";
+			}else{
+				html ="<span><a href='#'>查看</a></span>";
+			}
+			$(row).children("td").eq(11).html(html);
+			
+		},
+		"columnDefs" : [ {
+			"targets" : [ 0 ],
+			"visible" : true,
+			"searchable" : false
+		} ]
+		
+	});
+	$('.lq_biao .row:first-child').css('display','none');
+	$('.dataTables_info').css('text-align','center');
+//	$.fn.dataTable.ext.errMode = 'throw';//当出现问题时不弹出
+}
+

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.IndexDao">
+
+	<!--查询当前用户权限的试验室，返回list -->
+	<select id="getTestRoom" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		    tri.UniqueIdentifier as UniqueIdentifier
+		  , tri.TestRoomName as TestRoomName 
+		from
+		TestRoomInfo as tri
+		where 1=1 
+		<if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and tri.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+		</if>	
+	</select>
+	<!--查询index试验室数据，返回list -->
+	<select id="getIndexSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  top(1)( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+			      and UniqueIdentifier in 
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as sumCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2 
+		      and IsTestCollection = 1
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+			      and UniqueIdentifier in 
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as sumAutoCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2 
+		      and IsTestBlind = 1		      
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		      	  and UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as sumBlindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      IsTestCollection = 1
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		      	  and UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as autoCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      IsTestCollection = 1 
+		      and IsQualifiedTest = 1
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		      	  and UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as autoQualifiedCount
+		  , (select
+		      count(*) 
+		    from
+		      BlindInfo t 
+		      left join TestInfo t2 
+		        on t2.QRCode = t.QRCode 
+		    where
+		      1 = 1		       
+		       <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		          and t2.UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and t2.UniqueIdentifier in('')
+        	  </if>
+		  ) as blindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo t 
+		      left join TestInfo t2 
+		        on t2.QRCode = t.QRCode 
+		    where
+		      t2.IsQualifiedTest = 1		       
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		          and t2.UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and t2.UniqueIdentifier in('')
+        	  </if>
+		  ) as blindQualifiedCount 
+		from
+		  TestInfo	
+	</select>
+</mapper>

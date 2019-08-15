@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.cement.CementProductionPlanDao">
+	<!-- 查询水泥生产计划列表 -->
+	<select id="getAllCementProductionPlan" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementProductionPlan">
+		SELECT
+			p.Id                                            AS id,-- 自增长ID
+			p.Org_ID                                        AS orgId, -- 组织机构ID
+			p.Equ_ID                                        AS equId,-- 拌和机Id
+			e.Equipment_Name                                AS equipmentName,-- 拌合机设备名称
+			isnull(p.Plan_No, '')                           AS planNo,-- 生产计划编号
+			p.Product_ID                                    AS productId,-- 产品Id
+			mn.Material_Name                                AS materialName,-- 产品名称
+			mm.Material_Model                               AS materialModel,-- 产品型号
+			isnull(mn.Material_Name + mm.Material_Model,'') AS nameAndModel,-- 产品名称+产品型号
+			p.ConsProp_ID                                   AS consPropId,-- 施工配比ID
+			isnull(ccp.Prop_Code, '')                       AS propCode,-- 施工配比编码
+			isnull(CONVERT(varchar(20),p.StartTime,120), '') AS startTime,-- 生产计划开始时间
+			isnull(p.Proj_Pos, '')                          AS projPos,-- 施工地点
+			isnull(p.Construction_Unit, '')                 AS constructionUnit,-- 施工单位
+			p.Scheduled_Production                          AS scheduledProduction,-- 计划生产量
+			isnull(p.Watering_Site, '')                     AS wateringSite,-- 浇灌部位
+			p.IsCancel                                      AS isCancel,-- 计划是否作废
+			isnull(p.Invalid_Person, '')                    AS invalidPerson,-- 作废人
+			isnull(p.Cancel_Reason, '')                     AS cancelReason,-- 作废原因
+			isnull(CONVERT(varchar(20),p.Create_Date,120), '') AS createDate-- 创建时间
+		FROM
+			Cement_Production_Plan p -- 水泥生产计划
+			LEFT JOIN Equipment_Info e ON e.Id = p.Equ_ID -- 拌合机设备表
+			LEFT JOIN Cement_ConstructionProportion ccp ON ccp.Id = p.ConsProp_ID -- 施工配比表
+			LEFT JOIN Material_Info mi ON p.Product_ID = mi.Id
+			LEFT JOIN MaterName_Info mn ON mi.MateName_ID = mn.Id
+			LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID = mm.Id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+				<if test="materialModel != null and materialModel != ''">
+				    AND mm.Material_Model LIKE '%${materialModel}%'
+				</if>
+				<if test="materialName != null and materialName != ''">
+				    AND mn.Material_Name LIKE '%${materialName}%'
+				</if>
+				<if test="propCode != null and propCode != ''">
+				    AND ccp.Prop_Code LIKE '%${propCode}%'
+				</if>
+				<if test="orgId != null and orgId != 0">
+					AND p.Org_ID = #{orgId}
+				</if>
+				AND p.Valid_Flag=1 
+			ORDER BY 
+				p.Id DESC 
+		 </trim>
+	</select>
+	<!-- 获取拌和设备 -->
+	<select id="getEquipmentInfo" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.EquipmentInfo">
+		SELECT
+			Id             AS id,           -- 自增长id
+			Equipment_Name AS equipmentName -- 拌合站设备名称
+		FROM
+			Equipment_Info -- 拌和设备表
+		WHERE
+			Valid_Flag = 1
+			AND Equi_State = 2
+			<if test="orgId != null and orgId != 0">
+				AND Org_ID = #{orgId}
+			</if>
+			AND Equipment_Type = #{equipmentType}
+	</select>
+	<!-- 获取产品名称 -->
+	<select id="getMaterialNameList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT DISTINCT
+			v.Material_Name AS mateName -- 物料名称
+		FROM
+			V_MaterialInfo v -- 材料信息（视图）
+		WHERE
+			v.Material_Type = #{materialType}
+			AND v.Material_Mold = #{materialMold}
+			AND v.org_id = #{orgId}
+			AND v.Valid_Flag = 1
+	</select>
+	<!-- 获取产品型号 -->
+	<select id="getMaterialModelList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT
+			a.Id             AS id,-- 自增长Id       
+			a.Material_Model AS mateModel -- 物料型号
+		FROM
+			V_MaterialInfo a -- 材料信息（视图）
+		WHERE
+			a.Material_Type = #{materialType}
+			AND a.Material_Mold = #{materialMold}
+			AND a.Material_Name = #{materialName}
+			AND a.Valid_Flag = 1
+			<if test="orgId != null and orgId != 0">
+				AND org_id = #{orgId}
+			</if>
+	</select>
+	<!-- 获取施工配比编号 -->
+	<select id="getConstructionPropCode" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementConstructionProportion">
+		SELECT
+			Id              AS id, -- 自增长ID
+			Prop_Code       AS propCode -- 施工配比编码
+		FROM
+			Cement_ConstructionProportion -- 水泥施工配比表
+		WHERE
+			Valid_Flag = 1
+		  	AND Org_ID = #{orgId}
+		  	AND Product_Id = #{productId}
+	</select>
+	<!-- 获取施工地点 -->
+	<select id="getProjPos" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT
+			Proj_Pos AS projPos -- 施工地点
+		FROM
+			Cement_Production_Plan -- 水泥生产计划
+		WHERE
+			Valid_Flag = 1 AND IsCancel = 0
+	</select>
+	<!-- 获取施工单位 -->
+	<select id="getConstructionUnit" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT
+			Construction_Unit AS cnstructionUnit -- 施工单位
+		FROM
+			Cement_Production_Plan -- 水泥生产计划
+		WHERE
+			Valid_Flag = 1 AND IsCancel = 0
+	</select>
+	<!-- 获取浇灌部位 -->
+	<select id="getWateringSite" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT DISTINCT
+			Watering_Site   AS wateringSite -- 施工单位
+		FROM
+			Cement_Production_Plan -- 水泥生产计划
+		WHERE
+			Valid_Flag = 1 AND IsCancel = 0
+	</select>
+	<!-- 添加水泥生产计划 -->
+	<insert id="addCementProductionPlan" parameterType="com.mixingStation.model.cement.CementProductionPlan">
+		INSERT INTO Cement_Production_Plan (
+			Org_ID,
+			Plan_No,
+			StartTime,
+			Equ_ID,
+			Product_ID,
+			ConsProp_ID,
+			Proj_Pos,
+			Construction_Unit,
+			Watering_Site,
+			Scheduled_Production,
+			IsCancel,
+			Operator,
+			Create_Date,
+			Valid_Flag
+		)
+		VALUES
+			(
+				#{orgId},
+				#{planNo},
+				#{startTime},
+				#{equId},
+				#{productId},
+				#{consPropId},
+				#{projPos},
+				#{constructionUnit},
+				#{wateringSite},
+				#{scheduledProduction},
+				0,
+				#{operator},
+				CONVERT (VARCHAR(100), GETDATE(), 20),
+				1
+			)
+	</insert>
+	<!-- 通过id查询水泥生产计划 -->
+	<select id="getCementProductionPlanById" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementProductionPlan">
+		SELECT
+			p.Id                                            AS id,-- 自增长ID
+			p.Org_ID                                        AS orgId, -- 组织机构ID
+			p.Equ_ID                                        AS equId,-- 拌和机Id
+			e.Equipment_Name                                AS equipmentName,-- 拌合机设备名称
+			isnull(p.Plan_No, '')                           AS planNo,-- 生产计划编号
+			p.Product_ID                                    AS productId,-- 产品Id
+			mn.Material_Name                                AS materialName,-- 产品名称
+			mm.Material_Model                               AS materialModel,-- 产品型号
+			isnull(mn.Material_Name + mm.Material_Model,'') AS nameAndModel,-- 产品名称+产品型号
+			p.ConsProp_ID                                   AS consPropId,-- 施工配比ID
+			isnull(ccp.Prop_Code, '')                       AS propCode,-- 施工配比编码
+			isnull(CONVERT(varchar(20),p.StartTime,120), '') AS startTime,-- 生产计划开始时间
+			isnull(p.Proj_Pos, '')                          AS projPos,-- 施工地点
+			isnull(p.Construction_Unit, '')                 AS constructionUnit,-- 施工单位
+			p.Scheduled_Production                          AS scheduledProduction,-- 计划生产量
+			isnull(p.Watering_Site, '')                     AS wateringSite,-- 浇灌部位
+			p.IsCancel                                      AS isCancel,-- 计划是否作废
+			isnull(p.Invalid_Person, '')                    AS invalidPerson,-- 作废人
+			isnull(p.Cancel_Reason, '')                     AS cancelReason,-- 作废原因
+			isnull(CONVERT(varchar(20),p.Create_Date,120), '') AS createDate-- 创建时间
+		FROM
+			Cement_Production_Plan p -- 水泥生产计划
+			LEFT JOIN Equipment_Info e ON e.Id = p.Equ_ID -- 拌合机设备表
+			LEFT JOIN Cement_ConstructionProportion ccp ON ccp.Id = p.ConsProp_ID -- 施工配比表
+			LEFT JOIN Material_Info mi ON p.Product_ID = mi.Id
+			LEFT JOIN MaterName_Info mn ON mi.MateName_ID = mn.Id
+			LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID = mm.Id
+		WHERE
+			p.Id = #{id}
+	</select>	
+	<!-- 修改水泥生产计划 -->
+	<update id="updateCementProductionPlan" parameterType="com.mixingStation.model.cement.CementProductionPlan">
+		UPDATE Cement_Production_Plan
+			SET 
+				Plan_No = #{planNo},
+				StartTime = #{startTime},
+				Equ_ID = #{equId},
+				Product_ID = #{productId},
+				ConsProp_ID = #{consPropId},
+				Proj_Pos = #{projPos},
+				Construction_Unit = #{constructionUnit},
+				Watering_Site = #{wateringSite},
+				Scheduled_Production = #{scheduledProduction},
+				IsCancel = 0,
+				Modifier = #{modifier},
+				Modify_Date = CONVERT (VARCHAR(100), GETDATE(), 20),
+				Valid_Flag = 1
+			WHERE
+				Id = #{id}
+	</update>
+	<!-- 删除修改水泥生产计划 -->
+	<update id="deleteCementProductionPlan" parameterType="java.util.Map">
+		UPDATE Cement_Production_Plan
+			SET
+				Valid_Flag = 0
+		WHERE
+			Id = #{id}		
+	</update>
+	<!-- 作废修改水泥生产计划 -->
+	<update id="zfCementProductionPlan" parameterType="java.util.Map">
+		UPDATE Cement_Production_Plan
+			SET
+				Cancel_Reason = #{cancelReason},
+				IsCancel = 1
+		WHERE
+			Id = #{id}	
+	</update>
+</mapper>

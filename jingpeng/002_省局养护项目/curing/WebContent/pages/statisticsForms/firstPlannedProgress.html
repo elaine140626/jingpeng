@@ -1,0 +1,161 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="Bookmark" href="/favicon.ico">
+		<link rel="Shortcut Icon" href="/favicon.ico" />
+		<!--[if lt IE 9]>
+<script type="text/javascript" src="../../js/html5shiv.js"></script>
+<script type="text/javascript" src="../../js/respond.min.js"></script>
+
+<![endif]-->
+		<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+		<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="../../js/zTree/v3/css/metroStyle/metroStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/search.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/datatable/datatables.css" /></link>
+		<!-- <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"> -->
+
+		<title></title>
+	</head>
+	<body>
+		<nav class="breadcrumb">
+			<i class="Hui-iconfont">&#xe67f;</i> 首页 
+			<span class="c-gray en">&gt;</span> 工程进度
+			<span class="c-gray en">&gt;</span> <span id="reportTitle"></span>
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="Hui-iconfont">&#xe68f;</i>
+			</a>
+		</nav>
+		<div class="page-container">
+			<div class="col-xs-8 col-sm-12 ">
+				<div class="text-c search-line">
+					<div class="col-xs-6 col-sm-3 mt-20">
+						市别：<input type="text" name="CityName" id="CityName" placeholder="" style="width:250px;margin-right: 30px;" class="input-text">
+					</div>
+					<div class="col-xs-1 col-sm-1 mt-20">
+						<button name="" id="" class="btn btn-success search-btn" type="button" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					</div>	
+					<div class="col-xs-1 col-sm-1 mt-20">
+						<button name="" id="" class="btn btn-success search-btn" type="button" onclick="printTable()"><i class="Hui-iconfont">&#xe665;</i> 打印</button>
+					</div>								
+				</div>
+				<div class="text-c search-line">
+					<div class="col-xs-1 col-sm-1 mt-20">选择打印的列：</div>
+					<div class="mt-20">				
+					<input type="checkbox" name="checkbox" value="1" checked="checked" />总 项 数
+					<input type="checkbox" name="checkbox" value="2" checked="checked" />开工数
+					<input type="checkbox" name="checkbox" value="3" checked="checked" />开工率(%)
+					<input type="checkbox" name="checkbox" value="4" checked="checked" />省补总投资(万元)
+					<input type="checkbox" name="checkbox" value="5" checked="checked" />完成总投资(万元)
+					<input type="checkbox" name="checkbox" value="6" checked="checked" />工程进度(%)
+					<input type="checkbox" name="checkbox" value="19" checked="checked" />项 目 进 展 情 况
+					</div>
+					<div class="col-xs-1 col-sm-1 mt-20"></div>
+					<div class="col-xs-1 col-sm-1 mt-20">路面工程:</div>
+					<div class="mt-20">	
+					<input type="checkbox" name="checkbox" value="7" checked="checked" />计划量（km/项)
+					<input type="checkbox" name="checkbox" value="8" checked="checked" />开工数
+					<input type="checkbox" name="checkbox" value="9" checked="checked" />开工率（%）
+					<input type="checkbox" name="checkbox" value="10" checked="checked" />省补总投资(万元)
+					<input type="checkbox" name="checkbox" value="11" checked="checked" />完成投资  (万元)
+					<input type="checkbox" name="checkbox" value="12" checked="checked" />工程进度(%)
+					</div>
+					<div class="col-xs-1 col-sm-1 mt-20"></div>
+					<div class="col-xs-1 col-sm-1 mt-20">桥隧工程:</div>
+					<div class="mt-20">	
+					<input type="checkbox" name="checkbox" value="13" checked="checked" />计划量 （m/座)
+					<input type="checkbox" name="checkbox" value="14" checked="checked" />开工数
+					<input type="checkbox" name="checkbox" value="15" checked="checked" />开工率（%）
+					<input type="checkbox" name="checkbox" value="16" checked="checked" />省补总投资(万元)
+					<input type="checkbox" name="checkbox" value="17" checked="checked" />完成投资  (万元)					
+					<input type="checkbox" name="checkbox" value="18" checked="checked" />工程进度(%)
+					</div>
+				</div>
+				<div class="mt-20" style="width: 100%; overflow-x: scroll;">							
+					<table id="table1" style="width: 1800px;" class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+						<thead>
+							<tr class="text-c">
+								<th rowspan="2"><p style="width: 30px;">序号</p></th>
+								<th rowspan="2"><p style="width: 80px;">操作</p></th>
+								<th rowspan="2"><p style="width: 60px;">市别</p></th>
+								<th rowspan="2"><p style="width: 80px;">总 项 数</p></th>
+								<th rowspan="2"><p style="width: 80px;">开工数</p></th>
+								<th rowspan="2"><p style="width: 80px;">开工率(%)</p></th>
+								<th rowspan="2"><p style="width: 95px;">省补总投资(万元)</p></th>
+								<th rowspan="2"><p style="width: 95px;">完成总投资(万元)</p></th>
+								<th rowspan="2"><p style="width: 80px;">工程进度(%)</p></th>
+								<th colspan="6" id="lumianTab"><p style="width: 550px;">路面工程</p></th>
+								<th colspan="6" id="qiaosuiTab"><p style="width: 550px;">桥隧工程</p></th>
+								<th rowspan="2"><p style="width: 180px;">项 目 进 展 情 况</p></th>
+							</tr>
+							<tr class="text-c">
+								<th><p style="width: 120px;"></p>计划量（km/项)</th>
+								<th><p style="width: 80px;"></p>开工数</th>
+								<th><p style="width: 80px;"></p>开工率（%）</th>
+								<th><p style="width: 95px;"></p>省补总投资(万元)</th>
+								<th><p style="width: 95px;"></p>完成投资  (万元)</th>
+								<th><p style="width: 80px;"></p>工程进度(%)</th>
+								<th><p style="width: 120px;"></p>计划量 （m/座)</th>
+								<th><p style="width: 80px;"></p>开工数</th>
+								<th><p style="width: 80px;"></p>开工率（%）</th>
+								<th><p style="width: 95px;"></p>省补总投资(万元)</th>
+								<th><p style="width: 95px;"></p>完成投资  (万元)</th>
+								<th><p style="width: 80px;"></p>工程进度(%)</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+						<tfoot>
+							<tr class="text-c">
+								<th colspan="3" id="caozuoTab" align="center"><p style="width: 80px;">全省</p></th>
+								<th><span id="totalCountSum"></span></th>
+								<th><span id="totalStartNumberSum"></span></th>
+								<th><span id="totalStartRateSum"></span></th>
+								<th><span id="totalProvinceSum"></span></th>
+								<th><span id="totalFinishSum"></span></th>
+								<th><span id="totalScheduleSum"></span></th>
+								<th><span id="pavementAmountSum"></span></th>
+								<th><span id="pavementStartNumberSum"></span></th>
+								<th><span id="pavementStartRateSum"></span></th>
+								<th><span id="pavementProvinceSum"></span></th>
+								<th><span id="pavementFinishSum"></span></th>
+								<th><span id="pavementScheduleSum"></span></th>
+								<th><span id="tunnelAmountSum"></span></th>
+								<th><span id="tunnelStartNumberSum"></span></th>
+								<th><span id="tunnelStartRateSum"></span></th>
+								<th><span id="tunnelProvinceSum"></span></th>
+								<th><span id="tunnelFinishSum"></span></th>
+								<th><span id="tunnelScheduleSum"></span></th>
+								<th></th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+		<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../js/zTree/v3/js/jquery.ztree.all-3.5.js"></script>
+		<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/datatables/1.10.0/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../../js/datatable/datatables.js"></script>
+
+		<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/entryTree.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/statisticsForms/firstPlannedProgress.js"></script>
+		<script type="text/javascript">			
+			$(document).ready(function() {
+				
+			});	   		
+		</script>
+	</body>
+</html>

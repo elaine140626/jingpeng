@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="material">
+    <sql id="Material_Mold">
+        (CASE Material_Mold
+                WHEN '0'     THEN '原材料'
+                WHEN '1'     THEN '产成品'
+        ELSE '半成品' END) str_material_Mold
+    </sql>
+    
+    
+	<select id="getMaterialInfo" parameterType="v_MaterialInfo"
+		resultType="v_MaterialInfo">
+		SELECT
+		id i_id,
+		org_Id i_org_Id,
+		material_Code str_material_Code,
+		mateName_Id i_mateName_Id,
+		mateModel_Id i_mateModel_Id,
+		<include refid="Material_Mold"/>,
+		density d_density,
+		measure_Unit str_measure_Unit,
+		material_Mold
+		str_measure_Unit,
+		operator str_operator,
+		CONVERT(varchar(20),create_Date,120) str_create_Date,
+		modifier str_modifier,
+		CONVERT(varchar(20),modify_Date,120) str_modify_Date,
+		valid_Flag
+		i_valid_Flag,
+		upload i_upload,
+		remarks str_remarks,
+		material_Name str_material_Name,
+		material_Model str_material_Model,
+		material_Name+'-'+material_Model nameAndModel
+		FROM
+		V_MaterialInfo
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+		    org_Id = #{i_org_Id}
+		    AND valid_Flag=1
+		    AND Material_Type=#{str_material_Type}
+			<if test="str_material_Name != null and str_material_Name != ''">
+				AND material_Name like '%${str_material_Name}%'
+			</if>
+			<if test="str_material_Model != null and str_material_Model != ''">
+				AND material_Model like '%${str_material_Model}%'
+			</if>
+			<if test="str_material_Mold != null and str_material_Mold != '' and str_material_Mold != 3">
+				AND material_Mold like '%${str_material_Mold}%'
+			</if>
+			<if test="i_id != null and i_id != '' or i_id != 0">
+				AND id = #{i_id}
+			</if>
+		</trim>
+		ORDER BY id DESC
+	</select>
+	
+	<select id="getMaterialById" parameterType="v_MaterialInfo"
+		resultType="v_MaterialInfo">
+		SELECT
+		id i_id,
+		org_Id i_org_Id,
+		material_Code str_material_Code,
+		mateName_Id i_mateName_Id,
+		mateModel_Id i_mateModel_Id,
+		<include refid="Material_Mold"/>,
+		density d_density,
+		measure_Unit str_measure_Unit,
+		material_Mold
+		str_measure_Unit,
+		operator str_operator,
+		CONVERT(varchar(20),create_Date,120) str_create_Date,
+		modifier str_modifier,
+		CONVERT(varchar(20),modify_Date,120) str_modify_Date,
+		valid_Flag
+		i_valid_Flag,
+		upload i_upload,
+		remarks str_remarks,
+		material_Name str_material_Name,
+		material_Model str_material_Model,
+		material_Name+'-'+material_Model nameAndModel
+		FROM
+		V_MaterialInfo
+		where id = #{i_id}
+	</select>
+	
+	<select id="getMaterialbyCode" parameterType="v_MaterialInfo" resultType="v_MaterialInfo">
+		SELECT
+		id i_id
+		FROM
+		V_MaterialInfo
+		WHERE
+		Material_Code = #{str_material_Code}
+		AND valid_Flag=1
+		AND org_Id = #{i_org_Id}
+	</select>
+
+	<select id="getMaterialbyNameOrModel" parameterType="v_MaterialInfo"
+		resultType="v_MaterialInfo">
+		SELECT
+		id i_id
+		FROM
+		V_MaterialInfo
+		WHERE
+		material_Name = #{str_material_Name}
+		AND material_Model = #{str_material_Model}
+		AND valid_Flag=1
+		AND org_Id = #{i_org_Id}
+		AND id not in (#{i_id})
+	</select>
+
+	<update id="updateMaterial" parameterType="v_MaterialInfo">
+		UPDATE Material_Info
+		SET
+		Org_ID = #{i_org_Id},
+		mateName_Id = #{i_mateName_Id},
+		mateModel_Id=#{i_mateModel_Id},
+		material_Code = #{str_material_Code},
+		material_Mold = #{str_material_Mold},
+		material_Type = #{str_material_Type},
+		density = #{d_density},
+		measure_Unit = #{str_measure_Unit},
+		modifier = #{str_modifier},
+		modify_Date = CONVERT(varchar(100), GETDATE(),20)
+		WHERE id = #{i_id}
+	</update>
+	
+	<insert id="addMaterial" parameterType="v_MaterialInfo">
+		INSERT INTO Material_Info
+		(org_Id,material_Code,mateName_Id,mateModel_Id,density,measure_Unit,
+		material_Type,material_Mold,operator,create_Date) VALUES
+		(#{i_org_Id},#{str_material_Code},#{i_mateName_Id},#{i_mateModel_Id},
+		#{d_density},#{str_measure_Unit},#{str_material_Type},#{str_material_Mold},#{operate},
+		CONVERT(varchar(100), GETDATE(),20))
+	</insert>
+
+	<select id="getLastMaterModelId" resultType="MaterModel_Info">
+		select max(id) i_id from material_Model
+	</select>
+
+	<select id="getLastMaterNameId" resultType="MaterName_Info">
+		select max(id) i_id from material_Model
+	</select>
+
+	<select id="getMaterName" parameterType="v_MaterialInfo"
+		resultType="v_MaterialInfo">
+		SELECT
+		id i_id
+		FROM
+		MaterName_Info
+		WHERE
+		material_Name =
+		#{str_material_Name}
+		AND valid_Flag=1
+	</select>
+
+	<select id="getMaterModel" parameterType="v_MaterialInfo"
+		resultType="v_MaterialInfo">
+		SELECT
+		id i_id
+		FROM
+		MaterModel_Info
+		WHERE
+		material_Model =
+		#{str_material_Model}
+		AND valid_Flag=1
+	</select>
+
+	<insert id="addMaterName" useGeneratedKeys="true" keyProperty="i_mateName_Id" parameterType="v_MaterialInfo">
+		INSERT INTO MaterName_Info
+		(material_Name,operator,create_Date) VALUES
+		(#{str_material_Name},#{str_operator},CONVERT(varchar(100), GETDATE(),
+		20))
+	</insert>
+
+	<insert id="addMaterModel" useGeneratedKeys="true" keyProperty="i_mateModel_Id"
+		parameterType="v_MaterialInfo">
+		INSERT INTO MaterModel_Info
+		(material_Model,operator,create_Date) VALUES
+		(#{str_material_Model},#{str_operator},CONVERT(varchar(100),
+		GETDATE(), 20))
+	</insert>
+
+    <update id="deletMaterial" parameterType="v_MaterialInfo">
+        UPDATE Material_Info
+		SET valid_Flag=0 WHERE id=#{i_id}
+    </update>
+    
+    <select id="isInAsphTargetProportion" parameterType="v_MaterialInfo" resultType="java.util.Map">
+		SELECT
+		m.id
+		FROM
+		Asph_TargetProportion a, Material_Info m
+		WHERE
+		a.Product_ID=m.id
+		and m.id=#{i_id}
+		and a.Org_ID=#{i_org_Id}
+		and m.valid_Flag=1
+		and m.Material_Mold=1
+		and a.valid_Flag=1
+	</select>
+	
+	 <select id="isInCementTheoryProportion" parameterType="v_MaterialInfo" resultType="java.util.Map">
+		SELECT
+		m.id
+		FROM
+		Cement_TheoryProportion a, Material_Info m
+		WHERE
+		a.Product_ID=m.id
+		and m.id=#{i_id}
+		and a.Org_ID=#{i_org_Id}
+		and m.valid_Flag=1
+		and m.Material_Mold=1
+		and a.valid_Flag=1
+	</select>
+	
+	<select id="isInAsphTargetPropDetailed" parameterType="v_MaterialInfo" resultType="java.util.Map">
+		SELECT
+		a.id
+		FROM
+		Asph_TargetPropDetailed a, Material_Info m
+		WHERE
+		a.Materials_ID=m.id
+		and m.id=#{i_id}
+		and m.valid_Flag=1
+		and m.Material_Mold=1
+		and a.valid_Flag=1
+	</select>
+	
+	<select id="isInCementTheoPropDetailed" parameterType="v_MaterialInfo" resultType="java.util.Map">
+		SELECT
+		a.id
+		FROM
+		Cement_TheoPropDetailed a, Material_Info m
+		WHERE
+		a.Materials_ID=m.id
+		and m.id=#{i_id}
+		and m.valid_Flag=1
+		and m.Material_Mold=1
+		and a.valid_Flag=1
+	</select>
+	
+	
+	<select id="isMayMaterialDel" parameterType="java.util.Map" resultType="java.util.Map">
+	
+	select SUM(t.a) as materialcount from(
+    select COUNT(*) as a from Asph_TargetProportion where Product_ID = #{i_id} and Valid_Flag = 1 AND Org_ID =#{i_org_Id}
+    union 
+    select COUNT(*) as a from Asph_TargetPropDetailed where Materials_ID = #{i_id} and Valid_Flag = 1
+    union
+    select COUNT(*) as a from Asphalt_Grading where Product_ID = #{i_id} and Valid_Flag = 1 AND Org_ID =#{i_org_Id}
+    union
+    select COUNT(*) as a from Asphalt_Prod_Proportion where Product_ID = #{i_id} and Valid_Flag = 1 AND Org_ID =#{i_org_Id}
+    union
+    select COUNT(*) as a from Production_Plan where Product_ID = #{i_id} and Valid_Flag = 1 AND Org_ID =#{i_org_Id}) t  
+    
+	</select>
+	
+		
+	<select id="iscementMaterialMayMaterialDel" parameterType="java.util.Map" resultType="java.util.Map">
+	
+    select SUM(a) as cementMaterialCount
+    from(
+          select COUNT(*) as a  from Cement_TheoryProportion where Product_ID = #{i_id} and Valid_Flag = 1 and Org_ID = #{i_org_Id}
+          union
+          select COUNT(*) as a from Cement_TheoPropDetailed where Materials_ID = #{i_id} and Valid_Flag = 1 
+          union
+          select COUNT(*) as a from Cement_ConstructionProportion where Product_ID  = #{i_id} and Valid_Flag = 1 and Org_ID = #{i_org_Id}
+          union
+          select COUNT(*) as  a from Cement_Production_Plan where Product_ID = #{i_id} and Valid_Flag = 1 and Org_ID = #{i_org_Id}
+         ) t 
+    
+	</select>
+
+</mapper>

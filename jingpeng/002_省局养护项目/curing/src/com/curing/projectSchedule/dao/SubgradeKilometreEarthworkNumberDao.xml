@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SubgradeKilometreEarthworkNumberDao">
+	<!-- 工程进度（路基每公里土石方数量表）List取得 -->
+	<select id="getSubgradeKilometreEarthworkNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SubgradeKilometreEarthworkNumberEntity">
+		SELECT
+		  sken.Id
+		  , sken.ProjectId                                -- 项目id
+		  , sken.PileNumber                               -- 起讫桩号
+		  , sken.AllCount                                 -- 总数量
+		  , sken.ExcavationSoil                           -- 挖方土普通土（立方米）
+		  , sken.ExcavationSoilOldRoad                    -- 挖方土旧路结构层（立方米）
+		  , sken.ExcavationSoilReplacement                -- 挖方土换填挖方（立方米）
+		  , sken.ExcavationStoneBrick                     -- 挖方石砖砌圬工（立方米）
+		  , sken.ExcavationStoneSoft                      -- 挖方石软岩（立方米）
+		  , sken.ExcavationStoneFirm                      -- 挖方石坚岩（立方米）
+		  , sken.FillAllCount                             -- 填方合计总数量（立方米）
+		  , sken.FillTotal                                -- 填方合计土（立方米）
+		  , sken.FillStone                                -- 填方合计石渣（立方米）
+		  , sken.FillLocalSoil                            -- 填方本桩利用土（立方米）
+		  , sken.FillLocalStone                           -- 填方本桩利用石（立方米）
+		  , sken.FillPortraitSoil                         -- 填方纵向利用土（立方米）
+		  , sken.FillPortraitStone                        -- 填方纵向利用石（立方米）
+		  , sken.FillDebtorTotal                          -- 填方借方土（立方米）
+		  , sken.FillDebtorStone                          -- 填方借方石渣（立方米）
+		  , sken.AbandonSoil                              -- 弃方土（立方米）
+		  , sken.AbandonOldRoad                           -- 弃方旧路结构层（立方米）
+		  , sken.AbandonBrick                             -- 弃方砖砌圬工（立方米）
+		  , sken.Remarks                                  -- 备注
+		  , sken.IsDel
+		  , sken.Creater
+		  , sken.CreaterDate
+		  , sken.Reviser
+		  , sken.ReviserDate 
+		FROM
+		  SubgradeKilometreEarthworkNumber as sken 
+		  left join V_EntryTree as ve 
+		    on sken.ProjectId = ve.pid
+		WHERE
+		  sken.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sken.Id = #{id}                           -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sken.ProjectId = #{treeIds}               -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sken.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="allCount!=null and allCount!=''">
+		    and sken.allCount like concat('%',#{allCount},'%')     -- 根据挖方总数量
+		  </if>
+		  <if test="fillAllCount!=null and fillAllCount!=''">
+		    and sken.fillAllCount  like concat('%',#{fillAllCount},'%') -- 根据填方总数量查询
+		  </if>
+		  order by sken.CreaterDate desc
+	</select>
+	
+	<!-- 导出 -->
+		<select id="getSubgradeKilometreEarthworkNumberListEx" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  sken.PileNumber                               -- 起讫桩号
+		  , sken.AllCount                                 -- 总数量
+		  , sken.ExcavationSoil                           -- 挖方土普通土（立方米）
+		  , sken.ExcavationSoilOldRoad                    -- 挖方土旧路结构层（立方米）
+		  , sken.ExcavationSoilReplacement                -- 挖方土换填挖方（立方米）
+		  , sken.ExcavationStoneBrick                     -- 挖方石砖砌圬工（立方米）
+		  , sken.ExcavationStoneSoft                      -- 挖方石软岩（立方米）
+		  , sken.ExcavationStoneFirm                      -- 挖方石坚岩（立方米）
+		  , sken.FillAllCount                             -- 填方合计总数量（立方米）
+		  , sken.FillTotal                                -- 填方合计土（立方米）
+		  , sken.FillStone                                -- 填方合计石渣（立方米）
+		  , sken.FillLocalSoil                            -- 填方本桩利用土（立方米）
+		  , sken.FillLocalStone                           -- 填方本桩利用石（立方米）
+		  , sken.FillPortraitSoil                         -- 填方纵向利用土（立方米）
+		  , sken.FillPortraitStone                        -- 填方纵向利用石（立方米）
+		  , sken.FillDebtorTotal                          -- 填方借方土（立方米）
+		  , sken.FillDebtorStone                          -- 填方借方石渣（立方米）
+		  , sken.AbandonSoil                              -- 弃方土（立方米）
+		  , sken.AbandonOldRoad                           -- 弃方旧路结构层（立方米）
+		  , sken.AbandonBrick                             -- 弃方砖砌圬工（立方米）
+		  , sken.Remarks                                  -- 备注
+		FROM
+		  SubgradeKilometreEarthworkNumber as sken 
+		  left join V_EntryTree as ve 
+		    on sken.ProjectId = ve.pid
+		WHERE
+		  sken.IsDel = 0
+		  order by sken.CreaterDate desc
+	</select>
+	
+	
+	<!-- 工程进度（路基每公里土石方数量表）合计 -->
+	<select id="getSubgradeKilometreEarthworkNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SubgradeKilometreEarthworkNumberSum">
+		SELECT
+		  sum(sken.AllCount) as AllCountSum               -- 总数量
+		  , sum(sken.ExcavationSoil) as ExcavationSoilSum -- 挖方土普通土（立方米）
+		  , sum(sken.ExcavationSoilOldRoad) as ExcavationSoilOldRoadSum -- 挖方土旧路结构层（立方米）
+		  , sum(sken.ExcavationSoilReplacement) as ExcavationSoilReplacementSum -- 挖方土换填挖方（立方米）
+		  , sum(sken.ExcavationStoneBrick) as ExcavationStoneBrickSum -- 挖方石砖砌圬工（立方米）
+		  , sum(sken.ExcavationStoneSoft) as ExcavationStoneSoftSum -- 挖方石软岩（立方米）
+		  , sum(sken.ExcavationStoneFirm) as ExcavationStoneFirmSum -- 挖方石坚岩（立方米）
+		  , sum(sken.FillAllCount) as FillAllCountSum     -- 填方合计总数量（立方米）
+		  , sum(sken.FillTotal) as FillTotalSum           -- 填方合计土（立方米）
+		  , sum(sken.FillStone) as FillStoneSum           -- 填方合计石渣（立方米）
+		  , sum(sken.FillLocalSoil) as FillLocalSoilSum   -- 填方本桩利用土（立方米）
+		  , sum(sken.FillLocalStone) as FillLocalStoneSum -- 填方本桩利用石（立方米）
+		  , sum(sken.FillPortraitSoil) as FillPortraitSoilSum -- 填方纵向利用土（立方米）
+		  , sum(sken.FillPortraitStone) as FillPortraitStoneSum -- 填方纵向利用石（立方米）
+		  , sum(sken.FillDebtorTotal) as FillDebtorTotalSum -- 填方借方土（立方米）
+		  , sum(sken.FillDebtorStone) as FillDebtorStoneSum -- 填方借方石渣（立方米）
+		  , sum(sken.AbandonSoil) as AbandonSoilSum       -- 弃方土（立方米）
+		  , sum(sken.AbandonOldRoad) as AbandonOldRoadSum -- 弃方旧路结构层（立方米）
+		  , sum(sken.AbandonBrick) as AbandonBrickSum     -- 弃方砖砌圬工（立方米）
+		FROM
+		  SubgradeKilometreEarthworkNumber as sken 
+		  left join V_EntryTree as ve 
+		    on sken.ProjectId = ve.pid
+		WHERE
+		  sken.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sken.Id = #{id}                           -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sken.ProjectId = #{treeIds}               -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and sken.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="allCount!=null and allCount!=''">
+		    and sken.allCount like concat('%',#{allCount},'%')     -- 根据挖方总数量
+		  </if>
+		  <if test="fillAllCount!=null and fillAllCount!=''">
+		    and sken.fillAllCount  like concat('%',#{fillAllCount},'%') -- 根据填方总数量查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（路基每公里土石方数量表） -->
+	<insert id="insertSubgradeKilometreEarthworkNumber" parameterType="com.curing.projectSchedule.model.SubgradeKilometreEarthworkNumberEntity">
+		INSERT 
+		INTO SubgradeKilometreEarthworkNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , AllCount
+		  , ExcavationSoil
+		  , ExcavationSoilOldRoad
+		  , ExcavationSoilReplacement
+		  , ExcavationStoneBrick
+		  , ExcavationStoneSoft
+		  , ExcavationStoneFirm
+		  , FillAllCount
+		  , FillTotal
+		  , FillStone
+		  , FillLocalSoil
+		  , FillLocalStone
+		  , FillPortraitSoil
+		  , FillPortraitStone
+		  , FillDebtorTotal
+		  , FillDebtorStone
+		  , AbandonSoil
+		  , AbandonOldRoad
+		  , AbandonBrick
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{AllCount}
+		  , #{ExcavationSoil}
+		  , #{ExcavationSoilOldRoad}
+		  , #{ExcavationSoilReplacement}
+		  , #{ExcavationStoneBrick}
+		  , #{ExcavationStoneSoft}
+		  , #{ExcavationStoneFirm}
+		  , #{FillAllCount}
+		  , #{FillTotal}
+		  , #{FillStone}
+		  , #{FillLocalSoil}
+		  , #{FillLocalStone}
+		  , #{FillPortraitSoil}
+		  , #{FillPortraitStone}
+		  , #{FillDebtorTotal}
+		  , #{FillDebtorStone}
+		  , #{AbandonSoil}
+		  , #{AbandonOldRoad}
+		  , #{AbandonBrick}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（路基每公里土石方数量表） -->
+	<update id="updateSubgradeKilometreEarthworkNumber" parameterType="com.curing.projectSchedule.model.SubgradeKilometreEarthworkNumberEntity">
+		UPDATE SubgradeKilometreEarthworkNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , AllCount = #{AllCount}
+		  , ExcavationSoil = #{ExcavationSoil}
+		  , ExcavationSoilOldRoad = #{ExcavationSoilOldRoad}
+		  , ExcavationSoilReplacement = #{ExcavationSoilReplacement}
+		  , ExcavationStoneBrick = #{ExcavationStoneBrick}
+		  , ExcavationStoneSoft = #{ExcavationStoneSoft}
+		  , ExcavationStoneFirm = #{ExcavationStoneFirm}
+		  , FillAllCount = #{FillAllCount}
+		  , FillTotal = #{FillTotal}
+		  , FillStone = #{FillStone}
+		  , FillLocalSoil = #{FillLocalSoil}
+		  , FillLocalStone = #{FillLocalStone}
+		  , FillPortraitSoil = #{FillPortraitSoil}
+		  , FillPortraitStone = #{FillPortraitStone}
+		  , FillDebtorTotal = #{FillDebtorTotal}
+		  , FillDebtorStone = #{FillDebtorStone}
+		  , AbandonSoil = #{AbandonSoil}
+		  , AbandonOldRoad = #{AbandonOldRoad}
+		  , AbandonBrick = #{AbandonBrick}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（路基每公里土石方数量表） -->
+	<update id="deleteSubgradeKilometreEarthworkNumber" parameterType="com.curing.projectSchedule.model.SubgradeKilometreEarthworkNumberEntity">
+		UPDATE SubgradeKilometreEarthworkNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

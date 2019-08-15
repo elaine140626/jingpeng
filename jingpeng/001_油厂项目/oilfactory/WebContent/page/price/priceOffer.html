@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<!--财务报价记录-->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-select.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 		
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/bootstrap-select.js"></script>
+		<!-- <script type="text/javascript" src="../../DataTables/datatables.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../DataTables/datatables.css" /></link> -->
+		<script type="text/javascript" src="../../js/oilfactory/price/priceOffer.js"></script> 
+		<script type="text/javascript"  src="../../js/laydate/laydate.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+		<script src="../../js/js/My97DatePicker/WdatePicker.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				.show {
+					position: absolute;
+					top: 40px;
+					left: 0px;
+					bottom: 0px;
+					width: 200px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.hiden{
+					position: absolute;
+					top: 40px;
+					left: 0px;
+					bottom: 0px;
+					width: 20px;
+					overflow: auto;
+    				border: none;
+				}
+				.mshow {
+					position: absolute;
+					top: 40px;
+					left: 205px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.mhide{
+					position: absolute;
+					top: 40px;
+					left: 20px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 260px
+				}
+				.fs-wrap {
+				    display: inline-block;
+				    width: 200px;
+				    font-size: 12px;
+				    line-height: 1;
+				    position: absolute;
+				    top: 5px;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				.show {
+					position: absolute;
+					top: 70px;
+					left: 0px;
+					bottom: 0px;
+					width: 260px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.hiden{
+					position: absolute;
+					top: 70px;
+					left: 0px;
+					bottom: 0px;
+					width: 20px;
+					overflow: auto;
+    				border: none;
+				}
+				.mshow {
+					position: absolute;
+					top: 70px;
+					left: 265px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.mhide{
+					position: absolute;
+					top: 70px;
+					left: 20px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 600px
+				}
+				.fs-wrap {
+				    display: inline-block;
+				    width: 200px;
+				    font-size: 12px;
+				    line-height: 1;
+				    position: absolute;
+				    top: 15px;
+				}
+			}
+	/* .fuchuang4 {
+    position: absolute;
+    width: 604px;
+    height: auto;
+    left: 10%;
+    top: 20%;
+    background-color: rgb(255, 255, 255);
+    z-index: 9999;
+    margin-right: 5px;
+    display: none;
+    padding: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(16, 75, 141);
+    border-image: initial;
+    border-radius: 3px;
+	}
+	.fuchuang3 {
+    position: absolute;
+    width: 604px;
+    height: auto;
+    left: 15%;
+    top: 20%;
+    background-color: rgb(255, 255, 255);
+    z-index: 9999;
+    margin-right: 5px;
+    display: none;
+    padding: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(16, 75, 141);
+    border-image: initial;
+    border-radius: 3px;
+} */
+		</style>
+<script type="text/javascript">
+/** ----------------leftMenu zTree部分开始----------------  **/
+jQuery.browser = {};
+jQuery.browser.msie = false;
+jQuery.browser.version = 0;
+if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+jQuery.browser.msie = true;
+jQuery.browser.version = RegExp.$1;
+}
+var zTree;
+var setting = {
+		view: {
+			dblClickExpand: false,
+			showLine: true,
+			selectedMulti: false,
+			expandSpeed: ($.browser.msie && parseInt($.browser.version) <= 6) ? "" : "fast"
+		},
+		data : {
+			simpleData : {
+				enable : true,
+			}
+		},
+		callback: {
+			onClick: findClick
+
+		}
+	};
+
+// 节点集合
+var nodes = [];
+var pid = 0;
+var ppid = '';
+var salesOrderId = "";
+var node = {};
+node = {
+	id : "客户订单信息",
+	pId : 0,
+	name : "客户订单信息"
+};
+nodes.push(node);
+
+$.ajax({
+	type: "post",
+	url: "../../price/getOfferrecordTree.action",
+	data: {"keyword":$("#keyword").val()},
+	dataType: "json",
+	success: function (data) {
+		if (data != null && data.length > 0) {
+			for (var i = 0; i < data.length; i++) {
+				
+				// 客户名称变更时
+				if (data[i].customerName != pid) {
+					// 父节点-标题名称
+					pid = "客户订单信息";
+					
+					// 子节点-客户名称
+					if (data[i].customerName != null
+							&& data[i].customerName != '') {
+						node = {
+							id : data[i].customerName,
+							pId : pid,
+							name : data[i].customerName
+						};
+						nodes.push(node);
+						
+						// 父节点-客户名称
+						ppid = data[i].customerName;
+					}
+
+					// 子节点-销售订单编号
+					if (data[i].salesOrderId != null
+							&& data[i].salesOrderId != '') {
+						node = {
+							id : data[i].orderNumber,
+							pId : ppid,
+							name : data[i].orderNumber
+						};
+						nodes.push(node);
+						salesOrderId = data[i].salesOrderId;
+					}
+
+					// 下一个父节点-当前客户名称
+					pid = data[i].customerName;
+
+				} else {
+					// 客户名称相同时
+					if(data[i].salesOrderId != salesOrderId){
+						// 子节点-销售订单编号
+						if (data[i].salesOrderId != null
+								&& data[i].salesOrderId != '') {
+							node = {
+								id : data[i].orderNumber,
+								pId : ppid,
+								name : data[i].orderNumber
+							};
+							nodes.push(node);
+						}
+					}
+				}
+			}
+		}
+		$.fn.zTree.init($("#tree"), setting, nodes);
+		zTree = $.fn.zTree.getZTreeObj("tree");
+		// 默认展开所有节点
+		zTree.expandAll(true);
+	}
+});
+function findClick(event, treeId, treeNode, isCancel) {
+
+	var id = treeNode.id;
+	var pid = treeNode.pId;
+	var param = {};
+	// 清空页面上检索信息
+	$("#plateNumber").val("");
+	$("#startTime").val("");
+	$("#endTime").val("");
+	if(id == '客户订单信息'){
+		// 总结点全部查询
+		getInfoList(param)
+	}else if(pid == "客户订单信息"){
+		param.client = id;
+		// 根据客户名称查询
+		getInfoList(param)
+	}else{
+		// 根据客户名称和销售订单id查询
+		param.orderNumber = id;
+		param.client = pid;
+		// 根据客户名称查询
+		getInfoList(param)
+	}
+	
+	$(document).ready(function() {
+		$("#searchAll").click(function(){
+				location.href = 'priceOffer.html';
+			})
+	});
+	}
+</script>
+	</head>
+
+	<body class="container-fluid">
+	<div class="row">
+		<div id="top_nav">
+			<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;财务管理&nbsp;>&nbsp;<span
+				style="color: #1A5CC6">财务报价记录</span></span>
+		</div>
+		<div id="sider" class="show">
+			<a class="shouqi" href="javascript:;" title="收起菜单"></a> <a
+				class="zhankai" href="javascript:;" title="展开菜单"></a>
+			<div id="box_top" class="">财务报价记录</div>
+			<ul id="tree" class="ztree">
+			</ul>
+		</div>
+	</div>
+	<div id="main" class="mshow">
+		<div class="ui_tb">
+			<div id="box_border">
+				<div id="box_top">财务报价记录</div>
+				<div id="box_center">
+					<div class="col-lg-2 col-sm-4" style=" padding-right: 0; ">
+						按车辆查询：
+						<input type="text" class="ui_input_txt02" id="plateNumber" list="plateNumbers"/>
+						<dataList id="plateNumbers" class="ui_input_txt02" style="padding: 0;"></dataList>
+					</div>	
+					<div class="col-lg-4 col-sm-8">
+						按时间段查询：&nbsp;&nbsp; 
+						<input type="text" class="ui_input_txt02" name="startTime" id="startTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>&nbsp;--&nbsp;
+						<input type="text" class="ui_input_txt02" name="endTime" id="endTime" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					</div>	
+					<div class="col-lg-4 col-sm-6">
+						按出库单类型查询:&nbsp;&nbsp;
+			 			<select id="ContractState" multiple="multiple">  
+						    <optgroup label="按出库单类型查询">  
+						        <option value="0">正常出库单</option>  
+						        <option value="1">调拨出库单</option>  
+						        <option value="2">退货出库单</option>  
+						        <option value="3">空发出库单</option>  
+						        <option value="4">兑换出库单</option>
+						        <option value="5">兑换时调拨单</option>
+						        <option value="98">未称重出库单</option>  
+						    </optgroup>   
+						</select>
+					</div>
+					<div class="col-lg-2 col-sm-6">
+						<input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" onclick="search()"/>
+					</div>	
+
+				</div>
+					<div style="overflow-x: auto; padding:0" class="col-lg-12 col-sm-12">
+					<table id="listTable" class="table table-striped" style="width: 3620px;" cellspacing="0" cellpadding="0" align="center" border="0">
+						<thead>
+						   <tr>
+							<th class="xuhao" width="100px">序号</th>
+							<th class="chepaihao" width="100px">车牌号</th>
+							<th class="chukuriqi" width="200px">出厂时间</th>
+							<th class="zhiyundi" width="100px">止运地</th>
+							<th class="xinghao" width="300px">产品名称-型号</th>
+							<th class="kehumingcheng" width="300px">客户名称</th>
+							<th class="kehumingcheng" width="300px">客户别称</th>
+							<th class="hetongbianhao" width="150px">合同编号</th>
+							<th class="hetongbianhao" width="150px">销售订单编号</th>
+							<th class="hetongbianhao" width="150px">出库单编号</th>
+							<th class="zhuangtai" width="100px">状态</th>
+							<th class="zhuangtai" width="100px">销售员</th>
+							<th class="siji" width="100px">司机</th>
+							<th class="yunshujiesuan" width="100px">出厂重量(t)</th>
+							<th class="zhuangtai" width="100px">修改前价格(元)</th>
+							<th class="zhuangtai" width="100px">修改后价格(元)</th>
+							</tr>
+						</tbody>
+					</table>
+					</div>
+				</div>
+		</div>
+	</div>
+</body>
+
+</html>

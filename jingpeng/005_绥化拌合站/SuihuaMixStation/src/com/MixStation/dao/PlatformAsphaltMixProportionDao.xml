@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformAsphaltMixProportionDao">
+	<select id="getList" parameterType="java.util.Map" resultType="ApshaltMixProportionEntity">
+		SELECT
+			 amp.Id
+			,amp.Org_ID
+			,o.Org_Name  
+			,amp.Material_Name
+			,amp.Material_Model
+			,amp.Mix_Number
+			,amp.str_material_1
+			,amp.str_material_2
+			,amp.str_material_3
+			,amp.str_material_4
+			,amp.str_material_5
+			,amp.str_material_6
+			,amp.str_material_7
+			,amp.str_material_8
+			,amp.str_material_9
+			,amp.str_material_10
+			,amp.str_material_11
+			,amp.str_material_12
+			,amp.Operator
+			,CONVERT(varchar (100), amp.Create_Date, 20) as Create_Date 
+			,amp.Modifier
+			,CONVERT(varchar (100), amp.Modify_Date, 20) as Modify_Date 
+			,amp.Valid_Flag	
+			,amp.IsEnable	
+			,amp.Remarks
+		FROM
+			Asphalt_Mix_Proportion amp 
+		LEFT JOIN Organization_Info o on amp.Org_Id = o.Id
+		where 
+			amp.Valid_Flag = 1
+		<if test="id != '' and id != null">
+		and amp.id = #{id}
+		</if>
+		<if test="mix_Number != '' and mix_Number != null">
+		and amp.Mix_Number = #{mix_Number}
+		</if>
+		<if test="org_Id != '' and org_Id != null">
+		and amp.Org_ID = #{org_Id}
+		</if>
+		ORDER By amp.Create_Date desc
+			
+	</select>
+	<insert id="insertPlatformAsphaltMixProportion" parameterType="ApshaltMixProportionEntity">
+		insert 
+		into Asphalt_Mix_Proportion( 
+		 	 Org_ID
+			,Material_Name
+			,Material_Model
+			,Mix_Number
+			,str_material_1
+			,str_material_2
+			,str_material_3
+			,str_material_4
+			,str_material_5
+			,str_material_6
+			,str_material_7
+			,str_material_8
+			,str_material_9
+			,str_material_10
+			,str_material_11
+			,str_material_12
+			,Operator
+			,Create_Date
+			,Valid_Flag	
+			,IsEnable	
+			,Remarks
+		) 
+		values (
+			  #{Org_Id}
+			, #{Material_Name}
+			, #{Material_Model}
+			, #{Mix_Number}
+			, #{str_material_1}
+			, #{str_material_2}
+			, #{str_material_3}
+			, #{str_material_4}
+			, #{str_material_5}
+			, #{str_material_6}
+			, #{str_material_7}
+			, #{str_material_8}
+			, #{str_material_9}
+			, #{str_material_10}
+			, #{str_material_11}
+			, #{str_material_12}
+			, #{Operator}
+			, getdate()
+			, 1
+			, 0
+			, #{Remarks}	
+		)
+	</insert>
+	<update id="updatePlatformAsphaltMixProportion" parameterType="ApshaltMixProportionEntity">
+		UPDATE 
+			Asphalt_Mix_Proportion 
+		SET
+			  Org_Id = #{Org_Id}
+			, Material_Name = #{Material_Name}
+			, Material_Model = #{Material_Model}
+			, Mix_Number = #{Mix_Number}
+			, str_material_1 = #{str_material_1}
+			, str_material_2 = #{str_material_2}
+			, str_material_3 = #{str_material_3}
+			, str_material_4 = #{str_material_4}
+			, str_material_5 = #{str_material_5}
+			, str_material_6 = #{str_material_6}
+			, str_material_7 = #{str_material_7}
+			, str_material_8 = #{str_material_8}
+			, str_material_9 = #{str_material_9}
+			, str_material_10 = #{str_material_10}
+			, str_material_11 = #{str_material_11}
+			, str_material_12 = #{str_material_12}
+			, Modifier = #{Operator}
+			, Valid_Flag = 1
+			, Remarks = #{Remarks}	
+			where id = #{id} 
+	</update>
+	<update id="update" parameterType="ApshaltMixProportionEntity">
+		UPDATE 
+			Asphalt_Mix_Proportion 
+		
+		<if test="id == 0">
+		SET
+			IsEnable = 0
+		where org_Id = #{org_Id}
+		</if>
+	 	<if test="id != 0">
+	 	SET
+			 Modify_Date = getdate()
+			,IsEnable = 1
+			where id = #{id} 
+			and org_Id = #{org_Id}
+		</if>
+	</update>
+	<update id="delPlatformAsphaltMixProportion" parameterType="ApshaltMixProportionEntity">
+		UPDATE 
+			Asphalt_Mix_Proportion 
+		SET
+		   Valid_Flag = 0
+		where id = #{id}
+	</update>
+</mapper>

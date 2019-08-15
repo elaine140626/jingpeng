@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../js/oilfactory/screenDisplay/css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/oilfactory/screenDisplay/css/screen3.css"/>
+		<script src="../../js/oilfactory/screenDisplay/js/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/oilfactory/screenDisplay/js/screen3.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.scrollTbody {         
+				display:block;         
+				height:316px;       
+				overflow:hidden;        
+				width:100%;     
+			}
+			
+			table tr {
+				height: 60px
+				
+			}
+		</style>
+		<script type="text/javascript">
+			//先在table的最后增加一行，然后再把第一行中的数据填充到新增加的行中，最后再删除table的第一行
+			function change(table){
+				var row = table.insertRow(table.rows.length);//在table的最后增加一行,table.rows.length是表格的总行数
+				for(j=0;j<table.rows[0].cells.length;j++){//循环第一行的所有单元格的数据，让其加到最后新加的一行数据中（注意下标是从0开始的）
+				var cell = row.insertCell(j);//给新插入的行中添加单元格
+				cell.innerHTML = table.rows[0].cells[j].innerHTML;//设置新单元格的内容，这个根据需要，自己设置
+				}
+				table.deleteRow(0);//删除table的第一行
+			};
+			function tableInterval(){
+				var table1 = document.getElementById("qualityList");//获得表格
+				var table2 = document.getElementById("planQualityList");//获得表格
+				change(table1);//执行表格change函数，删除第一行，最后增加一行，类似行滚动
+				change(table2);//执行表格change函数，删除第一行，最后增加一行，类似行滚动
+			};
+			setInterval("tableInterval()",5000);//每隔2秒执行一次change函数，相当于table在向上滚动一样
+		</script>
+	</head>
+
+	<body class="body3">
+		<div class="itemTable">
+			<div class="quality_num">
+				<div class="quality_text">待出厂检测</div>
+				<div class="quality_number" id="count1">9</div>
+			</div>
+			<table class="quality_table">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>车牌号码</th>
+						<th>产品名称</th>
+						<th>产品规格</th>
+						<th>出库重量(吨)</th>
+						<th>客户编号</th>
+					</tr>
+				</thead>
+				<tbody id="qualityList" class="scrollTbody">
+				</tbody>
+			</table>
+		</div>
+		<div style="width: 90%;margin: 0 auto;border-bottom: 2px dashed #00ffcc;"></div>
+		<div class="itemTable">
+			<div class="quality_num">
+			</div>
+			<table class="quality_table">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>生产批次</th>
+						<th>产品名称</th>
+						<th>产品规格</th>
+						<th>计划生产量</th>
+						<th>单位</th>
+						<th>客户编号</th>
+					</tr>
+				</thead>
+				<tbody id="planQualityList" class="scrollTbody">
+				</tbody>
+			</table>
+			<div class="quality_num">
+				<div class="quality_text">待下发生产<br />工艺通知单</div>
+				<div class="quality_number" id="count2">9</div>
+			</div>
+		</div>
+	</body>
+
+</html>

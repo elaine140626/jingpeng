@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.BridgeGuardDao">
+	<!-- 工程进度（小桥防护工程及附属设施工程量汇总表）List取得 -->
+	<select id="getBridgeGuardList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeGuardEntity">
+		SELECT
+		  bg.Id                             -- id
+		  , bg.ProjectId                    -- 项目id
+		  , bg.CoreNumber                   -- 中心桩号
+		  , bg.BridgeName                   -- 桥名
+		  , bg.SupportingC25Concrete        -- 支撑梁C25混凝土（m³）
+		  , bg.SupportingRebar              -- 支撑梁钢筋（Kg）
+		  , bg.AliformC15Concrete           -- 八字墙/一字墙C15片石混凝土基础（m³）
+		  , bg.AliformM10Wall               -- 八字墙/一字墙M10片石墙身（m³）
+		  , bg.AliformM10Basics             -- 八字墙/一字墙M10片石基础（m³）
+		  , bg.AliformM10Veneer             -- 八字墙/一字墙M10浆砌块石镶面（m³）
+		  , bg.RubblePaving                 -- 铺砌M7.5片石铺砌（m³）
+		  , bg.Rubble                       -- 隔水墙M7.5号浆砌片石（m³）
+		  , bg.Gravel                       -- 砂砾（m³）
+		  , bg.BridgeBrand                  -- 桥名碑（70×30×1）
+		  , bg.Mason                        -- 拆除圬工（m³）
+		  , bg.Backfilling                  -- 后台填筑（m³）
+		  , bg.Earthwork                    -- 挖基土方（m³）
+		  , bg.Remarks                     
+		  , bg.IsDel
+		  , bg.Creater
+		  , bg.CreaterDate
+		  , bg.Reviser
+		  , bg.ReviserDate
+		FROM
+		  BridgeGuard as bg
+		  left join V_EntryTree as ve 
+		    on bg.ProjectId = ve.pid 
+		WHERE
+		  bg.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and bg.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and bg.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and bg.coreNumber like concat('%',#{coreNumber},'%')-- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and bg.bridgeName like concat('%',#{bridgeName},'%')    -- 根据位置查询
+		  </if>
+		  order by bg.CreaterDate desc
+	</select>
+	
+		<select id="getBridgeGuardListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  bg.CoreNumber                   -- 中心桩号
+		  , bg.BridgeName                   -- 桥名
+		  , bg.SupportingC25Concrete        -- 支撑梁C25混凝土（m³）
+		  , bg.SupportingRebar              -- 支撑梁钢筋（Kg）
+		  , bg.AliformC15Concrete           -- 八字墙/一字墙C15片石混凝土基础（m³）
+		  , bg.AliformM10Wall               -- 八字墙/一字墙M10片石墙身（m³）
+		  , bg.AliformM10Basics             -- 八字墙/一字墙M10片石基础（m³）
+		  , bg.AliformM10Veneer             -- 八字墙/一字墙M10浆砌块石镶面（m³）
+		  , bg.RubblePaving                 -- 铺砌M7.5片石铺砌（m³）
+		  , bg.Rubble                       -- 隔水墙M7.5号浆砌片石（m³）
+		  , bg.Gravel                       -- 砂砾（m³）
+		  , bg.BridgeBrand                  -- 桥名碑（70×30×1）
+		  , bg.Mason                        -- 拆除圬工（m³）
+		  , bg.Backfilling                  -- 后台填筑（m³）
+		  , bg.Earthwork                    -- 挖基土方（m³）
+		  , bg.Remarks                     
+		FROM
+		  BridgeGuard as bg
+		  left join V_EntryTree as ve 
+		    on bg.ProjectId = ve.pid 
+		WHERE
+		  bg.IsDel = 0
+		  order by bg.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（小桥防护工程及附属设施工程量汇总表）合计 -->
+	<select id="getBridgeGuardSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeGuardSum">
+		SELECT
+		    sum(bg.SupportingC25Concrete)   as SupportingC25ConcreteSum      -- 支撑梁C25混凝土（m³）
+		  , sum(bg.SupportingRebar)         as SupportingRebarSum            -- 支撑梁钢筋（Kg）
+		  , sum(bg.AliformC15Concrete)      as AliformC15ConcreteSum         -- 八字墙/一字墙C15片石混凝土基础（m³）
+		  , sum(bg.AliformM10Wall)          as AliformM10WallSum             -- 八字墙/一字墙M10片石墙身（m³）
+		  , sum(bg.AliformM10Basics)        as AliformM10BasicsSum           -- 八字墙/一字墙M10片石基础（m³）
+		  , sum(bg.AliformM10Veneer)        as AliformM10VeneerSum           -- 八字墙/一字墙M10浆砌块石镶面（m³）
+		  , sum(bg.RubblePaving)            as RubblePavingSum               -- 铺砌M7.5片石铺砌（m³）
+		  , sum(bg.Rubble)                  as RubbleSum                     -- 隔水墙M7.5号浆砌片石（m³）
+		  , sum(bg.Gravel)                  as GravelSum                     -- 砂砾（m³）
+		  , sum(bg.BridgeBrand)             as BridgeBrandSum                -- 桥名碑（70×30×1）
+		  , sum(bg.Mason)                   as MasonSum                      -- 拆除圬工（m³）
+		  , sum(bg.Backfilling)             as BackfillingSum                -- 后台填筑（m³）
+		  , sum(bg.Earthwork)               as EarthworkSum                  -- 挖基土方（m³）
+		FROM
+		  BridgeGuard as bg
+		  left join V_EntryTree as ve 
+		    on bg.ProjectId = ve.pid 
+		WHERE
+		  bg.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and bg.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and bg.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and bg.coreNumber like concat('%',#{coreNumber},'%')-- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and bg.bridgeName like concat('%',#{bridgeName},'%')    -- 根据位置查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（小桥防护工程及附属设施工程量汇总表） -->
+	<insert id="insertBridgeGuard" parameterType="com.curing.projectSchedule.model.BridgeGuardEntity">
+		INSERT 
+		INTO BridgeGuard (
+			Id 
+		  , ProjectId
+		  , CoreNumber
+		  , BridgeName
+		  , SupportingC25Concrete
+		  , SupportingRebar
+		  , AliformC15Concrete
+		  , AliformM10Wall
+		  , AliformM10Basics
+		  , AliformM10Veneer
+		  , RubblePaving
+		  , Rubble
+		  , Gravel
+		  , BridgeBrand
+		  , Mason
+		  , Backfilling
+		  , Earthwork
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{CoreNumber}
+		  , #{BridgeName}
+		  , #{SupportingC25Concrete}
+		  , #{SupportingRebar}
+		  , #{AliformC15Concrete}
+		  , #{AliformM10Wall}
+		  , #{AliformM10Basics}
+		  , #{AliformM10Veneer}
+		  , #{RubblePaving}
+		  , #{Rubble}
+		  , #{Gravel}
+		  , #{BridgeBrand}
+		  , #{Mason}
+		  , #{Backfilling}
+		  , #{Earthwork}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		); 
+	</insert>
+	
+	<!-- 更新工程进度（小桥防护工程及附属设施工程量汇总表） -->
+	<update id="updateBridgeGuard" parameterType="com.curing.projectSchedule.model.BridgeGuardEntity">
+		UPDATE BridgeGuard 
+		SET
+		    CoreNumber = #{CoreNumber}
+		  , BridgeName = #{BridgeName}
+		  , SupportingC25Concrete = #{SupportingC25Concrete}
+		  , SupportingRebar = #{SupportingRebar}
+		  , AliformC15Concrete = #{AliformC15Concrete}
+		  , AliformM10Wall = #{AliformM10Wall}
+		  , AliformM10Basics = #{AliformM10Basics}
+		  , AliformM10Veneer = #{AliformM10Veneer}
+		  , RubblePaving = #{RubblePaving}
+		  , Rubble = #{Rubble}
+		  , Gravel = #{Gravel}
+		  , BridgeBrand = #{BridgeBrand}
+		  , Mason = #{Mason}
+		  , Backfilling = #{Backfilling}
+		  , Earthwork = #{Earthwork}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（小桥防护工程及附属设施工程量汇总表） -->
+	<update id="deleteBridgeGuard" parameterType="com.curing.projectSchedule.model.BridgeGuardEntity">
+		UPDATE BridgeGuard
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

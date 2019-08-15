@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/upload/upload.js"></script>
+<script type="text/javascript" src="../../js/jquery-upload-file/js/jquery.uploadfile.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/dispath/outbound_edit.js"></script>
+<script type="text/javascript" src="../../js/jquery-upload-file/js/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../../js/layer/layer.js"></script>
+<title>瑞德公路管理系统</title>
+<style type="text/css">
+tr {
+	margin-top: 5px;
+}
+
+.ui_text_rt {
+	width: 15%;
+	text-align: right;
+}
+
+.ui_text_lt {
+	width: 35%;
+}
+
+.ui_input_txt01 {
+	width: 60%;
+}
+
+.ui_input_txt0:first-child {
+	margin: 1px 1px 1px 5px;
+}
+
+.ui_select01 {
+	width: 60%;
+	margin-left: 2%;
+}
+
+.showDetail {
+	position: relative;
+}
+
+.text {
+	height: 80px;
+	resize: none
+}
+
+</style>
+<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				 * 取消
+				 */
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				}
+			});
+		</script>
+</head>
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<div id="container">
+			<div id="nav_links"
+				style="background-color: #02397F; color: white; font-size: 20px;">
+				新增出库单</div>
+				<input type="hidden" id="suttle" name="suttle" /> <!-- 净重 -->
+				<input type="hidden" id="productId" name="productId" /> <!-- 物料id -->
+				<input type="hidden" id="tareWeight" name="tareWeight" /> <!-- 皮重 -->
+				<input type="hidden" id="grossWeight" name="grossWeight" /> <!-- 毛重-->
+			<div class="ui_content">
+				<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+					<tr id="serialIDFlag">
+						<td class="ui_text_rt">出库单编号：</td>
+						<td class="ui_text_lt"><input type="text"
+							style="background: #cccccc" id="serialId" name="serialId"
+							class="ui_input_txt01" readonly="readonly" /></td>						
+					</tr>
+					<tr>
+						<td class="ui_text_rt">销售订单编号：</td>
+						<td class="ui_text_lt"  colspan="3"><select class="ui_select01" style="width: 529px; margin-left: 1%;"
+							id="salesOrderId" name="salesOrderId" onchange="changeOrderNumber(this.value);">
+						</select><span style="color: red;">*</span></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">销售订单明细编号：</td>
+						<td class="ui_text_lt" colspan="3"><select
+							class="ui_select01" style="width: 529px; margin-left: 1%;"
+							id="orderDetailedId" name="orderDetailedId"
+							onchange="changeDetailedNumber(this.value);">
+						</select><span style="color: red;">*</span></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">磅单打印物料名称：</td>
+						<td class="ui_text_lt">
+							<input type="text" id="lbsMaterialName" name="lbsMaterialName" maxlength="50"
+							class="ui_input_txt01" />
+							</td>
+						<td class="ui_text_rt" rowspan="2">物料名称/型号：</td>
+						<td class="ui_text_lt"><input type="text" id="materielName" style="background: #cccccc;"
+							name="materielName" readonly="readonly" class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">销售数量(吨)：</td>
+						<td class="ui_text_lt">
+							<input type="text" id="saleNumber" name="saleNumber" readonly="readonly" style="background: #cccccc;"
+							 class="ui_input_txt01" onkeyup='clearNoDecimal(this,8,4)'/>
+							</td>
+						<td class="ui_text_lt">
+							<input type="text" id="materielModel" name="materielModel" style="background: #cccccc;"
+							readonly="readonly" class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">车牌号码：</td>
+						<td class="ui_text_lt"><input class="ui_select01"
+							id="plateNumber" maxlength="15" name="plateNumber"
+							list="plateNumberList" onchange="changePlateNumber(this.value);" /><span
+							style="color: red;">*</span> <dataList class="ui_select01"
+								id="plateNumberList"></dataList></td>
+						<td class="ui_text_rt">客户编号：</td>
+						<td class="ui_text_lt"><input type="text"
+							style="background: #cccccc;" maxlength="100" id="customerCode"
+							name="customerCode" readonly="readonly" class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">送货人：</td>
+						<td class="ui_text_lt"><input type="text" id="deliveryMan"
+							name="deliveryMan" maxlength="10" class="ui_input_txt01" />
+						<td class="ui_text_rt">客户名称：</td>
+						<td class="ui_text_lt"><input type="text"
+							style="background: #cccccc;" maxlength="100" id="customerName"
+							name="customerName" readonly="readonly" class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">送货电话：</td>
+						<td class="ui_text_lt"><input type="text"
+							id="deliveryManPhone" name="deliveryManPhone" onchange="changeTelephone(this.value, 2)"
+							onkeyup="value=value.replace(/[^\d-]/g,'')" maxlength="14"
+							class="ui_input_txt01" /></td>
+						<td class="ui_text_rt">止运地：</td>
+						<td class="ui_text_lt"><input readonly="readonly"
+							style="background: #cccccc;" type="text" id="transports" name="transports"
+							class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">荷载吨数：</td>
+						<td class="ui_text_lt"><input type="text" id="loadTon" readonly="readonly"
+							name="loadTon" maxlength="200" style="background: #cccccc;"  class="ui_input_txt01" /></td>
+						<td class="ui_text_rt">起运地：</td>
+						<td class="ui_text_lt"><input type="text" id="startAddress"
+							name="startAddress" maxlength="200" class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">车辆称重类型：</td>
+						<td class="ui_text_lt"><select class="ui_select01"
+							id="cartWeighType" name="cartWeighType">
+						</select><span style="color: red;">*</span></td>
+						<td class="ui_text_rt">销售公司名称：</td>
+						<td class="ui_text_lt"><input type="text"
+							id="saleCompanyName" name="saleCompanyName" style="background: #cccccc;"
+							readonly="readonly"  maxlength="50"
+							class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">客户别称：</td>
+						<td class="ui_text_lt"><input type="text" id="customerAlias"
+							name="customerAlias" maxlength="50" class="ui_input_txt01" /></td>
+						<td class="ui_text_rt">运距（公里）：</td>
+						<td class="ui_text_lt"><input type="text" name="distance"
+							style="background: #cccccc;" id="distance" readonly="readonly"
+							class="ui_input_txt01" /></td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">收货人：</td>
+						<td class="ui_text_lt"><input type="text" id="consignee"
+							name="consignee" maxlength="10" class="ui_input_txt01" /><span
+							style="color: red;">*</span></td>
+						<td class="ui_text_rt">结算情况：</td>
+						<td class="ui_text_lt"><input readonly="readonly"
+							style="background: #cccccc" class="ui_input_txt01"
+							id="transportBalancesName" name="transportBalancesName"/></td>						
+					</tr>
+					<tr>
+						<td class="ui_text_rt">送货地址：</td>
+						<td class="ui_text_lt"><input type="text" id="address"
+							name="address" maxlength="128" class="ui_input_txt01" /><span
+							style="color: red;">*</span></td>
+						<td class="ui_text_rt">联系电话：</td>
+						<td class="ui_text_lt"><input type="text" id="consigneePhone" onchange="changeTelephone(this.value, 1)"
+							name="consigneePhone" onkeyup="value=value.replace(/[^\d-]/g,'')"
+							maxlength="14" class="ui_input_txt01" /><span
+							style="color: red;">*</span></td>						
+					</tr>
+					<tr>
+						<td class="ui_text_rt">备注：</td>
+						<td class="ui_text_lt" colspan="3"><input type="text" id="remarks"
+								name="remarks" maxlength="200" class="ui_input_txt01" style="width:529px;"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">销售备注：</td>
+						<td class="ui_text_lt" colspan="3"><input type="text" id="salRemarks"
+								name="salRemarks" maxlength="200" class="ui_input_txt01" readonly="readonly" style="background: #cccccc;width:529px;"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="ui_text_rt">&nbsp;</td>
+						<td class="ui_text_lt"></td>
+						<td class="ui_text_rt">&nbsp;</td>
+						<td class="ui_text_lt">&nbsp;<input id="submitbutton"
+							type="button" value="保存" class="ui_input_btnsave" onclick="save()" />
+							&nbsp; <input id="cancelbutton" type="button" value="关闭"
+							class="ui_input_btnclose" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

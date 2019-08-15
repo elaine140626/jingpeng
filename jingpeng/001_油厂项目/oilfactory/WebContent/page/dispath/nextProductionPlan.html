@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--下生产工艺通知单-->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" type="text/css" href="../../css/scrollTable.css" />
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../DataTables/datatables.js"></script>
+		<link rel="stylesheet" type="text/css" href="../../DataTables/datatables.css" /></link>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/dispath/nextProductionPlan.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				.mshow {
+					position: absolute;
+					top: 40px;
+					left: 5px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 260px
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				.mshow {
+					position: absolute;
+					top: 70px;
+					left: 5px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 600px
+				}
+			}
+		</style>
+	</head>
+	<body class="container-fluid">
+		<div>
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;调度管理&nbsp;>&nbsp;<span style="color:#1A5CC6">下发生产计划</span></span>
+			</div>
+			<div id="main" class="mshow">
+				<div class="ui_tb">			
+					<div id="box_border">
+						<div id="box_top">生产计划</div>
+						<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+							<div id="box_center">
+								<div class="col-lg-12 col-sm-12">
+									产品名称：<input type="text" class="ui_input_txt02" id="materielName" name="materielName" class="ui_input_txt02" />
+									产品规格：<input type="text" class="ui_input_txt02" id="materielModel" name="materielModel" class="ui_input_txt02" />
+									 是否下发计划：
+								 	<select id="isLowerHair" class="ui_input_txt02" name="isLowerHair" style="padding: 0;">
+										<option value="">请选择</option>
+										<option value="0">是</option>
+										<option value="1">否</option>
+			   						</select>
+									<input type="button" style="margin-left: 10px;" onclick="search()" value="查询" style=" margin-top: 2px;" class="ui_input_btnsearch" /> 
+									<input type="button" style="float: right; margin-right: 10px;" value="新增生产计划" class="ui_input_btnadd" id="addExchangeBtn" />
+								</div>
+							</div>
+						</form>
+						<div style="overflow-x: auto;"class="col-lg-12 col-sm-12">
+							<table id="list" class="table table-striped table2excel" style="width: 3100px;" cellspacing="0" cellpadding="0" align="center" border="0">
+								<thead>
+									<tr>
+										<th class="xuhao">序号</th>
+										<th class="caozuo1" style="width: 110px">操作</th>
+										<th class="hetongbianhao">编号</th>
+										<th class="xinghao">产品名称</th>
+										<th class="xinghao">产品规格</th>
+										<th class="hetongbianhao">产品编号</th>
+										<th class="kehumingcheng">订货单位编号</th>
+										<th class="kehumingcheng">订货单位名称</th>
+										<th class="kehumingcheng">计划生产量</th>
+										<th class="xuhao">单位</th>
+										<th class="kehumingcheng">储位</th>
+										<th class="hetongbianhao">生产批次</th>
+										<th class="hetongbianhao">是否下发计划</th>
+										<th class="hetongbianhao">计划完成时间</th>
+										<th class="hetongbianhao">下发人员角色</th>
+										<th class="xiaoshouyuan">下发人</th>
+										<th class="xiaoshouyuan">下发时间</th>
+										<th class="hetongbianhao">备注</th>
+									</tr>
+								</thead>								
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>	
+	</body>
+
+</html>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.AppJpushDao">
+	<!-- 获取用户id -->
+	<select id="getAppUser" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  ptui.UserCode 
+		from
+		  PTestSetDetailed as ptsd 
+		  left join PTestUserInfo as ptui 
+		    on ptsd.PlatformUserInfoId = ptui.Id 
+		where
+		  1 = 1
+		<if test="UniqueIdentifier !=null and UniqueIdentifier!= ''">
+	      and ptsd.UniqueIdentifier in 
+	      <foreach collection="UniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+          		 #{item}
+       	  </foreach>
+       	</if>       	 
+	</select>
+	<!-- 获取将要推送的数据 -->
+	<select id="getPushInfo" resultType="java.util.Map">
+		SELECT
+		  id
+		  , title
+		  , content
+		  , grouping 
+		FROM
+		  PushInfo 
+		where
+		  IsValidData = 1 
+		  and IfPush = 0 
+		  and convert(char (20), PushDate, 120) &lt;= convert(char (20), getDate(), 120)
+	</select>
+	
+	<!-- 修改推送消息状态 -->
+	<update id="updatePushState" parameterType="String">
+		update PushInfo 
+		set
+		  IfPush = 1
+		  , Modifier = '定时器推送'
+		  , ModifyDate = getDate() 
+		where
+		  id = #{id}
+	</update>
+	
+	<!-- 自动采集推送数据 -->
+	<select id="getAppData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  ti.UniqueIdentifier as uniqueIdentifier         -- 试验室唯一标识
+		  , CONVERT(varchar (100), ti.TestDate, 20) as testDate -- 试验日期
+		  , tri.TestRoomName as testRoomName              -- 试验室名称
+		  , ti.IsQualifiedTest as isQualifiedTest         -- 试验是否合格
+		  , tpi.TestName as testName                      -- 试验名称
+		  , ti.SampleCode as sampleCode                   -- 样品编号
+		FROM
+		  TestInfo ti                                     -- 试验室基本信息表
+		  left join TestRoomInfo tri                      -- 试验室信息
+		    on ti.UniqueIdentifier = tri.UniqueIdentifier 
+		  left join TestPageInfos tpi                     -- 试验页面信息
+		    on tpi.Id = ti.TestNameId                     -- 试验名称id
+		where
+		  ti.IsTestCollection = 1 
+		  and ti.IsValidData = 1 
+		  and ti.TestState = 2
+		  and ti.IsQualifiedTest = 0
+		  <if test="id !=null and id != ''">
+		  and ti.id = #{id}
+		  </if>
+		  <if test="uniqueIdentifier !=null and uniqueIdentifier != ''">
+	      	and ti.UniqueIdentifier in 
+		      <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+	          	#{item}
+	       	  </foreach>
+       	  </if>    
+       	order by
+		  ti.TestDate desc		  
+	</select>
+</mapper>

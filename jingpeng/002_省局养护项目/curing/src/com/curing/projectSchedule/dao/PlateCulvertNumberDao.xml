@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.PlateCulvertNumberDao">
+	<!-- 工程进度（小桥防护工程及附属设施工程量汇总表）List取得 -->
+	<select id="getPlateCulvertNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PlateCulvertNumberEntity">
+		SELECT
+		    pcn.Id                                   -- id
+		  , pcn.ProjectId                            -- 项目id
+		  , pcn.PileNumber                           -- 桩号
+		  , pcn.TopRebar                             -- 上部板钢筋（Kg）
+		  , pcn.TopC30Concrete                       -- 上部板C30混凝土（m³）
+		  , pcn.TopDeckRebar                         -- 上部桥面铺装钢筋（Kg）
+		  , pcn.TopDeckC40Concrete                   -- 上部桥面铺装C40混凝土（m³）
+		  , pcn.TopDeckWaterproof                    -- 上部桥面铺装防水（㎡）
+		  , pcn.TopGuardrailRebar                    -- 上部护栏基座钢筋（Kg）
+		  , pcn.TopGuardrailC40Concrete              -- 上部护栏基座C40混凝土（m³）
+		  , pcn.TopBearingRebar                      -- 上部支座锚栓钢筋（Kg）
+		  , pcn.TopBearingC40Concrete                -- 上部支座锚栓C40混凝土（m³）
+		  , pcn.M15Rubble                            -- M15浆砌片石台身（m³）
+		  , pcn.BottomRubbleBody                     -- 下部台身M10浆砌片石台身（m³）
+		  , pcn.BottomRubbleVeneer                   -- 下部台身M10浆砌块石镶面（m³）
+		  , pcn.BottomCapRebar                       -- 下部台帽及挡块钢筋（Kg）
+		  , pcn.BottomCapC30Concrete                 -- 下部台帽及挡块C30混凝土（m³）
+		  , pcn.BottomPlatformRebar                  -- 下部台基础钢筋（Kg）
+		  , pcn.BottomPlatformC20Stone               -- 下部台基础C20片石（m³）
+		  , pcn.BottomPlatformC20Concrete            -- 下部台基础C20混凝土（m³）
+		  , pcn.BottomBraceRebar                     -- 下部支撑梁钢筋（Kg）
+		  , pcn.BottomBraceConcrete                  -- 下部支撑梁混凝土（m³）
+		  , pcn.GuardC15Concrete                     -- 防护工程八字墙C15片石混凝土基础（m³）
+		  , pcn.GuardM10RubbleBody                   -- 防护工程八字墙M10浆砌片石墙身（m³）
+		  , pcn.GuardM10RubbleVeneer                 -- 防护工程八字墙M10浆砌块石镶面（m³）
+		  , pcn.GuardPaving                          -- 防护工程铺砌M7.5片石铺砌（m³）
+		  , pcn.GuardRubble                          -- 防护工程隔水墙M7.5号浆砌片石（m³）
+		  , pcn.GuardGravel                          -- 防护工程砂砾
+		  , pcn.Backfilling                          -- 后台填筑
+		  , pcn.Masonry                              -- 圬工
+		  , pcn.Earthwork                            -- 挖基土方
+		  , pcn.Remarks
+		  , pcn.IsDel
+		  , pcn.Creater
+		  , pcn.CreaterDate
+		  , pcn.Reviser
+		  , pcn.ReviserDate
+		FROM
+		  PlateCulvertNumber as pcn
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid 
+		WHERE
+		  pcn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pcn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pcn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pcn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		   order by pcn.CreaterDate desc
+	</select>
+	
+		<select id="getPlateCulvertNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		    pcn.PileNumber                           -- 桩号
+		  , pcn.TopRebar                             -- 上部板钢筋（Kg）
+		  , pcn.TopC30Concrete                       -- 上部板C30混凝土（m³）
+		  , pcn.TopDeckRebar                         -- 上部桥面铺装钢筋（Kg）
+		  , pcn.TopDeckC40Concrete                   -- 上部桥面铺装C40混凝土（m³）
+		  , pcn.TopDeckWaterproof                    -- 上部桥面铺装防水（㎡）
+		  , pcn.TopGuardrailRebar                    -- 上部护栏基座钢筋（Kg）
+		  , pcn.TopGuardrailC40Concrete              -- 上部护栏基座C40混凝土（m³）
+		  , pcn.TopBearingRebar                      -- 上部支座锚栓钢筋（Kg）
+		  , pcn.TopBearingC40Concrete                -- 上部支座锚栓C40混凝土（m³）
+		  , pcn.M15Rubble                            -- M15浆砌片石台身（m³）
+		  , pcn.BottomRubbleBody                     -- 下部台身M10浆砌片石台身（m³）
+		  , pcn.BottomRubbleVeneer                   -- 下部台身M10浆砌块石镶面（m³）
+		  , pcn.BottomCapRebar                       -- 下部台帽及挡块钢筋（Kg）
+		  , pcn.BottomCapC30Concrete                 -- 下部台帽及挡块C30混凝土（m³）
+		  , pcn.BottomPlatformRebar                  -- 下部台基础钢筋（Kg）
+		  , pcn.BottomPlatformC20Stone               -- 下部台基础C20片石（m³）
+		  , pcn.BottomPlatformC20Concrete            -- 下部台基础C20混凝土（m³）
+		  , pcn.BottomBraceRebar                     -- 下部支撑梁钢筋（Kg）
+		  , pcn.BottomBraceConcrete                  -- 下部支撑梁混凝土（m³）
+		  , pcn.GuardC15Concrete                     -- 防护工程八字墙C15片石混凝土基础（m³）
+		  , pcn.GuardM10RubbleBody                   -- 防护工程八字墙M10浆砌片石墙身（m³）
+		  , pcn.GuardM10RubbleVeneer                 -- 防护工程八字墙M10浆砌块石镶面（m³）
+		  , pcn.GuardPaving                          -- 防护工程铺砌M7.5片石铺砌（m³）
+		  , pcn.GuardRubble                          -- 防护工程隔水墙M7.5号浆砌片石（m³）
+		  , pcn.GuardGravel                          -- 防护工程砂砾
+		  , pcn.Backfilling                          -- 后台填筑
+		  , pcn.Masonry                              -- 圬工
+		  , pcn.Earthwork                            -- 挖基土方
+		  , pcn.Remarks
+		FROM
+		  PlateCulvertNumber as pcn
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid 
+		WHERE
+		  pcn.IsDel = 0
+		   order by pcn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（小桥防护工程及附属设施工程量汇总表）合计 -->
+	<select id="getPlateCulvertNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PlateCulvertNumberSum">
+		SELECT
+		    sum(pcn.TopRebar)                   as TopRebarSum                        -- 上部板钢筋（Kg）
+		  , sum(pcn.TopC30Concrete)             as TopC30ConcreteSum                  -- 上部板C30混凝土（m³）
+		  , sum(pcn.TopDeckRebar)               as TopDeckRebarSum                    -- 上部桥面铺装钢筋（Kg）
+		  , sum(pcn.TopDeckC40Concrete)         as TopDeckC40ConcreteSum              -- 上部桥面铺装C40混凝土（m³）
+		  , sum(pcn.TopDeckWaterproof)          as TopDeckWaterproofSum               -- 上部桥面铺装防水（㎡）
+		  , sum(pcn.TopGuardrailRebar)          as TopGuardrailRebarSum               -- 上部护栏基座钢筋（Kg）
+		  , sum(pcn.TopGuardrailC40Concrete)    as TopGuardrailC40ConcreteSum         -- 上部护栏基座C40混凝土（m³）
+		  , sum(pcn.TopBearingRebar)            as TopBearingRebarSum                 -- 上部支座锚栓钢筋（Kg）
+		  , sum(pcn.TopBearingC40Concrete)      as TopBearingC40ConcreteSum           -- 上部支座锚栓C40混凝土（m³）
+		  , sum(pcn.M15Rubble)                  as M15RubbleSum                       -- M15浆砌片石台身（m³）
+		  , sum(pcn.BottomRubbleBody)           as BottomRubbleBodySum                -- 下部台身M10浆砌片石台身（m³）
+		  , sum(pcn.BottomRubbleVeneer)         as BottomRubbleVeneerSum              -- 下部台身M10浆砌块石镶面（m³）
+		  , sum(pcn.BottomCapRebar)             as BottomCapRebarSum                  -- 下部台帽及挡块钢筋（Kg）
+		  , sum(pcn.BottomCapC30Concrete)       as BottomCapC30ConcreteSum            -- 下部台帽及挡块C30混凝土（m³）
+		  , sum(pcn.BottomPlatformRebar)        as BottomPlatformRebarSum             -- 下部台基础钢筋（Kg）
+		  , sum(pcn.BottomPlatformC20Stone)     as BottomPlatformC20StoneSum          -- 下部台基础C20片石（m³）
+		  , sum(pcn.BottomPlatformC20Concrete)  as BottomPlatformC20ConcreteSum       -- 下部台基础C20混凝土（m³）
+		  , sum(pcn.BottomBraceRebar)           as BottomBraceRebarSum                -- 下部支撑梁钢筋（Kg）
+		  , sum(pcn.BottomBraceConcrete)        as BottomBraceConcreteSum             -- 下部支撑梁混凝土（m³）
+		  , sum(pcn.GuardC15Concrete)           as GuardC15ConcreteSum                -- 防护工程八字墙C15片石混凝土基础（m³）
+		  , sum(pcn.GuardM10RubbleBody)         as GuardM10RubbleBodySum              -- 防护工程八字墙M10浆砌片石墙身（m³）
+		  , sum(pcn.GuardM10RubbleVeneer)       as GuardM10RubbleVeneerSum            -- 防护工程八字墙M10浆砌块石镶面（m³）
+		  , sum(pcn.GuardPaving)                as GuardPavingSum                     -- 防护工程铺砌M7.5片石铺砌（m³）
+		  , sum(pcn.GuardRubble)                as GuardRubbleSum                     -- 防护工程隔水墙M7.5号浆砌片石（m³）
+		  , sum(pcn.GuardGravel)                as GuardGravelSum                     -- 防护工程砂砾
+		  , sum(pcn.Backfilling)                as BackfillingSum                     -- 后台填筑
+		  , sum(pcn.Masonry)                    as MasonrySum                         -- 圬工
+		  , sum(pcn.Earthwork)                  as EarthworkSum                       -- 挖基土方
+		FROM
+		  PlateCulvertNumber as pcn
+		  left join V_EntryTree as ve 
+		    on pcn.ProjectId = ve.pid 
+		WHERE
+		  pcn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pcn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pcn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and pcn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（小桥防护工程及附属设施工程量汇总表） -->
+	<insert id="insertPlateCulvertNumber" parameterType="com.curing.projectSchedule.model.PlateCulvertNumberEntity">
+		INSERT 
+		INTO PlateCulvertNumber ( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , TopRebar
+		  , TopC30Concrete
+		  , TopDeckRebar
+		  , TopDeckC40Concrete
+		  , TopDeckWaterproof
+		  , TopGuardrailRebar
+		  , TopGuardrailC40Concrete
+		  , TopBearingRebar
+		  , TopBearingC40Concrete
+		  , M15Rubble
+		  , BottomRubbleBody
+		  , BottomRubbleVeneer
+		  , BottomCapRebar
+		  , BottomCapC30Concrete
+		  , BottomPlatformRebar
+		  , BottomPlatformC20Stone
+		  , BottomPlatformC20Concrete
+		  , BottomBraceRebar
+		  , BottomBraceConcrete
+		  , GuardC15Concrete
+		  , GuardM10RubbleBody
+		  , GuardM10RubbleVeneer
+		  , GuardPaving
+		  , GuardRubble
+		  , GuardGravel
+		  , Backfilling
+		  , Masonry
+		  , Earthwork
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{TopRebar}
+		  , #{TopC30Concrete}
+		  , #{TopDeckRebar}
+		  , #{TopDeckC40Concrete}
+		  , #{TopDeckWaterproof}
+		  , #{TopGuardrailRebar}
+		  , #{TopGuardrailC40Concrete}
+		  , #{TopBearingRebar}
+		  , #{TopBearingC40Concrete}
+		  , #{M15Rubble}
+		  , #{BottomRubbleBody}
+		  , #{BottomRubbleVeneer}
+		  , #{BottomCapRebar}
+		  , #{BottomCapC30Concrete}
+		  , #{BottomPlatformRebar}
+		  , #{BottomPlatformC20Stone}
+		  , #{BottomPlatformC20Concrete}
+		  , #{BottomBraceRebar}
+		  , #{BottomBraceConcrete}
+		  , #{GuardC15Concrete}
+		  , #{GuardM10RubbleBody}
+		  , #{GuardM10RubbleVeneer}
+		  , #{GuardPaving}
+		  , #{GuardRubble}
+		  , #{GuardGravel}
+		  , #{Backfilling}
+		  , #{Masonry}
+		  , #{Earthwork}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		); 
+	</insert>
+	
+	<!-- 更新工程进度（小桥防护工程及附属设施工程量汇总表） -->
+	<update id="updatePlateCulvertNumber" parameterType="com.curing.projectSchedule.model.PlateCulvertNumberEntity">
+		UPDATE PlateCulvertNumber 
+		SET
+		    PileNumber = #{PileNumber}
+		  , TopRebar = #{TopRebar}
+		  , TopC30Concrete = #{TopC30Concrete}
+		  , TopDeckRebar = #{TopDeckRebar}
+		  , TopDeckC40Concrete = #{TopDeckC40Concrete}
+		  , TopDeckWaterproof = #{TopDeckWaterproof}
+		  , TopGuardrailRebar = #{TopGuardrailRebar}
+		  , TopGuardrailC40Concrete = #{TopGuardrailC40Concrete}
+		  , TopBearingRebar = #{TopBearingRebar}
+		  , TopBearingC40Concrete = #{TopBearingC40Concrete}
+		  , M15Rubble = #{M15Rubble}
+		  , BottomRubbleBody = #{BottomRubbleBody}
+		  , BottomRubbleVeneer = #{BottomRubbleVeneer}
+		  , BottomCapRebar = #{BottomCapRebar}
+		  , BottomCapC30Concrete = #{BottomCapC30Concrete}
+		  , BottomPlatformRebar = #{BottomPlatformRebar}
+		  , BottomPlatformC20Stone = #{BottomPlatformC20Stone}
+		  , BottomPlatformC20Concrete = #{BottomPlatformC20Concrete}
+		  , BottomBraceRebar = #{BottomBraceRebar}
+		  , BottomBraceConcrete = #{BottomBraceConcrete}
+		  , GuardC15Concrete = #{GuardC15Concrete}
+		  , GuardM10RubbleBody = #{GuardM10RubbleBody}
+		  , GuardM10RubbleVeneer = #{GuardM10RubbleVeneer}
+		  , GuardPaving = #{GuardPaving}
+		  , GuardRubble = #{GuardRubble}
+		  , GuardGravel = #{GuardGravel}
+		  , Backfilling = #{Backfilling}
+		  , Masonry = #{Masonry}
+		  , Earthwork = #{Earthwork}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（小桥防护工程及附属设施工程量汇总表） -->
+	<update id="deletePlateCulvertNumber" parameterType="com.curing.projectSchedule.model.PlateCulvertNumberEntity">
+		UPDATE PlateCulvertNumber
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

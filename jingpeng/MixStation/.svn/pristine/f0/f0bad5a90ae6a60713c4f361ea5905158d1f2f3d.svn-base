@@ -1,0 +1,26 @@
+package com.blindSample.model;
+
+public class AppSetDetailed {
+	private Long Id;	//自增长ID
+	private Long AppUserId;	//App用户Id
+	private String UniqueIdentifier;	//实验室唯一标识
+	public Long getId() {
+		return Id;
+	}
+	public void setId(Long id) {
+		Id = id;
+	}
+	public Long getAppUserId() {
+		return AppUserId;
+	}
+	public void setAppUserId(Long appUserId) {
+		AppUserId = appUserId;
+	}
+	public String getUniqueIdentifier() {
+		return UniqueIdentifier;
+	}
+	public void setUniqueIdentifier(String uniqueIdentifier) {
+		UniqueIdentifier = uniqueIdentifier;
+	}
+	
+}

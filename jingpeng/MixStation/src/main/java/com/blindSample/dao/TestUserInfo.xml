@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blindSample.dao.TestUserInfoDao">
+
+	<!--查询试验室名称 -->
+	<select id="getTestRoomName" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.id id,t.TestRoomName,t.UniqueIdentifier,t.parentNode from TestRoomInfo t
+            
+		<if test="testIds != null and testIds != ''">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+        	<foreach collection="testIds" index="index" item="item" open="AND t.id IN (" separator="," close=")">
+                #{item}
+        	</foreach>
+        	</trim>
+        </if> 
+	</select>
+	
+	<!--查询注册的账号是否重复 -->
+	<select id="getTestUserName" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.id,t.userCode,t.name,t.password,t.IsSystemUser isSystemUser from PTestUserInfo t where  t.IsValidData=1
+		<if test="userName != null and userName != ''">
+			and t.UserCode=#{userName}
+		</if>
+		<if test="id != null and id != ''">
+			and t.id=#{id}
+		</if>
+	</select>
+	<!-- 注册账号 -->
+	<insert id="addTestName" parameterType="testUser_Info">
+		insert into PTestUserInfo(UserCode,Password,Name,IsSystemUser,Operator,CreateDate,IsCollector,RoleType,IsSamping,IsValidData)
+		values(#{usercode},#{password},#{name},0,#{operator},GETDATE(),#{collector},#{roletype},#{isSamping},1)
+	</insert>
+	
+	<!-- 注册账号增加权限 -->
+	<insert id="addTestRoot" parameterType="java.util.Map">
+		insert into PTestSetDetailed(PlatformUserInfoId,UniqueIdentifier)
+		values(#{ids},#{uniqueIdentifier})
+	</insert>
+	
+	<!-- 获取登录账户 -->
+	<select id="getUserLogin" parameterType="testUser_Info" resultType="testUser_Info">
+		select
+			*
+		from PTestUserInfo 
+		where IsValidData=1 and
+			userCode=#{usercode} and password=#{password}
+	</select>
+	
+	<!-- 获取用户信息 -->
+	<select id="getUserInformation" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			distinct r.TestRoomName 
+		from PTestSetDetailed t
+			left join TestRoomInfo r on r.UniqueIdentifier=t.UniqueIdentifier 
+		where 1=1
+		
+		<if test="ids != null and ids != ''">
+			and t.PlatformUserInfoId = #{ids}
+		</if>
+	</select>
+	
+	<!-- 删除 -->
+	<update id="testUserdel" parameterType="testUser_Info">
+		UPDATE PTestUserInfo SET IsValidData=0 WHERE id = #{id}
+	</update>
+	
+	<!--修改前的查询赋值操作 -->
+	<select id="getTestNameUpdate" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.id,t.userCode,t.name,t.IsCollector,t.password,t.RoleType, t.IsSamping from PTestUserInfo t where  t.IsValidData=1 and id=#{id}
+	</select>
+	
+	<!-- 修改 -->
+	<update id="updateTestUser" parameterType="testUser_Info">
+		update PTestUserInfo 
+		set 
+			Password=#{password}
+			,Name=#{name}
+			,IsCollector=#{collector}
+			,IsSamping =#{isSamping}
+			,RoleType=#{roletype}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteUserSubtable" parameterType="testSetDetailed">
+		delete from PTestSetDetailed where PlatformUserInfoId = #{platformUserInfoId} 
+	</delete> 
+</mapper>

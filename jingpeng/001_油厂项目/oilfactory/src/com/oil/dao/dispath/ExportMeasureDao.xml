@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.dispath.ExportMeasureDao">
+	<!-- 左侧客户订单信息树  -->
+	<select id="getCustomerOrderList" parameterType="java.util.Map" resultType="CustomerOrderEntity">
+		SELECT DISTINCT
+		  s.Id as salesOrderId   						  -- 销售订单id
+		  , s.OrderNumber as orderNumber                  -- 订单编号
+		  , cus.CustomerCode as customerCode              -- 客户编号
+		  , CONCAT(pi.Province, '-', ci.CityName, '-', cus.CustomerName) as customerName -- 客户名称
+		from
+		  exportMeasure d                                 -- 调度出库表
+		  left join salesorder s                          -- 销售订单表
+		    on d.SalesOrderId = s.Id                      -- 订单id
+		    and s.IsDel = 0  
+		  left join customerinfo as cus                   -- 客户信息表
+		    on s.CustomerId = cus.Id 
+		  left join userinfo as ui 
+		    on s.UserInfoId = ui.Id 
+		  left join cityinfo as ci 
+		    on cus.CityId = ci.Id 
+		  left join provinceinfo as pi 
+		    on ci.ProvinceId = pi.Id 
+		where
+		  d.IsDel = 0 
+		  <if test="keyword != null and keyword != ''">
+		  and s.OrderNumber like concat('%',#{keyword},'%') 
+		  </if>
+		  <if test="flag != null and flag != ''">
+	      and d.OutType = #{flag}                         -- 根据出库单类型查询
+	      </if>
+		ORDER BY
+		  cus.CustomerCode
+	</select>
+
+	<!-- 获取调度单已有车牌号  -->
+	<select id="getPlateNumberList" parameterType="java.util.Map" resultType="String">
+		select distinct
+		  PlateNumber 
+		from
+		  exportMeasure 
+		where
+		  IsDel = 0
+		<if test="flag != null and flag != ''">
+	      and OutType = #{flag}                          -- 根据出库单类型查询
+	    </if>
+	</select>
+	
+	<!-- 获取页面list信息  -->
+	<select id="getExportMeasureList" parameterType="java.util.Map" resultType="ExportMeasureEntity">
+		select
+		  exm.Id as id
+		  , exm.Serial_ID as SerialId                     -- 出库单编号
+		  , exm.PlateNumber as plateNumber                -- 车牌号码
+		  , exm.ProductID as productId                    -- 物料id
+		  , mai.MaterielName as materielName              -- 物料名称
+		  , mai.MaterielModel as materielModel            -- 规格型号
+		  , exm.LbsMaterialName as lbsMaterialName        -- 磅单打印物料名称
+		  , mai2.MaterielName as materielName2            -- 物料名称(兑换前)
+		  , mai2.MaterielModel as materielModel2          -- 规格型号(兑换前)
+		  , sald2.Proportion as proportion                -- 兑换比例
+		  , exm.Client as customerCode                    -- 客户编号
+		  , cus.CustomerName as customerName              -- 客户名称
+		  , exm.CustomerAlias as customerAlias            -- 客户别称
+		  , con.ContractNumber as contractNumber          -- 合同编号
+		  , exm.SalesOrderId as salesOrderId              -- 销售订单id
+		  , sal.OrderNumber as orderNumber                -- 销售订单编号
+		  , exm.OrderDetailedId as orderDetailedId        -- 销售订单明细id
+  		  , sald.OrderDetailedNumber as orderDetailedNumber -- 销售订单明细编号
+		  , sald.SaleNumber as saleNumber                 -- 销售数量
+		  , exm.OutType as outType                        -- 出库单状态 0：正常 1：调拨 2：退货 3:空发 4:兑换 5.兑换时调拨
+		  , exm.IsExamine as exmIsExamine                 -- 是否审核合格 0:是 1:否
+		  , getContentByCode('ckdzt', exm.OutType) as outTypeName -- 出库单状态名称
+		  , u.Name as salesName                           -- 销售员
+		  , exm.DeliveryMan as deliveryMan                -- 送货人(司机)
+		  , exm.DeliveryManPhone as deliveryManPhone      -- 送货电话(联系电话)
+		  , exm.Address as address                        -- 送货地址
+		  , exm.Consignee as consignee                    -- 收货人(联系人)
+		  , exm.ConsigneePhone as consigneePhone          -- 收货人电话(电话)
+		  , exm.ConsigneeAddress as consigneeAddress      -- 收货地址
+		  , tp.TestReportNumber as testReportNumber       -- 检测报告编号
+		  , DATE_FORMAT(exm.FactoryTime, '%Y-%m-%d') as factoryTime -- 出厂时间
+		  , DATE_FORMAT(sald.ExpectedDeliveryDate, '%Y-%m-%d') as expectedDeliveryDate -- 预计发货时间
+		  , exm.TareWeight as tareWeight                  -- 皮重
+		  , exm.GrossWeight as grossWeight                -- 毛重
+		  , exm.Suttle as suttle                          -- 净重
+		  , exm.IsTesting as isTesting                    -- 是否检测
+		  , tab.EmptyCarId as emptyCarId                  -- 关联空发出库单编号
+		  , exm.cancellationCause as cancellationCause    -- 作废原因
+		  , exm.CartWeighType as cartWeighType            -- 车辆称重类型（数据字典） 0:普通 1:大车 2:超大车
+		  , sald.Transports as transports                 -- 止运地
+		  , sald.Distance as distance                     -- 运距（千米）
+		  , exm.SaleCompanyName as saleCompanyName        -- 销售公司名称
+		  , sald.TransportBalance as transportBalances    -- 结算情况
+		  , getContentByCode('ysjsqk', sald.TransportBalance) as transportBalancesName -- 结算情况
+		  , exm.StartAddress as startAddress              -- 起运地
+		  , emp.OutWarehouseId as outWarehouseId          -- 空发关联出库单编号
+		  , exm.Remarks as remarks                        -- 备注
+		  , sald.Remarks as salRemarks                    -- 销售备注
+		  , exm.ValidFlag as validFlag                    -- 有效标识
+		  , exm.Creater
+		  , exm.CreaterDate
+		  , exm.Reviser
+		  , exm.ReviserDate 
+		  , plan.IsLowerHair as isLowerHair               -- 是否下发生产计划
+		  , plan.IsInspector as isInspector               -- 质检员审核工艺通知单
+		  , plan.IsExamine as isExamine                   -- 主任审核工艺通知单
+		  , plan.IsCheck as isCheck                       -- 生产任务核对
+		  , plan.IsProduction as isProduction             -- 确认生产
+		  , plan.IsApplication as isApplication           -- 提交质检申请
+		  , plan.IsQualified as isQualified               -- 质检是否合格
+		  , plan.IsAdjust as isAdjust                     -- 是否调整
+		  , plan.IsComplete as isComplete                 -- 是否生产完成
+		  , plan.IsConfirmSubmission as isConfirmSubmission -- 是否确认实际消耗
+  		  , car.LoadTon as loadTon                        -- 荷载吨数
+  		  ,	t.ReceiptWeight as receiptWeight              -- 回执重量
+		from
+		  exportMeasure exm                               -- 调度出库表
+		  left join salesorder sal                        -- 销售订单表
+		    on exm.SalesOrderId = sal.Id                  -- 销售订单id
+		    and sal.IsDel = 0 
+		  left join salesorderdetailed sald               -- 销售订单明细表
+		    on sal.Id = sald.SalesOrderId 
+		    and sald.IsDel = 0 
+		    AND exm.OrderDetailedId = sald.Id 
+		  left join customerinfo cus                      -- 客户信息表
+		    on cus.Id = sal.CustomerId 
+		    and cus.IsDel = 0 
+		  left join userinfo u                            -- 用户信息表
+		    on u.Id = sal.UserInfoId                      -- 销售员id
+		    and u.IsDel = 0 
+		  left join contractinfo con                      -- 合同信息表
+		    on sal.ContractId = con.Id                    -- 合同id
+		    and con.IsDel = 0 
+		  left join materielinfo mai                      -- 物料信息表
+		    on exm.ProductID = mai.Id                     -- 物料id
+		    and mai.IsDel = 0 
+		  left join salesorderdetailed sald2              -- 销售订单明细表
+		    on sal.Id = sald2.SalesOrderId 
+		    and sald2.IsDel = 0 
+		    AND exm.OrderDetailedId = sald2.Id 
+		  left join materielinfo mai2                     -- 物料信息表
+		    on sald2.MaterielId = mai2.Id                 -- 物料id
+		    and mai2.IsDel = 0 
+		  left join testreport tp                         -- 检测报告单
+		    on exm.Id = tp.ExportStorageId                -- 检测报告id
+		    and tp.IsDel = 0 
+		    and tp.Exchange = 1                           -- 兑换后检测报告
+		  left join ( 
+		    select
+		      emp.OutWarehouseId as OutWarehouseId
+		      , group_concat(emp.EmptyCarId) as EmptyCarId 
+		    from
+		      outemptyrelation emp                        -- 出库空发关联表
+		    where
+		      emp.IsDel = 0 
+		    group by
+		      emp.OutWarehouseId
+		  ) tab 
+		    on exm.Serial_ID = tab.OutWarehouseId
+		  left join outemptyrelation emp                  -- 出库空发关联表
+		    on exm.Serial_ID = emp.EmptyCarId 
+		    and emp.IsDel = 0 
+		  left join planmeasure plan                      -- 计划调度表
+		    on sald.Id = plan.SalesOrderDetailedId 
+		    and plan.IsDel = 0 
+		  left join carinfo car                           -- 车辆信息表
+		    on exm.PlateNumber = car.PlateNumber 
+		    and car.IsDel = 0
+		  left join transportlist t                           -- 运输单表
+		    on t.DispatchOutWarehouseId = exm.Id 
+		    and t.IsDel = 0
+		where
+		  exm.IsDel = 0
+		<if test="id != null">
+		  and exm.Id = #{id}                             -- 根据出库单id查询
+		</if>
+		<if test="plateNumber != null and plateNumber != ''">
+		  and exm.PlateNumber like concat('%',#{plateNumber},'%')       -- 根据车牌号码查询
+		</if>
+		<if test="startTime != null and startTime != ''">
+	      and <![CDATA[ DATE_FORMAT(sald.ExpectedDeliveryDate, '%Y-%m-%d') >=  #{startTime} ]]> -- 根据预计发货时间查询
+	    </if>
+	    <if test="endTime != null and endTime != ''">
+	      and <![CDATA[ DATE_FORMAT(sald.ExpectedDeliveryDate, '%Y-%m-%d') <=  #{endTime} ]]> -- 根据预计发货时间查询
+	    </if>
+	    <if test="materielType != null and materielType != ''">
+	      AND exm.ProductID IN (SELECT Id FROM materielinfo WHERE MaterielType = #{materielType}) -- 根据物料级别查询
+	    </if>    
+		<if test="client != null and client != ''">
+	      and exm.Client = #{client}                     -- 根据客户编号查询
+	    </if>
+	    <if test="orderNumber != null and orderNumber != ''">
+	      and sal.OrderNumber = #{orderNumber}           -- 根据销售订单编号查询       
+	    </if>
+	    <if test="flag != null and flag != ''">
+	      and exm.OutType = #{flag}                      -- 根据出库单类型查询
+	    </if>
+		order by
+		  exm.Id desc	    
+	</select>	
+
+	<!-- 新增页面获取销售订单编号 -->
+	<select id="getSalesOrderList" parameterType="java.util.Map" resultType="SalesOrderListEntity">
+		SELECT
+		  sal.Id as id                                    -- 销售订单id
+		  , sal.OrderNumber as orderNumbers               -- 销售订单编号
+		  , cus.CustomerCode as customerCode              -- 客户编号
+		  , cus.CustomerName as customerName              -- 客户名称
+		  , sal.CustomerAlias as customerAlias            -- 客户别称
+		  , sal.Contacts as contacts                      -- 收货人
+		  , sal.Telephone as telephone                    -- 联系电话
+		  , sal.Address as address                        -- 送货地址
+		  , sald.SaleNumber as saleNumber                 -- 销售数量
+		  , sc.CompanyName as saleCompanyName             -- 销售公司名称
+		  , sald.Id as orderDetailedId                    -- 销售订单明细id
+		  , sald.OrderDetailedNumber as orderDetailedNumber -- 销售订单明细编号
+		  , mai.Id as materielId                          -- 物料id
+		  , mai.MaterielName as materielName              -- 物料名称
+		  , mai.MaterielModel as materielModel            -- 物料型号
+		  , mai2.Id as exchangeMaterielId                 -- 物料id(兑换后)
+		  , mai2.MaterielName as exchangeMaterielName     -- 物料名称(兑换后)
+		  , mai2.MaterielModel as exchangeMaterielModel   -- 物料型号(兑换后)
+		  , sald.Proportion as proportion                 -- 兑换比例
+		  , sald.ListModel as listModel                   -- 磅单打印物料名称
+		  , sald.Transports as transports                 -- 止运地
+		  , sald.Distance as distance                     -- 运距（千米）
+		  , sald.TransportBalance as transportBalances    -- 结算情况
+		  , getContentByCode('ysjsqk', sald.TransportBalance) as transportBalancesName -- 结算情况
+		  , tab.OrderDetailedId as exmOrderDetailedId     -- 关联出库单的销售订单明细id
+		  , sald.Remarks as salRemarks                    -- 销售备注
+		FROM
+		  salesorder sal                                  -- 销售订单表
+		  left join salesorderdetailed sald               -- 销售订单明细表
+		    on sal.Id = sald.SalesOrderId 
+		    and sald.IsDel = 0 
+		  left join customerinfo cus                      -- 客户信息表
+		    on cus.Id = sal.CustomerId 
+		    and cus.IsDel = 0 
+		  left join salecompany sc                        -- 销售公司表
+		    on sc.Id = sal.SalesCompanyId 
+		    and sc.IsDel = 0 
+		  left join materielinfo mai                      -- 物料信息表
+		    on sald.MaterielId = mai.Id                   -- 物料id
+		    and mai.IsDel = 0 
+		  left join materielinfo mai2                     -- 物料信息表(兑换后)
+		    on sald.ExchangeMaterielId = mai2.Id          -- 物料id
+		    and mai2.IsDel = 0 
+		  left join ( 
+		    select distinct
+		      OrderDetailedId                             -- 销售订单明细id
+		    from
+		      exportMeasure 
+		    where
+		      IsDel = 0
+		  ) tab 
+		    on sald.Id = tab.OrderDetailedId 
+		WHERE
+		  sal.IsDel = 0 
+		  and sal.OrderState in (0, 4)                    -- 订单状态
+		  <if test="type != null and type != '' and type == 'exchange'"> -- 兑换的场合
+		    AND sald.IsExchange = 0
+		    AND sald.IsActualDelivery = 0
+		  </if>
+		  <if test="type != null and type != '' and type == 'empty'"> -- 空发的场合
+		    AND sald.IsActualDelivery = 1
+		    AND sald.TransportBalance <![CDATA[<>]]> 1
+		  </if>
+		  <if test="type != null and type != '' and type == 'normal'"> -- 正常的场合
+		    AND sald.IsActualDelivery = 0                 -- 是否实际发货
+		    AND sald.IsExchange = 1                       -- 是否兑换
+		  </if>
+		ORDER BY
+		  sal.Id DESC
+	</select>
+	
+	<!-- 空发：查询所有可选出库单号 -->
+	<select id="getAllOutboundList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  exm.Serial_ID
+		  , CONCAT(mai.MaterielName, "-", mai.MaterielModel) MaterielInfo
+		  , exm.PlateNumber
+		  , sald.Transports 
+		FROM
+		  exportmeasure exm 
+		  LEFT JOIN materielinfo mai 
+		    ON mai.IsDel = 0 
+		    AND exm.ProductID = mai.Id 
+		  LEFT JOIN salesorderdetailed sald 
+		    on exm.OrderDetailedId = sald.Id 
+		    AND sald.IsDel = 0 
+		WHERE
+		  exm.IsDel = 0 
+		  and exm.ValidFlag = 1 
+		  and exm.OutType <![CDATA[<>]]> 3 
+		  and sald.Transports = #{transports}             -- 止运地相同的出库单
+	</select>
+	
+	<!-- 获取所有车牌号码 -->
+	<select id="getAllPlateNumbers" parameterType="java.util.Map" resultType="CarInfo">
+		select distinct
+		  * 
+		from
+		  carinfo 
+		where
+		  IsDel = 0 
+	      <if test="plateNumber != null and plateNumber != ''">
+		    and plateNumber = #{plateNumber}
+		  </if>
+		ORDER BY
+		  id desc
+	</select>
+	
+	<!-- 获取所有车牌号码（不包含没有二次称重的车牌号） -->
+	<select id="getAllPlateNumbersExc" parameterType="java.util.Map" resultType="CarInfo">
+		select distinct
+		  * 
+		from
+		  carinfo as car 
+		  left join ( 
+		    select
+		      exm.PlateNumber 
+		    from
+		      exportmeasure as exm 
+		    where
+		      exm.IsDel = 0 
+		      and exm.ValidFlag = 1 
+		      and exm.OutType in ('0', '4') 
+		      and exm.Suttle is null
+		  ) as tab 
+		    on car.PlateNumber = tab.PlateNumber 
+		where
+		  car.IsDel = 0 
+		  and tab.PlateNumber is null	
+	      <if test="plateNumber != null and plateNumber != ''">
+		    and car.plateNumber = #{plateNumber}
+		  </if>
+		ORDER BY
+		  car.id desc	
+	</select>
+	
+	<!-- 判断输入车牌号是否没有完成二次称重 -->
+	<select id="checkPlateNumber" parameterType="java.util.Map" resultType="int">
+		select
+	      count(*) as count 
+	    from
+	      exportmeasure as exm 
+	    where
+	      exm.IsDel = 0 
+	      and exm.ValidFlag = 1 
+	      and exm.OutType in ('0', '4') 
+	      and exm.Suttle is null
+	      <if test="plateNumber != null and plateNumber != ''">
+		    and exm.PlateNumber = #{plateNumber}
+		  </if>	
+		  <if test="id != null and id != ''">
+		    and exm.id != #{id}
+		  </if>	
+	</select>
+
+	<!-- 出库单作废或者删除 -->
+	<update id="updateValidFlag" parameterType="java.util.Map">
+		UPDATE exportmeasure 
+		SET
+		  Reviser = #{reviser}
+		  , ReviserDate = now() 
+		  <if test="flag == 0">
+		    , ValidFlag = 0
+		    , CancellationCause = #{cancellationCause}
+		  </if>
+		  <if test="flag == 1">
+		  	, IsDel = 1
+		  </if>		  
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 删除关联的运输单 -->
+	<update id="delTranSportList" parameterType="java.util.Map">
+		UPDATE transportlist 
+		SET
+			IsDel = 1
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  DispatchOutWarehouseId = #{id}
+	</update>
+	
+	<!-- 删除关联的未称重出库单 -->
+	<update id="deleteNoWeight" parameterType="java.util.Map">
+		UPDATE noweighoutwarehouse 
+		set
+		  IsDel = 1 
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  DispatchOutWarehouseId = #{id}	
+	</update>
+
+	<!-- 新增出库单信息 -->
+	<insert id="addExportMeasure" parameterType="ExportMeasureEntity" useGeneratedKeys="true" keyProperty="id">
+		INSERT 
+		INTO exportmeasure( 
+		  Serial_ID                                       -- 流水号
+		  , SalesOrderId                                  -- 销售订单id
+		  , OrderDetailedId                               -- 订单详情ID
+		  , ProductID                                     -- 物料id
+		  , LbsMaterialName                               -- 磅单打印物料名称
+		  , PlateNumber                                   -- 车牌号码
+		  , Client                                        -- 客户编号
+		  , CustomerAlias                                 -- 客户别称
+		  , DeliveryMan                                   -- 送货人
+		  , DeliveryManPhone                              -- 送货电话
+		  , Address                                       -- 送货地址
+		  , Consignee                                     -- 收货人
+		  , ConsigneePhone                                -- 收货人电话
+		  , ConsigneeAddress                              -- 收货地址
+		  , CartWeighType                                 -- 车辆称重类型
+		  , SaleCompanyName                               -- 销售公司名称
+		  , OutType                                       -- 出库单状态 出库单状态0：正常 1：调拨 2：退货 3:空发 4:兑换 5.兑换时调拨
+		  , StartAddress                                  -- 起运地
+		  , TareWeight                                    -- 皮重
+		  , GrossWeight                                   -- 毛重
+		  , Suttle                                        -- 净重
+		  , Remarks                                       -- 备注
+		  , ValidFlag                                     -- 有效标识,0无效,1有效
+		  , IsDel                                         -- 删除标记
+		  , Creater                                       -- 创建人
+		  , CreaterDate                                   -- 创建时间		  
+		) 
+		VALUES ( 
+		  #{serialId}
+		  , #{salesOrderId}
+		  , #{orderDetailedId}
+		  , #{productId}
+		  , #{lbsMaterialName}
+		  , #{plateNumber}
+		  , #{customerCode}
+		  , #{customerAlias}
+		  , #{deliveryMan}
+		  , #{deliveryManPhone}
+		  , #{address}
+		  , #{consignee}
+		  , #{consigneePhone}
+		  , #{consigneeAddress}
+		  , #{cartWeighType}
+		  , #{saleCompanyName}
+		  , #{outType}
+		  , #{startAddress}
+		  , #{tareWeight}
+		  , #{grossWeight}
+		  , #{suttle}
+		  , #{remarks}
+		  , 1
+		  , 0
+		  , #{creater}
+		  , now()		  
+		) 
+		<selectKey resultType="Integer" order="AFTER" keyProperty="id">
+	      SELECT LAST_INSERT_ID() AS Id
+	    </selectKey>
+	</insert>
+	
+	<!-- 添加运输单 -->
+	<insert id="addTranSportList" parameterType="java.util.Map">
+		INSERT 
+		INTO transportlist( 
+		  DispatchOutWarehouseId
+		  , SerialID
+		  , type
+		  , BillNumber
+		  , MaterielId
+		  , Model
+		  , EndAddress
+		  , PlateNumber
+		  , CarOwnerTelephone
+		  , CarOwner
+		  , IsMention
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{dispatchOutWarehouseId}
+		  , #{serialID}
+		  , #{type}
+		  , #{billNumber}
+		  , #{materielId}
+		  , #{model}
+		  , #{endAddress}
+		  , #{plateNumber}
+		  , #{carOwnerTelephone}
+		  , #{carOwner}
+		  , #{isMention}
+		  , 0
+		  , #{creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 新增关联空发出库单 -->
+	<insert id="insertEmptyOutBound" parameterType="java.util.Map">
+		INSERT 
+		INTO outemptyrelation( 
+		  OutWarehouseId
+		  , EmptyCarId
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{outWarehouseId}
+		  , #{emptyCarId}
+		  , 0
+		  , #{creater}
+		  , now()
+		) 
+	</insert>
+
+	<!-- 更新出库单信息 -->
+	<update id="updateExportMeasure" parameterType="ExportMeasureEntity">
+		UPDATE exportmeasure 
+		SET
+		  SalesOrderId = #{salesOrderId}             -- 销售订单id
+		  , OrderDetailedId = #{orderDetailedId}       -- 销售订单详情id
+		  , ProductID = #{productId}                   -- 物料id
+		  , LbsMaterialName = #{lbsMaterialName}       -- 磅单打印物料名称
+		  , PlateNumber = #{plateNumber}               -- 车牌号码
+		  , Client = #{customerCode}                   -- 客户编号
+		  , CustomerAlias = #{customerAlias}           -- 客户别称
+		  , DeliveryMan = #{deliveryMan}               -- 送货人
+		  , DeliveryManPhone = #{deliveryManPhone}     -- 送货人电话
+		  , Address = #{address}                       -- 送货地址
+		  , Consignee = #{consignee}                   -- 收货人
+		  , ConsigneePhone = #{consigneePhone}         -- 收货电话
+		  , ConsigneeAddress = #{consigneeAddress}     -- 收货地址
+		  , CartWeighType = #{cartWeighType}           -- 是否大车称重
+		  , SaleCompanyName = #{saleCompanyName}       -- 销售公司名称
+		  , StartAddress = #{startAddress}             -- 起运地
+		  , Remarks = #{remarks}                       -- 备注
+		  , Reviser = #{reviser}                       -- 修改人
+		  , ReviserDate = now()                        -- 修改时间
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 更新运输单 -->
+	<update id="updateTranSportList" parameterType="java.util.Map">
+		UPDATE transportlist 
+		SET
+		  MaterielId = #{materielId}
+		  , Model = #{model}
+		  , PlateNumber = #{plateNumber}
+		  , EndAddress = #{endAddress}
+		  , CarOwner = #{carOwner}
+		  , CarOwnerTelephone = #{carOwnerTelephone}
+		  , IsMention = #{isMention}
+		  , Reviser = #{reviser}
+		  , ReviserDate = now() 
+		WHERE
+		  DispatchOutWarehouseId = #{dispatchOutWarehouseId}
+	</update>
+	
+	<!-- 删除道闸表 -->
+	<delete id="delRoadgate" parameterType="Roadgate">
+		delete 
+		from
+		  roadgate 
+		WHERE
+		  OutWarehouseId = #{outWarehouseId}
+	</delete>
+	
+	<!-- 调度导出 -->
+	<select id="getInfoListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  * 
+		from
+		  ( 
+		    select
+		      exm.Serial_ID as serialId                   -- 流水号
+		      , '' as nowSerialId
+		      , DATE_FORMAT(exm.CreaterDate, '%Y-%m-%d %H:%i:%s') as createrDate -- 日期
+		      , cus.CustomerName as customerName          -- 客户名称
+		      , mai.MaterielName as materielName          -- 产品名称
+		      , mai.MaterielModel as materielModel        -- 规格型号
+		      , exm.PlateNumber as plateNumber            -- 车牌号
+		      , exm.TareWeight as tareWeight              -- 皮重/吨
+		      , exm.GrossWeight as grossWeight            -- 毛重/吨
+		      , exm.Suttle as suttle                      -- 净重/吨
+		      , trl.ReceiptWeight as receiptWeight        -- 回执重量
+		      , trl.RiseLoss as riseLoss                  -- 涨亏吨
+		      , exm.Consignee as consignee                -- 收货人
+		      , exm.ConsigneePhone as consigneePhone      -- 电话
+		      , exm.Remarks as remarks                    -- 备注
+		    from
+		      exportMeasure as exm                        -- 调度出库表
+		      left join customerinfo as cus               -- 客户信息表
+		        on exm.Client = cus.CustomerCode 
+		        and cus.IsDel = 0 
+		      left join materielinfo as mai               -- 物料信息表
+		        on exm.ProductID = mai.Id 
+		        and mai.IsDel = 0 
+		      left join transportlist as trl              -- 运输单表
+		        ON exm.Serial_ID = trl.SerialID 
+		        AND trl.IsDel = 0 
+		    where
+		      exm.IsDel = 0 
+		    union 
+		    select
+		      now.SerialID as serialId                    -- 流水号
+		      , exm.Serial_ID as nowSerialId              -- 关联的出库单编号
+		      , DATE_FORMAT(now.CreaterDate, '%Y-%m-%d %H:%i:%s') as createrDate -- 日期
+		      , cus.CustomerName as customerName          -- 客户名称
+		      , mai.MaterielName as materielName          -- 产品名称
+		      , mai.MaterielModel as materielModel        -- 规格型号
+		      , now.CarName as plateNumber                -- 车牌号
+		      , exm.TareWeight as tareWeight              -- 皮重/吨
+		      , exm.TareWeight + now.AllotWeight as grossWeight -- 毛重/吨
+		      , now.AllotWeight as suttle                 -- 净重/吨
+		      , trl.ReceiptWeight as receiptWeight        -- 回执重量
+		      , trl.RiseLoss as riseLoss                  -- 涨亏吨
+		      , now.Consignee as consignee                -- 收货人
+		      , now.ConsigneePhone as consigneePhone      -- 电话
+		      , now.Remarks as remarks                    -- 备注
+		    from
+		      noweighoutwarehouse as now 
+		      left join customerinfo as cus               -- 客户信息表
+		        on now.Client = cus.CustomerCode 
+		        and cus.IsDel = 0 
+		      left join materielinfo as mai               -- 物料信息表
+		        on now.MaterielInfoId = mai.Id 
+		        and mai.IsDel = 0 
+		      left join exportMeasure as exm 
+		        on now.DispatchOutWarehouseId = exm.Id 
+		        and exm.IsDel = 0 
+		      left join transportlist as trl              -- 运输单表
+		        ON now.SerialID = trl.SerialID 
+		        AND trl.IsDel = 0 
+		    where
+		      now.IsDel = 0 
+		      and now.DispatchOutWarehouseId is not null
+		  ) as tab 
+		  where 1=1
+		order by
+		  tab.createrDate desc
+		
+	</select>
+
+<!-- 物料型号 -->
+<select id="getMaterielinfoList" parameterType="java.util.Map" resultType="MaterielinfoEntity">
+	select
+	    mai.Id                as id                   -- 物料id
+	  , mai.MaterielName     as materielName         -- 物料名称
+	  , mai.MaterielModel    as materielModel        -- 规格型号
+	from
+	  materielinfo as mai                             -- 物料信息表
+	where mai.IsDel = 0
+		<if test="salesOrderId != null and salesOrderId != ''">
+			and mai.id IN ( 
+				SELECT DISTINCT
+					 case 
+					 when s.IsExchange = 0
+					 then ifnull(s.ExchangeMaterielId,0)
+					 when s.IsExchange = 1
+					 then ifnull(s.MaterielId,0)
+					 ELSE 0
+					 end MaterielId 
+				FROM
+					salesorderdetailed s
+				WHERE 
+					Id = #{salesOrderId} 
+			)
+	  	</if>
+		<if test="contractId != null and contractId != ''">
+			and mai.id IN ( 
+				SELECT DISTINCT
+					MaterielId 
+				FROM
+					contractdetailed 
+				WHERE
+					ContractId = #{contractId} 
+			)
+	  	</if>
+		<if test="purchaseId != null and purchaseId != ''">
+			and mai.id IN ( 
+				SELECT DISTINCT
+					MaterielInfoId 
+				FROM
+					purchaseorderinfo 
+				WHERE
+					PurchaseOrderId = #{purchaseId} 
+			)
+	  	</if>
+	  	<if test="productID != null and productID != ''">
+			and mai.id  = #{productID} 
+	  	</if>
+</select>
+
+
+
+
+
+<select id="getTransportList" parameterType="map" resultType="map">
+	SELECT
+		* 
+	FROM
+		transportlist 
+	WHERE
+		SerialID = #{plateNumber}
+	AND IsDel = 0
+</select>
+
+<select id="queryNoWeight" parameterType="map" resultType="Integer">
+	SELECT
+		count( 1 ) 
+	FROM
+		noweighoutwarehouse 
+	WHERE
+		DispatchOutWarehouseId = #{id}
+	AND Type = 1	
+</select>
+	
+	
+	
+	<update id="updateTranSportListOutType" parameterType="java.util.Map">
+		UPDATE transportlist 
+		SET
+		  type = #{type}
+		  ,	Reviser = #{userName}
+		  , ReviserDate = NOW()
+		WHERE
+		  DispatchOutWarehouseId = #{dispatchOutWarehouseId}
+	</update>
+
+	<!-- ******出库单查询用******** -->
+	<!-- 获取符合条件的调拨销售订单物料Id -->
+	<select id="getDiaoMaterielId" parameterType="map" resultType="map">
+	select MaterielId, ExchangeMaterielId,IsExchange from salesorderdetailed where Id = #{orderId}
+	</select>	
+	
+	<!-- 获取符合条件的调拨销售订单列表 -->
+	<select id="getDiaoOrderNumber" parameterType="map" resultType="map">
+		SELECT
+			s.Id,
+			s.OrderNumber,
+			u.UserName customerName,
+			s.CustomerAlias customer,
+			c.ContractNumber contractNumber
+			,cus.customerCode customerCode
+		FROM
+			salesorder s
+		LEFT JOIN salesorderdetailed d ON s.Id = d.SalesOrderId AND d.IsDel = 0 
+		LEFT JOIN userinfo u on u.Id = s.UserInfoId and u.IsDel = 0
+		LEFT JOIN contractinfo c on c.Id = s.ContractId and c.IsDel = 0
+		left join customerinfo as cus    -- 客户信息表
+		  on c.CustomerId = cus.Id and cus.IsDel = 0
+		WHERE s.IsDel = 0
+			AND d.MaterielId = #{materielId}
+			AND d.TransportBalance <![CDATA[<>]]> 1
+			AND d.IsExchange = 1
+			AND s.OrderState <![CDATA[<>]]> 2
+			AND s.OrderState <![CDATA[<>]]> 3
+			AND d.id <![CDATA[<>]]> #{orderDetailId}
+	
+		UNION
+	
+		SELECT
+			s.Id,
+			s.OrderNumber,
+			u.UserName customerName,
+			s.CustomerAlias customer,
+			c.ContractNumber contractNumber
+			,cus.customerCode customerCode
+		FROM
+			salesorder s
+		LEFT JOIN salesorderdetailed d ON s.Id = d.SalesOrderId AND d.IsDel = 0 
+		LEFT JOIN userinfo u on u.Id = s.UserInfoId and u.IsDel = 0
+		LEFT JOIN contractinfo c on c.Id = s.ContractId and c.IsDel = 0
+		left join customerinfo as cus    -- 客户信息表
+		  on c.CustomerId = cus.Id and cus.IsDel = 0
+		WHERE s.IsDel = 0
+			AND d.ExchangeMaterielId = #{materielId}
+			AND d.TransportBalance <![CDATA[<>]]> 1
+			and d.IsExchange = 0
+			AND s.OrderState <![CDATA[<>]]> 2
+			AND s.OrderState <![CDATA[<>]]> 3
+			AND d.id <![CDATA[<>]]> #{orderDetailId}
+	</select>
+	
+	<!-- 获取符合条件的调拨销售订单明细列表 -->
+	<select id="getDiaoOrderDetail" parameterType="map" resultType="map">
+		SELECT
+			s.Id,
+			s.OrderDetailedNumber,
+			CONCAT( mi.MaterielName, "-", mi.MaterielModel ) MaterielInfo,
+			IFNULL( s.Transports, "" ) Transports,
+			s.Transports ,
+			s.IsExchange isExchange
+		FROM
+			salesorderdetailed s
+		LEFT JOIN materielinfo mi ON mi.IsDel = 0 
+			AND s.MaterielId = mi.Id
+		WHERE
+			s.IsDel = 0 
+			AND s.IsCancel = 1 
+			AND s.SalesOrderId = #{id}
+			AND MaterielId = #{materielId}
+			AND s.IsExchange = 1 
+			AND s.id <![CDATA[<>]]> #{orderDetailId}
+			AND s.TransportBalance <![CDATA[<>]]> 1
+		
+		union 
+		
+		SELECT
+			s.Id,
+			s.OrderDetailedNumber,
+			CONCAT( mi.MaterielName, "-", mi.MaterielModel ) MaterielInfo,
+			IFNULL( s.Transports, "" ) Transports,
+			s.Transports,
+			s.IsExchange isExchange
+		FROM
+			salesorderdetailed s
+		LEFT JOIN materielinfo mi ON mi.IsDel = 0 
+			AND s.ExchangeMaterielId = mi.Id
+		WHERE
+			s.IsDel = 0 
+			AND s.IsCancel = 1 
+			AND s.SalesOrderId = #{id}
+			AND ExchangeMaterielId = #{materielId}
+			AND s.IsExchange = 0
+			AND s.id <![CDATA[<>]]> #{orderDetailId}
+			AND s.TransportBalance <![CDATA[<>]]> 1
+	</select>
+	
+	<!-- 根据收货地址获取收货人信息 -->
+	<select id="getConsigneeInfo" parameterType="map" resultType="map">
+		SELECT DISTINCT
+		  e.Consignee
+		  , e.ConsigneePhone 
+		FROM
+		  exportmeasure e 
+		  LEFT JOIN salesorderdetailed d 
+		    on e.OrderDetailedId = d.Id 
+		    and d.IsDel = 0 
+		WHERE
+		  e.isDel = 0 
+		  AND d.Transports = #{consigneeAddress} 
+		ORDER BY
+		  e.Consignee
+		  , e.ConsigneePhone
+	</select>
+</mapper>

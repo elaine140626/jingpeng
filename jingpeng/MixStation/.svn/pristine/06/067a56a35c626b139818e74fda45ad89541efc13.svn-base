@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>吉东公路智慧公路平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+</head>
+
+<body>
+<div class="top">
+	<div class="row">
+        <div class="topleft">吉东公路智慧公路平台</div>
+        <div class="topright">
+            <span class="userid">wangdanwei</span><span>你好！</span>
+            <span><a id="pt" href="../testUserInfo/userinfo.html?flag=true" class="shezhi">用户管理</a></span>
+            <span><a id="app" style="display: none;" href="../testUserInfo/userinfo.html?flag=false" class="shezhi">用户管理</a></span>
+            <a href="../testUserInfo/login.html" class="out">安全退出</a>
+        </div>
+	</div>
+</div>
+<div class="container-fluid content">
+        <div class="rightcon" style="padding-left:0;">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室 > 用户管理</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="lq_main">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="yonghu">
+                            <thead>
+                              <tr class="dise zi14">
+                                <th scope="col">序号</th>
+                                <th scope="col">用户名</th>
+                                <th scope="col">姓名</th>
+                                <th id="roleType" scope="col">试验室权限</th>
+                                <th scope="col">操作</th>
+                              </tr>
+                              </thead>
+                             <tbody id="list"></tbody>
+                            </table>
+                            </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/userinfo.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+</body>
+</html>

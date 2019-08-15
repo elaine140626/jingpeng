@@ -1,0 +1,113 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+	margin: 0;
+	padding: 0;
+}
+/*body {
+	font-family: "宋体", Arial, "仿宋";
+	font-size: 10pt;
+}*/
+label {
+	font-weight: normal;
+	font-size:10pt;
+}
+table {
+	width: 100%;
+	color:#000;
+}
+.jilu_main{
+	width:680px;
+	height:1068px;
+	margin: 10px auto 0;
+	font-family: "宋体", Arial, "仿宋"
+}
+.jilu_main_s{
+	width: 1068px;
+	height: 680px;
+	margin: 10px auto 0;
+	font-family: "宋体", Arial, "仿宋"
+}
+.table_1{
+	text-align:right;
+	font-size:10pt;
+	font-family:"宋体";
+}
+.table_1 td{
+	height:20px;
+}
+.jilu_title{
+	height:44px;
+	font-size:16pt;
+	line-height:22px;
+	text-align:center;
+	font-weight:bold;
+}
+.table_2{
+	font-size:10pt;
+	font-family:"仿宋";
+	height:36px;
+}
+.table_3,.table_3 td,.table_4,.table_4 td,.table_5,.table_5 td,.table_6,.table_6 td{
+	text-align:center;
+	border:1px solid #000;
+	border-collapse:collapse;
+	border-bottom:none;
+}
+.table_5,.table_5 td{
+	text-align:left;
+	height:60px;
+}
+.table_3 td,.table_4 td,.table_5 td,.table_6 td{
+	height:24px;
+	line-height:24px;
+	font-family:"宋体";
+	font-size:10pt;
+}
+.table_3 td label,.table_4 td label,.table_5 td label,.table_6 td label{
+	font-family:"仿宋";
+	font-size:10pt;
+}
+.table_6,.table_6 td{
+	text-align:left;
+	height:56px;
+}
+.xbj1{
+	border-bottom:1px solid #000;
+}
+.table_footer,.table_footer_2{
+	height:24px;
+	line-height:24px;
+	font-family:"宋体";
+	font-size:10pt;
+}
+.table_footer span,.table_footer_2 span{width:60px; display:inline-block;}
+
+.dingwei{
+	position:absolute;
+	right:0;
+	top:0px;
+}
+.dingwei img{
+	width:100px;
+	height:100px;
+}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

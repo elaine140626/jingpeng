@@ -1,0 +1,392 @@
+package com.blindSample.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.blindSample.model.APPUserInfo;
+import com.blindSample.model.TestSetDetailed;
+import com.blindSample.model.TestUser_Info;
+import com.blindSample.model.cookieModel;
+import com.blindSample.service.TestUserInfoService;
+import com.blindSample.util.MessageUtilBlindSample;
+import com.jingpeng.dao.DataTablesResponseInfo;
+import com.jingpeng.model.ResponseInfo;
+import com.jingpeng.util.Consts;
+
+@Controller
+@RequestMapping("/testUserInfo")
+public class TestUserInfoController{
+	
+	@Autowired
+	private TestUserInfoService  testUserInfoService;
+	
+	//跳转登录
+	@RequestMapping("/login.html")
+	public String login() {
+		return "/BlindnessTest/login";
+	}
+	//跳转用户管理
+	@RequestMapping("/userinfo.html")
+	public String userinfo() {
+		return "/BlindnessTest/userinfo";
+	}
+	//跳转主页面
+	@RequestMapping("/index.html")
+	public String index() {
+		return "/BlindnessTest/index";
+	}
+	//跳转注册页面
+	@RequestMapping("/user.html")
+	public String user() {
+		return "/BlindnessTest/user";
+	}
+		
+	@RequestMapping("/getTestUserName")
+	public @ResponseBody cookieModel getValue(HttpServletRequest request) {
+		//通过session获取账号密码
+		HttpSession session = request.getSession();
+		
+			TestUser_Info obj = (TestUser_Info) session.getAttribute("user");
+			cookieModel cookie = new cookieModel();
+			if(obj != null) {
+			cookie.setUserName(obj.getName());
+			cookie.setId(obj.getId());
+		}
+		
+		return cookie;
+	}
+	
+	//接收map参数，查询实验室名称
+	@RequestMapping("/getTestRoomName.html")
+	@ResponseBody
+	public DataTablesResponseInfo getTestRoomName(@RequestParam HashMap<String, Object> map) {
+						
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+						
+		List<Map<String, Object>> list = testUserInfoService.getTestRoomName(map);
+		dtr.setData(list);
+		
+		return dtr;
+	}
+
+	//接收map参数，查询实验室名称
+	@RequestMapping("/addTestRoomName.html")
+	@ResponseBody
+	public ResponseInfo addTestRoomName(@RequestParam HashMap<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		List<Map<String, Object>> list = testUserInfoService.getTestUserName(map);
+		if(list != null && list.size() > 0) {
+			//多种选择 300
+			info.setCode(MessageUtilBlindSample.MULTIPLE_CHOICES);
+			//用户名已经存在
+			info.setMessage(MessageUtilBlindSample.USERNAME_EXISTENCE);
+		} else {
+			//查询唯一标识
+			Map par = new HashMap();
+			//截取，分隔，循环放入数组，加入map作为条件
+			
+			String testId = map.get("testId").toString();
+			String[] str = testId.split(",");
+			par.put("testIds", str);
+			//查询出唯一标识
+			List<Map<String, Object>> idList = testUserInfoService.getTestRoomName(par);
+			//添加
+			//以对象类型做添加 从map取出放入对象
+			TestUser_Info testUser_Info = new TestUser_Info();
+			testUser_Info.setUsercode(map.get("userName").toString());
+			testUser_Info.setPassword(map.get("password").toString());
+			testUser_Info.setName(map.get("name").toString());
+			testUser_Info.setOperator(map.get("operator").toString());
+			if(Integer.parseInt(map.get("isCollector").toString())==0) {
+				testUser_Info.setCollector(1);
+			}else {
+				testUser_Info.setCollector(0);
+			}
+			if(Integer.parseInt(map.get("roleType").toString())==1) {
+				testUser_Info.setRoletype(1);
+			}else {
+				testUser_Info.setRoletype(2);
+			}
+			
+			
+			//添加后，返回新添加的id
+			int ids = testUserInfoService.addTestName(testUser_Info);
+			//循环加入权限
+			for (int i = 0; i < idList.size(); i++) {
+				Map params = new HashMap();
+				params.put("ids", ids);
+				params.put("uniqueIdentifier", idList.get(i).get("UniqueIdentifier").toString());
+				testUserInfoService.addTestRoot(params);
+			}
+			//成功处理请求提示 200
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//注册成功
+			info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+		}
+		
+		return info;
+	}
+	
+	//登录
+	@RequestMapping("/userLogin.html")
+	public @ResponseBody ResponseInfo userLogin(HttpServletRequest request, TestUser_Info testUser_Info){
+		ResponseInfo info = new ResponseInfo();
+		List list;
+		list = testUserInfoService.getUserLogin(testUser_Info);
+		if(list != null && list.size() == 1) {
+			testUser_Info = (TestUser_Info) list.get(0);
+			request.getSession().setAttribute(Consts.SESSION_USER_KEY, testUser_Info);
+            request.getSession().setAttribute("user", testUser_Info);
+            //登录成功返回success
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+		} else {
+			//登录失败
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			//账号或密码错误
+            info.setMessage(MessageUtilBlindSample.ACCOUNT_PASSWORD_ERROR);
+		}
+
+		return info;
+	}
+	
+	//接收map参数，查询实验室名称
+	@RequestMapping("/getUserInformation.html")
+	@ResponseBody
+	public DataTablesResponseInfo getUserInformation(@RequestParam HashMap<String, Object> map,HttpServletRequest request){
+							
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		//从session里获取当前登录的账号
+		HttpSession session = request.getSession();
+		TestUser_Info obj = (TestUser_Info) session.getAttribute("user");	
+		//定义list作为集合子表主表返回容器
+		List li = new ArrayList();
+		
+		Map pa = new HashMap();
+		pa.put("userName", obj.getUsercode());
+		
+		Map params = new HashMap();
+		List<Map<String, Object>> lis = testUserInfoService.getTestUserName(pa);
+		if("".equals(lis.get(0).get("isSystemUser")) && lis.get(0).get("isSystemUser")==null) {
+			
+			return dtr;
+		}
+		if("false".equals(lis.get(0).get("isSystemUser").toString())) {
+			params.put("userName", obj.getUsercode());
+		}
+		//定义map传输参数
+		
+		//查询出账号的信息
+		List<Map<String, Object>> list1 = testUserInfoService.getTestUserName(params);
+		for (int i = 0; i < list1.size(); i++) {
+			list1.get(i).put("operation", "<a href='javascript:void(0)' onclick='update(\""+list1.get(i).get("id")+"\")'>修改</a><a href='javascript:void(0)' onclick='del(\""+list1.get(i).get("id")+"\")'>删除</a>");
+			//拿到账号表的id去子表查询
+			Integer ids = Integer.parseInt(list1.get(0).get("id").toString());
+			Map par = new HashMap();
+			par.put("ids", ids);
+			//查询出关联的试验室名称
+			List<Map<String, Object>> list2 = testUserInfoService.getUserInformation(par);
+			//定义map作为容器装以上两个list
+			Map mp = new HashMap();
+			mp.put("list1", list1.get(i));
+			mp.put("list2", list2);
+			//集合
+			li.add(mp);
+		}		
+		//返回
+		dtr.setData(li);
+
+		return dtr;
+	}
+	
+	//删除用户
+	@RequestMapping("/testUserdel.html")
+	public @ResponseBody ResponseInfo testUserdel(TestUser_Info testUser_Info){
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.testUserdel(testUser_Info);
+		if(num>0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.DELETE_SUCCESSFU);
+		}else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.DELETE_ERROR);
+		}
+		return info;
+	}
+	
+	//修改前的查询修改用户信息
+	@RequestMapping("/getTestNameUpdate.html")
+	@ResponseBody
+	public DataTablesResponseInfo getTestNameUpdate(@RequestParam HashMap<String, Object> map) {
+							
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+							
+		map.put("id", Integer.parseInt(map.get("id").toString()));
+		List<Map<String, Object>> list = testUserInfoService.getTestNameUpdate(map);
+		Map par = new HashMap();
+		par.put("ids", Integer.parseInt(map.get("id").toString()));
+		List<Map<String, Object>> list2 = testUserInfoService.getUserInformation(par);
+		List li = new ArrayList();
+		Map para = new HashMap();
+		para.put("list", list);
+		para.put("list2", list2);
+		li.add(para);
+		dtr.setData(li);
+			
+		return dtr;
+	}
+
+	//修改用户信息
+	@RequestMapping("/updateTestUser.html")
+	@ResponseBody
+	public ResponseInfo updateTestUser(@RequestParam HashMap<String, Object> map){
+							
+		ResponseInfo info = new ResponseInfo();
+							
+		TestUser_Info test = new TestUser_Info();
+		test.setPassword(map.get("password").toString());
+		test.setName(map.get("name").toString());
+		
+		if(Integer.parseInt(map.get("isCollector").toString())==0) {
+			test.setCollector(1);
+		}else {
+			test.setCollector(0);
+		}
+		if(Integer.parseInt(map.get("roleType").toString())==1) {
+			test.setRoletype(1);
+		}else {
+			test.setRoletype(2);
+		}
+		test.setId(Integer.parseInt(map.get("id").toString()));
+		
+		//修改主表
+		int num = testUserInfoService.updateTestUser(test);
+		if(num==0) {
+			//修改失败
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+			return info;
+		}
+		
+		if(map.containsKey("testId")&&(!"".equals(map.get("testId").toString()))&&map.get("testId").toString().length()>0) {
+			Map par = new HashMap();
+			//截取，分隔，循环放入数组，加入map作为条件
+			String testId = map.get("testId").toString();
+			String[] str = testId.split(",");
+			par.put("testIds", str);
+			List<Map<String, Object>> idList = testUserInfoService.getTestRoomName(par);
+			
+			//删除子表
+			TestSetDetailed td = new TestSetDetailed();
+			td.setPlatformUserInfoId(Integer.parseInt(map.get("id").toString()));
+			int nums = testUserInfoService.deleteUserSubtable(td);
+			if(nums==0) {
+				//删除失败子表失败
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				info.setMessage(MessageUtilBlindSample.DELETE_Subtable_ERRO);
+				return info;
+			}
+			//循环加入权限子表
+			for (int i = 0; i < idList.size(); i++) {
+				Map params = new HashMap();
+				params.put("ids", Integer.parseInt(map.get("id").toString()));
+				params.put("uniqueIdentifier", idList.get(i).get("UniqueIdentifier").toString());
+				testUserInfoService.addTestRoot(params);
+			}
+		}
+		if(num>0) {
+			//修改成功
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_SUCCESS);
+		}
+		return info;
+	}
+	
+
+	// 获取app用户信息
+	@RequestMapping("/getAppUserList")
+	@ResponseBody
+	public DataTablesResponseInfo getAppUserList(@RequestParam Map<String, Object> map) {
+							
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();						
+			
+		List<APPUserInfo> list = testUserInfoService.getAppUserList(map);	
+		dtr.setData(list);
+
+		return dtr;
+	}
+	
+	// 更新app用户信息
+	@RequestMapping("/updateAppUser")
+	public @ResponseBody ResponseInfo updateAppUser(@RequestParam Map<String, Object> map){
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.updateAppUser(map);
+		if(num>0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_SUCCESS);
+		}else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			//操作失败提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+		}
+		return info;
+	}
+	
+	// 删除app用户信息
+	@RequestMapping("/deleteAppUser")
+	public @ResponseBody ResponseInfo deleteAppUser(@RequestParam Map<String, Object> map){
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.deleteAppUser(map);
+		if(num>0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.DELETE_SUCCESSFU);
+		}else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			//操作失败提示
+			info.setMessage(MessageUtilBlindSample.DELETE_ERROR);
+		}
+		return info;
+	}
+	
+	// 添加app用户信息
+	@RequestMapping("/addAppUser")
+	@ResponseBody
+	public ResponseInfo addAppUser(@RequestParam Map<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		List<APPUserInfo> list = testUserInfoService.getAppUserList(map);
+		if(list != null && list.size() > 0) {
+			//多种选择 300
+			info.setCode(MessageUtilBlindSample.MULTIPLE_CHOICES);
+			//用户名已经存在
+			info.setMessage(MessageUtilBlindSample.USERNAME_EXISTENCE);
+		} else {
+			int num = testUserInfoService.addAppUser(map);
+			if(num>0) {
+				info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+				//操作成功提示
+				info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+			}else {
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				//操作失败提示
+				info.setMessage(MessageUtilBlindSample.LOGIN_ERROR);
+			}
+		}
+		return info;
+	}
+	
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+
+<select id="getUserinfo" parameterType="user_Info" resultType="user_Info">
+select id i_id,user_Name str_user_Name,power_Org_Id i_power_Org_Id,name str_name from User_Info where Valid_Flag = 1
+<if test="i_id != null and i_id != 0">
+and id=#{i_id}
+</if>
+</select>
+
+<select id="getOrgName" parameterType="user_Info" resultType="java.util.Map">
+select id i_id, Org_Name str_org_Name from Organization_Info where Valid_Flag = 1 and Parent_Id=#{i_power_Org_Id}
+</select>
+
+<update id="updateUser" parameterType="user_Info">
+UPDATE user_Info SET Password=#{str_password},Power_Org_ID=#{i_power_Org_Id},Name=#{str_name} WHERE id = #{i_id}
+</update>
+
+<update id="del" parameterType="user_Info">
+UPDATE user_Info SET Valid_Flag=0 WHERE id = #{i_id}
+</update>
+
+<select id="getPlatformUserinfo" parameterType="core_User_Info" resultType="core_User_Info">
+select id i_id,user_Name str_user_Name,power_Org_Id i_power_Org_Id,name str_name from Core_User_Info where Valid_Flag = 1
+<if test="i_id != null and i_id != 0">
+and id=#{i_id}
+</if>
+</select>
+
+<select id="getPlatformOrgName" parameterType="java.util.List" resultType="java.util.Map">
+select id i_id, Org_Name str_org_Name from Organization_Info where Valid_Flag = 1 
+<foreach collection="list" item="item" index="index" open=" AND Id IN (" separator="," close=")">
+#{item}
+</foreach>
+</select>
+
+<update id="updatePlatformUser" parameterType="core_User_Info">
+UPDATE core_User_Info SET Password=#{str_password},Power_Org_ID=#{i_power_Org_Id},Name=#{str_name} WHERE id = #{i_id}
+</update>
+
+<update id="delPlatform" parameterType="core_User_Info">
+UPDATE core_User_Info SET Valid_Flag=0 WHERE id = #{i_id}
+</update>
+
+</mapper>

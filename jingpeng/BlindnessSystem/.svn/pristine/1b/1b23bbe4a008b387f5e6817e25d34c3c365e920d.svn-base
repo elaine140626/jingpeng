@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>试验检测结果表</title>
+<link href="../resources/css/record.css" rel="stylesheet" type="text/css">
+<link rel="Shortcut Icon" href="../resources/img/favicon.ico"> 
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/jilu_2.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/qrcode.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.qrcode.min.js"></script>
+
+<script>
+function qrcode(str){
+    jQuery(function(){
+    jQuery('#qrcode').qrcode({width: 100,height: 100,text: str});
+})
+}
+</script>
+</head>
+<body>
+<div class="jilu_main" style="position:relative; height:auto;">
+	<div class="dingwei" id="qrcode"></div>
+  	<div class="jilu_title" style="padding-top:60px;">试验检测结果</div>
+    <div class="jilu_title" style="display:none;">水泥混凝土抗压强度(立方体)试验检测报告</div>
+    <div style="display:none;">
+    	<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+        	<tr>
+            	<td width="68%">试验室名称：<label>BCNS02标段试验室</label></td>
+                <td width="32%">记录编号：<label>BG-2017-LQH-014</label></td>
+            </tr>
+        </table>
+    </div>
+    <div style="display:none;">
+    	<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+        	<tr>
+            	<td width="68%">试验室名称：<label>BCNS02标段试验室</label></td>
+                <td width="32%">报告编号：<label>BG-2017-LQH-014</label></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_3">
+          <tr>
+            <td width="16%">样品编号</td>
+            <td width="34%"><label id="sampeCode"></label></td>
+            <td width="16%">工程项目名称</td>
+            <td width="34%"><label id="engineeringName"></label></td>
+          </tr>
+          <tr>
+            <td>施工部位</td>
+            <td><label id="purpose"></label></td>
+            <td>施工单位</td>
+            <td><label id="constructionUnit"></label></td>
+          </tr>
+          <tr>
+            <td>取样人</td>
+            <td><label id="samplingPerson"></label></td>
+            <td>取样日期</td>
+            <td><label id="samplingDate"></label></td>
+          </tr>
+          <tr>
+            <td>材料名称</td>
+            <td><label id="materialName"></label></td>
+            <td>产地</td>
+            <td><label id="placeOrigin"></label></td>
+          </tr>
+          <tr>
+            <td>设计强度等级</td>
+            <td><label id="designStrength"></label></td>
+            <td>取样数量</td>
+            <td><label id="quantity"></label></td>
+          </tr>
+          <tr>
+            <td>试件成型日期</td>
+            <td><label id="moldDate"></label></td>
+            <td>试验完成日期</td>
+            <td><label id="targetDate"></label></td>
+          </tr>
+          <tr>
+            <td>取样桩号</td>
+            <td><label id="sPileNumber"></label></td>
+            <td></td>
+            <td><label></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div style="display:none;">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_3">
+          <tr>
+            <td width="16%">施工/委托单位</td>
+            <td width="34%"><label>面层</label></td>
+            <td width="16%">委托编号</td>
+            <td width="34%"><label></label></td>
+          </tr>
+          <tr>
+            <td>工程名称</td>
+            <td><label id="purpose"></label></td>
+            <td>样品编号</td>
+            <td><label id="quantity">YP-2017-LQH-014</label></td>
+          </tr>
+          <tr>
+            <td>工程部位/用途</td>
+            <td><label id="purpose">JTG E20-2011(T0705,T0706,T0707,T0709-2011)</label></td>
+            <td>样品描述</td>
+            <td><label></label></td>
+          </tr>
+          <tr>
+            <td>试验依据</td>
+            <td><label>温度 ℃ 湿度 %</label></td>
+            <td>判定依据</td>
+            <td><label>2017-9-2～2017-9-3</label></td>
+          </tr>
+          <tr>
+            <td>主要仪器设备及编号</td>
+            <td colspan="3"><label></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div>
+       <table width="100%" border="0" cellpadding="0" cellspacing="0" id="tab" class="table_4">
+          <tr>
+            <td>序号</td>
+            <td>检测项目</td>
+            <td>技术指标</td>
+            <td>检测结果</td>
+            <td>结果判定</td>
+          </tr>
+          <tr>
+            <td><label id="sernum_1" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_1" class ="test" flag="lq" ></label></td>
+            <td><label id="technical_1" class ="test" flag="technical"></label></td>
+            <td><label id="detection_1" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_1" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_2" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_2" class ="test" flag="lq"></label></td>
+            <td><label id="technical_2" class ="test" flag="technical"></label></td>
+            <td><label id="detection_2" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_2" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_3" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_3" class ="test" flag="lq"></label></td>
+            <td><label id="technical_3" class ="test" flag="technical"></label></td>
+            <td><label id="detection_3" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_3" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_4" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_4" class ="test" flag="lq"></label></td>
+            <td><label id="technical_4" class ="test" flag="technical"></label></td>
+            <td><label id="detection_4" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_4" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_5" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_5" class ="test" flag="lq"></label></td>
+            <td><label id="technical_5" class ="test" flag="technical"></label></td>
+            <td><label id="detection_5" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_5" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_6" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_6" class ="test" flag="lq"></label></td>
+            <td><label id="technical_6" class ="test" flag="technical"></label></td>
+            <td><label id="detection_6" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_6" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_7" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_7" class ="test" flag="lq"></label></td>
+            <td><label id="technical_7" class ="test" flag="technical"></label></td>
+            <td><label id="detection_7" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_7" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_8" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_8" class ="test" flag="lq"></label></td>
+            <td><label id="technical_8" class ="test" flag="technical"></label></td>
+            <td><label id="detection_8" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_8" class ="test" flag="resultPd"></label></td>
+          </tr>
+         <tr>
+            <td><label id="sernum_9" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_9" class ="test" flag="lq"></label></td>
+            <td><label id="technical_9" class ="test" flag="technical"></label></td>
+            <td><label id="detection_9" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_9" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_10" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_10" class ="test" flag="lq"></label></td>
+            <td><label id="technical_10" class ="test" flag="technical"></label></td>
+            <td><label id="detection_10" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_10" class ="test" flag="resultPd"></label></td>
+          </tr>
+         <tr>
+            <td><label id="sernum_11" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_11" class ="test" flag="lq"></label></td>
+            <td><label id="technical_11" class ="test" flag="technical"></label></td>
+            <td><label id="detection_11" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_11" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_12" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_12" class ="test" flag="lq"></label></td>
+            <td><label id="technical_12" class ="test" flag="technical"></label></td>
+            <td><label id="detection_12" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_12" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_13" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_13" class ="test" flag="lq"></label></td>
+            <td><label id="technical_13" class ="test" flag="technical"></label></td>
+            <td><label id="detection_13" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_13" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_14" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_14" class ="test" flag="lq"></label></td>
+            <td><label id="technical_14" class ="test" flag="technical"></label></td>
+            <td><label id="detection_14" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_14" class ="test" flag="resultPd"></label></td>
+          </tr>
+            <tr>
+            <td><label id="sernum_15" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_15" class ="test" flag="lq"></label></td>
+            <td><label id="technical_15" class ="test" flag="technical"></label></td>
+            <td><label id="detection_15" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_15" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_16" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_16" class ="test" flag="lq"></label></td>
+            <td><label id="technical_16" class ="test" flag="technical"></label></td>
+            <td><label id="detection_16" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_16" class ="test" flag="resultPd"></label></td>
+          </tr>
+            <tr>
+            <td><label id="sernum_17" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_17" class ="test" flag="lq"></label></td>
+            <td><label id="technical_17" class ="test" flag="technical"></label></td>
+            <td><label id="detection_17" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_17" class ="test" flag="resultPd"></label></td>
+          </tr>
+           <tr>
+            <td><label id="sernum_18" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_18" class ="test" flag="lq"></label></td>
+            <td><label id="technical_18" class ="test" flag="technical"></label></td>
+            <td><label id="detection_18" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_18" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_19" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_19" class ="test" flag="lq"></label></td>
+            <td><label id="technical_19" class ="test" flag="technical"></label></td>
+            <td><label id="detection_19" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_19" class ="test" flag="resultPd"></label></td>
+          </tr>
+          <tr>
+            <td><label id="sernum_20" class ="test" flag="sernum"></label></td>
+            <td><label id ="lq_20" class ="test" flag="lq"></label></td>
+            <td><label id="technical_20" class ="test" flag="technical"></label></td>
+            <td><label id="detection_20" class ="test" flag="detection"></label></td>
+            <td><label id="resultPd_20" class ="test" flag="resultPd"></label></td>
+          </tr>
+        </table>
+
+    </div>
+    <div style="display:none;">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_6">
+          <tr>
+            <td>检测结论：<label></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_5 xbj1">
+          <tr>
+            <td>备注：<label id="remarks"></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_footer" style="display:none;">
+          <tr>
+            <td width="35%">试验：</td>
+            <td width="35%">复核：</td>
+            <td width="30%">日期：<span></span>年<span></span>月<span></span>日</td>
+          </tr>
+        </table>
+    </div>
+    <div style="display:none;">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_footer_2">
+          <tr>
+            <td width="22%">试验：</td>
+            <td width="22%">审核：</td>
+            <td width="22%">签发：</td>
+            <td width="34%">日期：<span></span>年<span></span>月<span></span>日(专用章)</td>
+          </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

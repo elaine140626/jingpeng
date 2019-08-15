@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/price/price_empty.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: left;
+			}
+			
+			.ui_text_lt {
+				width: 35%;
+			}
+			
+			.ui_input_txt01 {
+				width: 60%;
+			}
+			
+			.ui_input_txt0 {
+				width: 30%;
+				height: 26px;
+				margin: 1px -9px 1px -5px;
+				outline: 0;
+				padding: 5px;
+				border: 1px solid;
+				border-color: #C0C0C0 #D9D9D9 #D9D9D9;
+				border-radius: 2px;
+				background: #FFF;
+				box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.2);
+				-webkit-transition: box-shadow, border-color .5s ease-in-out;
+			}
+			
+			.ui_input_txt0:first-child {
+				margin: 1px 1px 1px 5px;
+			}
+			
+			.ui_select01 {
+				width: 60%;
+			}
+			.showDetail {
+				position: relative;
+			}
+			.text {
+				height: 80px;
+				resize: none
+			}
+			.fuchuang3 {
+			    position: absolute;
+			    width: 550px;
+			    height: auto;
+			    left: 0%;
+			    padding: 20px;
+			    top: 30%;
+			    background-color: rgba(255,255,255,1);
+			    border: 1px solid #104b8d;
+			    border-radius: 3px;
+			    z-index: 9999;
+			    margin-right: 25px;
+			    display: none;
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				 * 取消
+				 */
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				}
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					维护价格
+				</div>
+				<br>
+				修改价格(元):<input type="text" style="width: 155px;"  oninput = "value=value.replace(/[^\d]/g,'')" id="newPrice" name="newPrice" value="" class="ui_input_txt01" maxlength="14"/>
+				<br>
+				<br>
+				<div style="overflow:auto;height:450px;">
+					<table id="transportationList" style="min-width:100%;width:900px"  border="1" cellpadding="2" cellspacing="0">
+					<thead>
+ 						 <tr>
+ 						 	<th style="text-align:center;background-color:#044599;color:#fff;">序号</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">合同编号</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">销售编号</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">客户名称</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">客户别称</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">产品名称-型号</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">修改前价格(元)</th>
+						    <th style="width: 130px;text-align:center;background-color:#044599;color:#fff;">修改后价格(元)</th>
+ 						</tr>
+ 					</thead>
+                    <tbody>
+                    </tbody>
+					</table>
+				</div>
+								<input type="hidden" id="outBoundId"/>
+								<table id="emptyList" border=1></table>
+								<input id="submitbutton" type="button" value="保存" class="ui_input_btnsave" onclick="addEmpty()"/>  &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+<!-- 				<div class="ui_content" style="position: absolute; left:4%">
+					<input type="hidden" id="outBoundId"/>
+					<table id="emptyList" border=1></table>
+					<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />&nbsp;
+					<input id="submitbutton" type="button" value="保存" class="ui_input_btnsave" onclick="addEmpty()"/> 
+				</div> -->
+		</div>
+
+	</body>
+
+</html>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blindSample.dao.TestUserInfoDao">
+
+	<!--查询试验室名称 -->
+	<select id="getTestRoomName" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.id id,t.TestRoomName,t.UniqueIdentifier,t.parentNode from TestRoomInfo t
+            
+		<if test="testIds != null and testIds != ''">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+        	<foreach collection="testIds" index="index" item="item" open="AND t.id IN (" separator="," close=")">
+                #{item}
+        	</foreach>
+        	</trim>
+        </if> 
+	</select>
+	
+	<!--查询注册的账号是否重复 -->
+	<select id="getTestUserName" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.id,t.userCode,t.name,t.password,t.IsSystemUser isSystemUser from PTestUserInfo t where  t.IsValidData=1
+		<if test="userName != null and userName != ''">
+			and t.UserCode=#{userName}
+		</if>
+		<if test="id != null and id != ''">
+			and t.id=#{id}
+		</if>
+	</select>
+	<!-- 注册账号 -->
+	<insert id="addTestName" parameterType="testUser_Info">
+		insert into PTestUserInfo(UserCode,Password,Name,Operator,CreateDate,IsCollector,RoleType)
+		values(#{usercode},#{password},#{name},#{operator},GETDATE(),#{collector},#{roletype})
+	</insert>
+	
+	<!-- 注册账号增加权限 -->
+	<insert id="addTestRoot" parameterType="java.util.Map">
+		insert into PTestSetDetailed(PlatformUserInfoId,UniqueIdentifier)
+		values(#{ids},#{uniqueIdentifier})
+	</insert>
+	
+	<!-- 获取登录账户 -->
+	<select id="getUserLogin" parameterType="testUser_Info" resultType="testUser_Info">
+		select
+			id 
+			,userCode
+			,name
+		from PTestUserInfo 
+		where IsValidData=1 and
+			userCode=#{usercode} and password=#{password}
+	</select>
+	
+	<!-- 获取用户信息 -->
+	<select id="getUserInformation" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			distinct r.TestRoomName 
+		from PTestSetDetailed t
+			left join TestRoomInfo r on r.UniqueIdentifier=t.UniqueIdentifier 
+		where 1=1
+		
+		<if test="ids != null and ids != ''">
+			and t.PlatformUserInfoId = #{ids}
+		</if>
+	</select>
+	
+	<!-- 删除 -->
+	<update id="testUserdel" parameterType="testUser_Info">
+		UPDATE PTestUserInfo SET IsValidData=0 WHERE id = #{id}
+	</update>
+	
+	<!--修改前的查询赋值操作 -->
+	<select id="getTestNameUpdate" parameterType="java.util.Map" resultType="java.util.Map">
+		select t.id,t.userCode,t.name,t.IsCollector,t.password,t.RoleType from PTestUserInfo t where  t.IsValidData=1 and id=#{id}
+	</select>
+	
+	<!-- 修改 -->
+	<update id="updateTestUser" parameterType="testUser_Info">
+		update PTestUserInfo 
+		set 
+			Password=#{password}
+			,Name=#{name}
+			,IsCollector=#{collector}
+			,RoleType=#{roletype}
+		where id = #{id}
+	</update>
+	
+	<delete id="deleteUserSubtable" parameterType="testSetDetailed">
+		delete from PTestSetDetailed where PlatformUserInfoId = #{platformUserInfoId} 
+	</delete> 
+	
+	<!-- 获取app全部用户 -->
+	<select id="getAppUserList" parameterType="java.util.Map" resultType="APPUserInfo">
+		select * from APPUserInfo
+		where 1=1
+		<if test="usercode != null and usercode != ''">
+		    and UserCode = #{usercode}
+		</if>
+		<if test="id != null and id != ''">
+		    and id = #{id}
+		</if>
+	</select>
+	
+	<!-- 修改app用户 -->
+	<update id="updateAppUser" parameterType="java.util.Map">
+	    update APPUserInfo
+	     set UserCode = #{usercode},
+	         Password = #{password},
+	         Name = #{name}
+	    where id = #{id}   
+	</update>
+	
+	<!-- 删除app用户 -->
+	<delete id="deleteAppUser" parameterType="java.util.Map">
+		delete from APPUserInfo where Id = #{id} 
+	</delete>
+	
+	<!-- 添加app用户信息 -->
+	<insert id="addAppUser" parameterType="java.util.Map">
+		INSERT 
+		INTO APPUserInfo ( 
+		    UserCode
+		  , Password
+		  , Name
+		  , Operator
+		  , CreateDate
+		  , IsValidData
+		) 
+		VALUES ( 
+		   #{usercode}
+		  , #{password}
+		  , #{name}
+		  , #{operator}
+		  , GETDATE()
+		  , 1
+		) 
+	</insert>
+</mapper>

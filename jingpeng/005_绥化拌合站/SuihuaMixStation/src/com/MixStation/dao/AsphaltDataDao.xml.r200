@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.AsphaltDataDao">
+	<!-- 沥青数据结果取得 -->
+	<select id="getAsphaltData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  asp.Org_ID as orgId
+		  , asp.Analysis_Result as analysisResult
+		  , org.Org_Name as orgName
+		  , CONVERT(varchar (100), asp.Collect_Time, 102) as collectTime 
+		FROM
+		  Asphalt_ProductionData as asp 
+		  left join Organization_Info as org 
+		    on asp.Org_ID = org.Id 
+		    and org.Valid_Flag = 1
+		WHERE
+		  asp.Valid_Flag = 1
+		  AND Id = #{id}				
+	</select>	
+</mapper>

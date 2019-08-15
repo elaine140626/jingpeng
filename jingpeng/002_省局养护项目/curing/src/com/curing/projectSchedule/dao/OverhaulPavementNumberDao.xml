@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.OverhaulPavementNumberDao">
+	<!-- 工程进度（大修路面工程数量表）List取得 -->
+	<select id="getOverhaulPavementNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.OverhaulPavementNumberEntity">
+		SELECT
+		  opn.Id
+		  , opn.ProjectId                                 -- 项目id
+		  , opn.PileNumber                                -- 起讫桩号
+		  , opn.PavingLength                              -- 铺筑长度（米）
+		  , opn.NewWidth                                  -- 新建路面平均宽度（米）
+		  , opn.NewType                                   -- 新建路面结构类型
+		  , opn.NewThickness                              -- 新建路面平均厚度（厘米）
+		  , opn.ReinforceWidth                            -- 补强路面平均宽度（米）
+		  , opn.ReinforceType                             -- 补强路面结构类型
+		  , opn.ReinforceThickness                        -- 补强路面平均厚度（厘米）
+		  , opn.ProjectNewRoad                            -- 工程数量新建路面（千平方米）
+		  , opn.ProjectReinforceRoad                      -- 工程数量补强路面（千平方米）
+		  , opn.ProjectStickyOil                          -- 工程数量粘层油（千平方米）
+		  , opn.ProjectSlurrySeal                         -- 工程数量稀浆封层（千平方米）
+		  , opn.ProjectRubber                             -- 工程数量橡胶沥青碎石封层（千平方米）
+		  , opn.ProjectSurfaceCourse                      -- 工程数量铣刨旧路面层均厚7cm（千平方米）
+		  , opn.ProjectPavementBase                       -- 工程数量铣刨旧路面基层（千平方米）
+		  , opn.ProjectShoulderThickness                  -- 工程数量培路肩厚（厘米）
+		  , opn.ProjectShoulderArea                       -- 工程数量培路肩面积（千平方米）
+		  , opn.BridgeLength                              -- 桥长（米）
+		  , opn.Remarks                                   -- 备注
+		  , opn.IsDel
+		  , opn.Creater
+		  , opn.CreaterDate
+		  , opn.Reviser
+		  , opn.ReviserDate 
+		FROM
+		  OverhaulPavementNumber as opn 
+		  left join V_EntryTree as ve 
+		    on opn.ProjectId = ve.pid
+		WHERE
+		  opn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and opn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and opn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and opn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="pavingLength!=null and pavingLength!=''">
+		    and opn.pavingLength  like concat('%',#{pavingLength},'%')    -- 根据铺筑长度查询
+		  </if>
+		   order by opn.CreaterDate desc
+	</select>
+	
+		<select id="getOverhaulPavementNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  opn.PileNumber                                -- 起讫桩号
+		  , opn.PavingLength                              -- 铺筑长度（米）
+		  , opn.NewWidth                                  -- 新建路面平均宽度（米）
+		  , opn.NewType                                   -- 新建路面结构类型
+		  , opn.NewThickness                              -- 新建路面平均厚度（厘米）
+		  , opn.ReinforceWidth                            -- 补强路面平均宽度（米）
+		  , opn.ReinforceType                             -- 补强路面结构类型
+		  , opn.ReinforceThickness                        -- 补强路面平均厚度（厘米）
+		  , opn.ProjectNewRoad                            -- 工程数量新建路面（千平方米）
+		  , opn.ProjectReinforceRoad                      -- 工程数量补强路面（千平方米）
+		  , opn.ProjectStickyOil                          -- 工程数量粘层油（千平方米）
+		  , opn.ProjectSlurrySeal                         -- 工程数量稀浆封层（千平方米）
+		  , opn.ProjectRubber                             -- 工程数量橡胶沥青碎石封层（千平方米）
+		  , opn.ProjectSurfaceCourse                      -- 工程数量铣刨旧路面层均厚7cm（千平方米）
+		  , opn.ProjectPavementBase                       -- 工程数量铣刨旧路面基层（千平方米）
+		  , opn.ProjectShoulderThickness                  -- 工程数量培路肩厚（厘米）
+		  , opn.ProjectShoulderArea                       -- 工程数量培路肩面积（千平方米）
+		  , opn.BridgeLength                              -- 桥长（米）
+		  , opn.Remarks                                   -- 备注
+		FROM
+		  OverhaulPavementNumber as opn 
+		  left join V_EntryTree as ve 
+		    on opn.ProjectId = ve.pid
+		WHERE
+		  opn.IsDel = 0
+		   order by opn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（大修路面工程数量表）合计 -->
+	<select id="getOverhaulPavementNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.OverhaulPavementNumberSum">
+		SELECT
+		  sum(opn.PavingLength) as PavingLengthSum        -- 铺筑长度（米）
+		  , sum(opn.NewWidth) as NewWidthSum              -- 新建路面平均宽度（米）
+		  , sum(opn.NewThickness) as NewThicknessSum      -- 新建路面平均厚度（厘米）
+		  , sum(opn.ReinforceWidth) as ReinforceWidthSum  -- 补强路面平均宽度（米）
+		  , sum(opn.ReinforceThickness) as ReinforceThicknessSum -- 补强路面平均厚度（厘米）
+		  , sum(opn.ProjectNewRoad) as ProjectNewRoadSum  -- 工程数量新建路面（千平方米）
+		  , sum(opn.ProjectReinforceRoad) as ProjectReinforceRoadSum -- 工程数量补强路面（千平方米）
+		  , sum(opn.ProjectStickyOil) as ProjectStickyOilSum -- 工程数量粘层油（千平方米）
+		  , sum(opn.ProjectSlurrySeal) as ProjectSlurrySealSum -- 工程数量稀浆封层（千平方米）
+		  , sum(opn.ProjectRubber) as ProjectRubberSum    -- 工程数量橡胶沥青碎石封层（千平方米）
+		  , sum(opn.ProjectSurfaceCourse) as ProjectSurfaceCourseSum -- 工程数量铣刨旧路面层均厚7cm（千平方米）
+		  , sum(opn.ProjectPavementBase) as ProjectPavementBaseSum -- 工程数量铣刨旧路面基层（千平方米）
+		  , sum(opn.ProjectShoulderThickness) as ProjectShoulderThicknessSum -- 工程数量培路肩厚（厘米）
+		  , sum(opn.ProjectShoulderArea) as ProjectShoulderAreaSum -- 工程数量培路肩面积（千平方米）
+		  , sum(opn.BridgeLength) as BridgeLengthSum      -- 桥长（米）
+		FROM
+		  OverhaulPavementNumber as opn 
+		  left join V_EntryTree as ve 
+		    on opn.ProjectId = ve.pid 
+		WHERE
+		  opn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and opn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and opn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and opn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="pavingLength!=null and pavingLength!=''">
+		    and opn.pavingLength  like concat('%',#{pavingLength},'%')    -- 根据铺筑长度查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（大修路面工程数量表） -->
+	<insert id="insertOverhaulPavementNumber" parameterType="com.curing.projectSchedule.model.OverhaulPavementNumberEntity">
+		INSERT 
+		INTO OverhaulPavementNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , PavingLength
+		  , NewWidth
+		  , NewType
+		  , NewThickness
+		  , ReinforceWidth
+		  , ReinforceType
+		  , ReinforceThickness
+		  , ProjectNewRoad
+		  , ProjectReinforceRoad
+		  , ProjectStickyOil
+		  , ProjectSlurrySeal
+		  , ProjectRubber
+		  , ProjectSurfaceCourse
+		  , ProjectPavementBase
+		  , ProjectShoulderThickness
+		  , ProjectShoulderArea
+		  , BridgeLength
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+			 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{PavingLength}
+		  , #{NewWidth}
+		  , #{NewType}
+		  , #{NewThickness}
+		  , #{ReinforceWidth}
+		  , #{ReinforceType}
+		  , #{ReinforceThickness}
+		  , #{ProjectNewRoad}
+		  , #{ProjectReinforceRoad}
+		  , #{ProjectStickyOil}
+		  , #{ProjectSlurrySeal}
+		  , #{ProjectRubber}
+		  , #{ProjectSurfaceCourse}
+		  , #{ProjectPavementBase}
+		  , #{ProjectShoulderThickness}
+		  , #{ProjectShoulderArea}
+		  , #{BridgeLength}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（大修路面工程数量表） -->
+	<update id="updateOverhaulPavementNumber" parameterType="com.curing.projectSchedule.model.OverhaulPavementNumberEntity">
+		UPDATE OverhaulPavementNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , PavingLength = #{PavingLength}
+		  , NewWidth = #{NewWidth}
+		  , NewType = #{NewType}
+		  , NewThickness = #{NewThickness}
+		  , ReinforceWidth = #{ReinforceWidth}
+		  , ReinforceType = #{ReinforceType}
+		  , ReinforceThickness = #{ReinforceThickness}
+		  , ProjectNewRoad = #{ProjectNewRoad}
+		  , ProjectReinforceRoad = #{ProjectReinforceRoad}
+		  , ProjectStickyOil = #{ProjectStickyOil}
+		  , ProjectSlurrySeal = #{ProjectSlurrySeal}
+		  , ProjectRubber = #{ProjectRubber}
+		  , ProjectSurfaceCourse = #{ProjectSurfaceCourse}
+		  , ProjectPavementBase = #{ProjectPavementBase}
+		  , ProjectShoulderThickness = #{ProjectShoulderThickness}
+		  , ProjectShoulderArea = #{ProjectShoulderArea}
+		  , BridgeLength = #{BridgeLength}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（大修路面工程数量表） -->
+	<update id="deleteOverhaulPavementNumber" parameterType="com.curing.projectSchedule.model.OverhaulPavementNumberEntity">
+		UPDATE OverhaulPavementNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

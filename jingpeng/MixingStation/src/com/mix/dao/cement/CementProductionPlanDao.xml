@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.cement.CementProductionPlanDao">
+	<select id="getCementProductionPlan" parameterType="java.util.HashMap" resultType="Cement_Production_PlanDTO">
+		SELECT
+			e.Equipment_Name str_equipment_Name,
+			p.id i_id,
+			p.Org_ID i_org_Id,
+			isnull(p.plan_No,'') str_plan_No,
+			isnull(mn.Material_Name +'/' + mm.Material_Model,'') str_material_Model,
+			isnull(ccp.Prop_Code,'') str_Prop_Code,
+			isnull(b.Bunker_Code,'') str_bunker_Code,
+			isnull(p.startTime,'') str_startTime,
+			isnull(p.proj_Pos,'') str_proj_Pos,
+			isnull(p.construction_Unit,'') str_construction_Unit,
+			p.scheduled_Production d_scheduled_Production,
+			isnull(p.Watering_Site,'') str_Watering_Site,
+			p.bunkerCor_Id i_bunkerCor_Id,
+			p.isCancel i_isCancel,
+			isnull(p.invalid_Person,'') str_invalid_Person,
+			isnull(p.cancel_Reason,'') str_cancel_Reason,
+			isnull(p.create_Date,'') str_create_Date
+		FROM
+			Cement_Production_Plan p
+		LEFT JOIN Equipment_Info e ON e.id = p.Equ_ID
+		LEFT JOIN Cement_ConstructionProportion ccp ON ccp.Id = p.ConsProp_ID
+		LEFT JOIN Bunker_Correspondence b ON p.BunkerCor_ID = b.Id
+		LEFT JOIN Material_Info mi ON p.product_Id = mi.id
+		LEFT JOIN MaterName_Info mn ON mi.MateName_ID = mn.id
+		LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID = mm.id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="productModel != null and productModel != ''">
+			    AND mm.material_Model LIKE '%${productModel}%'
+			</if>
+			<if test="productName != null and productName != ''">
+			    AND mn.material_Name LIKE '%${productName}%'
+			</if>
+			<if test="NumberOfConstructionRatio != null and NumberOfConstructionRatio != ''">
+			    AND p.ConsProp_ID LIKE '%${NumberOfConstructionRatio}%'
+			</if>
+			
+			<if test="Proportion_Code != null and Proportion_Code != ''">
+			    AND p.proportion_Code LIKE '%${str_proportion_Code}%'
+			</if>
+			
+			<if test="str_Prop_Code != null and str_Prop_Code != ''">
+			    AND ccp.Prop_Code LIKE '%${str_Prop_Code}%'
+			</if>
+			
+			
+			<!-- <if test="id != null and id != '' or id != ''">
+			    AND p.id =#{i_id}
+			</if> -->
+			<foreach collection="org_Ids" index="index" item="item" open=" AND p.org_id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+			
+			AND p.valid_Flag=1 ORDER BY p.id DESC 
+		</trim>
+	</select>
+	
+	<insert id="addCementProductionPlan" parameterType="Cement_Production_PlanDTO">
+		INSERT INTO Cement_Production_Plan (Watering_Site,Org_ID,Plan_No,StartTime,Product_ID,ConsProp_Id,Proj_Pos,Construction_Unit,Scheduled_Production,
+		BunkerCor_Id,Equ_ID,IsCancel,Operator,Create_Date) 
+		VALUES (#{str_Watering_Site},#{i_org_id},#{str_plan_No},#{str_startTime},#{i_product_Id},#{i_consProp_Id},#{str_proj_Pos},#{str_construction_Unit}
+		,#{d_scheduled_Production},#{i_bunkerCor_Id},#{i_equ_Id},#{i_isCancel},#{str_operator},#{str_create_Date})
+	</insert>
+	
+	<select id="getPlanNo" parameterType="Cement_Production_PlanDTO" resultType="Cement_Production_PlanDTO">
+		SELECT p.id i_id from  Cement_Production_Plan p  WHERE p.Valid_Flag =1 AND p.Org_ID =#{i_org_id} AND p.Plan_No=#{str_plan_No}	</select>
+	
+	<select id="getBunkerCode" parameterType="Cement_Production_PlanDTO" resultType="Cement_Production_PlanDTO">
+		SELECT id i_id,bunker_Code str_bunker_Code FROM Bunker_Correspondence WHERE valid_Flag=1 AND org_id=#{i_org_id} AND id=#{i_bunkerCor_Id}	</select>
+	
+
+	<select id="getCementProductionPlanById" parameterType="Cement_Production_PlanDTO" resultType="java.util.Map">
+	
+	select m.Material_Name,m.Material_Model,e.Equipment_Code,c.Prop_Code,b.Bunker_Code,P.* 
+	  from Cement_Production_Plan p left join
+	       V_MaterialInfo m on m.Id = p.Product_ID left join
+	       Cement_ConstructionProportion c on c.Id = p.ConsProp_ID left join
+	       Bunker_Correspondence b on b.Id = p.BunkerCor_ID left join
+	       Equipment_Info e on e.Id = p.Equ_ID
+	where p.Id = #{i_id} and p.Valid_Flag=1
+		
+		
+		
+	</select>
+	
+<!-- 	<select id="getProductionById" parameterType="java.util.Map" resultType="java.util.Map">
+	 
+	 select 
+	 	 b.Bunker_Code,
+	 	 p.ConsProp_ID,
+	 	 c.Prop_Code,
+		 p.Plan_No,
+		 p.Product_ID,
+		 e.Equipment_Name,
+		 m.Material_Name,
+		 m.Material_Model,
+		 P.Id,
+		 p.Org_ID,
+		 p.StartTime,
+		 p.Equ_ID,
+		
+		 p.BunkerCor_ID,
+		 p.Proj_Pos,
+		 p.Construction_Unit,
+		 p.Watering_Site,
+		 p.Scheduled_Production,
+		 p.IsCancel,
+		 p.Cancel_Time,
+		 p.Invalid_Person,
+		 p.Cancel_Reason,
+		 p.Remarks,
+		 p.Operator  
+	 from Cement_Production_Plan p 
+		 left join Cement_ConstructionProportion c on c.Id = p.ConsProp_ID left join Equipment_Info e on e.Id = p.Equ_ID 
+		 left join Bunker_Correspondence b on b.Id = p.BunkerCor_ID 
+		 left join V_MaterialInfo m on m.Id = p.Product_ID 
+	where p.Id = #{i_id}
+ 	 
+		
+	</select>
+	 -->
+	<select id="getProductionById" parameterType="java.util.Map" resultType="java.util.Map">
+	 
+	 select 
+	 	 
+	 	 p.ConsProp_ID,
+	 	 c.Prop_Code,
+		 p.Plan_No,
+		 p.Product_ID,
+		 e.Equipment_Name,
+		 m.Material_Name,
+		 m.Material_Model,
+		 
+		 b.Bunker_Code,
+		 P.Id,
+		 p.Org_ID,
+		 p.StartTime,
+		 p.Equ_ID,
+		
+		 p.BunkerCor_ID,
+		 p.Proj_Pos,
+		 p.Construction_Unit,
+		 p.Watering_Site,
+		 p.Scheduled_Production,
+		 p.IsCancel,
+		 p.Cancel_Time,
+		 p.Invalid_Person,
+		 p.Cancel_Reason,
+		 p.Remarks,
+		 p.Operator  
+	 from Cement_Production_Plan p 
+	 
+		 left join Cement_ConstructionProportion c on c.Id = p.ConsProp_ID left join Equipment_Info e on e.Id = p.Equ_ID 
+		 left join Bunker_Correspondence b on b.Id = p.BunkerCor_ID 
+		 left join V_MaterialInfo m on m.Id = p.Product_ID 
+	where p.Id = #{i_id}
+ 	 
+		
+	</select>
+	
+	<!-- <select id="getProductionTwoById" parameterType="java.util.Map" resultType="java.util.Map">
+	 
+	  select 
+		  c.Prop_Code,
+		  b.Bunker_Code,
+		  p.BunkerCor_ID,
+		  p.ConsProp_ID 
+	  from Cement_Production_Plan p 
+		 left join Cement_ConstructionProportion c on c.Id = p.ConsProp_ID left join Equipment_Info e on e.Id = p.Equ_ID 
+		 left join Bunker_Correspondence b on b.Id = p.BunkerCor_ID 
+		 left join V_MaterialInfo m on m.Id = p.Product_ID 
+		where p.Id = #{i_id}
+ 	 
+		
+	</select> -->
+	
+	
+	<update id="updateCementProductionPlan" parameterType="Cement_Production_PlanDTO">
+		UPDATE Cement_Production_Plan SET
+			Equ_ID =#{i_equ_Id},
+			Product_ID =#{i_product_Id},
+			StartTime =#{str_startTime},
+			ConsProp_Id=#{i_consProp_Id},
+			BunkerCor_Id=#{i_bunkerCor_Id},
+			Proj_Pos =#{str_proj_Pos},
+			Construction_Unit=#{str_construction_Unit},
+			Scheduled_Production =#{d_scheduled_Production},
+			Watering_Site=#{str_Watering_Site},
+			isCancel = 0
+		WHERE id=#{i_id}
+	</update>
+	
+	<update id="zfProductionPlan" parameterType="Cement_Production_PlanDTO">
+			
+			UPDATE Cement_Production_Plan SET cancel_Reason =#{str_cancel_Reason} ,isCancel =1 ,invalid_Person = #{str_invalid_Person},cancel_Time =#{str_cancel_Time}  WHERE Id =#{i_id}
+	
+	</update>
+	
+	<update id="delCementProductionPlan" parameterType="Cement_Production_PlanDTO">
+		UPDATE Cement_Production_Plan SET Valid_Flag=0 WHERE id=#{i_id}
+	</update>
+	<select id="getCementProductionPlanByPlan_No" parameterType="java.util.Map" resultType="Cement_Production_PlanDTO">
+	 
+	 SELECT
+			*
+		FROM
+			Cement_Production_Plan
+		WHERE
+			Plan_No = #{Plan_No}
+		
+	</select>
+	
+	
+</mapper>

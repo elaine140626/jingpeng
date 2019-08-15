@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>黑龙江省高速公路管理局盲样检测管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/systyle.css">
+<link rel="StyleSheet" href="css/dtree.css"/>
+<script type="text/javascript" src="js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="js/dtree.js"></script>
+</head>
+
+<body>
+<div class="container-fluid top">
+	<div class="topleft">黑龙江盲样试验展示平台</div>
+        <div class="topright">
+            <span class="userid">wangdanwei</span><span>你好！</span>
+            <a href="userinfo.html" target="_blank" class="shezhi">用户管理</a>
+            <a href="#" class="out">安全退出</a>
+        </div>
+
+</div>
+<div class="container-fluid">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="index.html" class="nav1">首页</a></li>
+                <li><a href="shiyan_3.html" class="nav4">试验收样</a></li>
+                <li><a href="shiyan_1.html" class="nav2">试验汇总</a></li>
+                <li><a href="shiyan_2.html" class="nav3">试验查询</a></li>
+                <li><a href="shiyan_4.html" class="nav5">自动采集</a></li>
+                <li><a href="shiyan_5.html" class="nav6">盲样检测</a></li>
+                <li><a href="shiyan_6.html" class="focus_g">指标维护</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室<span class="zhongxin">（中心实验室1）</span>  > 结果判定指标维护 > 沥青三大指标试验</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+                <div class="shunav">
+                	<div class="shu_btn">
+                    <script type="text/javascript">
+					$(function() {
+						$("#toggle").click(function() {
+							$(this).text($("#content").is(":hidden") ? "试验室" : "试验室");
+							$("#content").slideToggle();
+						});
+					});
+					</script>
+                        <span class="shu_ban" id="toggle">试验室</span>
+                        <div class="dtree" id="content" style="display:none;">
+						<script type="text/javascript">
+                            d = new dTree('d', true);   //参数一: 树名称。参数二：单选多选 true多选  false单选  默认单选               
+                            d.add(0, -1, '黑龙江盲样试验室');
+                            d.add(1, 0, 'authority', '0001', '一工区', true, false);
+                            d.add(4, 1, 'authority', '0004', '001试验室', false, false);
+                            d.add(5, 1, 'authority', '0005', '002试验室', false, false);
+                
+                            // dTree实例属性以此为：  节点ID，父类ID，chechbox的名称，chechbox的值，chechbox的显示名称，
+                            //chechbox是否被选中--默认是不选，chechbox是否可用：默认是可用，节点链接：默认是虚链接
+                            d.add(6, 0, 'authority', '0012', '二工区 ', true, false);
+                            d.add(7, 6, 'authority', '0014', '003001试验室', false, false);
+                            d.add(8, 6, 'authority', '0015', '004001试验室', false, false);
+                
+                
+                            d.add(11, 0, 'authority', '0016', '三工区 ', true, false);
+                            d.add(13, 11, 'authority', '0018', '005001试验室', false, false);
+                            d.add(14, 11, 'authority', '0019', '006001试验室', false, false);
+                            document.write(d);
+                            d.openAll();
+                        </script>
+                    </div>
+                    </div> 
+                    <form action="" method="get" class="sousuo">
+                   	  <label style="margin-left:6px;">试验名称</label>
+                      <select name="" size="1" class="search_select">
+                   	    <option>请选择</option>
+                   	    <option>水泥胶砂强度试验（ISO法）</option>
+                        <option>沥青三大指标试验</option>
+                        <option>沥青混合料马歇尔稳定度试验</option>
+                        <option>钢筋抗拉强度、屈服强度、伸长率、冷弯试验</option>
+                        <option>钢筋接头抗拉强度、冷弯试验</option>
+                   	  </select>
+                        <input name="input" type="submit" value="查&nbsp;&nbsp;询" class="btncha">
+                    </form>
+                </div>
+                <div class="lq_main">
+                	<div>
+                    	<p class="jiance">沥青种类
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>黏稠沥青</option>
+                                <option>液体沥青</option>
+                                <option>固体沥青</option>
+                            </select>
+                            <label>针入度</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>1.2~3.0</option>
+                            </select>
+                            <label>软化点</label>
+                            <select name="">
+                            	<option>请选择</option>
+                            	<option>≥20</option>
+                            </select>
+                           <input name="input" type="submit" value="保  存" class="btncha"></p>
+                    </div>
+                    <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th width="6%" class="xh" scope="col">序号</th>
+                                <th width="15%" scope="col">沥青种类</th>
+                                <th width="13%" scope="col">针入度</th>
+                                <th width="13%" scope="col">软化点</th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>黏稠沥青</td>
+                                <td>1.2~3.0</td>
+                                <td>≥20</td>
+                                <td><a href="#">删除</a></td>
+                              </tr>
+                              <tr>
+                            </table>
+                            </div>
+                    <div class="page">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div>
+          		</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于 我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+				
+
+
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="js/modal.js"></script>
+<script type="text/javascript" src="js/script.js"></script>
+</body>
+</html>

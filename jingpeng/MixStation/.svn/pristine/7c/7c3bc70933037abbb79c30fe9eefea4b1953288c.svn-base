@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bigScreen">
+
+<select id="getLeft" parameterType="java.util.Map" resultType="left">
+select e.Id,e.Org_ID,o.Org_Name,a.TotalWeight,a.Total,a.Eligibility 
+  from Equipment_Info e left join
+		(select v.Org_ID,SUM(v.Total_Weight) as TotalWeight,COUNT(*) Total 
+			   ,(select COUNT(*) from V_Asphalt_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.Analysis_Result = '1') as Eligibility 
+		  from V_Asphalt_ProductionData v 
+		 where v.Valid_Flag = 1  
+		  group by v.Org_ID
+		union  
+		select v.Org_ID,SUM(v.d_total_Weight) as TotalWeight,COUNT(*) Total 
+			   ,(select COUNT(*) from V_Cement_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_analysis_Results = '1') as Eligibility 
+		  from V_Cement_ProductionData v 
+		 where v.Valid_Flag = 1  
+		  group by v.Org_ID )as a on a.Org_ID = e.Org_ID left join
+		Organization_Info o on o.Id = e.Org_ID 
+</select>
+
+<select id="getTab" parameterType="java.util.Map" resultType="tab">
+select e.Id,e.Org_ID,o.Org_Name
+      ,a.TotalWeight,a.Total,a.Collect_Time,a.Eligibility,a.Equipment_Type type
+  from Equipment_Info e left join
+		(select v.Org_ID,v.Equipment_Type,SUM(v.Total_Weight) as TotalWeight
+			   ,COUNT(*) Total , CONVERT(varchar(100), v.Collect_Time, 23) as Collect_Time
+			   ,(select COUNT(*) 
+			       from V_Asphalt_ProductionData d 
+			      where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.Analysis_Result = '1' 
+			        and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23)) as Eligibility 
+		  from V_Asphalt_ProductionData v 
+		 where v.Valid_Flag = 1  and CONVERT(varchar(100), v.Collect_Time, 23) = CONVERT(varchar(100), GETDATE(), 23)
+		  group by v.Org_ID, CONVERT(varchar(100), v.Collect_Time, 23),v.Equipment_Type,v.Equ_ID
+		union  
+		select v.Org_ID,v.str_Equipment_Type,SUM(v.d_total_Weight) as TotalWeight
+			   ,COUNT(*) Total ,CONVERT(varchar(100), v.str_collect_Date, 23) as collect_Date
+			   ,(select COUNT(*) 
+			       from V_Cement_ProductionData d 
+			      where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.i_analysis_Results = '1'
+			        and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as Eligibility 
+		  from V_Cement_ProductionData v 
+		 where v.Valid_Flag = 1 and CONVERT(varchar(100), v.str_collect_Date, 23) = CONVERT(varchar(100), GETDATE(), 23) 
+		  group by v.Org_ID,CONVERT(varchar(100), v.str_collect_Date, 23),v.str_Equipment_Type) a on a.Org_ID = e.Org_ID  left join
+		 Organization_Info o on o.Id = e.Org_ID
+</select>
+
+<select id="getPie" parameterType="java.util.Map" resultType="tab">
+select e.Id,e.Org_ID,o.Org_Name,a.TotalWeight,a.Total,a.Collect_Time,a.Eligibility,a.Equipment_Type type
+  from Equipment_Info e left join
+		(select v.Org_ID,v.Equipment_Type,SUM(v.Total_Weight) as TotalWeight
+			   ,COUNT(*) Total , CONVERT(varchar(100), v.Collect_Time, 23) as Collect_Time
+			   ,(select COUNT(*) 
+			       from V_Asphalt_ProductionData d 
+			      where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.Analysis_Result = '1' 
+			        and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23)) as Eligibility 
+		  from V_Asphalt_ProductionData v 
+		 where v.Valid_Flag = 1  and CONVERT(varchar(100), v.Collect_Time, 23) = CONVERT(varchar(100), GETDATE(), 23)
+		  group by v.Org_ID, CONVERT(varchar(100), v.Collect_Time, 23),v.Equipment_Type,v.Equ_ID
+		union  
+		select v.Org_ID,v.str_Equipment_Type,SUM(v.d_total_Weight) as TotalWeight
+			   ,COUNT(*) Total ,CONVERT(varchar(100), v.str_collect_Date, 23) as collect_Date
+			   ,(select COUNT(*) 
+			       from V_Cement_ProductionData d 
+			      where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.i_analysis_Results = '1'
+			        and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as Eligibility 
+		  from V_Cement_ProductionData v 
+		 where v.Valid_Flag = 1 and CONVERT(varchar(100), v.str_collect_Date, 23) = CONVERT(varchar(100), GETDATE(), 23) 
+		  group by v.Org_ID,CONVERT(varchar(100), v.str_collect_Date, 23),v.str_Equipment_Type) a on a.Org_ID = e.Org_ID  left join
+		 Organization_Info o on o.Id = e.Org_ID
+		 where o.id=#{org_id}
+</select>
+
+<select id="getLqBar" parameterType="java.util.Map" resultType="lqBar">
+select v.Org_Name,count(*) as Unqualified ,'0' type
+       ,(select COUNT(*) 
+           from V_Asphalt_ProductionData d 
+          where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.Analysis_Result like '%2%' 
+            and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23) ) as GLUnqualified
+       ,(select COUNT(*) 
+           from V_Asphalt_ProductionData d 
+          where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.Analysis_Result like '%3%' 
+            and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23)) as FLUnqualified
+       ,(select COUNT(*) 
+           from V_Asphalt_ProductionData d 
+          where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.Analysis_Result like '%4%' 
+            and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23)) as LQUnqualified
+       ,(select COUNT(*) 
+           from V_Asphalt_ProductionData d 
+          where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.Analysis_Result like '%5%' 
+            and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23)) as WCJUnqualified
+       ,(select COUNT(*) 
+           from V_Asphalt_ProductionData d 
+          where d.Org_ID = v.Org_ID  and d.Valid_Flag = 1 and d.Analysis_Result like '%10%' 
+            and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100), v.Collect_Time, 23)) as JPUnqualified
+  from V_Asphalt_ProductionData v  
+ where v.Org_ID = #{org_id} and v.Equ_ID = 1 and v.Valid_Flag = 1  and v.Analysis_Result != '1' 
+   and CONVERT(varchar(100), v.Collect_Time, 23) = CONVERT(varchar(100), GETDATE(), 23) 
+  group by v.Org_ID,v.Org_Name,v.Equipment_Name,CONVERT(varchar(100), v.Collect_Time, 23)
+</select>
+
+<select id="getSnBar" parameterType="java.util.Map" resultType="snBar">
+ select v.Org_Name,count(*) as Unqualified,'1' type
+        ,(select COUNT(*) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_analysis_Results_Cement = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as SNUnqualified  
+        ,(select COUNT(*) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_Analysis_Results_Aggregate = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as GLUnqualified  
+        ,(select COUNT(*) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_Analysis_Results_Water = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as WaterUnqualified  
+        ,(select COUNT(*) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_Analysis_Results_Admixture = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as WCJUnqualified 
+    from V_Cement_ProductionData v
+   where v.Org_ID = #{org_id}  and v.Valid_Flag = 1  and v.i_analysis_Results != 1
+     and CONVERT(varchar(100), v.str_collect_Date, 23) = CONVERT(varchar(100), GETDATE(), 23) 
+  group by v.Org_ID,v.Org_Name,CONVERT(varchar(100), v.str_collect_Date, 23)
+</select>
+
+<select id="getSwBar" parameterType="java.util.Map" resultType="swBar">
+ select v.Org_Name,SUM(d_total_Weight) as Unqualified,'2' type
+        ,(select SUM(d_total_Weight) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_analysis_Results_Cement = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as SNUnqualified  
+        ,(select SUM(d_total_Weight) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_Analysis_Results_Aggregate = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as GLUnqualified  
+        ,(select SUM(d_total_Weight) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_Analysis_Results_Water = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as WaterUnqualified  
+        ,(select SUM(d_total_Weight) 
+            from V_Cement_ProductionData d 
+           where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.i_Analysis_Results_Admixture = 2 
+             and CONVERT(varchar(100), d.str_collect_Date, 23) = CONVERT(varchar(100), v.str_collect_Date, 23)) as WCJUnqualified 
+    from V_Cement_ProductionData v
+   where v.Org_ID = #{org_id}  and v.Valid_Flag = 1  and v.i_analysis_Results != 1
+     and CONVERT(varchar(100), v.str_collect_Date, 23) = CONVERT(varchar(100), GETDATE(), 23) 
+  group by v.Org_ID,v.Org_Name,CONVERT(varchar(100), v.str_collect_Date, 23)
+</select>
+
+<select id="getLqAxis" parameterType="java.util.Map" resultType="lqAxis">
+select v.Material,DATEPART(HOUR,v.Collect_Time) as CollectHour,SUM(v.MaterialConsumption) as MaterialConsumption
+  from V_MaterialConsumption v
+ where v.Org_ID = #{org_id} <!-- and CONVERT(varchar(100), v.Collect_Time, 23) = CONVERT(varchar(100), GETDATE(), 23)   -->
+group by v.Material,DATEPART(HOUR,v.Collect_Time)
+order by v.Material,DATEPART(HOUR,v.Collect_Time)
+</select>
+
+<select id="getSnSwAxis" parameterType="java.util.Map" resultType="snSwAxis">
+select vm.Material_Name+'-'+vm.Material_Model as Material,DATEPART(HOUR,d.Collect_Date) as CollectHour
+      ,SUM(dd.Collection_Weight) as MaterialConsumption
+  from Cement_ProductionData d left join
+       Cement_ProductionDetailed dd on dd.Cemment_ID = d.Id left join
+       V_MaterialInfo vm on vm.Id = dd.Materials_ID
+ where d.Org_ID = {org_id}   and d.Valid_Flag =1 and CONVERT(varchar(100),d.Collect_Date , 23) = CONVERT(varchar(100), GETDATE(), 23) <!--测试数据 6 -->
+group by dd.Materials_ID,vm.Material_Name,vm.Material_Model, DATEPART(HOUR,d.Collect_Date)
+order by dd.Materials_ID,vm.Material_Name,vm.Material_Model, DATEPART(HOUR,d.Collect_Date) 
+</select>
+
+<select id="getMaps" parameterType="java.util.Map" resultType="java.util.Map">
+select t.Machine_ID,t.Is_OnLine,isnull(LQCollect_Time,SNCollect_Time) from
+(select ec.Machine_ID,ec.Is_OnLine
+      ,(select top(1) ad.Collect_Time 
+          from Asphalt_ProductionData ad 
+         where ad.Equ_ID = ec.Machine_ID and ad.Valid_Flag = 1
+        order by ad.Collect_Time desc )as LQCollect_Time
+      ,(select top(1) cd.Collect_Date 
+          from Cement_ProductionData cd 
+         where cd.Equ_ID = ec.Machine_ID and cd.Valid_Flag = 1
+        order by cd.Collect_Date desc )as SNCollect_Time
+  from Equipment_Connected ec) t
+</select>
+
+</mapper>

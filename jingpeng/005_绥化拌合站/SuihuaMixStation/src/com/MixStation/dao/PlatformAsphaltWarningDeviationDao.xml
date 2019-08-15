@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformAsphaltWarningDeviationDao">
+
+	<!-- 查询沥青预警偏差 -->
+	<select id="getPlatformAsphaltWarningDeviation" parameterType="java.util.Map" resultType="PlatformAsphaltWarningDeviationEntity">
+		SELECT
+<<<<<<< .mine
+		  da.Org_ID as Org_ID,
+		  oi.Org_Name as Org_Name, 
+		  da.Dev_Aggregate as Dev_Aggregate, 
+		  da.Dev_Powder as Dev_Powder, 
+		  da.Dev_Admixture as Dev_Admixture, 
+		  da.Dev_Asphalt as Dev_Asphalt, 
+		  da.Dev_AggregateDown as Dev_AggregateDown, 
+		  da.Dev_PowderDown as Dev_PowderDown, 
+		  da.Dev_AdmixtureDown as Dev_AdmixtureDown, 
+		  da.Dev_AsphaltDown as Dev_AsphaltDown, 
+		  da.MixTemperatureUp as MixTemperatureUp, 
+		  da.MixTemperatureDown  as MixTemperatureDown,
+		  cast( mn.Material_Name AS VARCHAR) + '/' + cast(mm.Material_Model AS VARCHAR) AS material
+||||||| .r4
+		  da.Org_ID as Org_ID,
+		  oi.Org_Name as Org_Name, 
+		  da.Dev_Aggregate as Dev_Aggregate, 
+		  da.Dev_Powder as Dev_Powder, 
+		  da.Dev_Admixture as Dev_Admixture, 
+		  da.Dev_Asphalt as Dev_Asphalt, 
+		  da.Dev_AggregateDown as Dev_AggregateDown, 
+		  da.Dev_PowderDown as Dev_PowderDown, 
+		  da.Dev_AdmixtureDown as Dev_AdmixtureDown, 
+		  da.Dev_AsphaltDown as Dev_AsphaltDown, 
+		  da.MixTemperatureUp as MixTemperatureUp, 
+		  da.MixTemperatureDown  as MixTemperatureDown,
+		  cast( da.Material_Name AS VARCHAR) + '/' + cast(da.Material_Model AS VARCHAR) AS material
+=======
+		  da.Org_ID as Org_ID,                           -- 组织机构ID
+		  oi.Org_Name as Org_Name,                       -- 机构名称
+		  da.Dev_Aggregate as Dev_Aggregate,             -- 骨料超差(高级预警)
+		  da.Dev_Powder as Dev_Powder,                   -- 粉料超差(高级预警)
+		  da.Dev_Admixture as Dev_Admixture,             -- 外掺剂超差(高级预警)
+		  da.Dev_Asphalt as Dev_Asphalt,                 -- 油石比超差(高级预警)
+		  da.Dev_AggregateCenter as Dev_AggregateCenter, -- 骨料超差(中级预警)
+		  da.Dev_PowderCenter as Dev_PowderCenter,       -- 粉料超差(中级预警)
+		  da.Dev_AdmixtureCenter as Dev_AdmixtureCenter, -- 外掺剂超差(中级预警)
+		  da.Dev_AsphaltCenter as Dev_AsphaltCenter,     -- 油石比超差(中级预警)
+		  da.Dev_AggregateDown as Dev_AggregateDown,     -- 骨料超差(初级预警)
+		  da.Dev_PowderDown as Dev_PowderDown,           -- 粉料超差(初级预警)
+		  da.Dev_AdmixtureDown as Dev_AdmixtureDown,     -- 外掺剂超差(初级预警)
+		  da.Dev_AsphaltDown as Dev_AsphaltDown,         -- 油石比超差(初级预警)
+		  da.MixTemperatureUp as MixTemperatureUp,       -- 混合料温度上限
+		  da.MixTemperatureDown  as MixTemperatureDown,  -- 混合料温度下限
+		  cast( da.Material_Name AS VARCHAR) + '/' + cast(da.Material_Model AS VARCHAR) AS material, -- 混合料名称/混合料型号
+		  CONVERT(varchar, da.Create_Date, 120) as Create_Date                                 -- 创建时间
+>>>>>>> .r200
+		FROM
+		  Deviation_Asphalt as da -- 沥青偏差设定表
+		  LEFT JOIN Organization_Info as oi ON da.Org_ID = oi.Id -- 组织机构信息
+		  LEFT JOIN Material_Info mi ON da.Product_ID = mi.id
+		  LEFT JOIN MaterName_Info mn ON mi.MateName_ID= mn.id
+		  LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID= mm.id
+		order by
+  		  da.Create_Date desc
+	</select>
+	
+	<!-- 插入沥青阀值设定 -->
+	<insert id="insertPlatformAsphaltWarningDeviation" parameterType="PlatformAsphaltWarningDeviationEntity">
+		insert 
+		into Deviation_Asphalt( 
+		  Org_ID
+		  , Dev_Aggregate
+		  , Dev_Powder
+		  , Dev_Admixture
+		  , Dev_Asphalt
+		  , Dev_AggregateCenter
+		  , Dev_PowderCenter
+		  , Dev_AdmixtureCenter
+		  , Dev_AsphaltCenter
+		  , Dev_AggregateDown
+		  , Dev_PowderDown
+		  , Dev_AdmixtureDown
+		  , Dev_AsphaltDown
+		  , Operator
+		  , MixTemperatureUp
+		  , MixTemperatureDown
+		  , Product_ID
+		) 
+		values (
+		  #{Org_ID}
+		  , #{Dev_Aggregate}
+		  , #{Dev_Powder}
+		  , #{Dev_Admixture}
+		  , #{Dev_Asphalt}
+		  , #{Dev_AggregateCenter}
+		  , #{Dev_PowderCenter}
+		  , #{Dev_AdmixtureCenter}
+		  , #{Dev_AsphaltCenter}
+		  , #{Dev_AggregateDown}
+		  , #{Dev_PowderDown}
+		  , #{Dev_AdmixtureDown}
+		  , #{Dev_AsphaltDown}
+		  , #{Operator}
+		  , #{MixTemperatureUp}
+		  , #{MixTemperatureDown}
+		  , #{Product_ID}
+		)
+	</insert>
+</mapper>

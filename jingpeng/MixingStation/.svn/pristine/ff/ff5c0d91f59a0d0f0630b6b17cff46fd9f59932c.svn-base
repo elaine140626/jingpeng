@@ -1,0 +1,770 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/lqstyle.css">
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/c_dtree.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+    <script>
+        function showwindow(obj,id) {
+            var objDiv = $("#"+id+"");
+            $(objDiv).css("display","block");
+            $(objDiv).css("left", event.clientX);
+            $(objDiv).css("top", event.clientY + 10);
+        }
+        function hide(obj,id) {
+            var objDiv = $("#"+id+"");
+            $(objDiv).css("display", "none");
+        }
+        
+    </script>
+    
+    <script type="text/javascript">
+$b = $("#shu_btn");
+$("#toggle").on({
+	"click": function(){
+		$b.toggle();
+		return false;
+	}
+});
+$(document).on({
+	"click": function(e){
+		var src = e.target;
+
+		if(src.id && src.id ==="toggle"){
+			return false;
+		}else{
+			$("#content").hide();
+		}
+	}
+});
+
+</script>
+</head>
+
+<body>
+<div class="top">
+	<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+    <div class="topright">
+    	<a href="../User/userinfo.action" target="_black"  class="userid"></a><span>你好！</span>
+        <a href="../Common/out.action" class="out">安全退出</a>
+    </div>
+    <div class="top_btn">
+    	<span class="lq_btn"><a href="../AsphaltProduceStatistic/asphaltProduceStatistic.action" class="hvr-bounce-to-top focusbtn">沥青</a></span>
+    	<span class="sn_btn"><a href="../cementProductionData/cement_ProductionStatistic.action" class="hvr-bounce-to-top">水泥</a></span>
+    </div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="../AsphaltProduceStatistic/asphaltProduceStatistic.action" class="nav1">生产统计</a></li>
+                <li><a href="../Material/material.action" class="nav2">原材料管理</a></li>
+                <li>
+               	  <a href="../AsphTargetPro/asphTargetPro.action" class="focus_c">配比管理<span>></span></a>
+               	  <div class="down">
+                        <a href="../AsphTargetPro/asphTargetPro.action">目标配合比</a>
+                        <a href="../AsphaltGrading/asphaltGrading.action">级配</a>
+                        <a href="../AsphProportion/asphaltProdProportion.action">生产配合比</a>
+                    </div>
+              </li>
+                <li>
+               	  <a href="../ProductionPlan/productionPlan.action" class="nav4">生产管理<span>></span></a>
+                    <div class="down">
+                        <a href="../ProductionPlan/productionPlan.action">生产计划</a>
+                        <a href="../AsphaltProductionData/asphaltProductionData.action">生产数据</a>
+                    </div>
+              </li>
+            </ul>
+        </div>
+    	<!-- <div class="leftnav">
+        	<ul>
+            	<li><a href="../AsphaltProduceStatistic/asphaltProduceStatistic.html"><span class="sctj"></span><b>生产统计</b></a></li>
+                <li><a href="../Material/material.html"><span class="yclgl"></span><b>原材料管理</b></a></li>
+                <li class="nav-focus">
+                	<a href="../AsphTargetPro/asphTargetPro.html"><span class="pbgl"></span><b>配比管理</b></a>
+                	<div class="down" style="display:block;">
+                    	<a href="../AsphTargetPro/asphTargetPro.html">目标配合比</a>
+                        <a href="../AsphaltGrading/asphaltGrading.html">级配</a>
+                        <a href="../AsphProportion/asphaltProdProportion.html" class="er-focus-color">生产配合比</a>
+                    </div>
+                </li>
+                <li>
+                	<a href="../ProductionPlan/productionPlan.html"><span class="scgl"></span><b>生产管理</b></a>
+                    <div class="down">
+                    	<a href="../ProductionPlan/productionPlan.html">生产计划</a>
+                        <a href="../AsphaltProductionData/asphaltProductionData.html">生产数据</a>
+                    </div>
+                </li>
+            </ul>
+        </div> -->
+        <!-- <div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                            <script type="text/javascript">
+                                var baseUrl= getContextPath();
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.html",
+        							async:false,
+        							data : {"mixStation_Type":"0"},
+        							dataType : "json",
+        							success : function(data) {
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                            </script>
+                        </div>
+                        </div> -->
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id = "locationText">综合一标</span>） > 配比管理 > 生产配合比</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="shunav">
+            	<div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                            <script type="text/javascript">
+                                var baseUrl= getContextPath();
+                                var orgid = "";
+                                var orgname = "";
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.action",
+        							async:false,
+        							data : {"mixStation_Type":"0"},
+        							dataType : "json",
+        							success : function(data) {
+        								var flag = true;
+        								
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        										if(flag){
+        											orgid = data[i].i_id;
+        	        								orgname = data[i].str_org_Name;
+        											//默认指向列表中第一个
+        											$("#locationText").text(data[i].str_org_Name);
+        											flag = false;
+        										}
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                                </script>
+                        </div>
+                        </div>
+                    <form action="" method="get" class="sousuo">
+                      <label>生产配合比编号：</label>
+                      <input type="text" class="search_input rightwbj" id="proportion_Code">
+                      <label>产品名称：</label>
+                      <input type="text" class="search_input rightwbj" id="material_Name">
+                      </select>
+                      <label>产品型号：</label>
+                      <input type="text" class="search_input rightwbj" id="material_Model">
+                      <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+                  </form>
+                  <div class="clear"></div>
+                    </div>
+                   
+            	<div class="table-b">
+                	<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="getMaterialName()">新增录入</a></div>
+            	  	<div class="table-c-right table-b-right" >
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="list">
+                         <thead>
+                          <tr>
+                            <th scope="col" class="mbpb_xh">序号</th>	
+                            <th scope="col" class="mbpb_bh">生产配合比编号</th>
+                            <th scope="col" >级配编号</th>
+                            <th scope="col" >目标配合比编号</th>
+                            <th scope="col">产品名称/型号</th>
+                            <th scope="col" class="mbpb_cjr">创建人</th>
+                            <th scope="col">创建时间</th>
+                            <th scope="col" class="mbpb_bz">备注</th>
+                            <th scope="col">操作</th>
+                          </tr>
+
+                          </thead>
+                          <tbody></tbody>
+                          </table>
+					 	<div class="page">
+                  	</div>
+              	</div>
+            	
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="/MixingStation/resources/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>生产配合比</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            <form id="add">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="mbphb_luru" id="add">
+                  <tr>
+                    <td width="16%" align="right">生产配合比编号：</td>
+                    <td width="20%"><input name="str_proportion_Code" type="text" placeholder="输入" id="str_proportion_Code"  maxlength="40"><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td width="10%" align="right">产品名称：</td>
+                    <td width="20%"><select size="1" class="sekuan" id="str_material_Name" onchange="getOutName()" >
+                    <option></option>
+                    </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td width="10%" align="right">产品型号：</td>
+                    <td width="24%"><select class="sekuan" size="1" name="i_product_Id" id="str_material_Model" required="required" onchange="getOutModel()">
+                        <option></option>
+                      </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                  </tr>
+                  <tr>
+                    <td width="14%" align="right">目标配合比编号：</td>
+                    <td width="18%"><select class="sekuan" name="i_targ_PropId" size="1" id="str_mb_proportion_Code"  >
+                    <option></option>
+                    </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td width="7%" align="right">级配编号：</td>
+                    <td colspan="3" align="left"><select class="sekuan" name=i_grad_Id size="1" id="str_grade_Code" onfocus="getJpbhShow()" >
+                        <option></option>
+                      </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td align="left">&nbsp;</td>
+                    <td align="left">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="14%" align="right">备注：</td>
+                    <td height="60" colspan="5" valign="bottom">
+                    <textarea name="str_remarks" cols="40" rows="2" id="str_remarks" class="textkuan"></textarea></td>
+                  </tr>
+                  
+                  <tr>
+                    <td><input type="hidden" id="i_org_Id"  name="i_org_Id"></td>
+                  </tr>
+                  
+                </table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="scphb_jia" id="detailedTab">
+				<thead>
+                  <tr class="mbphb_luru_dise">
+                    <td width="9%" rowspan="2">材料种类</td>
+                    <td colspan="6">骨料仓(%)</td>
+                    <td colspan="2">粉料仓(%)</td>
+                    <td width="9%" rowspan="2">油石比(%)</td>
+                    <td colspan="2">外掺剂(%)</td>
+                  </tr>
+                  <tr class="mbphb_luru_dise">
+                    <td width="8%">1#仓</td>
+                    <td width="8%">2#仓</td>
+                    <td width="8%">3#仓</td>
+                    <td width="8%">4#仓</td>
+                    <td width="8%">5#仓</td>
+                    <td width="8%">6#仓</td>
+                    <td width="8%">冷粉仓</td>
+                    <td width="8%">热粉仓</td>
+                    <td width="9%">外掺剂1</td>
+                    <td width="9%">外掺剂2</td>
+                  </tr>
+                  </thead>
+                  <tbody id="tb">
+                  <tr>
+                    <td class="mbphb_luru_dise h50">用量</td>
+                    <td><input type="text" name="d_no1_SetValue" id="d_no1_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no2_SetValue" id="d_no2_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no3_SetValue" id="d_no3_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no4_SetValue" id="d_no4_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no5_SetValue" id="d_no5_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no6_SetValue" id="d_no6_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_coldPowder_SetValue" id="d_coldPowder_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_hotPowder_SetValue" id="d_hotPowder_SetValue" value="" onkeyup="num(this)"    maxlength="15"></td>
+                    <td><input type="text" name="d_asphalt_SetValue" id="d_asphalt_SetValue" value="" onkeyup="num(this)"        maxlength="15"></td>
+                    <td><input type="text" name="d_admixture1_SetValue" id="d_admixture1_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_admixture2_SetValue" id="d_admixture2_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                  </tr>
+                  </tbody>
+                </table>
+                </form>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                  <tr>
+                    <td align="center"><input type="button"  id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addOrUpdate(1);" ></td>
+                  </tr>
+              </table>
+              
+       	  </div>
+		</div>
+	</div>
+</div>	
+
+<div class="modal fade" id="loginModal2">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="/MixingStation/resources/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>生产配合比</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            <form id="update">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="mbphb_luru">
+                  <tr>
+                    <td width="16%" align="right">生产配合比编号：</td>
+                    <td width="20%"><input name="str_proportion_Code" class="sekuan"   type="text" placeholder="输入" id="updatestr_proportion_Code" readonly="readonly"  maxlength="40">
+                    <span style="color:red">&nbsp;*</span></td>
+                    <td width="10%" align="right">产品名称：</td>
+                    <td width="20%"><select size="1" class="sekuan" id="updatestr_material_Name" onfocus="getUpdateMaterialName($(this));" onchange="getUpdateOutName()" disabled="disabled">
+                    </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td width="10%" align="right">产品型号：</td>
+                    <td width="24%"><select size="1" class="sekuan" name="i_product_Id" id="updatestr_material_Model" required="required" onchange="getUpdateOutModel()" disabled="disabled">
+                        <option></option>
+                      </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                  </tr>
+                  <tr>
+                    <td  align="right">目标配合比编号：</td>
+                    <td><select class="sekuan" name="i_targ_PropId" size="1" id="updatestr_mb_proportion_Code" disabled="disabled">
+                    <option></option>
+                    </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td align="right">级配编号：</td>
+                    <td><select class="sekuan" name=i_grad_Id size="1" id="updatestr_grade_Code" onfocus="getUpdateJpbhShow()" disabled="disabled">
+                        <option></option>
+                      </select><span style="color:red">&nbsp;&nbsp;*</span></td>
+                    <td>&nbsp;</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td width="14%" align="right">备注：</td>
+                    <td height="60" colspan="5" valign="bottom">
+                    <textarea name="str_remarks" cols="40" rows="2" id="updatestr_remarks" class="textkuan"></textarea></td>
+                  </tr>
+                </table>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="scphb_jia" id="updatedetailedTab">
+				<thead>
+                  <tr class="mbphb_luru_dise">
+                    <td width="9%" rowspan="2">材料种类</td>
+                    <td colspan="6">骨料仓(%)</td>
+                    <td colspan="2">粉料仓(%)</td>
+                    <td width="9%" rowspan="2">油石比(%)</td>
+                    <td colspan="2">外掺剂(%)</td>
+                  </tr>
+                  <tr class="mbphb_luru_dise">
+                    <td width="8%">1#仓</td>
+                    <td width="8%">2#仓</td>
+                    <td width="8%">3#仓</td>
+                    <td width="8%">4#仓</td>
+                    <td width="8%">5#仓</td>
+                    <td width="8%">6#仓</td>
+                    <td width="8%">冷粉仓</td>
+                    <td width="8%">热粉仓</td>
+                    <td width="9%">外掺剂1</td>
+                    <td width="9%">外掺剂2</td>
+                  </tr>
+                  </thead>
+                 <tbody id="update">
+                  <tr>
+                    <td class="mbphb_luru_dise h50">用量</td>
+                    <td><input type="text" name="d_no1_SetValue" id="updated_no1_SetValue" value="" onkeyup="num(this)"  maxlength="15">
+                    <input type="hidden" value="" id="i_id" name="i_id">
+                    </td>
+                    <td><input type="text" name="d_no2_SetValue" id="updated_no2_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no3_SetValue" id="updated_no3_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no4_SetValue" id="updated_no4_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no5_SetValue" id="updated_no5_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_no6_SetValue" id="updated_no6_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_coldPowder_SetValue" id="updated_coldPowder_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_hotPowder_SetValue" id="updated_hotPowder_SetValue" value="" onkeyup="num(this)"    maxlength="15"></td>
+                    <td><input type="text" name="d_asphalt_SetValue" id="updated_asphalt_SetValue" value="" onkeyup="num(this)"        maxlength="15"></td>
+                    <td><input type="text" name="d_admixture1_SetValue" id="updated_admixture1_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                    <td><input type="text" name="d_admixture2_SetValue" id="updated_admixture2_SetValue" value="" onkeyup="num(this)"  maxlength="15"></td>
+                  </tr>
+                  </tbody>
+                </table>
+                </form>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+                  <tr>
+                    <td align="center"><input type="button"  id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addOrUpdate(2);" ></td>
+                  </tr>
+              </table>
+              
+       	  </div>
+		</div>
+	</div>
+</div>
+
+    <div class="mbpb_tanc" id="mydiv2" style="position:absolute;display:none;">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" id = >
+            <tr>
+                <td width="26%" class="ydq">生产配合比编号：</td>
+                <td width="20%" class="zdq" id ="pcstr_proportion_Code"></td>
+                <td width="20%" class="ydq" >产品名称：</td>
+                <td width="34%" class="zdq" id="pcstr_material_Name"></td>
+            </tr>
+            <tr>
+                <td width="24%" class="ydq" >目标配合比编号：</td>
+                <td width="21%" class="zdq" id = "mb_proportion_Code"></td>
+                <td width="21%" class="ydq" >级配编号：</td>
+                <td class="zdq" id="Grade_Code"></td>
+            </tr>
+        </table>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj xbj mbphb_bg">
+            <tr class="dise">
+                <td height="42">料仓</td>
+                <td>用量(%)</td>
+                <td>料仓</td>
+                <td>用量(%)</td>
+            </tr>
+            <tr>
+                <td class="dise">骨料1#仓</td>
+                <td id = "pc_no1_SetValue"></td>
+                <td class="dise">冷粉仓</td>
+                <td id="pc_coldPowder_SetValue"></td>
+            </tr>
+            <tr>
+                <td class="dise">骨料2#仓</td>
+                <td id = "pc_no2_SetValue"></td>
+                <td class="dise">热粉仓</td>
+                <td  id="pc_hotPowder_SetValue"></td>
+            </tr>
+            <tr>
+                <td class="dise">骨料3#仓</td>
+                <td id = "pc_no3_SetValue"></td>
+                <td class="dise">油石比</td>
+                <td id="pc_asphalt_SetValue"></td>
+            </tr>
+            <tr>
+                <td class="dise">骨料4#仓</td>
+                <td id = "pc_no4_SetValue"></td>
+                <td class="dise">外掺剂1</td>
+                <td id ="pc_admixture1_SetValue"></td>
+            </tr>
+            <tr>
+                <td class="dise">骨料5#仓</td>
+                <td id = "pc_no5_SetValue"></td>
+                <td class="dise">外掺剂2</td>
+                <td id = "pc_admixture2_SetValue"></td>
+            </tr>
+            <tr>
+                <td class="dise">骨料6#仓</td>
+                <td id = "pc_no6_SetValue"></td>
+                <td class="dise">&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+
+    </div>
+
+<div class="mbpb_tanc k1000 fud" id="mydiv2" style="position:absolute;display:none;">
+                            	  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="zi12">
+                            	  
+                            	  <tr>
+                                    <td width="8%" class="ydq">1级配编号：</td>
+                                    <td width="16%" class="zdq"><span id="yjph"></span></td>
+                                    <td width="9%" class="ydq">产品名称：</td>
+                                    <td width="37%" class="zdq"><span id="cpmc"></span></td>
+                                    <td width="18%" class="ydq">&nbsp;</td>
+                                    <td width="12%" class="zdq">&nbsp;</td>
+                          	        </tr>
+                            	  </table>
+                                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj xbj">
+                                  <thead>
+                                  <tr class="dise">
+                                    <td><img src="/MixingStation/resources/images/jipeitou_2.jpg" width="103" height="30"></td>
+                                    <td width="6%">53.0</td>
+                                    <td width="6%">37.5</td>
+                                    <td width="6%">31.5</td>
+                                    <td width="6%">26.5</td>
+                                    <td width="6%">19.0</td>
+                                    <td width="6%">16.0</td>
+                                    <td width="6%">13.2</td>
+                                    <td width="6%">9.5</td>
+                                    <td width="6%">4.75</td>
+                                    <td width="6%">2.36</td>
+                                    <td width="6%">1.18</td>
+                                    <td width="6%">0.6</td>
+                                    <td width="6%">0.3</td>
+                                    <td width="6%">0.15</td>
+                                    <td width="6%">0.075</td>
+                                  </tr>
+                                  </thead>
+                                  
+                                  <tbody id="tab">
+                  <tr>
+                    <td class="mbphb_luru_dise">1#仓</td>
+                    <td><span type="text" class="inputb" id="101_1"></span>
+                       <input type="hidden" value="" id="lN1" ">
+                    </td>
+                        <td><span type="text" class="inputb" id="101_2" name="d_a37_5"></span></td>
+                        <td><span  id="101_3"></span></td>
+                        <td><span  id="101_4" ></span></td>
+                        <td><span  id="101_5" ></span></td>
+                        <td><span  id="101_6" ></span></td>
+                        <td><span  id="101_7" ></span></td>
+                        <td><span  id="101_8" ></span></td>
+                        <td><span  id="101_9" ></span></td>
+                        <td><span  id="101_10" ></span></td>
+                        <td><span  id="101_11" ></span></td>
+                        <td><span  id="101_12" ></span></td>
+                        <td><span  id="101_13" ></span></td>
+                        <td><span  id="101_14" ></span></td>
+                        <td><span  id="101_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">2#仓</td>
+                     <td><span  id="102_1" name="d_a53"></span>
+                     <span type="hidden" value="" id="lN2" name="str_warehouse_Num">
+                     </td>
+                        <td><span  id="102_2" ></span></td>
+                        <td><span  id="102_3" ></span></td>
+                        <td><span  id="102_4" ></span></td>
+                        <td><span  id="102_5" ></span></td>
+                        <td><span  id="102_6" ></span></td>
+                        <td><span  id="102_7" ></span></td>
+                        <td><span  id="102_8" ></span></td>
+                        <td><span  id="102_9" ></span></td>
+                        <td><span  id="102_10" ></span></td>
+                        <td><span  id="102_11" ></span></td>
+                        <td><span  id="102_12" ></span></td>
+                        <td><span  id="102_13" ></span></td>
+                        <td><span  id="102_14" ></span></td>
+                        <td><span  id="102_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">3#仓</td>
+                        <td><span  id="103_1" name="d_a53"></span>
+                        <span type="hidden" value="" id="lN3" name="str_warehouse_Num">
+                        </td>
+                        <td><span  id="103_2" ></span></td>
+                        <td><span  id="103_3" ></span></td>
+                        <td><span  id="103_4" ></span></td>
+                        <td><span  id="103_5" ></span></td>
+                        <td><span  id="103_6" ></span></td>
+                        <td><span  id="103_7" ></span></td>
+                        <td><span  id="103_8" ></span></td>
+                        <td><span  id="103_9" ></span></td>
+                        <td><span  id="103_10" ></span></td>
+                        <td><span  id="103_11" ></span></td>
+                        <td><span  id="103_12" ></span></td>
+                        <td><span  id="103_13" ></span></td>
+                        <td><span  id="103_14" ></span></td>
+                        <td><span  id="103_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">4#仓</td>
+                        <td><span  id="104_1" name="d_a53"></span>
+                        <span type="hidden" value="" id="lN4" name="str_warehouse_Num">
+                        </td>
+                        <td><span  id="104_2" ></span></td>
+                        <td><span  id="104_3" ></span></td>
+                        <td><span  id="104_4" ></span></td>
+                        <td><span  id="104_5" ></span></td>
+                        <td><span  id="104_6" ></span></td>
+                        <td><span  id="104_7" ></span></td>
+                        <td><span  id="104_8" ></span></td>
+                        <td><span  id="104_9" ></span></td>
+                        <td><span  id="104_10" ></span></td>
+                        <td><span  id="104_11" ></span></td>
+                        <td><span  id="104_12" ></span></td>
+                        <td><span  id="104_13" ></span></td>
+                        <td><span  id="104_14" ></span></td>
+                        <td><span  id="104_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">5#仓</td>
+                        <td><span  id="105_1" name="d_a53"></span>
+                        <span type="hidden" value="" id="lN5" name="str_warehouse_Num">
+                        </td>
+                        <td><span  id="105_2" ></span></td>
+                        <td><span  id="105_3" ></span></td>
+                        <td><span  id="105_4" ></span></td>
+                        <td><span  id="105_5" ></span></td>
+                        <td><span  id="105_6" ></span></td>
+                        <td><span  id="105_7" ></span></td>
+                        <td><span  id="105_8" ></span></td>
+                        <td><span  id="105_9" ></span></td>
+                        <td><span  id="105_10" ></span></td>
+                        <td><span  id="105_11" ></span></td>
+                        <td><span  id="105_12" ></span></td>
+                        <td><span  id="105_13" ></span></td>
+                        <td><span  id="105_14" ></span></td>
+                        <td><span  id="105_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">6#仓</td>
+                        <td><span  id="106_1" name="d_a53"></span>
+                        <span type="hidden" value="" id="lN6" name="str_warehouse_Num">
+                        </td>
+                        <td><span  id="106_2" ></span></td>
+                        <td><span  id="106_3" ></span></td>
+                        <td><span  id="106_4" ></span></td>
+                        <td><span  id="106_5" ></span></td>
+                        <td><span  id="106_6" ></span></td>
+                        <td><span  id="106_7" ></span></td>
+                        <td><span  id="106_8" ></span></td>
+                        <td><span  id="106_9" ></span></td>
+                        <td><span  id="106_10" ></span></td>
+                        <td><span  id="106_11" ></span></td>
+                        <td><span  id="106_12" ></span></td>
+                        <td><span  id="106_13" ></span></td>
+                        <td><span  id="106_14" ></span></td>
+                        <td><span  id="106_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">冷粉仓</td>
+                    <td><span  id="107_1" name="d_a53"></span>
+                    <span type="hidden" value="" id="lNH" name="str_warehouse_Num">
+                    </td>
+                        <td><span  id="107_2" ></span></td>
+                        <td><span  id="107_3" ></span></td>
+                        <td><span  id="107_4" ></span></td>
+                        <td><span  id="107_5" ></span></td>
+                        <td><span  id="107_6" ></span></td>
+                        <td><span  id="107_7" ></span></td>
+                        <td><span  id="107_8" ></span></td>
+                        <td><span  id="107_9" ></span></td>
+                        <td><span  id="107_10" ></span></td>
+                        <td><span  id="107_11" ></span></td>
+                        <td><span  id="107_12" ></span></td>
+                        <td><span  id="107_13" ></span></td>
+                        <td><span  id="107_14" ></span></td>
+                        <td><span  id="107_15" ></span></td>
+                  </tr>
+                  <tr>
+                    <td class="mbphb_luru_dise">热粉仓</td>
+                    <td><span  id="108_1" name="d_a53"></span>
+                    <span type="hidden" value="" id="lNC" name="str_warehouse_Num">
+                    </td>
+                        <td><span  id="108_2" ></span></td>
+                        <td><span  id="108_3" ></span></td>
+                        <td><span  id="108_4" ></span></td>
+                        <td><span  id="108_5" ></span></td>
+                        <td><span  id="108_6" ></span></td>
+                        <td><span  id="108_7" ></span></td>
+                        <td><span  id="108_8" ></span></td>
+                        <td><span  id="108_9" ></span></td>
+                        <td><span  id="108_10" ></span></td>
+                        <td><span  id="108_11" ></span></td>
+                        <td><span  id="108_12" ></span></td>
+                        <td><span  id="108_13" ></span></td>
+                        <td><span  id="108_14" ></span></td>
+                        <td><span  id="108_15" ></span></td>
+                  </tr>
+                  <tr>
+                  <td class="mbphb_luru_dise">上限</td>
+                  <td><span  id="109_1" name="d_a53"></span>
+                  <span type="hidden" value="" id="lMax" name="str_warehouse_Num">
+                  </td>
+                        <td><span  id="109_2" ></span></td>
+                        <td><span  id="109_3" ></span></td>
+                        <td><span  id="109_4" ></span></td>
+                        <td><span  id="109_5" ></span></td>
+                        <td><span  id="109_6" ></span></td>
+                        <td><span  id="109_7" ></span></td>
+                        <td><span  id="109_8" ></span></td>
+                        <td><span  id="109_9" ></span></td>
+                        <td><span  id="109_10" ></span></td>
+                        <td><span  id="109_11" ></span></td>
+                        <td><span  id="109_12" ></span></td>
+                        <td><span  id="109_13" ></span></td>
+                        <td><span  id="109_14" ></span></td>
+                        <td><span  id="109_15" ></span></td>
+                  </tr>
+                  <tr>
+                     <td class="mbphb_luru_dise">下限</td>
+                   <td><span  id="110_1" name="d_a53"></span>
+                   <span type="hidden" value="" id="lMin" name="str_warehouse_Num">
+                   </td>
+                        <td><span  id="110_2" ></span></td>
+                        <td><span  id="110_3" ></span></td>
+                        <td><span  id="110_4" ></span></td>
+                        <td><span  id="110_5" ></span></td>
+                        <td><span  id="110_6" ></span></td>
+                        <td><span  id="110_7" ></span></td>
+                        <td><span  id="110_8" ></span></td>
+                        <td><span  id="110_9" ></span></td>
+                        <td><span  id="110_10" ></span></td>
+                        <td><span  id="110_11" ></span></td>
+                        <td><span  id="110_12" ></span></td>
+                        <td><span  id="110_13" ></span></td>
+                        <td><span  id="110_14" ></span></td>
+                        <td><span  id="110_15" ></span></td>
+                  </tr>
+                  </tbody>
+               </table>
+		 </div>
+		 
+		 
+		 <div  class=" fud mbpb_tanc" id="mydiv3" style="position:absolute;display:none;" >
+                                	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                      <tr>
+                                        <td width="24%">目标配合比编号：</td>
+                                        <td width="26%" class="zdq"><span id="nr_l"></span></td>
+                                        <td width="23%">产品名称/型号：</td>
+                                        <td width="27%"><span id="xh_l"></span></td>
+                                      </tr>
+                                    </table>
+									<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="sbj mbphb_bg xbj">
+									<thead>
+                                      <tr class="mbphb_luru_dise">
+                                        <td width="21%" align="center">序号</td>
+                                        <td width="43%" align="center"><strong>原材料</strong></td>
+                                        <td width="36%" align="center"><strong>比例%</strong></td>                                
+                                     </tr>
+                                     </thead>
+                                     <tbody id="nr_l_new"></tbody>
+                                      <!-- <tr>
+                                        <td>1</td>
+                                        <td>沥青水泥AC-20</td>
+                                        <td align="center">85.45</td>
+                                      </tr>
+                                      <tr>
+                                        <td>2</td>
+                                        <td>沥青水泥AC-25</td>
+                                        <td align="center">23.00</td>
+                                      </tr> -->
+                                      </table>
+                                </div>
+<script src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<!-- <script type="text/javascript" src="../resources/js/script.js"></script> -->
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/pbgl_3.js"></script>
+</body>
+</html>

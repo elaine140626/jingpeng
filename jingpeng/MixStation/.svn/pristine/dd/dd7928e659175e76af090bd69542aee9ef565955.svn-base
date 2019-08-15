@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.blindSample.dao.BlindSampleDetectionDao">
+<select id="getInfoList" parameterType="java.util.Map" resultType="com.blindSample.model.TestSelectEntity">
+	select 
+		t2.Id,
+		t2.SerialNumber,                    -- 流水号
+		t3.TestRoomName,                    -- 试验室名称
+		t5.TestClassification_Name,         -- 试验类别
+		t4.TestName,                        -- 试验名称
+		t2.TestState,                       -- 试验状态
+		t4.TestTable,                       -- 试验关联试验表
+		t.SampleName as samplecode,         -- 样品名称
+		t.ConstructionUnit,                 -- 施工单位
+		t.EngineeringName,                  -- 工程名称
+		t.Purpose,                          -- 工程部位/用途
+		t2.CollectionState,                  -- 采集状态
+		CONVERT(varchar(100), t2.TestDate, 23) as TestDate, -- 试验日期
+		t2.TestOperator,                    -- 试验员
+		t2.IsQualifiedTest                  -- 是否合格
+	from BlindInfo t                    -- 盲样信息
+	left join TestInfo t2               -- 试验基本信息表
+	on t2.QRCode = t.QRCode             -- 二维码
+	left join TestRoomInfo t3           -- 试验室信息
+	on t2.UniqueIdentifier = t3.UniqueIdentifier
+	left join TestPageInfos t4          -- 试验页面信息
+	on t.TestNameId = t4.Id             -- 试验名称id
+	left join TestClassification t5     -- 试验分类
+	on t4.TestClass_Code = t5.TestClassification_Code
+	where
+	  1 = 1
+	  <if test="testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="teststate != null and teststate != ''">
+	   <if test="teststate == 0">
+	     and t3.TestRoomName IS NULL
+	   </if>
+	   <if test="teststate == 1">
+	     and t2.TestState != '2'
+	     and t3.TestRoomName IS NOT NULL
+	   </if>
+	   <if test="teststate == 2">
+	     and t2.TestState = #{teststate}
+	   </if>
+	 </if>
+	 <if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and t2.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+	 </if>
+	  <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	  	and #{startTime} &lt;= CONVERT(varchar(100), t2.TestDate, 23) 
+	  	and CONVERT(varchar(100), t2.TestDate, 23) &lt;= #{endTime} 
+	  </if> 
+	  order by t.CreateDate desc
+</select>
+</mapper>

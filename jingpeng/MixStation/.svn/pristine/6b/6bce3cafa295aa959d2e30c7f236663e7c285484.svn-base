@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="bunker">
+
+
+	<insert id="addBunker_Correspondence" parameterType="bunker_Correspondence">
+
+		INSERT INTO Bunker_Correspondence (
+		Org_ID,
+		Bunker_Code,
+		ConsProp_ID,
+		MateID_Cement1,
+		MateID_Cement2,
+		MateID_Cement3,
+		MateID_Cement4,
+		MateID_Aggregate1,
+		MateID_Aggregate2,
+		MateID_Aggregate3,
+		MateID_Aggregate4,
+		MateID_Aggregate5,
+		MateID_Aggregate6,
+		MateID_Water,
+		MateID_Admixture1,
+		MateID_Admixture2,
+		Remarks,
+		Operator,
+		Create_Date
+		)
+		VALUES
+		(
+		#{ i_org_Id },
+		#{ str_bunker_Code },
+		#{ i_consProp_Id },
+		#{ i_mateId_Cement1 },
+		#{ i_mateId_Cement2 },
+		#{ i_mateId_Cement3 },
+		#{ i_mateId_Cement4 },
+		#{ i_mateId_Aggregate1 },
+		#{ i_mateId_Aggregate2},
+		#{ i_mateId_Aggregate3},
+		#{ i_mateId_Aggregate4 },
+		#{ i_mateId_Aggregate5 },
+		#{ i_mateId_Aggregate6 },
+		#{ i_mateId_Water },
+		#{ i_mateId_Admixture1 },
+		#{ i_mateId_Admixture2 },
+		#{ str_remarks },
+		#{ str_operator },
+		#{ str_create_Date }
+		)
+	</insert>
+
+	<select id="getBunker_Correspondences" parameterType="java.util.HashMap"
+		resultType="bunker_Correspondence">
+
+		SELECT
+		c.Prop_Code str_prop_Code,
+		b.Bunker_Code str_bunker_Code,
+		c.Product_ID i_productid,
+		m.Material_Name + '-' + m.Material_Model str_Material,
+		b.Operator str_operator,
+		b.Create_Date str_create_Date
+		FROM
+		Bunker_Correspondence b
+		LEFT JOIN Cement_ConstructionProportion c ON c.Id = b.ConsProp_ID
+		LEFT JOIN V_MaterialInfo m ON m.Id = c.Product_ID
+		WHERE
+		1 = 1
+
+		<if test="productName != null and productName != ''">
+			AND m.Material_Name LIKE '%${productName}%'
+		</if>
+		<if test="productModel != null and productModel != ''">
+			AND m.Material_Model LIKE '%${productModel}%'
+		</if>
+		<if
+			test="SiloCorrespondingRelationshipNumber != null and SiloCorrespondingRelationshipNumber != ''">
+			AND b.Bunker_Code LIKE '%${SiloCorrespondingRelationshipNumber}%'
+		</if>
+
+
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND b.Org_ID IN (" separator="," close=")">
+			#{item}
+		</foreach>
+		AND b.Valid_Flag = 1
+		ORDER BY
+		b.id DESC
+	</select>
+
+	<select id="getBunker_CorrespondenceByCode" parameterType="bunker_Correspondence"
+		resultType="bunker_Correspondence">
+
+		SELECT
+		bc.Id i_id
+		FROM
+		Bunker_Correspondence bc
+		WHERE
+		bc.Valid_Flag = 1
+		AND bc.Bunker_Code =#{str_bunker_Code}
+		AND bc.Org_ID = #{i_org_Id}
+
+	</select>
+	<select id="getBunker_CorrespondencesByContonid" parameterType="java.util.HashMap"
+		resultType="bunker_Correspondence">
+
+		SELECT
+		bc.Id i_id,
+		bc.Bunker_Code str_bunker_Code
+		FROM
+		Bunker_Correspondence bc
+		WHERE 1=1
+
+		<foreach collection="org_Ids" index="index" item="item" open=" AND bc.Org_ID IN (" separator="," close=")">
+			#{item}
+		</foreach>
+		and bc.Valid_Flag = 1
+		AND bc.ConsProp_ID = #{i_consProp_Id}
+
+	</select>
+	
+	
+	
+		<select id="getBunkerCorrespondencesconstructionConsByPropID" parameterType="java.util.Map"
+		resultType="java.util.Map">
+                   select SUM(t.a) as constructionCount 
+                   from(
+                        select count(*) as a  from Bunker_Correspondence where ConsProp_ID = #{i_id} and Valid_Flag = 1 and  Org_ID = #{i_org_Id}
+                        union
+                        select count(*) as a from Cement_Production_Plan where ConsProp_ID = #{i_id} and Valid_Flag = 1 and  Org_ID = #{i_org_Id}
+                        )t
+
+	</select>
+	
+	
+
+</mapper>

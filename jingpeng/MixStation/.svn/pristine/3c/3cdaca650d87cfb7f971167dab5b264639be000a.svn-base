@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>吉东公路盲样检测系统</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree.css"/>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree2.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+<script type="text/javascript" src="../resources/js/echarts.min.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/jedate/jedate.js"></script>
+<style type="text/css">
+.pagination {
+	position: relative;
+    left: 50%;
+    transform: translate(-50%,0%);
+}
+
+</style>
+</head>
+
+<body>
+<div class="top">
+        <div class="topleft">吉东公路盲样检测系统</div> 
+        <div class="topright">
+            <span class="userid"></span><span>你好！</span>
+            <a href="../testUserInfo/userinfo.html" target="_blank" class="shezhi">用户管理</a>
+            <a href="../testUserInfo/login.html" class="out">安全退出</a>
+        </div>
+</div>
+<div class="container-fluid">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="../testUserInfo/index.html" class="nav1">首页</a></li>
+                <li><a href="../TestCollection/shiyan_3.html" class="nav4">试验收样</a></li>
+                <li><a href="../testInfo/shiyan_1.html" class="focus_b">试验汇总</a></li>
+                <li><a href="../TestSelect/shiyan_2.html" class="nav3">试验查询</a></li>
+                <li><a href="../TestAutoCollection/shiyan_4.html" class="nav5">自动采集</a></li>
+                <li><a href="../BlindSampleDetection/shiyan_5.html" class="nav6">盲样检测</a></li>
+                <li><a href=../BlindSample/shiyan_6.html class="nav7">指标维护</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">
+						您的位置：试验室
+						<span class="zhongxin" id="isOrName">(</span>
+						<span class="zhongxin" id="station"></span>
+						<span class="zhongxin" id="isOrName1">)</span> > 试验收样
+				</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+                <div class="shunav">
+                	<div class="shu_btn">
+                        <span class="shu_ban" id="toggle">试验室</span>
+                        <div class="dtree" id="content" style="display:none;">
+						<script type="text/javascript">
+						var parentNode = '0';
+						$.ajax({
+									type : "POST",
+									url : "../TestCollection/getTestRoomList",
+									async : false,
+									dataType : "json",
+									success : function(data) {
+										// 显示试验室名称
+										d = new dTree('d', true);
+										d.add(0, -1, '吉东公路盲样试验室');
+										var html = "";
+										if(data != null && data.length > 0){
+											for (var i = 0; i < data.length; i++) {
+												// 父类节点
+												if(data[i].parentNode != null && data[i].parentNode != 0){
+													// 根据父类id区分子集
+													if(data[i].parentNode == parentNode){
+														d.add(data[i].id,
+																data[i].parentNode,
+																'children',
+																data[i].uniqueidentifier,
+																data[i].testroomname,
+																false,
+																false);
+													}else{
+														// 父类显示(只选中子节点)
+														d.add(data[i].id,
+																0,
+																'authority',
+																data[i].uniqueidentifier,
+																data[i].testroomname,
+																false,
+																false);
+													}
+												}else{
+													// 父类显示
+													d.add(data[i].id,
+															data[i].parentNode,
+															'authority',
+															data[i].uniqueidentifier,
+															data[i].testroomname,
+															false,
+															false);
+													// 父类节点
+													parentNode = data[i].id;
+												}
+
+												 if (i == 0) {
+													 html += "<span class='s'>"
+															+ data[i].testroomname
+															+ "</span>";
+												} else {
+													html += "<span class='s'>"
+													    +'、'+ data[i].testroomname
+														+ "</span>";
+												}
+
+											}
+										}
+										$("#station").html(html);
+										document.write(d);
+										d.openAll();
+									}
+								});
+
+						// 设置checkBox全部选中
+						var authority = document.getElementsByName("authority");
+						for (var i = 0; i < authority.length; i++) {
+							var aut = authority[i]
+							$("#" + aut.id).attr("checked",
+									"checked");
+						}
+						var children = document.getElementsByName("children");
+						for (var i = 0; i < children.length; i++) {
+							var aut = children[i]
+							$("#" + aut.id).attr("checked",
+									"checked");
+						}
+								</script>
+                    </div>
+                    </div>
+                    <div class="shu_jieguo">
+                        <ul id="ulSelected" class="duihao"></ul>
+                    </div>   
+                    <form action="" method="get" class="sousuo">
+                        <label>试验日期：</label>
+                        <input type="text" size="20" class="search_input" id="startTime" readonly="readonly">
+                        <label>--</label>
+                      	<input type="text" size="20" class="search_input" id="endTime" readonly="readonly">
+                    	<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="getList()">
+                  	</form>
+                </div>
+                <div class="charttt" id="echar"></div>
+                <div class="lq_main">
+                    <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="list">
+                            <thead>
+                              <tr>
+                                <th width="6%" class="xh" scope="col">序号</th>
+                                <th width="12%" scope="col">试验室名称</th>
+                                <th width="7%" scope="col">试验总数</th>
+                                <th width="9%" scope="col">区间内试验数</th>
+                                <!--<th width="9%" scope="col">试验合格率</th>-->
+                                <th width="9%" scope="col">自动采集试验数</th>
+                                <th width="9%" scope="col">区间内自动采集试验数</th>
+                                <th width="10%" scope="col">盲样试验数</th>
+                                <th width="9%" scope="col">区间内盲样试验数</th>
+                                <th width="20%" scope="col">详情</th>
+                              </tr>
+                              </thead>
+                              <tbody></tbody>
+                            </table>
+                    </div>
+                    <div class="page" style="display: none">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div>
+          		</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../resources/images2/chakan.png" width="16" height="16"></span>
+		 	 	<h3>试验汇总明细</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt" style="padding-top:10px;">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" >
+                  <thead id="thead">
+                  <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">试验名称</th>
+                    <th scope="col">自动采集试验数量</th>
+                    <th scope="col">盲样试验数量</th>
+                    <th scope="col">区间内自动采集数量</th>
+                    <th scope="col">区间内盲样试验数量</th>
+                  </tr>
+                  </thead>
+                  <tbody id="listDetailed"></tbody>
+                </table>
+       	  </div>
+		</div>
+	</div>
+</div>	
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/blindSampleJs/shiyan_1.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+<!-- 引用js -->
+
+<script type="text/javascript">
+    jeDate({
+         dateCell:"#startTime",
+         format:"YYYY-MM-DD",
+         isinitVal:false,
+         isTime:true, 
+	   	 isClear:false,
+     })
+    jeDate({
+        dateCell:"#endTime",
+        format:"YYYY-MM-DD",
+        isinitVal:false,
+        isTime:true,
+        isClear:false,
+    })
+</script>
+</body>
+</html>

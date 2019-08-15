@@ -1,0 +1,95 @@
+package com.userInfo.model;
+
+public class PtUserInfo {
+	 private int Id;                 // 用户id
+	 private String UserCode;           // 用户名
+	 private String PassWord;           // 密码
+	 private String Name;               // 姓名
+	 private String IsSystemUser;       // 用户权限
+	 private String IsMixingStation;    // 拌合站权限
+	 private String IsTestRoom;         // 试验室权限
+	 private String IsCollector;        // 试验室收样权限
+	 private String DelFlag;            // 删除标识
+	 private String Operator;           // 创建人
+	 private String CreateDate;         // 创建时间
+	 private String Modifier;           // 更新人
+	 private String ModifyDate;         // 更新时间
+	public int getId() {
+		return Id;
+	}
+	public void setId(int id) {
+		Id = id;
+	}
+	public String getUserCode() {
+		return UserCode;
+	}
+	public void setUserCode(String userCode) {
+		UserCode = userCode;
+	}
+	public String getPassWord() {
+		return PassWord;
+	}
+	public void setPassWord(String passWord) {
+		PassWord = passWord;
+	}
+	public String getName() {
+		return Name;
+	}
+	public void setName(String name) {
+		Name = name;
+	}
+	public String getIsSystemUser() {
+		return IsSystemUser;
+	}
+	public void setIsSystemUser(String isSystemUser) {
+		IsSystemUser = isSystemUser;
+	}
+	public String getIsMixingStation() {
+		return IsMixingStation;
+	}
+	public void setIsMixingStation(String isMixingStation) {
+		IsMixingStation = isMixingStation;
+	}
+	public String getIsTestRoom() {
+		return IsTestRoom;
+	}
+	public void setIsTestRoom(String isTestRoom) {
+		IsTestRoom = isTestRoom;
+	}
+	public String getIsCollector() {
+		return IsCollector;
+	}
+	public void setIsCollector(String isCollector) {
+		IsCollector = isCollector;
+	}
+	public String getDelFlag() {
+		return DelFlag;
+	}
+	public void setDelFlag(String delFlag) {
+		DelFlag = delFlag;
+	}
+	public String getOperator() {
+		return Operator;
+	}
+	public void setOperator(String operator) {
+		Operator = operator;
+	}
+	public String getCreateDate() {
+		return CreateDate;
+	}
+	public void setCreateDate(String createDate) {
+		CreateDate = createDate;
+	}
+	public String getModifier() {
+		return Modifier;
+	}
+	public void setModifier(String modifier) {
+		Modifier = modifier;
+	}
+	public String getModifyDate() {
+		return ModifyDate;
+	}
+	public void setModifyDate(String modifyDate) {
+		ModifyDate = modifyDate;
+	}
+}

@@ -1,0 +1,102 @@
+var baseUrl = "";
+$(function(){
+	baseUrl = getContextPath();
+	$.ajax({
+        type: "get",
+        url:  baseUrl + "/VideoSurveillance/getAll.html",
+        data:{},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	 $.each(data.vsList, function (i, v) {
+                 $('<option></option>').attr("value", v.vid).html(v.vname).appendTo($("#selectMyPlayer"));
+                 $('<option></option>').attr("value", v.vid).html(v.vname).appendTo($("#selectMyPlayer2"));
+                 $('<option></option>').attr("value", v.vid).html(v.vname).appendTo($("#selectMyPlayer3"));
+
+             })
+        }
+ })
+})
+
+
+function VsById(){
+	
+	var vid = $("#selectMyPlayer").val();
+	
+	$.ajax({
+        type: "get",
+        url:  baseUrl + "/VideoSurveillance/getById.html",
+        data:{"vid":vid},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	data[0].vurl;
+        	var vid = data[0].vid;
+        	var url = data[0].vurl;
+        	var vcode = data[0].vcode;
+        	$("#myPlayerDiv").empty();
+        	var vhtml =["<video id=\"myPlayer\" poster=\"\" controls playsInline",
+        		"							webkit-playsinline autoplay>",
+        		"						<source src="+url+"",
+        		"								type=\"rtmp/flv\" />",
+        		"						</video>"].join("");
+        	$("#myPlayerDiv").html(vhtml);
+        	new EZUIPlayer('myPlayer');
+        }
+ })
+}
+
+function VsById2(){
+	
+	var vid = $("#selectMyPlayer2").val();
+	
+	$.ajax({
+        type: "get",
+        url:  baseUrl + "/VideoSurveillance/getById.html",
+        data:{"vid":vid},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	data[0].vurl;
+        	var vid = data[0].vid;
+        	var url = data[0].vurl;
+        	var vcode = data[0].vcode;
+        	$("#myPlayerDiv2").empty();
+        	var vhtml =["<video id=\"myPlayer2\" poster=\"\" controls playsInline",
+        		"							webkit-playsinline autoplay>",
+        		"						<source src="+url+"",
+        		"								type=\"rtmp/flv\" />",
+        		"						</video>"].join("");
+        	$("#myPlayerDiv2").html(vhtml);
+        	new EZUIPlayer('myPlayer2');
+        }
+ })
+}
+
+function VsById3(){
+	
+	var vid = $("#selectMyPlayer3").val();
+	
+	$.ajax({
+        type: "get",
+        url:  baseUrl + "/VideoSurveillance/getById.html",
+        data:{"vid":vid},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	data[0].vurl;
+        	var vid = data[0].vid;
+        	var url = data[0].vurl;
+        	var vcode = data[0].vcode;
+        	$("#myPlayerDiv3").empty();
+        	var vhtml =["<video id=\"myPlayer3\" poster=\"\" controls playsInline",
+        		"							webkit-playsinline autoplay>",
+        		"						<source src="+url+"",
+        		"								type=\"rtmp/flv\" />",
+        		"						</video>"].join("");
+        	$("#myPlayerDiv3").html(vhtml);
+        	new EZUIPlayer('myPlayer3');
+        }
+ })
+}
+

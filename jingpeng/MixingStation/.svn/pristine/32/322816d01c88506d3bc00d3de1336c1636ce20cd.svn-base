@@ -1,0 +1,21 @@
+package com.mix.service.login.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mix.dao.login.LoginDao;
+import com.mix.model.User_Info;
+import com.mix.service.login.LoginService;
+@Service
+@Transactional
+public class LoginServiceImpl implements LoginService{
+	@Autowired
+	private LoginDao loginDao;
+	
+	public List<User_Info> userLogin(User_Info user){
+			return loginDao.userLogin(user);
+}
+}

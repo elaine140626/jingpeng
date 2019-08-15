@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.basicSetting.dao.MaterialSettingDao">	
+	<!-- 材料名称List取得 -->
+	<select id="getMaterialSettingList" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.MaterialSettingEntity">
+		SELECT
+		   m.Id                           -- 主键id
+		  , m.MaterielNumber              -- 材料编号
+		  , m.MaterielName                -- 材料名称
+		  , m.MaterielType                -- 材料类别
+		  , getContentByCode('cllb', m.MaterielType) as MaterielTypeName  -- 材料类别名称
+		  , m.MaterielModel               -- 材料型号
+		  , m.Remarks
+		  , m.IsDel
+		  , m.Creater
+		  , m.CreaterDate
+		  , m.Reviser
+		  , m.ReviserDate 
+		FROM
+		  materielnameinfo m
+		where m.IsDel = 0
+		<if test="id != null and id != ''">
+			and m.Id = #{id}                       -- 主键id
+		</if>
+		<if test="MaterielName != null and MaterielName != ''">
+			and m.MaterielName like CONCAT('%',CONCAT(#{MaterielName},'%'))    -- 材料名称
+		</if>
+		<if test="MaterielType != null and MaterielType != ''">
+			and m.MaterielType = #{MaterielType}   -- 材料类别
+		</if>
+		<if test="MaterielModel != null and MaterielModel != ''">
+			and m.MaterielModel like CONCAT('%',CONCAT(#{MaterielModel},'%'))  -- 材料型号
+		</if>
+		<if test="type != null and type != ''">
+			GROUP BY m.MaterielName
+		</if>
+		order by m.CreaterDate desc
+	</select>
+	
+	<select id="getFeeddetailedcompany" resultType="map">
+		SELECT
+		   f.Id as id
+		FROM
+		  feeddetailedcompany f
+		where f.IsDel = 0 
+		AND f.MaterielNameId = #{id} LIMIT 1
+	</select>
+	
+	<select id="getMaterialSettingNumber" resultType="com.truckscale.basicSetting.model.MaterialSettingEntity">
+		SELECT
+		   m.Id                           -- 主键id
+		  , m.MaterielNumber              -- 材料编号
+		  , m.MaterielName                -- 材料名称
+		  , m.MaterielType                -- 材料类别
+		  , getContentByCode('cllb', m.MaterielType) as MaterielTypeName  -- 材料类别名称
+		  , m.MaterielModel               -- 材料型号
+		  , m.Remarks
+		  , m.IsDel
+		  , m.Creater
+		  , m.CreaterDate
+		  , m.Reviser
+		  , m.ReviserDate 
+		FROM
+		  materielnameinfo m
+		where m.IsDel = 0
+		order by m.CreaterDate desc LIMIT 1
+	</select>
+	
+	<!-- 判断材料名称和型号是否存在 -->
+	<select id="getCount" parameterType="com.truckscale.basicSetting.model.MaterialSettingEntity" resultType="com.truckscale.basicSetting.model.MaterialSettingEntity">
+		select 
+			*
+		from materielnameinfo m
+		where m.IsDel = 0 
+		  and m.MaterielName = #{materielName}
+		  and m.MaterielModel = #{materielModel}
+	</select>
+	<!-- 新增材料名称表 -->
+	<insert id="insertMaterialSetting" parameterType="com.truckscale.basicSetting.model.MaterialSettingEntity">
+		INSERT 
+		INTO materielnameinfo( 
+		    MaterielNumber
+		  , MaterielName
+		  , MaterielType
+		  , MaterielModel
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		    #{MaterielNumber}
+		  , #{MaterielName}
+		  , #{MaterielType}
+		  , #{MaterielModel}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		); 
+	</insert>
+	<!-- 修改材料名称表 -->
+	<update id="updateMaterialSetting" parameterType="com.truckscale.basicSetting.model.MaterialSettingEntity">
+		UPDATE materielnameinfo 
+		SET
+		    MaterielNumber = #{MaterielNumber}
+		  , MaterielName = #{MaterielName}
+		  , MaterielType = #{MaterielType}
+		  , MaterielModel = #{MaterielModel}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+	<!-- 删除材料名称表 -->
+	<update id="deleteMaterialSetting" parameterType="com.truckscale.basicSetting.model.MaterialSettingEntity">
+		UPDATE materielnameinfo 
+		SET
+		    IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+</mapper>

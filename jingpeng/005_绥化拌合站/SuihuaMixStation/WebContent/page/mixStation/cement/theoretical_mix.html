@@ -1,0 +1,121 @@
+<!-- 水泥理论配比信息 -->
+<script type="text/javascript" src="../../js/mixStation/cement/theoretical_mix.js"></script>
+<div class="rightcon_wz">
+    <div class="location">您的位置：水泥混合料拌合站（<span class="banhez"  id = "locationText">综合一标</span>） > 配比管理 > 理论配比信息</div>
+</div>
+<div class="rightcon_content">
+<div class="shunav">
+        <form action="" method="get" class="sousuo">
+            <label>理论配比编号：</label>
+             <input name="prop_Code" type="text" id="prop_Code" class="search_input rightwbj" >
+            <label>产品名称：</label>
+             <input name="material_Name" type="text" id="material_Name" class="search_input rightwbj" >
+            <label>产品型号：</label>
+            <input name="material_Model" type="text" id="material_Model" class="search_input rightwbj" >
+            <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search()">
+        </form>
+        </div>
+    <div class="table-b">
+        <div class="luru"><a href="#" class="hvr-icon-forward globalLoginBtn" onclick="addView();">新增录入</a></div>
+        <div class="table-a-right table-c-right">
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="list">
+                <thead>
+                <tr>
+                    <th scope="col" class="scsj_xh" style="text-align: center">序号</th>
+                    <th scope="col" class="llpb_bh10" style="text-align: center">理论配比编号</th>
+                    <th scope="col" class="llpb_xh12" style="text-align: center">产品名称/型号</th>
+                    <th scope="col" style="text-align: center">设计水灰比(%)</th>
+                    <th scope="col" style="text-align: center">坍落度(mm)</th>
+                    <th scope="col" style="text-align: center">设计强度(MPa)</th>
+                    <th scope="col" style="text-align: center">砂率(%)</th>
+                    <th scope="col" style="text-align: center">创建人</th>
+                    <th scope="col" style="text-align: center">创建时间</th>
+                    <th scope="col" style="text-align: center; width:10%;">操作</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+	<div class="modal fade" id="loginModal">
+	    <div class="modal-dialog modal-lg">
+	        <div class="modal-content">
+	            <div class="tan_dx_title">
+	                <span><img src="../../image/images/bi.png" width="16" height="16"></span>
+	                <h3>理论配比信息</h3>
+	                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+	            </div>
+	            <div class="tan_dx_txt">
+	                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru" id="tab">
+	                    <tr>
+	                        <td width="21%" align="right">理论配比编号：</td>
+	                        <td colspan="3"><input name="propCode" type="text" id="propCode" placeholder="输入理论配比编号" style="width : 430px;" maxlength="40" onkeyup="value=value.replace(/[\W]/g,'')" onchange="changePropCode(this.value)"><span style="color:red;padding-left: 10px">*</span></td>
+	                    </tr>
+	                    <tr>
+	                        <td align="right">产品名称：</td>
+	                        <td width="22%">
+	                        	<select name="materialName" size="1" id="materialName" onchange="getStrModel()"></select>
+	                        	<span style="color:red;padding-left: 10px">*</span>
+	                        </td>
+	                        <td width="9%" align="right">规格型号：</td>
+	                        <td width="48%">
+	                        	<select name="materialModel" size="1" id="materialModel"></select>
+	                        	<span style="color:red;padding-left: 10px">*</span>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td align="right">设计水灰比(%)：</td>
+	                        <td><input name="waterCementRatio" type="text" id="waterCementRatio" placeholder="输入设计水灰比" maxlength="15" onkeyup="num(this);"/><span style="color:red;padding-left: 10px">*</span></td>
+	                        <td align="right">砂率(%)：</td>
+	                        <td><input name="sandRatio" type="text" id="sandRatio" placeholder="输入砂率" maxlength="15" onkeyup="num(this);"/><span style="color:red;padding-left: 10px">*</span></td>
+	                    </tr>
+	                    <tr>
+	                        <td align="right">设计强度(MPa)：</td>
+	                        <td><input name="designStrength" type="text" id="designStrength" placeholder="输入设计强度" maxlength="40" onkeyup="num(this)"/><span style="color:red;padding-left: 10px">*</span></td>
+	                        <td align="right">&nbsp;</td>
+	                        <td>&nbsp;</td>
+	                    </tr>
+	                    <tr>
+	                        <td align="right">坍落度(mm)：</td>
+	                        <td><input name="slumpLow" type="text" id="slumpLow" placeholder="输入坍落度" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
+	                        	--</td>
+	                        <td colspan="2"><input name="slumpHigh" type="text" id="slumpHigh" placeholder="输入坍落度" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"/>
+	                        	<span style="color:red;padding-left: 10px">*</span>
+	                        </td>
+	                    </tr>
+	                    <!-- <tr>
+	                        <td align="right">制定人：</td>
+	                        <td colspan="3"><input name="textfield7" type="text" id="str_operator" placeholder="输入指定人"  maxlength="10"/><span style="color:red;padding-left: 10px">*</span></td>
+	                    </tr> -->
+	                    <tr>
+	                        <td align="right">备注：</td>
+	                        <td colspan="3"><textarea name="remarks" cols="57" rows="3" id="remarks" placeholder="输入备注" class="sbj" style="resize: none" maxlength="450"></textarea></td>
+	                    </tr>
+	                    <tr>
+	                    	<td><input name="id" id="id" hidden="true"/></td>
+	                    </tr>
+	                </table>
+	                <form id="submitForm" method="post">
+	                    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="llpb_luru sbj mbphb_bg jz bk table2" id="detailedTab">
+	                        <thead>
+		                        <tr class="mbphb_luru_dise">
+		                            <th colspan="2"><p align="center">原材料</p></th>
+		                    		<th width="10%"><p align="center">原材料用量</p></th>
+		                   			<th width="16%"><p align="center">厂家</p></th>
+		                   			<th width="16%"><p align="center">产地</p></th>
+		                            <th width="6%"><p align="center"><a onclick="addRow();" href="javascript:void(0)"><img src="../../image/images/jia2.png" width="16" height="16"></a></p></th>
+		                        </tr>
+	                        </thead>
+	                        <tbody></tbody>
+	                    </table>
+	                </form>
+	                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+	                    <tr>
+	                        <td align="center"><input type="button" name="button" value="保&nbsp;&nbsp;存" class="btn_bc" id="btnCementTheory" onclick="addCementTheory()"></td>
+	                    </tr>
+	                </table>
+	            </div>
+	        </div>
+	    </div>
+	</div>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../js/artDialog/artDialog.js?skin=default"></script>
+		<title>瑞德公路管理系统</title>
+
+		<script type="text/javascript">
+			$(document).ready(function() {});
+		</script>
+		<style type="text/css">
+			#main {
+				position: absolute;
+				top: 70px;
+				left: 0px;
+				right: 30px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			
+			.ui_input_txt02 {
+				width: 130px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="main">
+					<div id="top_nav">
+						<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;质检管理&nbsp;>&nbsp;<span style="color:#1A5CC6">销售订单检测</span></span>
+					</div>
+					<div class="ui_tb">
+						<div id="box_border">
+							<div id="box_top">销售订单检测</div>
+							<div id="box_center" style="padding-left: 20px;overflow: hidden;">
+								关键字：&nbsp;&nbsp;<input type="text" id="fyZldz" name="fangyuanEntity.fyZldz" class="ui_input_txt02" /><input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" onclick="search();" />
+							</div>
+							<div style="overflow-x:auto;">
+								<table style="width: 2290px;" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+									<tr>
+										<th class="xuhao">序号</th>
+										<th class="caozuo1">操作</th>
+										<th class="hetongbianhao">合同编号</th>
+										<th class="kehumingcheng">客户名称</th>
+										<th class="kehumingcheng">客户别称</th>
+										<th class="hetongzhuangtai">订单状态</th>
+										<th class="xiaoshouyuan">销售员</th>
+										<th class="beizhu">送货地址</th>
+										<th class="xiaoshouyuan">联系人</th>
+										<th class="dianhua">联系方式</th>
+										<th class="shijian">预计发车时间</th>
+										<th class="yunshujiesuan">检测结果</th>
+										<th class="beizhu">备注</th>
+
+									</tr>
+									<tr>
+										<td class="xuhao">1</td>
+										<td class="caozuo1">
+											<a style="margin: 0 15px;" href="order_detection_edit.html"><img src="../img/common/cha.png" width="20" height="20" alt="检测" title="检测"></a>
+										</td>
+										<td class="hetongbianhao">201808200001</td>
+										<td class="kehumingcheng">沈阳拌合站</td>
+										<td class="kehumingcheng">沈阳站</td>
+										<td class="hetongzhuangtai">进行中</td>
+										<td class="xiaoshouyuan">XXXX</td>
+										<td class="beizhu">沈阳市铁西区拌合站</td>
+										<td class="xiaoshouyuan">XX</td>
+										<td class="dianhua">18374855555</td>
+										<td class="shijian">2018/08/23</td>
+										<td class="yunshujiesuan">合格</td>
+										<td class="beizhu">无</td>
+
+									</tr>
+									<tr>
+										<td class="xuhao">2</td>
+										<td class="caozuo1">
+											<a style="margin: 0 15px;" href="order_detection_edit.html"><img src="../img/common/cha.png" width="20" height="20" alt="检测" title="检测"></a>
+										</td>
+										<td class="hetongbianhao">201808200001</td>
+										<td class="kehumingcheng">沈阳拌合站</td>
+										<td class="kehumingcheng">沈阳站</td>
+										<td class="hetongzhuangtai">进行中</td>
+										<td class="xiaoshouyuan">XXXX</td>
+										<td class="beizhu">沈阳市铁西区拌合站</td>
+										<td class="xiaoshouyuan">XX</td>
+										<td class="dianhua">18374855555</td>
+										<td class="shijian">2018/08/23</td>
+										<td class="yunshujiesuan">合格</td>
+										<td class="beizhu">无</td>
+
+									</tr>
+									<tr>
+										<td class="xuhao">3</td>
+										<td class="caozuo1">
+											<a style="margin: 0 15px;" href="order_detection_edit.html"><img src="../img/common/cha.png" width="20" height="20" alt="检测" title="检测"></a>
+										</td>
+										<td class="hetongbianhao">201808200001</td>
+										<td class="kehumingcheng">沈阳拌合站</td>
+										<td class="kehumingcheng">沈阳站</td>
+										<td class="hetongzhuangtai">进行中</td>
+										<td class="xiaoshouyuan">XXXX</td>
+										<td class="beizhu">沈阳市铁西区拌合站</td>
+										<td class="xiaoshouyuan">XX</td>
+										<td class="dianhua">18374855555</td>
+										<td class="shijian">2018/08/23</td>
+										<td class="yunshujiesuan">合格</td>
+										<td class="beizhu">无</td>
+									</tr>
+									<tr>
+										<td class="xuhao">4</td>
+										<td class="caozuo1">
+											<a style="margin: 0 15px;" href="order_detection_edit.html"><img src="../img/common/cha.png" width="20" height="20" alt="检测" title="检测"></a>
+										</td>
+										<td class="hetongbianhao">201808200001</td>
+										<td class="kehumingcheng">沈阳拌合站</td>
+										<td class="kehumingcheng">沈阳站</td>
+										<td class="hetongzhuangtai">进行中</td>
+										<td class="xiaoshouyuan">XXXX</td>
+										<td class="beizhu">沈阳市铁西区拌合站</td>
+										<td class="xiaoshouyuan">XX</td>
+										<td class="dianhua">18374855555</td>
+										<td class="shijian">2018/08/23</td>
+										<td class="yunshujiesuan">不合格</td>
+										<td class="beizhu">无</td>
+									</tr>
+									<tr>
+										<td class="xuhao">5</td>
+										<td class="caozuo1">
+											<a style="margin: 0 15px;" href="order_detection_edit.html"><img src="../img/common/cha.png" width="20" height="20" alt="检测" title="检测"></a>
+										</td>
+										<td class="hetongbianhao">201808200001</td>
+										<td class="kehumingcheng">沈阳拌合站</td>
+										<td class="kehumingcheng">沈阳站</td>
+										<td class="hetongzhuangtai">进行中</td>
+										<td class="xiaoshouyuan">XXXX</td>
+										<td class="beizhu">沈阳市铁西区拌合站</td>
+										<td class="xiaoshouyuan">XX</td>
+										<td class="dianhua">18374855555</td>
+										<td class="shijian">2018/08/23</td>
+										<td class="yunshujiesuan">合格</td>
+										<td class="beizhu">无</td>
+									</tr>
+									<tr>
+										<td class="xuhao">6</td>
+										<td class="caozuo1">
+											<a style="margin: 0 15px;" href="order_detection_edit.html"><img src="../img/common/cha.png" width="20" height="20" alt="检测" title="检测"></a>
+										</td>
+										<td class="hetongbianhao">201808200001</td>
+										<td class="kehumingcheng">沈阳拌合站</td>
+										<td class="kehumingcheng">沈阳站</td>
+										<td class="hetongzhuangtai">进行中</td>
+										<td class="xiaoshouyuan">XXXX</td>
+										<td class="beizhu">沈阳市铁西区拌合站</td>
+										<td class="xiaoshouyuan">XX</td>
+										<td class="dianhua">18374855555</td>
+										<td class="shijian">2018/08/23</td>
+										<td class="yunshujiesuan">合格</td>
+										<td class="beizhu">无</td>
+									</tr>
+
+								</table>
+							</div>
+
+						</div>
+						<div class="ui_tb_h30" style="padding-left: 30px;">
+							<div class="ui_flt" style="height: 30px; line-height: 30px;">
+								共有
+								<span class="ui_txt_bold04">90</span> 条记录，当前第
+								<span class="ui_txt_bold04">1
+						/
+						9</span> 页
+							</div>
+							<div class="ui_frt">
+								<!--    如果是第一页，则只显示下一页、尾页 -->
+
+								<input type="button" value="首页" class="ui_input_btn01" />
+								<input type="button" value="上一页" class="ui_input_btn01" />
+								<input type="button" value="下一页" class="ui_input_btn01" onclick="" />
+								<input type="button" value="尾页" class="ui_input_btn01" onclick="" />
+
+								<!--     如果是最后一页，则只显示首页、上一页 -->
+
+								转到第<input type="text" id="jumpNumTxt" class="ui_input_txt01" />页
+								<input type="button" class="ui_input_btn01" value="跳转" onclick="" />
+							</div>
+						</div>
+					</div>
+				</div>
+		</form>
+
+	</body>
+
+</html>

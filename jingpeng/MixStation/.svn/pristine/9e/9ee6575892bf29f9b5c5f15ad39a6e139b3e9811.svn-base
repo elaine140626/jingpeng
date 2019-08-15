@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>水泥凝结时间</title>
+<link href="../resources/css2/record.css" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+<style type="text/css">
+.inputClass{
+	text-align: center;
+    width: 100%;
+    height:96%;
+    border: none;
+}
+.search_select {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+}
+</style>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei"
+			style="position: relative; float: right;"></div>
+		<div id="istestcollection" class="jilu_title" style="padding-top: 60px;">水泥凝结时间自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">水泥凝结时间试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="16%">试验依据</td>
+					<td width="34%"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td width="34%"><input class="inputClass" type="text" id="testDate"></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td><label id="sampleName"></label></td>
+					<td>试件数量</td>
+					<td><label id="sampleCount"></label></td>
+				</tr>
+				<tr>
+					<td>试验员</td>
+					<td><label id="testOperator"></label></td>
+					<td>直径</td>
+					<td><label id="diameter"></label></td>
+				</tr>
+				<tr>
+					<td>水泥品种</td>
+					<td><label id="cementType"></label></td>
+					<td>强度等级</td>
+					<td><label id="cementStrengthGrade"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="12%">施工单位</td>
+					<td width="16%"><label id="constructionUnit"></label></td>
+					<td width="8%">工程名称</td>
+					<td width="20%"><label id="engineeringName"></label></td>
+					<td width="10%">工程部位/用途</td>
+					<td width="34%"><label id="purpose"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="16%">起始时间</td>
+						<td width="20%"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="start_Hour"></td>
+						<td width="10%" style="text-align: left;">&nbsp;时</td>
+						<td width="20%"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="start_Minute"></td>
+						<td width="10%" style="text-align: left;">&nbsp;分</td>
+						<td width="24%"></td>
+					</tr>
+					<tr>
+						<td width="16%">初凝状态时间</td>
+						<td width="20%"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="initial_Set_Hour"></td>
+						<td width="10%" style="text-align: left;">&nbsp;时</td>
+						<td width="20%"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="initial_Set_Minute"></td>
+						<td width="10%" style="text-align: left;">&nbsp;分</td>
+						<td width="24%"></td>
+					</tr>
+					<tr>
+						<td width="16%">终凝状态时间</td>
+						<td width="20%"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="final_Set_Hour"></td>
+						<td width="10%" style="text-align: left;">&nbsp;时</td>
+						<td width="20%"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="final_Set_Minute"></td>
+						<td width="10%" style="text-align: left;">&nbsp;分</td>
+						<td width="24%"></td>
+					</tr>
+					<tr>
+						<td width="16%">初凝时间(min)</td>
+						<td width="34%" colspan="2"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="init_Set_Time"></td>
+						<td width="16%">终凝时间(min)</td>
+						<td width="34%" colspan="2"><input onkeyup="value=(value.replace(/\D/g,'')==''?'':parseInt(value))" class="inputClass"  type="text" id="final_Set_Time"></td>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_7 xbj1">
+				<tr>
+					<td width="16%" align="center">结果判定</td>
+					<td width="84%"><select class="search_select" id="isQualifiedTest">
+						<option value="">未判定</option>
+						<option value="0">不合格</option>
+						<option value="1">合格</option>
+					</select></td>
+				</tr>
+			</table>
+		</div>
+		<div id="saveBtnShow" class="fanhui" style="float:left;">
+			<input id="save" type="button" value="保&nbsp;&nbsp;存" class="btncha">
+		</div>
+		<div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div>
+	</div>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../resources/DataTables/datatables.js"></script>
+	<script type="text/javascript" src="../resources/js/shiyan27.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/jedate/jedate.js"></script>
+	<script type="text/javascript">
+	   jeDate({
+	       dateCell:"#testDate",
+	       format:"YYYY-MM-DD",
+	       isinitVal:false,
+	       isTime:true, 
+	  	 isClear:false,
+	   })
+	</script>
+</body>
+</html>

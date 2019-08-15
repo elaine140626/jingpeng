@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	<!-- select2 下拉多选  -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+
+	<title>新增材料</title>
+	</head>
+	<body>
+	<div class="pd-20">
+	  <form class="form form-horizontal" id="form1" style="margin-top:-20px"  method="post">
+	    <div class="cl pd-5 bg-1 bk-gray mt-20"> 基本信息</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>材料编号：</label>
+				<div class="formControls col-xs-4 col-sm-3">
+					<input type="text" class="input-text" readonly="readonly" style="background-color: #e4e4e4" id="materielNumber" name="materielNumber" maxlength="50">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>材料名称：</label>
+				<div class="formControls col-xs-4 col-sm-3">
+					<input type="text" class="input-text" id="materielName" name="materielName" maxlength="50" onchange="changeMateriel()">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>规格型号：</label>
+				<div class="formControls col-xs-4 col-sm-3">
+					<input type="text" class="input-text" id="materielModel" name="materielModel" maxlength="50" onchange="changeMateriel()">
+				</div>
+			</div>
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>材料种类：</label>
+				<div class="formControls col-xs-4 col-sm-3">
+					<select class="select" style="width:50%" id="materielType" name="materielType">
+					</select>
+				</div>
+			</div>
+	  		<div class="row cl">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>备注：</label>
+	  			<div class="formControls col-xs-4 col-sm-3">
+	  				<input type="text" class="input-text" id="remarks" name="remarks" maxlength="500">
+	  			</div>
+	  		</div>
+	  </form>
+	</div>
+	<div class="row cl">
+	    <div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-3">
+	  		<button onclick="save();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+	  		<button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+	  	</div>
+	</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/basicSetting/materialSetting_add.js"></script>
+	</body>
+</html>

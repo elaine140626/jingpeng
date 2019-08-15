@@ -1,0 +1,353 @@
+<!-- 沥青目标配合比 -->
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 配比管理 &gt; 目标配合比</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<div class="shu_btn">
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+				<div class="dtree_Tree">
+					<div class="dTreeNode rootNode">
+						<a>吉东公路盲样试验室</a>
+					</div>
+					<div id="dd0-1" class="clip" style="display:block;">
+						<div class="dTreeNode"><img src="../../image/img/joinbottom.gif" alt="">
+							<a id="sd1" class="node" href="#" onmouseover="window.status='authority';return true;" onmouseout="window.status='';return true;">
+								<input type="checkbox" desc="ZS1中心试验室" name="authority" id="authority_2" cshow="ZS1中心试验室" value="ZS1" onclick="javascript: d.checkNode(2,0,false,&quot;ZS1中心试验室&quot;,this.checked);"
+								 checked="checked">
+								<span class="dtree_node" node_id="2">ZS1中心试验室</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<form action="" method="get" class="sousuo">
+			<label>目标配合比编号：</label>
+			<input type="text" class="search_input rightwbj" id="proportion_Code">
+			<label>产品名称：</label>
+			<input type="text" id="material_Name" class="search_input rightwbj">
+			<label>产品型号：</label>
+			<input type="text" id="material_Model" class="search_input rightwbj">
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" id="chaxun" onclick="search();">
+		</form>
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="$('#loginModal').modal('show');">新增录入</a></div>
+			<div class="table-b-right table-c-right">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="list"
+				 role="grid" aria-describedby="list_info">
+					<thead>
+						<tr role="row">
+							<th scope="col" width="8%">序号</th>
+							<th scope="col" width="12%">目标配合比编号</th>
+							<th scope="col">产品名称/型号</th>
+							<th scope="col" width="10%">创建人</th>
+							<th scope="col" >创建时间</th>
+							<th scope="col" width="15%">备注</th>
+							<th scope="col" >操作</th>
+						</tr>
+					</thead>
+					<tbody id="tb">
+						<tr role="row" class="odd">
+							<td>1</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,75);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">5555</a></td>
+							<td>沥青混合料-Ac25</td>
+							<td>test</td>
+							<td>2019-01-22 11:13:03</td>
+							<td>我是目标</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;75&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('75');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="even">
+							<td>2</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,74);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">12312312</a></td>
+							<td>沥青混合料-测试型号</td>
+							<td>test</td>
+							<td>2019-01-22 10:54:21</td>
+							<td></td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;74&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('74');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="odd">
+							<td>3</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,67);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">11</a></td>
+							<td>vsd-11电风扇</td>
+							<td>test</td>
+							<td>2018-10-08 13:55:39</td>
+							<td>11</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;67&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('67');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="even">
+							<td>4</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,66);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">511</a></td>
+							<td>vsd-11电风扇</td>
+							<td>test</td>
+							<td>2018-09-12 08:50:53</td>
+							<td>515</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;66&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('66');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="odd">
+							<td>5</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,58);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">1111</a></td>
+							<td>lei-cs-1995</td>
+							<td>hhh</td>
+							<td>2018-07-13 10:03:32</td>
+							<td>1111</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;58&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('58');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="even">
+							<td>6</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,57);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">ffg</a></td>
+							<td>lei-cs-1995</td>
+							<td>test</td>
+							<td>2018-07-13 09:51:33</td>
+							<td>dddd</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;57&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('57');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="odd">
+							<td>7</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,56);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">www</a></td>
+							<td>lei-cs-1995</td>
+							<td>tongn3gq</td>
+							<td>2018-07-13 09:37:18</td>
+							<td>wwww</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;56&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('56');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="even">
+							<td>8</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,48);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">12442</a></td>
+							<td>lei-cs-1995</td>
+							<td>test</td>
+							<td>2018-07-10 09:26:57</td>
+							<td>24</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;48&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('48');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="odd">
+							<td>9</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,41);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">45</a></td>
+							<td>lei-cs-1995</td>
+							<td>test</td>
+							<td>2018-07-07 15:51:14</td>
+							<td>1254</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;41&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('41');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+						<tr role="row" class="even">
+							<td>10</td>
+							<td class="mbpb_xg" onmouseover="show2(this,&quot;mydiv1&quot;,40);" onmouseout="hide(this,&quot;mydiv1&quot;)"><a
+								 href="javascript:void(0);">123asd</a></td>
+							<td>lei-cs-1995</td>
+							<td>test</td>
+							<td>2018-07-07 15:48:03</td>
+							<td>asd</td>
+							<td><span><a href="javascript:void(0)" class="globalLoginBtn2" onclick="show(&quot;40&quot;);"><img src="img/images/xiu.png"
+										 width="17" height="16" alt="修改" title="修改"></a></span><span><a href="javascript:void(0)" onclick="del('40');"><img
+										 src="img/images/del.png" width="18" height="16" alt="删除" title="删除"></a></span></td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>目标配合比</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="mbphb_luru">
+					<tbody>
+						<tr>
+							<td width="12%" align="right">目标配合比编号：</td>
+							<td width="20%"><input type="text" id="str_proportion_Code" placeholder="输入物料编码" name="str_proportion_Code"
+								 maxlength="40"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							<td width="11%" align="right">产品名称：</td>
+							<td width="19%" align="left">
+								<!-- onmouseout="getOutName()"; -->
+								<select id="str_material_Name" onchange="getOutName()" class="kuan">
+									<option value="null" selected="selected"> </option>
+									<option value="12">12</option>
+									<option value="44333sdfd">44333sdfd</option>
+									<option value="lei-cs">lei-cs</option>
+									<option value="vsd">vsd</option>
+									<option value="沥青混合料">沥青混合料</option>
+								</select>
+								<span style="color: red">*</span>
+							</td>
+							<td width="11%" align="right">产品型号：</td>
+							<td width="27%" align="left">
+								<select name="i_product_Id" id="i_product_Id" class="sekuan">
+									<option></option>
+								</select><span style="color: red">&nbsp;*</span>
+							</td>
+						</tr>
+						<tr>
+							<td width="19%" align="right">备注：</td>
+							<td height="60" colspan="5" valign="bottom">
+								<textarea name="str_remarks" cols="40" rows="2" id="str_remarks" class="textkuan"></textarea></td>
+						</tr>
+						<tr>
+							<td><input type="hidden" id="i_org_Id" name="i_org_Id"></td>
+						</tr>
+					</tbody>
+				</table>
+				<form id="asph_TargetPropList">
+					<table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" class="mbphb_luru sbj mbphb_bg" id="detailedTab">
+						<thead>
+							<tr class="mbphb_luru_dise">
+								<td colspan="2" align="center"><strong>原材料</strong></td>
+								<td width="10%" align="center"><strong>原材料比例%</strong></td>
+								<td width="16%" align="center">生产厂家</td>
+								<td width="16%" align="center">产地</td>
+								<td width="6%" align="center"><a onclick="addDetailed(0);" href="javascript:void(0)"><img src="img/images/jia2.png"
+										 width="16" height="16"></a></td>
+							</tr>
+						</thead>
+						<tbody id="addIds1">
+							<tr class="h50">
+								<!-- <td width="8%" align="right">名称：</td> -->
+								<!-- onfocus="getYclName(0,$(this));" onchange="clearModel(2,$(this))"-->
+								<td width="18%" align="center"><select class="sekuan2" name="str_materials_Name" onfocus="getYclName(0,$(this));"
+									 onchange="getYclModel($(this))">
+										<option></option>
+									</select></td>
+								<!-- <td width="6%" align="right">型号：</td> -->
+								<!-- onfocus="getMaterialModel(0,2,$(this));" -->
+								<td width="16%"><select class="sekuan2" name="i_materials_Id">
+										<option></option>
+									</select></td>
+								<td align="center"><input name="d_weight" type="text" placeholder="" size="5" value="" onkeyup="num(this)"></td>
+								<td align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value="" maxlength="200"></td>
+								<td align="center"><input name="str_material_Origin" type="text" placeholder="" size="10" value=""></td>
+								<td align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="img/images/del.png"
+										 width="16" height="16"></a></td>
+							</tr>
+
+							<tr class="h50">
+								<!-- <td width="8%" align="right">名称：</td> -->
+								<td width="18%" align="center"><select onfocus="getYclName(0,$(this));" name="str_materials_Name" class="sekuan2"
+									 onchange="getYclModel($(this))">
+										<option></option>
+									</select></td>
+								<!-- <td width="6%" align="right">型号：</td> -->
+								<td width="16%"><select name="i_materials_Id" class="sekuan2">
+										<option></option>
+									</select></td>
+								<td align="center"><input name="d_weight" type="text" id="d_weight" placeholder="" size="5" value="" onkeyup="num(this)"></td>
+								<td align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value="" maxlength="200"></td>
+								<td align="center"><input name="str_material_Origin" type="text" placeholder="" size="10" value=""></td>
+								<td align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="img/images/del.png"
+										 width="16" height="16"></a></td>
+							</tr>
+
+							<tr class="h50">
+								<!--  <td width="8%" align="right">名称：</td> -->
+								<td width="18%" align="center"><select onfocus="getYclName(0,$(this));" name="str_materials_Name" class="sekuan2"
+									 onchange="getYclModel($(this))">
+										<option></option>
+									</select></td>
+								<!--  <td width="6%" align="right">型号：</td> -->
+								<td width="16%"><select name="i_materials_Id" class="sekuan2">
+										<option></option>
+									</select></td>
+								<td align="center"><input name="d_weight" type="text" placeholder="" size="5" value="" onkeyup="num(this)"></td>
+								<td align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value=""></td>
+								<td align="center"><input name="str_material_Origin" type="text" placeholder="" size="10" value=""></td>
+								<td align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="img/images/del.png"
+										 width="16" height="16"></a></td>
+							</tr>
+
+							<tr class="h50">
+								<!-- <td width="8%" align="right">名称：</td> -->
+								<td width="18%" align="center"><select onfocus="getYclName(0,$(this));" name="str_materials_Name" class="sekuan2"
+									 onchange="getYclModel($(this))">
+										<option></option>
+									</select></td>
+								<!-- <td width="6%" align="right">型号：</td> -->
+								<td width="16%"><select name="i_materials_Id" class="sekuan2">
+										<option></option>
+									</select></td>
+								<td align="center"><input name="d_weight" type="text" placeholder="" size="5" value="" onkeyup="num(this)"></td>
+								<td align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value=""></td>
+								<td align="center"><input name="str_material_Origin" type="text" placeholder="" size="10" value=""></td>
+								<td align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="img/images/del.png"
+										 width="16" height="16"></a></td>
+							</tr>
+
+							<tr class="h50">
+								<!--  <td width="8%" align="right">名称：</td> -->
+								<td width="18%" align="center"><select onfocus="getYclName(0,$(this));" name="str_materials_Name" class="sekuan2"
+									 onchange="getYclModel($(this))">
+										<option></option>
+									</select></td>
+								<!--  <td width="6%" align="right">型号：</td> -->
+								<td width="16%"><select name="i_materials_Id" class="sekuan2">
+										<option></option>
+									</select></td>
+								<td align="center"><input name="d_weight" type="text" placeholder="" size="5" onkeyup="num(this)"></td>
+								<td align="center"><input name="str_manufacturer" type="text" placeholder="" size="15" value=""></td>
+								<td align="center"><input name="str_material_Origin" type="text" placeholder="" size="10" value=""></td>
+								<td align="center"><a href="javascript:void(0)" onclick="delDetailed($(this))"><img src="img/images/del.png"
+										 width="16" height="16"></a></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</form>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+					<tbody>
+						<tr>
+							<td align="center"><input type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addOrUpdate(1)"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#toggle').on('click', function(event) {
+		event.stopPropagation();
+		$(this).siblings('#content').toggle();
+		var tag = $(this).siblings('#content');
+		var flag = true;
+		$(document).bind("click", function(e) {
+			var target = $(e.target);
+			if (target.closest(tag).length == 0 && flag == true) {
+				$(tag).hide();
+				flag = false;
+			}
+		});
+	});
+</script>

@@ -1,0 +1,63 @@
+<!-- 自动采集页面  -->
+<script src="../../js/HighwayPlatform/TestRoom/testAutoCollection.js"
+	type="text/javascript" charset="utf-8"></script>
+<form action="" method="get" class="sousuo"id="automatic_collection">
+	<label>试验名称：</label>
+	<select name="" id="testPageInfosList" class="search_select">
+		<!-- <option value="">水泥混凝土抗压强度试验（立方体）</option>
+		<option value="">砂浆抗压强度试验</option>
+		<option value="">钢筋拉伸强度、屈服强度、伸长率、冷弯试验</option>
+		<option value="">钢筋接头拉伸强度、冷弯试验</option>
+		<option value="">沥青针入度试验</option>
+		<option value="">沥青软化点试验</option>
+		<option value="">沥青混合料马歇尔试验</option>
+		<option value="">沥青混合料沥青用量试验</option>
+		<option value="">沥青混合料车辙试验</option>
+		<option value="">温、湿度</option> -->
+	</select>
+	<label>试验日期：</label>
+	<input type="text" size="20" class="search_input" id="startTime">
+	<label>--</label>
+	<input type="text" size="20" class="search_input" id="endTime">
+	<input id="select" type="button" value="查&nbsp;&nbsp;询" class="btncha automatic_btn">
+</form>
+<div class="lq_main">
+	<div class="lq_biao">
+		 <table id="list" width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+			<thead>
+				<tr>
+					<th width="6%" class="xh" scope="col">序号</th>
+					<th width="9%" scope="col">试验室名称</th>
+					<th width="11%" scope="col">试验类别</th>
+					<th width="20%" scope="col">试验名称</th>
+					<th width="9%" scope="col">样品编号</th>
+					<th width="5%" scope="col">试件个数</th>
+					<th width="9%" scope="col">试验日期</th>
+					<th width="10%" scope="col">试验员</th>
+					<th width="9%" scope="col">结果判定</th>
+					<th width="12%" scope="col">详情</th>
+				</tr>
+			</thead>
+		</table>
+		<table id="listTable" width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+		<thead>
+		</thead>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+     jeDate({
+         dateCell:"#startTime",
+         format:"YYYY-MM-DD",
+         isinitVal:false,
+         isTime:true, 
+	   	 isClear:false,
+     })
+    jeDate({
+        dateCell:"#endTime",
+        format:"YYYY-MM-DD",
+        isinitVal:false,
+        isTime:true,
+        isClear:false,
+    })
+</script>

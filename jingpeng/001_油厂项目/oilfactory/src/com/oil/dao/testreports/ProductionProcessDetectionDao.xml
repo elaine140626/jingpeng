@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.testreports.ProductionProcessDetectionDao">	
+	<!-- 计划调度表获取(生产过程检测) -->
+	<select id="getPlanMeasure" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		SELECT
+		  * 
+		FROM
+		  v_planmeasure as vpm 
+		where
+		  vpm.IsApplication = 0
+		  <if test="id!=null and id!=''">
+		  and vpm.Id = #{id}                              -- 按照id查询
+		  </if>	
+		  <if test="materielName!=null and materielName!=''">
+		  and vpm.MaterielName like '%${materielName}%'   -- 产品名称
+		  </if>	
+		  <if test="materielModel!=null and materielModel!=''">
+		  and vpm.MaterielModel like '%${materielModel}%' -- 产品规格
+		  </if>	
+		  <if test="isQualified!=null and isQualified!=''">
+		  and vpm.IsQualified = #{isQualified}            -- 状态
+		  </if>	  	  
+	</select>
+	
+	<!-- 质检不合格需要调整的场合，回到生产工艺通知单 -->
+	<update id="updateState" parameterType="com.oil.model.dispath.NextProductionPlanEntity">
+		UPDATE planmeasure 
+		SET
+		  IsExamine = 1
+		  , ExaminePerson = null
+		  , ExamineDate = null
+		  , IsCheck = 1
+		  , CheckPerson = null
+		  , CheckDate = null
+		  , IsProduction = 1
+		  , ProductionPerson = null
+		  , ProductionDate = null
+		  , IsApplication = 1
+		  , ApplicationPerson = null
+		  , ApplicationDate = null
+		  , IsQualified = 1
+		  , QualifiedPerson = null
+		  , QualifiedDate = null
+		  , AdjustNumber = AdjustNumber + 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW() 
+		WHERE
+		  Id = #{Id}
+	</update>
+
+</mapper>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SevenDailyDao">
+	<!-- 工程进度（七日报）List取得 -->
+	<select id="getSevenDailyList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SevenDailyEntity">
+		SELECT
+		  sd.Id
+		  , sd.ProjectId                                  -- 项目id
+		  , ve.ProjectNumber                              -- 项目编号
+		  , ve.ProjectName                                -- 项目名称
+		  , ve.ContractSection                            -- 合同段
+		  , ve.ContractingUnit                            -- 承包单位
+		  , ve.Mileage                                    -- 里程（km)
+		  , sd.SubheadNumberId                            -- 第100章-第700章子目号id
+		  , snm.SubheadNumber                             -- 第100章-第700章子目号
+		  , snm.SubheadName                               -- 第100章-第700章子目名称
+		  , snm.Total                                     -- 总量
+		  , snm.UnitPrice                                 -- 单价
+		  , snm.TotalPrice                                -- 总价
+		  , sd.ThisComplete                               -- 本期完成（平方米）
+		  , sd.ThisCapital                                -- 本期完成资金
+		  , sd.CumulativeComplete                         -- 累计完成（平方米）
+		  , sd.CumulativeCapital                          -- 累计完成资金
+		  , sd.CumulativeSchedule                         -- 累计完成进度（%）
+		  , sd.DailyYear                                  -- 年
+		  , sd.DailyMonth                                 -- 月
+		  , sd.DailyDay                                   -- 周
+		  , sd.Remarks                                    -- 备注
+		  , sd.IsDel
+		  , sd.Creater
+		  , sd.CreaterDate
+		  , sd.Reviser
+		  , sd.ReviserDate 
+		FROM
+		  SevenDaily as sd 
+		  left join V_EntryTree as ve 
+		    on sd.ProjectId = ve.pid 
+		  left join SubheadNumberMoney as snm 
+		    on sd.ProjectId = snm.ProjectId 
+		    and sd.SubheadNumberId = snm.Id 
+		    and snm.IsDel = 0
+		WHERE
+		  sd.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sd.Id = #{id}                             -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sd.ProjectId = #{treeIds}                 -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="dailyYear!=null and dailyYear!=''">
+		    and sd.DailyYear = #{dailyYear}               -- 根据年查询
+		  </if>
+		  <if test="dailyMonth!=null and dailyMonth!=''">
+		    and sd.DailyMonth = #{dailyMonth}             -- 根据月查询
+		  </if>
+		  <if test="dailyDay!=null and dailyDay!=''">
+		    and sd.DailyDay = #{dailyDay}                 -- 根据周查询
+		  </if>
+		  order by sd.CreaterDate desc
+	</select>
+	
+	<!-- 新增工程进度（七日报） -->
+	<insert id="insertSevenDaily" parameterType="com.curing.projectSchedule.model.SevenDailyEntity">
+		INSERT 
+		INTO SevenDaily( 
+			Id
+		  , ProjectId
+		  , SubheadNumberId
+		  , ThisComplete
+		  , ThisCapital
+		  , CumulativeComplete
+		  , CumulativeCapital
+		  , CumulativeSchedule
+		  , DailyYear
+		  , DailyMonth
+		  , DailyDay
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{SubheadNumberId}
+		  , #{ThisComplete}
+		  , #{ThisCapital}
+		  , #{CumulativeComplete}
+		  , #{CumulativeCapital}
+		  , #{CumulativeSchedule}
+		  , #{DailyYear}
+		  , #{DailyMonth}
+		  , #{DailyDay}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（七日报） -->
+	<update id="updateSevenDaily" parameterType="com.curing.projectSchedule.model.SevenDailyEntity">
+		UPDATE SevenDaily 
+		SET
+		  SubheadNumberId = #{SubheadNumberId}
+		  , ThisComplete = #{ThisComplete}
+		  , ThisCapital = #{ThisCapital}
+		  , CumulativeComplete = #{CumulativeComplete}
+		  , CumulativeCapital = #{CumulativeCapital}
+		  , CumulativeSchedule = #{CumulativeSchedule}
+		  , DailyYear = #{DailyYear}
+		  , DailyMonth = #{DailyMonth}
+		  , DailyDay = #{DailyDay}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（七日报） -->
+	<update id="deleteSevenDaily" parameterType="com.curing.projectSchedule.model.SevenDailyEntity">
+		UPDATE SevenDaily 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 工程进度（七日报）本期合计 -->	
+	<select id="getCumulative" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SevenDailySum">
+		SELECT
+		  sum(ThisComplete) as ThisCompleteSum            -- 本期完成（平方米）
+		  , sum(ThisCapital) as ThisCapitalSum            -- 本期完成资金
+		FROM
+		  SevenDaily 
+		WHERE
+		  IsDel = 0 
+		  and ProjectId = #{projectId}                    -- 根据项目id查询
+		  and SubheadNumberId = #{subheadNumberId}        -- 第100章-第700章子目号id
+		  and DailyYear + RIGHT ('0' + DailyMonth, 2) + DailyDay &lt; #{date} -- 年月周  
+	</select>
+	
+	<!-- 判断新插入的子目号是否存在 -->
+	<select id="getSevenDailyCount" parameterType="com.curing.projectSchedule.model.SevenDailyEntity" resultType="int">
+		SELECT 
+		  count(*)
+		FROM
+		  SevenDaily 
+		WHERE
+		  IsDel = 0 
+		  and ProjectId = #{ProjectId}                    -- 根据项目id查询
+		  and SubheadNumberId = #{SubheadNumberId}        -- 第100章-第700章子目号id
+		  and DailyYear = #{DailyYear}                    -- 根据年查询
+		  and DailyMonth = #{DailyMonth}                  -- 根据月查询
+		  and DailyDay = #{DailyDay}                      -- 根据周查询 
+		  <if test="Id!=null">
+		    and Id != #{Id}                 
+		  </if>
+	</select>
+</mapper>

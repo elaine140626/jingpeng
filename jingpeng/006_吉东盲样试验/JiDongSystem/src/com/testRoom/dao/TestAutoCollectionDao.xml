@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.TestAutoCollectionDao">
+<select id="getInfoList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id,                            -- id 
+		t.SerialNumber,                  -- 流水号
+		t.UniqueIdentifier,              -- 试验室唯一标识
+		t.SampleCode,                    -- 样品编号
+		t.SampleCount,                   -- 试件个数
+		CONVERT(varchar(100), t.TestDate, 23) as TestDate,                      -- 试验日期
+		t.TestOperator,                  -- 试验员
+		t.IsTestCollection,              -- 是否自动采集试验
+		t.IsQualifiedTest,               -- 试验是否合格
+		t.TestState,                     -- 试验状态
+		t2.TestRoomName,                 -- 试验室名称
+		t3.TestName,                     -- 试验名称
+		t3.TestTable,                    -- 试验关联表
+		t4.TestClassification_Name       -- 试验类别
+	from TestInfo t                  -- 试验室基本信息表
+	left join BlindInfo t1           -- 盲样信息表
+	on t.QRCode = t1.QRCode          -- 二维码
+	left join TestRoomInfo t2        -- 试验室信息
+	on t.UniqueIdentifier = t2.UniqueIdentifier
+	left join TestPageInfos t3       -- 试验页面信息
+	on t3.Id = t.TestNameId          -- 试验名称id
+	left join TestClassification t4  -- 试验分类表
+	on t4.TestClassification_Code = t3.TestClass_Code  -- 试验分类
+	where
+	  t.IsTestCollection = 1
+	  and t.IsValidData = 1
+	  <if test="testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and t.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+	</if>
+	  <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	  	and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	  	and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	  </if> 
+	 order by t.CreateDate desc
+</select>
+<!-- 查询水泥混凝土抗压强度试验（立方体） -->
+<select id="getSNHNList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.SampleSize           -- 试件尺寸(mm)
+		,t2.CementGrade          -- 强度等级
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t3.Age                  -- 龄期(天)
+		,t.TestOperator          -- 试验员
+		,t.SampleCount           -- 试件个数
+		,t3.ComprStrength1       -- 抗压强度1(MPa)
+		,t3.ComprStrength2       -- 抗压强度2(MPa)
+		,t3.ComprStrength3       -- 抗压强度3(MPa)
+		,t3.CompressiveStrength  -- 测定值(MPa)
+		,t3.Prop_DesignStrength  -- 占设计强度(%)
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test0500101T0 t2					-- Test0500101水泥混凝土抗压强度（立方体）
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test0500101T01 t3					-- Test0500101水泥混凝土抗压强度（立方体）子表01
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '水泥混凝土抗压强度试验（立方体）'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+<!-- 查询砂浆抗压强度试验 -->
+<select id="getBJList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.CementGrade          -- 强度等级
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t3.AgeDay               -- 龄期(天)
+		,t.TestOperator          -- 试验员
+		,t.SampleCount           -- 试件个数
+		,t3.ComprStrength1       -- 抗压强度1(MPa)
+		,t3.ComprStrength2       -- 抗压强度2(MPa)
+		,t3.ComprStrength3       -- 抗压强度3(MPa)
+		,t3.ComprStrength4       -- 抗压强度4(MPa)
+		,t3.ComprStrength5       -- 抗压强度5(MPa)
+		,t3.ComprStrength6       -- 抗压强度6(MPa)
+		,t3.CompressionStrength  -- 测定值
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test0500102T0 t2					-- Test0500102砂浆抗压强度
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test0500102T01 t3					-- Test0500102砂浆抗压强度子表01
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '砂浆抗压强度试验'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+<!-- 钢筋拉伸强度、屈服强度、伸长率、冷弯试验 -->
+<select id="getKQSLList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.StrengthGrade        -- 强度等级或牌号
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t.TestOperator          -- 试验员
+		,t.SampleCount           -- 试件个数
+		,t3.YieldStrth1          --屈服强度1(MPa)
+		,t3.YieldStrth2          --屈服强度2(MPa)
+		,t3.TensileStrength1     --抗拉强度1(MPa)
+		,t3.TensileStrength2     --抗拉强度2(MPa)
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test1000101T0 t2					-- Test1000101钢筋抗拉强度、屈服强度、伸长率、冷弯试验
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test1000101T01 t3					-- Test1000101钢筋抗拉强度、屈服强度、伸长率、冷弯试验子表01
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '钢筋抗拉强度、屈服强度、伸长率、冷弯试验'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+<!-- 钢筋接头拉伸强度、冷弯试验 -->
+<select id="getKLList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.StrengthGrade        -- 强度等级或牌号
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t.TestOperator          -- 试验员
+		,t.SampleCount           -- 试件个数
+		,t3.TensileStrength1     --抗拉强度1(MPa)
+		,t3.TensileStrength2     --抗拉强度2(MPa)
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test1000201T0 t2					-- Test1000201钢筋接头抗拉强度、冷弯试验
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test1000201T01 t3					-- Test1000201钢筋接头抗拉强度、冷弯试验子表01
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '钢筋接头抗拉强度、冷弯试验'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+<!-- 沥青针入度试验 -->
+<select id="getLQZRList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.AsphaltType          -- 沥青种类
+		,t2.AsphaltGrade         -- 沥青等级
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t.TestOperator          -- 试验员
+		,t3.Temperature          -- 试验温度(℃)
+		,t.SampleCount           -- 试件个数
+		,t3.Penetration1         -- 针入度1(0.1mm)
+		,t3.Penetration2         -- 针入度2(0.1mm)
+		,t3.Penetration3         -- 针入度3(0.1mm)
+		,t2.AvgPenetration       -- 针入度平均值(0.1mm)
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test08001T0 t2					-- Test08001沥青三大指标
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test08001T01 t3					-- Test08001沥青三大指标(针入度)子表01
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '沥青针入度试验'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+<!-- 沥青软化点试验 -->
+<select id="getLQRHDList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.AsphaltType          -- 沥青种类
+		,t2.AsphaltGrade         -- 沥青等级
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t.TestOperator          -- 试验员
+		,t3.Temperature          -- 试验温度(℃)
+		,t.SampleCount           -- 试件个数
+		,t3.SoftenPoint1         -- 软化点1(℃)
+		,t3.SoftenPoint2         -- 软化点2(℃)
+		,t2.AvgSoftenPoint       -- 软化点平均值(℃)
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test08001T0 t2					-- Test08001沥青三大指标
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test08001T02 t3					-- Test08001沥青三大指标(软化点)子表02
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '沥青软化点试验'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+<!-- 沥青混合料马歇尔试验 -->
+<select id="getLQMXList" parameterType="java.util.Map" resultType="TestSelectEntity">
+	select 
+		t.Id                     -- id
+		,t.SerialNumber          -- 试验流水号
+		,t1.TestRoomName         -- 试验室名称
+		,t.UniqueIdentifier      -- 试验室唯一标识
+		,t4.TestName             -- 试验名称
+		,t.SampleCode            -- 样品编号
+		,t2.MixtureType          -- 混合料种类
+		,t2.GradationType        -- 级配类型
+		,t.Purpose               -- 工程部位
+		,CONVERT(varchar(100), t.TestDate, 23) as testDate   -- 试验日期
+		,t.TestOperator          -- 试验员
+		,t.SampleCount           -- 试件个数
+		,t2.AvgStab              -- 稳定度平均值(kN)
+		,t2.AvgFlow              -- 流值平均值(0.1mm)
+		,t3.Stab                 -- 稳定度(kN)
+		,t3.Flow                 --流值(0.1mm)
+		,t.IsQualifiedTest       -- 结果判定(试验是否合格)
+		,t.TestState             -- 试验状态
+		,t4.TestTable			 -- 试验关联表
+		,t.IsTestCollection      -- 是否自动采集试验
+	from TestInfo t									-- 试验基本信息表
+		left join TestRoomInfo t1					-- 试验室信息
+		on t.UniqueIdentifier = t1.UniqueIdentifier 
+		left join Test0900101T0 t2					-- Test0900101沥青混合料马歇尔稳定度试验主表
+		on t.SerialNumber = t2.SerialNumber  
+		left join Test0900101T02 t3					-- Test0900101沥青混合料马歇尔稳定度试验子表02
+		on t3.SerialNumber = t2.SerialNumber
+		left join TestPageInfos t4                  -- 试验页面信息
+		on t4.Id = t.TestNameId                     -- 试验名称id
+	where 
+		t.IsTestCollection = 1 
+		and
+		t.IsValidData = 1
+		and t4.TestName = '沥青混合料马歇尔稳定度试验'
+	 <if test="testNameId != null and testNameId != 0">
+	   and t.TestNameId = #{testNameId}
+	 </if>
+	 <if test="(startTime != null and startTime != '') and (endTime != null and endTime != '')">
+	   and #{startTime} &lt;= CONVERT(varchar(100), t.TestDate, 23) 
+	   and CONVERT(varchar(100), t.TestDate, 23) &lt;= #{endTime} 
+	 </if> 
+	   order by t.SerialNumber desc
+</select>
+</mapper>

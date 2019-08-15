@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="asph_TargetPro">
+
+	<select id="getV_Asph_TargetPro" parameterType="java.util.Map" resultType="asph_TargetProportion">
+		SELECT
+		pp.id i_id,
+		pp.proportion_Code str_proportion_Code,
+		pp.product_Id i_product_Id,
+		pp.create_Date str_create_Date,
+		pp.operator str_operator,
+		mn.Material_Name str_material_Name,
+		mm.Material_Model str_material_Model,
+		mn.Material_Name+'-'+mm.Material_Model materNameAndModel,
+		CONVERT(varchar(20),pp.modify_Date,120) str_modify_Date,
+		pp.remarks str_remarks,
+		oi.org_name str_org_Name
+		FROM
+		Asph_TargetProportion pp
+		LEFT JOIN Material_Info mi ON mi.Id = pp.product_Id
+		LEFT JOIN MaterModel_Info mm ON mm.Id = mi.MateModel_ID
+		LEFT JOIN MaterName_Info mn ON mn.Id = mi.MateName_ID
+		LEFT JOIN Organization_Info oi ON  pp.org_Id = oi.id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="str_proportion_Code != null and str_proportion_Code != ''">
+				AND pp.proportion_Code like '%${str_proportion_Code}%'
+			</if>
+			<if test="str_material_Name != null and str_material_Name != ''">
+				AND mn.material_Name like '%${str_material_Name}%'
+			</if>
+			<if test="str_material_Model != null and str_material_Model != ''">
+				AND mm.material_Model like '%${str_material_Model}%'
+			</if>
+			<foreach collection="org_Ids" index="index" item="item" open=" AND pp.org_Id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+            AND pp.valid_Flag=1
+			ORDER BY pp.id DESC
+		</trim>
+	</select>
+	
+	<select id="getAsphTargetProById" parameterType="asph_TargetProportion" resultType="asph_TargetProportion">
+		SELECT
+		pp.id i_id,
+		pp.proportion_Code str_proportion_Code,
+		pp.product_Id i_product_Id,
+		pp.create_Date str_create_Date,
+		pp.remarks str_remarks,
+		mn.Material_Name str_material_Name,
+		mm.Material_Model str_material_Model
+		FROM
+		Asph_TargetProportion pp
+		LEFT JOIN Material_Info mi ON mi.Id = pp.product_Id
+		LEFT JOIN MaterModel_Info mm ON mm.Id = mi.MateModel_ID
+		LEFT JOIN MaterName_Info mn ON mn.Id = mi.MateName_ID
+		WHERE pp.id = #{i_id}
+	</select>
+
+	<select id="getRawMaterial" parameterType="java.util.Map" resultType="v_MaterialInfo">
+		SELECT DISTINCT
+<!-- 		mateName_id i_mateName_id, -->
+		material_Name str_material_Name
+		FROM
+		V_MaterialInfo
+		WHERE 1=1
+		<if test="flag != '0'">
+		    <foreach collection="names" index="index" item="item" open=" AND material_Name NOT IN (" separator="," close=")">
+                #{item}
+            </foreach>
+		</if>
+		AND org_Id=#{i_org_Id}
+		AND material_Mold = '0'
+		AND Material_Type = '0'
+	</select>
+	
+	<select id="getMaterialModelBymateNameid" resultType="v_MaterialInfo" parameterType="v_MaterialInfo">
+		SELECT
+	    id i_id;
+	    material_model str_material_model
+        FROM
+	    V_MaterialInfo
+        WHERE
+	    Material_Type = '0'
+        AND Material_Mold = '0'
+        AND mateName_id = #{i_mateName_id}
+	</select>
+		
+	<select id="getProportionCode" resultType="asph_TargetProportion" parameterType="asph_TargetProportion">
+		SELECT
+	    id i_id
+        FROM
+        Asph_TargetProportion
+        WHERE
+        Proportion_Code = #{str_proportion_Code}
+        AND org_Id = #{i_org_Id}
+	</select>
+	
+	<insert id="addAsphTargetPro" useGeneratedKeys="true" keyProperty="i_id" parameterType="asph_TargetProportion">
+	    INSERT INTO Asph_TargetProportion (Operator,proportion_Code,product_Id,Remarks,create_Date,org_id) VALUES 
+	    (#{str_operator},#{str_proportion_Code},#{i_product_Id},#{str_remarks},CONVERT(varchar(100),GETDATE(), 20),#{i_org_Id})
+	</insert>
+	
+	<insert id="addAsphTargetProD"  parameterType="java.util.List">
+	   INSERT INTO Asph_TargetPropDetailed (targ_Prop_Id,materials_Id,weight,Material_Origin,Manufacturer)
+       VALUES
+          <foreach collection="list" item="asphTargetProDList" index="index" separator=",">
+              (#{asphTargetProDList.i_targ_Prop_Id},#{asphTargetProDList.i_materials_Id},
+              #{asphTargetProDList.d_weight},#{asphTargetProDList.str_material_Origin},
+              #{asphTargetProDList.str_manufacturer})
+          </foreach>
+	</insert>
+	
+	<select id="getAsphTargetProD" parameterType="asph_TargetProportion" resultType="java.util.Map" >
+		SELECT
+		p.id id,
+		p.targ_Prop_Id i_targ_Prop_Id,
+	    p.materials_Id i_materials_Id,
+		p.weight d_weight,
+		p.Material_Origin str_material_Origin,
+		p.Manufacturer str_manufacturer,
+		mn.Material_Name str_material_Name,
+		mm.Material_Model str_material_Model
+		FROM
+		Asph_TargetPropDetailed p
+		LEFT JOIN Material_Info mi ON mi.Id = p.materials_Id
+		LEFT JOIN MaterModel_Info mm ON mm.Id = mi.MateModel_ID
+		LEFT JOIN MaterName_Info mn ON mn.Id = mi.MateName_ID
+		WHERE
+		p.targ_Prop_Id = #{i_id}
+		AND p.valid_Flag = 1
+	</select>
+	
+	<select id="select_Asph_TargetPropDetailed" parameterType="asph_TargetProportion" resultType="asph_TargetProportion">
+	    select pp.Targ_PropID,p.Prod_ID,p.Grad_Id 
+		from Production_Plan p left join 
+		       Asphalt_Prod_Proportion pp on pp.Id = p.Prod_ID
+		where	
+				pp.Targ_PropID = #{i_id}
+				and
+				p.Valid_Flag = 1 and p.IsCancel = 0
+		       <!--  p.Prod_ID = #{i_id}
+                p.Grad_Id = #{i_id} -->
+	</select>
+	
+	<update id="updateAsphTargetPro" parameterType="asph_TargetProportion">
+		UPDATE Asph_TargetProportion SET Remarks = #{str_remarks}, product_Id = #{i_product_Id},modify_Date = #{str_modify_Date} WHERE id=#{i_id}
+	</update>
+	
+	<update id="delAsph_TargetPropDetailed" parameterType="asph_TargetProportion">
+	    UPDATE Asph_TargetPropDetailed SET Valid_Flag=0 WHERE Targ_Prop_ID = #{i_id}
+	</update>
+	
+	<update id="delAsphTargetPro" parameterType="asph_TargetProportion">
+		UPDATE Asph_TargetProportion SET valid_Flag = 0 WHERE id=#{i_id}
+	</update>
+	
+	
+</mapper>

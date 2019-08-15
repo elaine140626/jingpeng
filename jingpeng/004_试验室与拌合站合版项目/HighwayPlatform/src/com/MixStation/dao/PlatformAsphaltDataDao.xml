@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformAsphaltDataDao">
+	<!-- 沥青拌合站树 -->
+	<select id="getOrgId" parameterType="java.util.List" resultType="java.util.Map">
+		SELECT
+		  o.Id
+		  , o.Org_Name
+		  , o.Parent_Id
+		  , o.org_Type 
+		FROM
+		  Organization_Info o 
+		WHERE
+		  o.Org_Type = 2 
+		  AND o.MixStation_Type = '0' 
+		  <foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+			#{item}
+		  </foreach>
+		UNION ALL 
+		SELECT
+		  a.Id
+		  , a.Org_Name
+		  , a.Parent_Id
+		  , a.org_Type 
+		FROM
+		  Organization_Info a
+		  , ( 
+		    SELECT
+		      o.Parent_Id 
+		    FROM
+		      Organization_Info o 
+		    WHERE
+		      o.Org_Type = 2 
+		      AND o.MixStation_Type = '0' 
+		      <foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+				#{item}
+			  </foreach>
+		  ) b 
+		WHERE
+		  a.Id = b.Parent_Id			
+	</select>
+	
+	<!-- 查询生产数据列表 -->
+	<select id="getPlatformAsphaltData" parameterType="java.util.Map" resultType="PlatformAsphaltDataEntity">
+		select
+		  * 
+		from
+		  V_Asphalt_ProductionData 
+		where
+		  1 = 1
+		  <if test="orgId != null">
+		  	and Org_ID in
+		  	<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		  </if>	   
+		  and Collect_Time &gt;= #{startTime} 
+		  and Collect_Time &lt;= #{endTime} 
+		  and Valid_Flag = 1
+		  <if test="Analysis_Result == 1">
+		  and Analysis_Result = '1'
+		  </if>
+		  <if test="Analysis_Result == 2">
+		  and Analysis_Result != '1'
+		  </if>
+	</select>
+	
+	<!-- 采集数据明细 -->
+	<select id="getAsphaltPropDataAnalysis" parameterType="java.util.Map" resultType="AsphaltPropDataAnalysisEntity">
+		SELECT
+		  id
+		  , data_Type                                     
+		  , case when data_Type = 0 then '采集重量' 
+		    when data_Type = 1 then '采集设定配比' 
+			when data_Type = 2 then '生产配比'
+			when data_Type = 3 then '生产配比重量'
+			when data_Type = 4 then '实际偏差'
+			when data_Type = 5 then '实际占比'
+			else '料仓是否超差' end as data_Name
+		  , no1
+		  , no2
+		  , no3
+		  , no4
+		  , no5
+		  , no6
+		  , no7
+		  , no8
+		  , hotPowder
+		  , coldPowder
+		  , coldPowder2
+		  , asphalt
+		  , admixture1
+		  , admixture2 
+		FROM
+		  AsphaltProp_DataAnalysis 
+		WHERE
+		  Pro_Id = #{id} 
+		  AND Valid_Flag = 1 
+		  <if test="data_Type != null and data_Type != '' ">
+			AND data_Type = #{data_Type}
+		  </if>
+		ORDER BY
+		  data_Type
+	</select>
+	
+	<!-- 筛分通过率 -->
+	<select id="getAsphaltGradDataAnalysis" parameterType="java.util.Map" resultType="AsphaltGradDataAnalysis">
+		<!-- SELECT
+		  id
+		  , curve_Type
+		  , A0_075
+		  , A0_15
+		  , A0_3
+		  , A0_6
+		  , A1_18
+		  , A2_36
+		  , A4_75
+		  , A9_5
+		  , A13_2
+		  , A16
+		  , A19
+		  , A26_5
+		  , A31_5
+		  , A37_5
+		  , A53 
+		FROM
+		  AsphaltGrad_DataAnalysis 
+		WHERE
+		  Pro_Id = #{id} 
+		  AND Valid_Flag = 1 
+		ORDER BY
+		  curve_Type -->
+		select 
+			analysis_id  analysisId
+			,msda.ware1
+			,msda.ware2
+			,msda.ware3
+			,msda.ware4
+			,msda.ware5
+			,msda.ware6
+			,msda.hot_ware hotware
+			,msda.cold_ware1 coldware1
+			,msda.cold_ware2 coldware2
+			,msda.upper_limit upperlimit
+			,msda.lower_limit lowerlimit
+			,msi.mesh_size meshSize
+		from 
+			mesh_size_data_analysis msda
+	     left join mesh_size_info msi on msda.mesh_id = msi.id
+	     and msi.valid_flag = 1
+		where 
+		 msda.analysis_id = #{gradId}
+		 and msda.valid_flag = 1
+	</select>
+	
+	<!-- 原材料消耗 -->
+	<select id="getVMaterialConsumption" parameterType="java.util.Map" resultType="PlatformAsphaltMaterialsConsumptionEntity">
+		<!-- select
+		  V.Id
+		  , V.Material
+		  , V.MaterialConsumption 
+		from
+		  V_MaterialConsumption V 
+		where
+		  V.Id = #{id}  -->
+		  select 
+			atpd.Targ_Prop_ID as i_targ_Prop_Id,
+			atpd.Materials_ID as i_materials_Id,
+			atpd.Weight as d_weight,
+			mn.Material_Name +'-'+ mm.Material_Model as Material
+		 from Asph_TargetPropDetailed atpd 
+		 left join Asph_TargetProportion atp on atp.Id = atpd.Targ_Prop_ID
+		 left join Asphalt_Prod_Proportion app on atp.Id = app.Targ_PropID
+		 left join Production_Plan pp on app.Id = pp.Prod_ID
+		 left join Material_Info m on atpd.Materials_ID = m.Id
+		 left join MaterName_Info mn on m.MateName_ID = mn.Id
+		 left join MaterModel_Info mm on m.MateModel_ID = mm.Id
+		 where pp.Plan_No = #{prodPlanNo} 
+	</select>
+	
+	<!-- 生产预警统计 -->
+	<select id="getWarningStatistics" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		sum(a.warn) warn,sum(a.total) total,a.collectTime  from
+		(select
+			count(Id) warn,
+			0 total,
+			CONVERT(varchar(7), Collect_Time, 120) as collectTime
+		from Asphalt_ProductionData 
+		where 
+			Analysis_Result is not null 
+			and (Analysis_Result like '%2%' or Analysis_Result like '%3%'or Analysis_Result like '%4%' or Analysis_Result like '%5%' or Analysis_Result like '%10%') 
+			and Valid_Flag = 1 
+		group by CONVERT(varchar(7), Collect_Time, 120)
+		
+		union
+		
+		select
+			0 warn,
+			count(Id) total,
+			CONVERT(varchar(7), Collect_Time, 120) as collectTime
+		from Asphalt_ProductionData 
+		where 
+			Analysis_Result is not null 
+			and Valid_Flag = 1 
+		group by CONVERT(varchar(7), Collect_Time, 120)
+		) a
+		
+		group by a.collectTime
+	</select>
+	
+	<!-- 生产预警统计(水泥) -->
+	<select id="getWarningCementStatistics" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		sum(a.warn) warn,sum(a.total) total,a.collectDate  from
+		(select
+			count(Id) warn,
+			0 total,
+			CONVERT(varchar(7), Collect_Date, 120) as collectDate
+		from Cement_ProductionData 
+		where 
+			Analysis_Results is not null 
+			and (Analysis_Results like '%2%' or Analysis_Results like '%3%') 
+			and Valid_Flag = 1
+		group by CONVERT(varchar(7), Collect_Date, 120)
+		
+		union
+		
+		select
+			0 warn,
+			count(Id) total,
+			CONVERT(varchar(7), Collect_Date, 120) as collectDate
+		from Cement_ProductionData 
+		where 
+			Analysis_Results is not null 
+			and Valid_Flag = 1 
+		group by CONVERT(varchar(7), Collect_Date, 120)
+		) a
+		
+		group by a.collectDate
+	</select>
+	<!-- 拌合机汇总展示(沥青) -->
+	<select id="getAmalgamatorSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			a.Id,
+			SUM(a.warn)  as warn,
+			SUM(a.total) as total,
+			a.orgName    as orgName,
+			SUM(a.totalProduction) as totalProduction
+		from
+			(select
+				oi.Id,
+				COUNT(ap.Id) as warn,
+				0 total,
+				oi.Org_Name as orgName,
+				0 as totalProduction
+				from Organization_Info oi
+				left join Asphalt_ProductionData ap
+				on oi.Id = ap.Org_ID
+				where ap.Analysis_Result is not null
+				and (ap.Analysis_Result like '%2%' or ap.Analysis_Result like '%3%'or ap.Analysis_Result like '%4%' or ap.Analysis_Result like '%5%' or ap.Analysis_Result like '%10%') 
+				and ap.Valid_Flag = 1
+				group by oi.Org_Name,oi.Id
+			
+			union
+			
+				select
+				oi.Id,
+				0 warn,
+				COUNT(ap.Id) as total,
+				oi.Org_Name as orgName,
+				SUM(ap.Total_Weight) as totalProduction
+				from Organization_Info oi
+				left join Asphalt_ProductionData ap
+				on oi.Id = ap.Org_ID
+				where ap.Analysis_Result is not null
+				and ap.Valid_Flag = 1
+				group by oi.Org_Name,oi.Id
+			) a
+		group by a.orgName,a.Id
+		order by a.Id
+	</select>
+	
+	<!-- 拌合机汇总展示(水泥) -->
+	<select id="getCementAmalgamatorSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			SUM(a.warn)  as warn,
+			SUM(a.total) as total,
+			a.orgName    as orgName,
+			a.Id,
+			SUM(a.totalProduction) as totalProduction
+		from
+			(select
+				COUNT(cp.Id) as warn,
+				oi.Id,
+				0 total,
+				oi.Org_Name as orgName,
+				0 as totalProduction
+				from Organization_Info oi
+				left join Cement_ProductionData cp
+				on oi.Id = cp.Org_ID
+				where cp.Analysis_Results is not null
+				and (cp.Analysis_Results like '%2%' or cp.Analysis_Results like '%3%') 
+				and cp.Valid_Flag = 1
+				group by oi.Org_Name,oi.Id
+			
+			union
+			
+				select
+				0 warn,
+				oi.Id,
+				COUNT(cp.Id) as total,
+				oi.Org_Name as orgName,
+				SUM(cp.Total_Weight) as totalProduction
+				from Organization_Info oi
+				left join Cement_ProductionData cp
+				on oi.Id = cp.Org_ID
+				where cp.Analysis_Results is not null
+				and cp.Valid_Flag = 1
+				group by oi.Org_Name,oi.Id
+			) a
+		group by a.Id,a.orgName
+		order by a.Id
+	</select>
+	
+	<!-- 预警统计饼图 -->
+	<select id="getWarnChartData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			Analysis_Result analysisResult
+		FROM
+			Asphalt_ProductionData 
+		WHERE
+			Analysis_Result IS NOT NULL
+	</select>
+	
+	<!-- 设备运行状态表格 -->
+	<select id="getEquipmentsData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			o.MixStation_Type mixStationType,
+			o.Org_Name orgName,
+			e.Equipment_Name equipmentName,
+			e.Equi_State equiState,
+			e.Equipment_Type equipmentType,
+			CONVERT(varchar(100), e.State_Time, 20) stateTime,
+			ec.Is_OnLine isOnline,
+			CONVERT(varchar(100), ec.LastLink_Date, 20) lastlinkDate,
+			e.Id id
+		FROM
+			Organization_Info o
+			LEFT JOIN Equipment_Info e ON e.Org_ID = o.id
+			LEFT JOIN Equipment_Connected ec ON ec.Org_ID = e.Org_ID AND ec.Machine_ID = e.Id
+		WHERE o.MixStation_Type IS NOT NULL
+	</select>
+	
+	<!-- 预警统计饼图 -->
+	<select id="getAllOrganization" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			Id id,
+			Org_Name orgName
+		FROM
+			Organization_Info
+		WHERE
+			Org_code LIKE 'LQ_%'
+	</select>
+	
+	<!-- 油石比统计数据 -->
+	<select id="getAsphaltChartData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			v.Collect_Time as collectTime,
+			a.Asphalt as asphalt
+		FROM
+			V_Asphalt_ProductionData v
+			LEFT JOIN AsphaltProp_DataAnalysis a ON a.Pro_Id = v.Id
+			AND a.Data_Type = 1
+		WHERE
+			v.Product_ID = (
+				SELECT
+					top 1 Product_ID
+				FROM
+					V_Asphalt_ProductionData
+				WHERE
+					Org_ID = #{orgId}
+					AND v.Collect_Time &gt;= #{startTime} 
+					AND v.Collect_Time &lt;= #{endTime}
+				ORDER BY Collect_Time
+			)
+			AND v.Product_ID IS NOT NULL
+			AND v.Collect_Time &gt;= #{startTime} 
+			AND v.Collect_Time &lt;= #{endTime} 
+		GROUP BY
+			a.Asphalt,
+			v.Collect_Time
+	</select>
+	
+	
+	<select id="getAsphaltInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			top 1
+			c.Id,
+			c.No1_MeterValue no1MeterValue,
+			c.No2_MeterValue no2MeterValue,
+			c.No3_MeterValue no3MeterValue,
+			c.No4_MeterValue no4MeterValue,
+			c.No5_MeterValue no5MeterValue,
+			c.No6_MeterValue no6MeterValue,
+			c.No7_MeterValue no7MeterValue,
+			c.No8_MeterValue no8MeterValue,
+			c.HotP_MeterValue hotPMeterValue,
+			c.ColdP_MeterValue coldPMeterValue,
+			c.Asphalt_Meter asphaltMeter,
+			c.Admixture1 admixture1,
+			c.Admixture2 admixture2,
+			c.Analysis_Result analysisResult,
+			c.Total_Weight totalWeight,
+			c.Analysis_Result analysisResult,
+			mn.Material_Name materialName,
+			mm.Material_Model materialModel,
+			CONVERT(varchar(100), c.Collect_Time, 20) collectTime,
+			c.Equ_ID
+		FROM
+			Asphalt_ProductionData c
+			LEFT JOIN Material_Info m on c.Product_ID = m.Id AND m.Valid_Flag = 1
+			LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id
+			LEFT JOIN MaterModel_Info mm ON m.MateModel_ID = mm.Id
+		WHERE 
+			c.Equ_ID = #{id}
+			AND CONVERT(varchar(100), c.Collect_Time, 23) = #{date}
+		ORDER BY c.Collect_Time
+	</select>
+	
+	<select id="getCementInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			top 1
+			c.Id,
+			c.Product_ID productID,
+			c.Weight_Cement1 weightCement1,
+			c.Weight_Cement2 weightCement2,
+			c.Weight_Cement3 weightCement3,
+			c.Weight_Cement4 weightCement4,
+			c.Weight_Aggregate1 weightAggregate1,
+			c.Weight_Aggregate2 weightAggregate2,
+			c.Weight_Aggregate3 weightAggregate3,
+			c.Weight_Aggregate4 weightAggregate4,
+			c.Weight_Aggregate5 weightAggregate5,
+			c.Weight_Aggregate6 weightAggregate6,
+			c.Weight_Admixture1 weightAdmixture1,
+			c.Weight_Admixture2 weightAdmixture2,
+			c.Weight_Water weightWater,
+			c.Analysis_Results analysisResults,
+			mn.Material_Name materialName,
+			mm.Material_Model materialModel,
+			CONVERT(varchar(100), c.Collect_Date, 20) collectTime,
+			c.Equ_ID
+		FROM
+			Cement_ProductionData c
+			LEFT JOIN Material_Info m ON c.Product_ID = m.Id AND m.Valid_Flag = 1
+			LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id
+			LEFT JOIN MaterModel_Info mm ON m.MateModel_ID = mm.Id
+		WHERE 
+			c.Equ_ID = #{id}
+			AND CONVERT(varchar(100), c.Collect_Date, 23) = #{date}
+		ORDER BY c.Collect_Date
+	</select>
+	
+	<select id="getTotalAsphaltInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			sum(a.warn) warn,
+			sum(a.total) total,
+			a.Material_Name materialName,
+			a.Material_Model materialModel,
+			sum(a.totalWeight) totalWeight
+		FROM (
+			SELECT
+				mm.Material_Model,
+				mn.Material_Name,
+				count(*) total,
+				sum(c.Total_Weight) totalWeight,
+				0 warn
+			FROM
+				Asphalt_ProductionData c
+				LEFT JOIN Material_Info m on c.Product_ID = m.Id AND m.Valid_Flag = 1
+				LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id AND mn.Valid_Flag = 1
+				LEFT JOIN MaterModel_Info mm ON m.MateModel_ID = mm.Id AND mm.Valid_Flag = 1
+			WHERE 
+				c.Analysis_Result IS NOT NULL
+				AND CONVERT(varchar(100), c.Collect_Time, 23) = #{date}
+				AND c.Equ_ID = #{id}
+			GROUP BY c.Product_ID, mn.Material_Name, mm.Material_Model
+		
+			union
+		
+			SELECT
+				mm.Material_Model,
+				mn.Material_Name,
+				0 total,
+				0 totalWeight,
+				count(1) warn
+			FROM
+				Asphalt_ProductionData c
+				LEFT JOIN Material_Info m on c.Product_ID = m.Id AND m.Valid_Flag = 1
+				LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id AND mn.Valid_Flag = 1
+				LEFT JOIN MaterModel_Info mm ON m.MateModel_ID = mm.Id AND mm.Valid_Flag = 1
+			WHERE 
+				(c.Analysis_Result like '%2%' or c.Analysis_Result like '%3%' or c.Analysis_Result like '%4%' or c.Analysis_Result like '%5%'
+				 or c.Analysis_Result like '%6%' or c.Analysis_Result like '%7%' or c.Analysis_Result like '%8%' or c.Analysis_Result like '%9%'
+				  or c.Analysis_Result like '%10%' or c.Analysis_Result like '%11%')
+			    AND CONVERT(varchar(100), c.Collect_Time, 23) = #{date}	
+			    AND c.Equ_ID = #{id}
+			GROUP BY c.Product_ID, mn.Material_Name, mm.Material_Model
+		) a
+		GROUP BY a.Material_Name, a.Material_Model
+	</select>
+	
+	<select id="getTotalCementInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			sum(a.warn) warn,
+			sum(a.total) total,
+			a.Material_Name materialName,
+			a.Material_Model materialModel,
+			sum(a.totalWeight) totalWeight
+		FROM (
+			SELECT
+				mm.Material_Model,
+				mn.Material_Name,
+				count(*) total,
+				sum(c.Total_Weight) totalWeight,
+				0 warn
+			FROM
+				Cement_ProductionData c
+				LEFT JOIN Material_Info m on c.Product_ID = m.Id AND m.Valid_Flag = 1
+				LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id AND mn.Valid_Flag = 1
+				LEFT JOIN MaterModel_Info mm ON m.MateModel_ID = mm.Id AND mm.Valid_Flag = 1
+			WHERE 
+				c.Analysis_Results IS NOT NULL
+				AND CONVERT(varchar(100), c.Collect_Date, 23) = #{date}
+				AND c.Equ_ID = #{id}
+			GROUP BY c.Product_ID, mn.Material_Name, mm.Material_Model
+		
+			union
+		
+			SELECT
+				mm.Material_Model,
+				mn.Material_Name,
+				0 total,
+				0 totalWeight,
+				count(*) warn
+			FROM
+				Cement_ProductionData c
+				LEFT JOIN Material_Info m on c.Product_ID = m.Id AND m.Valid_Flag = 1
+				LEFT JOIN MaterName_Info mn ON m.MateName_ID = mn.Id AND mn.Valid_Flag = 1
+				LEFT JOIN MaterModel_Info mm ON m.MateModel_ID = mm.Id AND mm.Valid_Flag = 1
+			WHERE 
+				(c.Analysis_Results like '%2%' or c.Analysis_Results like '%3%') 
+				AND CONVERT(varchar(100), c.Collect_Date, 23) = #{date}
+				AND c.Equ_ID = #{id}
+			GROUP BY c.Product_ID, mn.Material_Name, mm.Material_Model
+		) a
+		GROUP BY a.Material_Name, a.Material_Model
+	</select>
+	<!-- 根据生产数据获取的生产编号查询生产计划 -->
+	<select id="getProductionPlanListByPlanNo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			Org_ID as orgId,
+			Proj_Pos as projPos ,
+			Construction_Unit as constructionUnit,
+			Prod_ID as prodId,
+			Grad_Id as gradId
+		from 
+			Production_Plan 
+		where 
+			Plan_No = #{plan_No} 
+	</select>
+</mapper>

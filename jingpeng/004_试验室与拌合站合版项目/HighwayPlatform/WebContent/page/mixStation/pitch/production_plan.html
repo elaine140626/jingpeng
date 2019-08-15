@@ -1,0 +1,176 @@
+<!-- 沥青生产计划 -->
+<script type="text/javascript" src="../../js/mixStation/pitch/production_plan.js"></script>
+<script type="text/javascript" src="../../js/dtree.js"></script>
+<script type="text/javascript">
+</script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 生产管理 &gt; 生产计划</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<!-- <div class="shu_btn">
+			<script type="text/javascript">
+			</script>
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+			</div>
+		</div> -->
+		<form action="" method="get" class="sousuo">
+			<label>产品名称：</label>
+			<input type="text" id="material_Name" class="search_input rightwbj">
+			<label>产品型号：</label>
+			<input type="text" id="material_Model" class="search_input rightwbj">
+			<label>生产计划比编号：</label>
+			<input type="text" class="search_input rightwbj" id="plan_No">
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+		</form>
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn"  onclick="getAddPlan();">新增录入</a></div>
+			<div class="table-a-right table-c-right">
+				<div id="list_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+					<div class="row">
+						<div class="col-sm-6"></div>
+						<div class="col-sm-6"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="list"
+							 role="grid" aria-describedby="list_info">
+								<thead>
+									<tr role="row">
+										<th scope="col" width="4%">序号</th>
+										<th scope="col">生产计划编号</th>
+										<th scope="col">目标配合比编号</th>
+										<th scope="col">拌合设备名称</th>
+										<th scope="col">产品名称/型号</th>
+										<th scope="col">生产配合比编号</th>
+										<th scope="col">级配编号</th>
+										<th scope="col">工程部位/用途</th>
+										<th scope="col">施工单位</th>
+										<th scope="col">计划生产量(t)</th>
+										<th scope="col">计划生产状态</th>
+										<th scope="col">计划时间</th>
+										<th scope="col">创建时间</th>
+										<th scope="col">作废原因</th>
+										<th scope="col" width="10%">操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>新增生产计划</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            <form id="tabForm">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru" id="tab">
+                  <tr>
+                    <td width="37%" align="right">生产计划编号：</td>
+                    <td width="63%">
+                    <input name="planNo" type="text" id="planNo" placeholder="输入生产计划编号" maxlength="40" onchange="changePlanNo(this.value);" onkeyup="value=value.replace(/[\W]/g,'')"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td width="37%" align="right">拌合设备名称：</td>
+                    <td width="63%">
+                    <select name="equId" size="1" id="equId" onchange="getMcName()"><option></option></select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品名称：</td>
+                    <td><select id="materialName" size="1" name="materialName" onchange="getMaterialModel()"><option></option></select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产品型号：</td>
+                    <td><select name="productId" id="materialModel" size="1" onchange="getProportionCode();"><option></option></select><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">生产配合比编号：</td>
+                    <td><select name="prodId" size="1" id="proportionCode" onchange="getGradeCode()"><option></option></select><span style="color:red;padding-left: 10px">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">级配编号：</td>
+                    <td><select name="gradId" size="1" id="gradId"><option></option></select><span style="color:red;padding-left: 10px">*</span>
+                  </tr>
+                  <tr>
+                    <td align="right">工程部位/用途：</td>
+                    <td>
+                    	<input name="projPos" type="text" id="projPos" placeholder="输入工程部位/用途" maxlength="40" list="projPoList">
+                    	<datalist id="projPoList"></datalist>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">施工单位：</td>
+                    <td>
+                    	<input name="constructionUnit" type="text" id="constructionUnit" placeholder="输入施工单位" maxlength="30" list="constructionUnitList">
+                    	<datalist id="constructionUnitList"></datalist>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产量(t)：<br></td>
+                    <td><input name="scheduledProduction" type="text" id="scheduledProduction" placeholder="输入计划生产量" onkeyup="num(this)" maxlength="15"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">计划生产时间：</td>
+                    <td>
+                      <input name="startTime" type="text" id="startTime" placeholder="选择日期" readonly="readonly"><span style="color:red;padding-left: 10px">*</span></td>
+                  </tr>
+                  <input id="orgId"  name="orgId" hidden="true">
+                  <input id="id"  name="id" hidden="true">
+                  <tr>
+                    <td colspan="2" align="center"><input type="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addOrUpdate()"></td>
+                  </tr>
+				</table>
+			 </form>
+          	</div>
+		</div>
+	</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal2">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		 	 	<h3>作废原因</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru sbj">
+                  <tr>
+                   <td width="32%" align="right">作废原因：</td>
+                   <td width="68%">                    
+                   <textarea name="textarea" cols="25" rows="10" id="textarea" placeholder="输入作废原因"></textarea></td>
+                  </tr>
+                  <tr>
+                   <td colspan="2" align="center"><input type="button" name="button" id="zfbutton" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="zuofei();"></td>
+                  </tr>
+                </table>
+          	</div>
+		</div>
+	</div>
+</div>	
+<script type="text/javascript">
+	//时间
+	jeDate({
+		dateCell:"#startTime",
+		format:"YYYY-MM-DD hh:mm:ss",
+		isinitVal:false,
+		isTime:true, //isClear:false,
+		minDate:"2014-09-19 00:00:00",
+		okfun:function(val){alert(val)}
+	})
+</script>

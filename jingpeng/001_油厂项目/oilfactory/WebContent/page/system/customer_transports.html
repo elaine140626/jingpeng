@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/system/customer_transports.js"></script> 
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+		<title>瑞德公路管理系统</title>
+		<script type="text/javascript">
+			/** 新增   **/
+
+			/** ----------------leftMenu zTree部分开始----------------  **/
+			jQuery.browser = {};
+		jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+        var zTree;
+    	var setting = {
+    		data : {
+    			simpleData : {
+    				enable : true,
+    			}
+    		},
+    		edit : {
+    			enable : true
+    		},
+    	 	callback: {
+    			onClick: findClick
+    		} 
+    	};
+
+    	var nodes = [];
+
+    	$(document).ready(
+    			function() {
+    				$.getJSON(baseUrl + '/Transports/getTransports_Tree.action',
+    						function(data) {
+    							console.log(data);
+    							date = data.list;
+    							if (data != null && data.list.length > 0) {
+    								var pid = 0;
+    								var ppid = '';
+    								var node = {};
+    								node = {
+    									id : "客户信息",
+    									pId : 0,
+    									name : "客户信息"
+    								};
+    								nodes.push(node);
+
+    								for (var i = 0; i < date.length; i++) {
+    									if (date[i].ProvinceId != pid) {
+    										pid = "客户信息";
+    										if (date[i].Province != null
+    												&& date[i].Province != '') {
+    											node = {
+    												id : date[i].Province,
+    												pId : pid,
+    												name : date[i].Province
+    											};
+    											nodes.push(node);
+    											ppid = date[i].Province;
+    										}
+
+    										if (date[i].CustomerCode != null
+    												&& date[i].CustomerCode != '') {
+    											node = {
+    												id : date[i].Id,
+    												pId : ppid,
+    												name : date[i].CustomerCode
+    											};
+    											nodes.push(node);
+    										}
+
+    										pid = date[i].ProvinceId;
+
+    									} else {
+    										node = {
+    											id : date[i].Id,
+    											pId : ppid,
+    											name : date[i].CustomerCode
+    										};
+    										nodes.push(node);
+    									}
+
+    								}
+    							}
+    							$.fn.zTree.init($("#tree"), setting, nodes);
+    							zTree = $.fn.zTree.getZTreeObj("tree");
+    							console.log(nodes);
+    							zTree.expandAll(true);
+    						});
+    			});
+    	function findClick(event, treeId, treeNode, isCancel) {
+    		var id = treeNode.id;
+    		var pid = treeNode.pId;
+    		findClickByName(id, pid);
+    	}
+        
+			/** ----------------leftMenu  zTree部分开始----------------  **/
+			//切换客户信息、拜访记录、回访记录
+			function changePage(data) {
+				var hrefChange = $(data).find("option:selected").val();
+				location.href = hrefChange;
+			}
+		</script>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+				//跳转到编辑页面
+				$("#addBtn").fancybox({
+					'href': 'customer_transports_edit.html',
+					'width': 1500,
+					'height': 900,
+					'type': 'iframe',
+					'hideOnOverlayClick': false,
+					'showCloseButton': false,
+					'onClosed': function() {
+						window.location.href = 'customer_transports.html';
+					}
+				});
+				// 左侧菜单展开收起
+				$('.shouqi').click(function() {
+					$('#sider').removeClass('show');
+					$('#sider').addClass('hiden');
+					$('#box_top').hide();
+					$('#tree').hide();
+					$('#main').removeClass('mshow');
+					$('#main').addClass('mhide');
+					$('.zhankai').show();
+					$('.shouqi').hide();
+				})
+				$('.zhankai').click(function() {
+					$('#sider').removeClass('hiden');
+					$('#sider').addClass('show');
+					$('#box_top').show();
+					$('#tree').show();
+					$('#main').removeClass('mhide');
+					$('#main').addClass('mshow');
+					$('.zhankai').hide();
+					$('.shouqi').show();
+				})
+			});
+ 		
+		</script>
+		<style type="text/css">
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				.show {
+					position: absolute;
+					top: 40px;
+					left: 0px;
+					bottom: 0px;
+					width: 200px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.hiden{
+					position: absolute;
+					top: 40px;
+					left: 0px;
+					bottom: 0px;
+					width: 20px;
+					overflow: auto;
+    				border: none;
+				}
+				.mshow {
+					position: absolute;
+					top: 40px;
+					left: 205px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.mhide{
+					position: absolute;
+					top: 40px;
+					left: 20px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 260px
+				}
+				.fs-wrap {
+				    display: inline-block;
+				    width: 200px;
+				    font-size: 12px;
+				    line-height: 1;
+				    position: absolute;
+				    top: 5px;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				.show {
+					position: absolute;
+					top: 70px;
+					left: 0px;
+					bottom: 0px;
+					width: 260px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.hiden{
+					position: absolute;
+					top: 70px;
+					left: 0px;
+					bottom: 0px;
+					width: 20px;
+					overflow: auto;
+    				border: none;
+				}
+				.mshow {
+					position: absolute;
+					top: 70px;
+					left: 265px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.mhide{
+					position: absolute;
+					top: 70px;
+					left: 20px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 600px
+				}
+				.fs-wrap {
+				    display: inline-block;
+				    width: 200px;
+				    font-size: 12px;
+				    line-height: 1;
+				    position: absolute;
+				    top: 15px;
+				}
+			}
+			.ui_input_txt02 {
+				width: 130px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="top_nav">
+					<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;系统管理&nbsp;>&nbsp;<span style="color:#1A5CC6">客户止运地</span></span>
+				</div>
+				<div id="sider" class="show">
+					<a class="shouqi" href="javascript:;" title="收起菜单"></a>
+					<a class="zhankai" href="javascript:;" title="展开菜单"></a>
+					<div id="box_top">客户信息</div>
+					<ul id="tree" class="ztree"></ul>
+				</div>
+				<div id="main" class="mshow">
+					<div class="ui_tb">
+						<div id="box_border">
+							<div id="box_top">客户止运地</div>
+							<div id="box_center" style="padding-left: 20px;overflow: hidden;">
+								客户名称：&nbsp;&nbsp;<input type="text" id="customerNames" name="fangyuanEntity.fyZldz" class="ui_input_txt02" /><input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" onclick="search();" /> 
+								<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="新增客户止运地" class="ui_input_btnadd" id="addBtn" />
+							</div>
+							<div style="overflow-x: auto;">
+								<table id="TransportsList" style="width: 1500px;" class="table" cellspacing="0" cellpadding="0" align="center" border="0">
+								<thead>
+									<tr>
+										<th width="100px" class="xuhao">序号</th>
+										<th width="150px" class="caozuo">操作</th>
+										<th width="280px" class="kehumingcheng">客户编号</th>
+										<th width="350px" class="yunshudidian">运输地点</th>
+										<th width="200px" class="yunshujuli">运输距离(公里)</th>
+										<th class="beizhu">备注</th>
+									</tr>
+								</thead>
+								</table>
+							</div>
+
+						</div>
+					</div>
+				</div>
+		</form>
+	</body>
+</html>

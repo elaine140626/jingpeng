@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="../../css/scrollTable.css" />
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<link rel="stylesheet" type="text/css"
+	href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript"
+	src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+<script type="text/javascript"
+	src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript"
+	src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript"
+	src="../../js/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/repertory/instore.js"></script>
+<title>瑞德公路管理系统</title>
+<style type="text/css">
+	#sider {
+		position: absolute;
+		top: 70px;
+		left: 0px;
+		bottom: 0px;
+		width: 260px;
+		border: 1px solid #DEDFDF;
+	}
+		.fuchuang4 {
+    position: absolute;
+    width: 604px;
+    height: auto;
+    left: 48%;
+    top: 20%;
+    background-color: rgb(255, 255, 255);
+    z-index: 9999;
+    margin-right: 5px;
+    display: none;
+    padding: 20px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(16, 75, 141);
+    border-image: initial;
+    border-radius: 3px;
+	}	
+	
+	#main {
+		position: absolute;
+		top: 70px;
+		left: 270px;
+		right: 10px;
+		bottom: 0px;
+		border: 1px solid #DEDFDF;
+		overflow-y:hidden;
+	}
+</style>
+</head>
+
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post"
+		enctype="multipart/form-data">
+		<div id="container">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;库存管理&nbsp;>&nbsp;<span style="color:#1A5CC6">入库单</span></span>
+			</div>
+			<div id="sider">
+				<a class="shouqi" href="javascript:;" title="收起菜单"></a> <a
+					class="zhankai" href="javascript:;" title="展开菜单"></a>
+				<div id="box_top">销售订单</div>
+				<div id="box_center" style="padding-left: 20px;">
+					关键字查询： <input type="text" id="keyword" name="keyword" onblur="keywordSelect()"
+						class="ui_input_txt02" />
+				</div>
+				<ul id="tree" class="ztree"></ul>
+			</div>
+			<div id="main" >
+				<div class="ui_tb">
+					<div id="box_border">
+						<div id="box_top">入库单查询</div>
+						<div id="box_center" style="padding-left: 20px; overflow: hidden;">
+							&nbsp;&nbsp;&nbsp;&nbsp;按车辆查询：&nbsp;&nbsp; 
+							<input type="text" class="ui_input_txt02" id="plateNumber" list="plateNumbers"/>
+							<dataList id="plateNumbers" class="ui_input_txt02" style="padding: 0;"></dataList>
+							<input type="button" value="查询" style="margin-left: 20px; margin-top: 2px;" onclick="selectInfoList()" class="ui_input_btnsearch" />
+						</div>
+						<div id="saleDiv0" class="sale">
+							<div style="overflow-x: auto;min-height:500px;">
+								<table id="outBoundTable" class="table table-striped" style="width: 3640px;" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr>
+											<th class="xuhao">序号</th>
+											<th class="shuilv">入库流水号</th>
+											<th class="kehumingcheng">车牌号码</th>
+											<th class="kehumingcheng">物料名称-型号</th>
+											<th class="xiaoshouyuan">类别</th>
+											<th class="xinghao">供应商名称</th>
+											<th class="caozuo1">起运地</th>
+											<th class="hetongbianhao">入库日期</th>
+											<th class="dianhua">来料票重</th>
+											<th class="beizhu">货物净重（t）</th>
+											<th class="shuilv">涨亏吨（t）</th>
+											<th class="caozuo1">来料皮重（t）</th>
+											<th class="caozuo1">皮重（t）</th>
+											<th class="caozuo1">允许偏差值</th>
+											<th class="caozuo1">实际偏差值</th>
+											<th class="caozuo1">是否异常数据</th>
+											<th class="caozuo1">异常处理意见</th>
+											<th class="caozuo1">异常处理人</th>
+											<th class="caozuo1">异常处理时间</th>
+											<th class="caozuo1">采购合同编号</th>
+											<th class="caozuo1">销售合同编号</th>
+											<th class="caozuo1">司机-联系电话</th>
+											<th class="caozuo1">入厂留样编号</th>
+											<th class="caozuo1">调度人</th>
+											<th class="caozuo1">录入时间</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

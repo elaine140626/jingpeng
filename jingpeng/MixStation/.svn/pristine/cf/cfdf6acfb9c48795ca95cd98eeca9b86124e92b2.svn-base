@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cement_ProductionData">
+
+<select id="getcement_ProductionDatas" parameterType="java.util.HashMap" resultType="v_Cement_ProductionData">
+
+		
+			SELECT
+			v.i_id,
+			v.Org_Name,
+			v.str_Prop_Code,
+			v.i_mix_Time,
+			v.d_weight_Cement1,
+			v.d_weight_Cement2,
+			v.d_weight_Cement3,
+			v.d_weight_Cement4,
+			v.d_weight_Aggregate1,
+			v.d_weight_Aggregate2,
+			v.d_weight_Aggregate3,
+			v.d_weight_Aggregate4,
+			v.d_weight_Aggregate5,
+			v.d_weight_Aggregate6,
+			v.d_weight_Water,
+			v.d_weight_Admixture1,
+			v.d_weight_Admixture2,
+			v.d_total_Weight,
+			v.i_analysis_Results,
+			v.str_Equipment_Name,
+			v.str_construction_Unit,
+			v.str_proj_Pos,
+			v.str_product,
+			v.str_collect_Date,
+			v.str_watering_Site,
+			v.str_proj_Pos,
+			v.i_analysis_Results_Cement,
+			v.i_analysis_Results_Aggregate
+		FROM
+			V_Cement_ProductionData v
+		
+		where 1=1 
+
+           AND v.Valid_Flag = 1
+			<if test="productName != null and productName != ''">
+				AND v.str_product like '%${productName}%'
+			</if>
+			<!-- <if test="productModel != null and productModel != ''">
+				AND v.material_Model like '%${productModel}%'
+			</if> -->
+			
+			<if test="mixingEquipmentName != null and mixingEquipmentName != ''">
+				AND v.str_Equipment_Name like '%${mixingEquipmentName}%'
+			</if>
+			
+			<if test="i_analysis_Results != null and i_analysis_Results != '' and i_analysis_Results != '0'">
+				<if test="i_analysis_Results != null and i_analysis_Results != '' and i_analysis_Results == 1">
+					AND v.i_analysis_Results ='1'
+				</if>
+				<if test="i_analysis_Results != null and i_analysis_Results != '' and i_analysis_Results != 1">
+					AND v.i_analysis_Results != '1'
+				</if>
+				
+			</if>
+		
+			 <if test="str_beginDate != null and str_beginDate != ''">
+				AND v.str_collect_Date &gt;=  #{str_beginDate}
+			 </if>
+ 			<if test="str_endDate != null and str_endDate != ''">
+ 				AND v.str_collect_Date &lt;= #{str_endDate}
+ 			</if>
+			
+			<foreach collection="org_Ids" index="index" item="item" open=" AND v.Org_ID IN (" separator="," close=")">
+                #{item}
+            </foreach>
+            order by v.i_id desc
+</select>
+
+
+	<select id="getcement_ProductionStatistics" resultType="v_Cement_ProductionData" parameterType="java.util.HashMap">
+	
+	
+	
+	
+	select Org_ID,str_product,CONVERT (VARCHAR (10),vd.str_collect_Date,120) str_collect_Date,str_proj_Pos,str_watering_Site,str_construction_Unit
+       ,SUM(d_weight_Cement1)+SUM(d_weight_Cement2) +SUM(d_weight_Cement3) +SUM(d_weight_Cement4) as cementWeight
+       ,SUM(d_total_Weight) as d_total_Weight,COUNT(*) i_total_number
+	   ,(select COUNT(*) 
+	       from V_Cement_ProductionData 
+	      where i_analysis_Results = 1 and Org_ID = vd.Org_ID and str_product=vd.str_product
+		    and CONVERT (VARCHAR (10),str_collect_Date,120)=CONVERT (VARCHAR (10),vd.str_collect_Date,120) 
+		    and str_prodPlan_No=vd.str_prodPlan_No) as i_qualified_number
+       ,(select COUNT(*) 
+	       from V_Cement_ProductionData 
+	      where i_analysis_Results != 1 and Org_ID = vd.Org_ID and str_product=vd.str_product
+		    and CONVERT (VARCHAR (10),str_collect_Date,120)=CONVERT (VARCHAR (10),vd.str_collect_Date,120) 
+		    and str_prodPlan_No=vd.str_prodPlan_No) as i_failures
+		from V_Cement_ProductionData vd
+		
+		where 1=1 
+		<if test="productName != null and productName != ''">
+				AND vd.str_product like '%${productName}%'
+		</if>
+		<if test="productModel != null and productModel != ''">
+				AND vd.str_product like '%${productModel}%'
+		</if>
+			
+		 <if test="str_beginDate != null and str_beginDate != ''">
+				AND vd.str_collect_Date &gt;=  #{str_beginDate}
+		 </if>
+ 		<if test="str_endDate != null and str_endDate != ''">
+ 				AND vd.str_collect_Date &lt;= #{str_endDate}
+ 		</if>
+ 		<if test="constructionUnit != null and constructionUnit != ''">
+				AND vd.str_construction_Unit like '%${constructionUnit}%'
+		</if>
+		<if test="engineeringSite != null and engineeringSite != ''">
+				AND vd.str_proj_Pos like '%${engineeringSite}%'
+		</if>
+		<foreach collection="org_Ids" index="index" item="item" open=" AND vd.Org_ID IN (" separator="," close=")">
+                #{item}
+            </foreach>
+		
+		
+		group by vd.Org_ID,vd.str_product,CONVERT (VARCHAR (10),vd.str_collect_Date,120),vd.str_proj_Pos
+        ,vd.str_watering_Site,vd.str_construction_Unit,vd.str_prodPlan_No 
+        
+	
+	</select>
+
+</mapper>

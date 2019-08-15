@@ -1,0 +1,97 @@
+<!-- 水泥生产数据 -->
+<script src="../../js/mixStation/cement/production_data.js" type="text/javascript" charset="utf-8"></script>
+<div class="rightcon_wz">
+       <div class="location">您的位置：水泥混合料拌合站（<span class="banhez"  id ="locationText"></span>） > 生产管理 > 生产计划</div>
+   </div>
+   <div class="rightcon_content">
+   <div class="shunav">
+       <form id="searchForm" action="" method="get" class="sousuo">
+			<label>生产时间：</label>
+			<input type="text" class="search_input" name="startTime" id="startTime" readonly="">
+			<label>--</label>
+			<input type="text" class="search_input rightwbj" name="endTime" id="endTime" readonly="">
+			<label>拌合设备名称：</label>
+			<input name=equipmentName class="search_input rightwbj" type="text" id="equipmentName">
+			<label>分析结果：</label>
+			<select name="analysisResult" class="search_input rightwbj" name="select" size="1" class="" id="analysisResult">
+				<option selected="selected" value="">全部</option>
+				<option value="1">合格</option>
+				<option value="2">不合格</option>
+			</select>
+			 <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+		</form>
+		<div class="clear"></div>
+		<div class="table-b">
+	        <div class="table-c-right table-b-right gdt">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover table-2000 jz" id="cement_ProductionDatas">
+	                   <thead>
+	                        <tr class="table-2000-bt">
+	                            <th rowspan="2" class="scsj_xh">序号</th>
+	                            <th rowspan="2" class="cjsj_sb">拌和设备名称</th>
+	                            <th rowspan="2" class="cjsj_140">采集时间</th>
+	                            <th rowspan="2" class="cjsj_sb">强度等级</th>
+	                            <th rowspan="2" class="cjsj_sb">盘号</th>
+	                            <th rowspan="2">拌和时间(s)</th>
+	                            <th colspan="4">水泥仓采集值(kg)</th>
+	                            <th colspan="6">骨料仓采集值(kg)</th>
+	                            <th rowspan="2">水仓采集值(kg)</th>
+	                            <th rowspan="2">外掺剂1采集值(kg)</th>
+	                            <th rowspan="2">外掺剂2采集值(kg)</th>
+	                            <th rowspan="2">拌和总量(kg)</th>
+	                            <th rowspan="2">拌和方量</th>
+	                            <th rowspan="2" class="gcbw_100">施工地点</th>
+	                            <th rowspan="2">浇灌部位</th>
+	                            <th rowspan="2">分析结果</th>
+	                        </tr>
+	                        <tr class="table-2000-bt">
+	                            <th>1#仓</th>
+	                            <th>2#仓</th>
+	                            <th>3#仓</th>
+	                            <th>4#仓</th>
+	                            <th>1#仓</th>
+	                            <th>2#仓</th>
+	                            <th>3#仓</th>
+	                            <th>4#仓</th>
+	                            <th>5#仓</th>
+	                            <th>6#仓</th>
+	                        </tr>
+	                    </thead>
+	              </table>
+				</div>
+			</div>
+   </div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;生产数据明细</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="mbphb_luru sbj mbphb_bg jz bk" id="cemdtel">
+                    <thead>
+                    <tr class="mbphb_luru_dise h50">
+                  	<td width="10%"><strong>序号</strong></td>
+                  	<td width="15%"><strong>料仓名称</strong></td>
+                    <td width="20%"><strong>材料名称/型号</strong></td>
+                    <td width="20%"><strong>设定重量(kg)</strong></td>
+                    <td width="20%"><strong>采集重量(kg)</strong></td>
+                    <td width="15%"><strong>重量偏差(%)</strong></td>
+                  </tr>
+                  </thead>
+                  <tbody id="cemdtelContain">
+                  
+                  </tbody>
+                </table>
+               
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg" >
+                  <tr>
+                    <td align="center"><input type="submit" name="button" id="login_close1" data-dismiss="modal" value="关&nbsp;&nbsp;闭" class="btn_bc"></td>
+                  </tr>
+              </table>
+
+          	</div>
+		</div>
+	</div>
+</div>

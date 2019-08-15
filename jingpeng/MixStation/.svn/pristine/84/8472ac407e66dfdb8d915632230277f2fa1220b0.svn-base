@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>视频监控</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+		<link rel="stylesheet" href="../resources/css2/systyle.css">
+		<link rel="StyleSheet" href="../resources/css2/dtree.css" />
+		<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+		<style>
+			html,
+			body {
+				height: 100%;
+			}
+			
+			.concon {
+				height: calc(100% - 87px);
+				overflow: hidden;
+			}
+			
+			#con {
+				overflow: hidden;
+				height: 50%
+			}
+			
+			#myPlayer,
+			#myPlayer2,
+			#myPlayer3,
+			#myPlayer4 {
+				width: 50%;
+				height: 100%;
+				float: left;
+			}
+			
+			#myPlayer4 {
+				background: rgba(25, 25, 25, .8);
+			}
+			
+			.cameraa {
+				width: 100%;
+				height: 100%;
+				background: url(../resources/img/camera.png) no-repeat 30% center;
+				background-size: 100px 100px;
+			}
+			
+			.cameraText {
+				width: 60%;
+				float: right;
+				height: 100%;
+				font-size: 36px;
+				color: #fff;
+			}
+		</style>
+		<script src="../resources/1.4/ckplayer/ckplayer.js"></script>
+		<script type="text/javascript" src="../resources/1.4/ezuikit.js"></script>
+	</head>
+
+	<body>
+		<div class="top">
+			<div class="topleft">吉东公路盲样检测系统</div>
+			<div class="topright">
+				<span class="userid"></span><span>你好！</span>
+				<a href="../testUserInfo/userinfo.html" target="_blank" class="shezhi">用户管理</a>
+				<a href="../testUserInfo/login.html" class="out">安全退出</a>
+			</div>
+		</div>
+		<div class="container-fluid concon">
+			<div id="con">
+				<video id="myPlayer" poster="" controls playsInline webkit-playsinline autoplay>
+					<source src="rtmp://rtmp.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b" type="rtmp/flv" />
+					<!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+				</video>
+				<video id="myPlayer2" poster="" controls playsInline webkit-playsinline autoplay>
+					<source src="rtmp://live.hkstv.hk.lxdns.com/live/hks" type="rtmp/flv" />
+					<!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+				</video>
+
+			</div>
+
+			<div id="con">
+
+				<video id="myPlayer3" poster="" controls playsInline webkit-playsinline autoplay>
+					<source src="rtmp://pull-g.kktv8.com/livekktv/100987038" type="rtmp/flv" />
+					<!--  <source src="http://hls.open.ys7.com/openlive/f01018a141094b7fa138b9d0b856507b.m3u8" type="application/x-mpegURL" /> -->
+				</video>
+				<div id="myPlayer4">
+					<div class="cameraa last">
+						<div class="cameraText">实时监控区</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			new EZUIPlayer('myPlayer');
+			new EZUIPlayer('myPlayer2');
+			new EZUIPlayer('myPlayer3');
+
+			//解除注释 监听事件信息
+			/*	var player = new EZUIPlayer('myPlayer');
+				var player2 = new EZUIPlayer('myPlayer2');
+				var player3 = new EZUIPlayer('myPlayer3');
+				// 注册错误事件回调
+			  player.on('error', function(){
+			    console.log('error');
+			});
+				//注册播放事件回调
+			player.on('play', function(){
+			    console.log('play');
+			});
+				//注册暂停事件回调
+			player.on('pause', function(){
+			    console.log('pause');
+			});
+			player.on('waiting', function(){
+			    console.log('waiting');
+			}); 
+
+
+			// 日志
+			player.on('log', log); */
+
+			function log(str) {
+				var div = document.createElement('DIV');
+				div.innerHTML = (new Date()).Format('yyyy-MM-dd hh:mm:ss.S') + JSON.stringify(str);
+				document.body.appendChild(div);
+			}
+			var textHeight3 = $('.cameraText').height();
+			$('.cameraText').css('line-height', textHeight3 + 'px');
+		</script>
+
+	</body>
+
+</html>

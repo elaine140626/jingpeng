@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.client.ClientDao">
+	<!-- 获取客户信息数据 -->
+    <select id="getCustomerInfoList" resultType="Customerinfo"  parameterType="java.util.Map">
+		select 
+			cus.Id as uuid,
+			cus.CustomerCode,
+			cus.Customername,
+			pro.Province as  province,
+			city.CityName as city,
+			cus.Intentionallevel,
+			cus.Procurementlevel,
+			cus.Creditlevel,
+			cus.Address,
+			cus.Contacts,
+			cus.Telephone,
+			cus.othernumbers,
+			cus.isincoming,
+			cus.issupplier,
+			cus.Remarks 
+			from customerinfo cus,cityinfo city,provinceinfo pro 
+		where cus.CityId = city.Id 
+		and city.ProvinceId = pro.Id 
+		and cus.IsDel = 0
+		<if test="customerCode!=null and customerCode!=''">
+		    and cus.CustomerCode = #{customerCode}              -- 根据计划批次查询
+		</if>
+		order by cus.Id desc
+	</select>
+	<!-- 添加客户信息数据 -->
+	<insert id="addCustomerinfo" parameterType="Customerinfo">
+		insert into customerinfo
+		(CustomerCode,CustomerName,CityId,IntentionalLevel,ProcurementLevel,CreditLevel,Address,Contacts,Telephone,OtherNumbers,Remarks,IsIncoming,
+		IsSupplier,ArrearsMoney,ArrearsAmount,IsDel,Creater,CreaterDate,Reviser,ReviserDate) 
+		values(#{customerCode},#{customername},#{city},#{intentionallevel},#{procurementlevel},#{creditlevel},#{address},#{contacts},#{telephone},
+		#{othernumbers},#{remarks},#{isincoming},#{issupplier},#{arrearsmoney},#{arrearsamount},0,#{creater},now(),#{reviser},now())
+		<selectKey resultType="Integer" order="AFTER" keyProperty="uuid">
+            SELECT LAST_INSERT_ID() AS uuid
+        </selectKey>
+	</insert>
+	<!-- 根据客户名称模糊查询 -->
+	<select id="findCustomerinfo" resultType="Customerinfo">
+		select 
+		cus.Id as uuid,
+			cus.Customername,
+			cus.CustomerCode,
+			pro.Province as  province,
+			city.CityName as city,
+			cus.Intentionallevel,
+			cus.Procurementlevel,
+			cus.Creditlevel,
+			cus.Address,
+			cus.Contacts,
+			cus.Telephone,
+			cus.othernumbers,
+			cus.Remarks,
+			cus.isincoming,
+			cus.issupplier,
+			cus.ArrearsMoney,
+			cus.ArrearsAmount
+		from customerinfo cus,cityinfo city,provinceinfo pro 
+		where cus.CityId = city.Id 
+		and city.ProvinceId = pro.Id 
+		and cus.IsDel = 0
+		and cus.CustomerCode like '%${customername}%'
+		order by cus.Id desc
+	</select>
+	<!--修改功能查询客户信息 -->
+	<select id="findCustomerinfoById" parameterType="int" resultType="Customerinfo">
+		select 
+			cus.Id as uuid,
+			cus.Customername,
+			cus.CustomerCode,
+			pro.Province as  province,
+			city.Id as city,
+			cus.Intentionallevel,
+			cus.Procurementlevel,
+			cus.Creditlevel,
+			cus.Address,
+			cus.Contacts,
+			cus.Telephone,
+			cus.othernumbers,
+			cus.Remarks,
+			cus.isincoming,
+			cus.issupplier,
+			cus.ArrearsMoney,
+			cus.ArrearsAmount 
+			from customerinfo cus,cityinfo city,provinceinfo pro
+		where cus.CityId = city.Id 
+		and city.ProvinceId = pro.Id 
+		and cus.Id = #{uuid}
+		and cus.IsDel = 0
+		order by cus.Id desc
+	</select>
+	<!-- 修改客户信息 -->
+	<update id="updateCustomerinfo" parameterType="Customerinfo">
+		update customerinfo set 
+		CustomerCode=#{customerCode},CustomerName=#{customername},CityId=#{city},IntentionalLevel=#{intentionallevel},
+		ProcurementLevel=#{procurementlevel},CreditLevel=#{creditlevel},Address=#{address},Contacts=#{contacts},Telephone=#{telephone},
+		OtherNumbers=#{othernumbers},Remarks=#{remarks},IsIncoming=#{isincoming},IsSupplier=#{issupplier},ArrearsMoney=#{arrearsmoney},
+		ArrearsAmount=#{arrearsamount} where Id = #{uuid}
+	</update>
+	<!-- 删除客户信息 -->
+	<update id="delCustomerinfoById" parameterType="int">
+		UPDATE customerinfo SET IsDel=1 WHERE Id = #{uuid}
+	</update>
+	<!-- 数据字典查询等级 -->
+	<select id="getDatadictionaryList" resultType="Datadictionary">
+		select * from datadictionary where type = '4'
+	</select>
+	<!-- 查询所有的省 -->
+	<select id="getProvinceinfoList" resultType="Provinceinfo">
+		select * from provinceinfo
+	</select>
+	<!-- 查询省下所有的市 -->
+	<select id="getCityInfoList" resultType="CityInfo" parameterType="int">
+		select * from cityinfo where ProvinceId = #{ProvinceId}
+	</select>
+	<!-- 添加欠款明细 -->
+	<insert id="addArrears" parameterType="Arrears">
+		insert into arrears(
+			CustomerId,
+			Detailed,
+			Amount,
+			IsDel,
+			Creater,
+			CreaterDate,
+			Reviser,
+			ReviserDate
+		) 
+		values(#{customerId},#{detailed},#{amount},0,#{creater},now(),#{reviser},now())
+	</insert>
+	<update id="delArrears" parameterType="int">
+		update arrears 
+			set
+			IsDel=1
+		where
+			CustomerId=#{uuid}
+	</update>
+	<!-- 修改欠款明细(逻辑删) -->
+	<update id="updateArrearsInfo" parameterType="int">
+		update arrears 
+			set
+			IsDel=1
+		where
+			Id = #{id}
+	</update>
+	<!-- 修改欠款明细(物理删) -->
+	<delete id="updateArrears" parameterType="int">
+		delete from arrears where CustomerId=#{customerId}
+		<!-- update arrears set IsDel=1 WHERE CustomerId=#{customerId} -->
+	</delete>
+	<!-- 通过id查询所在的市 -->
+	<select id="getCityInfo" parameterType="int" resultType="CityInfo">
+		select * from cityinfo where Id = #{id}
+	</select>
+	<!-- 通过市查询所在的省 -->
+	<select id="getProvinceinfo" parameterType="int" resultType="Provinceinfo">
+		select * from provinceinfo where Id=#{id}
+	</select>
+	<!-- 通过客户id查询欠款明细 -->
+	<select id="getArrears" parameterType="int" resultType="Arrears">
+		select * from arrears where CustomerId=#{customerId} and IsDel = 0
+	</select>
+	<select id="findByNameAndId"  parameterType="String" resultType="Customerinfo">
+	SELECT
+					b.Id as uuid,
+					b.Customername,
+					b.CustomerCode,
+					c.Province,
+					city.CityName as city,
+					b.Intentionallevel,
+					b.Procurementlevel,
+					b.Creditlevel,
+					b.Address,
+					b.Contacts,
+					b.Telephone,
+					b.othernumbers,
+					b.isincoming,
+					b.issupplier,
+					b.Remarks 
+				FROM
+				customerinfo b
+		LEFT JOIN cityinfo city on city.id = b.CityId
+		LEFT JOIN provinceinfo c on city.ProvinceId = c.Id 
+				where 
+				b.IsDel =0
+		<if test="pid != 'null'">
+			<if test="pid == '客户信息'">
+				AND c.Province = #{id}
+			</if>
+			<if test="pid != '客户信息' ">
+				and b.Id = #{id}
+				AND c.Province =#{pid}
+			</if>
+		</if>
+		ORDER BY b.Id DESC
+	</select>
+	<!-- 通过Id查询客户信息数据 -->
+	<select id="getVisitContentByCode" parameterType="String"  resultType="com.oil.model.Datadictionary">
+		select * from Datadictionary where code=#{code}
+	</select>
+	<!-- 获取客户信息数据 ztree-->
+    <select id="getClient_back" resultType="java.util.Map">
+	   SELECT
+			c.Province,
+			a.CustomerName,
+			a.CustomerCode,
+			a.Id,
+			b.ProvinceId
+		FROM
+			customerinfo a,
+			cityinfo b,
+			provinceinfo c
+		WHERE
+			a.CityId = b.Id
+		AND b.ProvinceId = c.Id
+		AND a.IsDel = 0
+		AND b.IsDel = 0
+		AND c.IsDel = 0
+		ORDER BY b.ProvinceId DESC
+	</select>
+	<!-- 判断客户是否被合同调用 -->
+	<select id="getCustomerIdCount" parameterType="int" resultType="int">
+		select
+		  count(*) as count
+		from
+		  contractinfo
+		where CustomerId = #{uuid}
+	</select>
+	<!-- 判断客户是否被止运地调用 -->
+	<select id="getCustomerIdCount2" parameterType="int" resultType="int">
+		select
+		  count(*) as count
+		from
+		  customertransports
+		where CustomerId = #{uuid}
+	</select>
+</mapper>

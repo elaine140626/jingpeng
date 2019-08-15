@@ -1,0 +1,77 @@
+SELECT
+  plan.Id
+  , plan.SalesOrderDetailedId                     -- 销售订单明细id
+  , s.SalesOrderId                                -- 销售订单
+  , ss.CustomerId                                 -- 客户id
+  , s.SaleNumber                                  -- 销售数量
+  , c.CustomerName                                -- 客户名称(定货单位名称)
+  , c.CustomerCode                                -- 客户编号
+  , s.MaterielId                                  -- 物料id
+  , m.MaterielNumber                              -- 物料编号(产品编号)
+  , m.MaterielName                                -- 物料名称(产品名称)
+  , m.MaterielModel                               -- 规格型号(产品型号)
+  , m.Unit                                        -- 单位
+  , plan.PlanNumber                               -- 编号
+  , plan.PlanWeight                               -- 计划生产量
+  , plan.StorageLocation                          -- 储位
+  , w.WarehouseName as StorageLocationName        -- 储位名称
+  , plan.Batch                                    -- 生产批次
+  , plan.AnalystOrDirector                        -- 化验员或主任 0:化验员 1:主任
+  , DATE_FORMAT(plan.FinishTime, '%Y-%m-%d') as FinishTime -- 计划完成时间
+  , plan.IsLowerHair                              -- 是否下发
+  , plan.LowerHairPerson                          -- 下发人
+  , DATE_FORMAT(plan.LowerHairDate, '%Y-%m-%d') as LowerHairDate -- 下发时间
+  , plan.BatchingList                             -- 配料单生产批次
+  , plan.TechnicsNumber                           -- 工艺编号
+  , plan.IsCheck                                  -- 是否核对
+  , plan.CheckPerson                              -- 核对人
+  , DATE_FORMAT(plan.CheckDate, '%Y-%m-%d') as CheckDate -- 核对时间
+  , plan.IsExamine                                -- 是否通过审核
+  , plan.ExaminePerson                            -- 审核人
+  , DATE_FORMAT(plan.ExamineDate, '%Y-%m-%d') as ExamineDate -- 审核时间
+  , plan.IsProduction                             -- 是否确认生产
+  , plan.ProductionPerson                         -- 确认人
+  , DATE_FORMAT(plan.ProductionDate, '%Y-%m-%d') as ProductionDate -- 确认时间
+  , plan.IsApplication                            -- 是否提交质检申请
+  , plan.ApplicationPerson                        -- 提交人
+  , DATE_FORMAT(plan.ApplicationDate, '%Y-%m-%d') as ApplicationDate -- 提交时间
+  , plan.IsQualified                              -- 质检是否合格
+  , plan.QualifiedPerson                          -- 质检员
+  , DATE_FORMAT(plan.QualifiedDate, '%Y-%m-%d') as QualifiedDate -- 质检确认时间
+  , plan.IsAdjust                                 -- 是否调整
+  , plan.IsComplete                               -- 是否生产完成
+  , plan.CompletePerson                           -- 完成确认人
+  , DATE_FORMAT(plan.CompleteDate, '%Y-%m-%d') as CompleteDate -- 完成确认时间
+  , plan.ActualWeight                             -- 实际原料消耗重量
+  , plan.IsConfirmSubmission                      -- 是否确认实际消耗提交
+  , plan.ConfirmSubmissionPerson                  -- 填写人
+  , DATE_FORMAT(plan.ConfirmSubmissionDate, '%Y-%m-%d') as ConfirmSubmissionDate -- 填写时间
+  , plan.Remarks                                  -- 备注
+  , plan.AdjustNumber                             -- 调整次数
+  , plan.IsDel
+  , plan.Creater
+  , plan.CreaterDate
+  , plan.Reviser
+  , plan.ReviserDate 
+FROM
+  planmeasure plan 
+  left join salesorderdetailed s                  -- 销售订单明细表
+    on s.Id = plan.SalesOrderDetailedId           -- 订单明细id
+    and s.IsDel = 0 
+    and s.IsActualDelivery = 0                    -- 是否实际发货(去除'空发'的状态)
+  left join salesorder ss                         -- 销售订单表
+    on ss.Id = s.SalesOrderId 
+    and ss.IsDel = 0 
+  left join customerinfo c                        -- 客户信息表
+    on ss.CustomerId = c.Id 
+    and c.IsDel = 0 
+  left join MaterielInfo m                        -- 物料信息表
+    on m.Id = s.MaterielId                        -- 物料id
+    and m.IsDel = 0 
+  left join warehouseinfo w                       -- 仓库信息
+    on w.Id = plan.StorageLocation
+    and w.IsDel = 0
+where
+  plan.IsDel = 0 
+ORDER BY
+  plan.CreaterDate desc

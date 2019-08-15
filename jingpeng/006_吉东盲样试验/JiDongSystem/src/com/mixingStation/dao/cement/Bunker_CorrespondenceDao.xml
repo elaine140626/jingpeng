@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.cement.Bunker_CorrespondenceDao">
+	<select id="getBunker_Correspondences" parameterType="java.util.HashMap" resultType="com.mixingStation.model.cement.Bunker_Correspondence">
+		SELECT
+			b.Org_ID orgId,
+			b.Equ_ID,
+			e.Equipment_Name equipmentName,
+			b.Remarks,
+			b.Bunker_Code bunkerCode,
+			b.Operator operator,
+			CONVERT(varchar(100),b.Create_Date , 20) createDate
+			FROM
+			Bunker_Correspondence b
+			left join Equipment_Info e on b.Equ_ID = e.Id
+		WHERE
+		1 = 1
+		<if test="siloCorrespondingRelationshipNumber != null and siloCorrespondingRelationshipNumber != ''">
+			AND b.Bunker_Code LIKE '%${siloCorrespondingRelationshipNumber}%'
+		</if>
+		<if test="orgId != null and orgId != ''">
+			AND b.Org_ID = #{orgId} 
+		</if>
+		AND b.Valid_Flag = 1
+		AND e.Valid_Flag = 1
+		ORDER BY
+		b.id DESC
+	</select>
+
+	<insert id="addBunker_Correspondence" parameterType="com.mixingStation.model.cement.Bunker_Correspondence">
+		INSERT INTO Bunker_Correspondence (
+		Org_ID,
+		Bunker_Code,
+		Equ_ID,
+		MateID_Cement1,
+		MateID_Cement2,
+		MateID_Cement3,
+		MateID_Cement4,
+		MateID_Aggregate1,
+		MateID_Aggregate2,
+		MateID_Aggregate3,
+		MateID_Aggregate4,
+		MateID_Aggregate5,
+		MateID_Aggregate6,
+		MateID_Water,
+		MateID_Admixture1,
+		MateID_Admixture2,
+		Remarks,
+		Operator,
+		Create_Date
+		)
+		VALUES
+		(
+		#{ orgId },
+		#{ bunkerCode },
+		#{ equId },
+		#{ mateIdCement1 },
+		#{ mateIdCement2 },
+		#{ mateIdCement3 },
+		#{ mateIdCement4 },
+		#{ mateIdAggregate1 },
+		#{ mateIdAggregate2},
+		#{ mateIdAggregate3},
+		#{ mateIdAggregate4 },
+		#{ mateIdAggregate5 },
+		#{ mateIdAggregate6 },
+		#{ mateIdWater },
+		#{ mateIdAdmixture1 },
+		#{ mateIdAdmixture2 },
+		#{ remarks },
+		#{ operator },
+		CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+</mapper>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/style.css">
+<link rel="StyleSheet" href="../resources/css/dtree.css" />
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+</head>
+
+<body>
+	<div class="top">
+		<div class="row">
+			<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+			<div class="topright">
+				<a href="user.html" class="userid"></a><span>你好！</span>
+				<a href="../User/platformUserinfo.html" class="shezhi">用户管理</a>
+					<a href="../Common/platformOut.html" class="out">安全退出</a>
+			</div>
+		</div>
+	</div>
+	<div class="container-fluid content">
+		<div class="row leftbj">
+			<div class="leftnav">
+				<ul>
+					<li><a href="../Platform/index.html"><span class="i_1"></span><b>首页</b></a></li>
+					<li class="focus2"><a href="../Andr/platform_asphalt_statistics.html"><span class="i_2"></span><b>沥青混合料</b></a></li>
+					<li><a href="../cemAndr/platform_cement_statistics.html"><span class="i_3"></span><b>水泥混凝土</b></a></li>
+					<li><a href="../waterstabilityAndr/platform_waterstability_statistics.html"><span class="i_4"></span><b>水泥稳定土</b></a></li>
+				</ul>
+			</div>
+			<div class="rightcon">
+				<div class="rightcon_wz">
+					<div class="location">您的位置：沥青混合料 > 生产数据</div>
+					<!--<div class="time">2018年4月10日 16:28:53</div>-->
+				</div>
+				<div class="rightcon_content">
+
+					<div class="lq_main">
+
+						<div class="lq_biao gdt">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-2000" id="list">
+								<thead>
+									<tr>
+										<th rowspan="2">序号</th>
+										<th rowspan="2">拌合站名称</th>
+										<th rowspan="2" class="cjtime">采集时间</th>
+										<th rowspan="2" class="sgdw_count">施工单位</th>
+										<th rowspan="2">工程部位/用途</th>
+										<th rowspan="2">拌合设备名称</th>
+										<th rowspan="2">产品名称/型号</th>
+										<th rowspan="2">生产配合比编号</th>
+										<th rowspan="2">级配编号</th>
+										<th rowspan="2">拌合温度(°C)</th>
+										<th rowspan="2">盘重量(KG)</th>
+										<th colspan="6">骨料仓(KG)</th>
+										<th colspan="2">粉料(KG)</th>
+										<th>沥青(KG)</th>
+										<th colspan="2">外掺剂(KG)</th>
+										<th rowspan="2">分析结果</th>
+									</tr>
+									<tr>
+										<th>1#仓</th>
+										<th>2#仓</th>
+										<th>3#仓</th>
+										<th>4#仓</th>
+										<th>5#仓</th>
+										<th>6#仓</th>
+										<th>冷粉</th>
+										<th>热粉</th>
+										<th>沥青</th>
+										<th>外掺剂1</th>
+										<th>外掺剂2</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="bottom">
+							<a href="#">关于 我们</a>|<a href="#">联系方式</a>Copyright (c) 2018
+							neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+						</div>
+
+<div class="modal fade" id="loginModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="tan_dx_title">
+                <span><img src="../resources/images/bi.png" width="16" height="16"></span>
+                <h3>生产数据明细</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+            </div>
+            <div class="example tan_dx_txt2">
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="zi12" id="info">
+                    <tr>
+                        <td width="15%" align="right">生产配合比编号：</td>
+                        <td width="10%"><span id="str_proportion_Code"></span></td>
+                        <td width="10%" align="right">级配编号：</td>
+                        <td width="18%"><span id="str_grade_Code"></span></td>
+                        <td width="12%" class="ydq">产品名称/型号：</td>
+                        <td width="16%"><span id="str_productInfo"></span></td>
+                        <td width="10%">盘重量(kg)：</td>
+                        <td width="9%"><span id="d_total_Weight"></span></td>
+                    </tr>
+                </table>
+                <div class="tabsholder1">
+
+                    <div data-tab="采集数据明细">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj juzhong bk">
+                            <thead>
+                            <tr class="dise">
+                                <td width="12%">&nbsp;</td>
+                                <td width="8%">1#仓</td>
+                                <td width="8%">2#仓</td>
+                                <td width="8%">3#仓</td>
+                                <td width="8%">4#仓</td>
+                                <td width="8%">5#仓</td>
+                                <td width="8%">6#仓</td>
+                                <td width="8%">冷粉</td>
+                                <td width="8%">热粉</td>
+                                <td width="8%">沥青</td>
+                                <td width="8%">外掺剂1</td>
+                                <td width="8%">外掺剂2</td>
+                            </tr>
+                            </thead>
+                            <tbody id="tb"></tbody>
+                        </table>
+                    </div>
+                    <div data-tab="筛分通过率">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj">
+                            <tr>
+                                <td><div id="chartmain" style="width: 884px;height: 267px;"></div></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div data-tab="原材料消耗">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj juzhong bk">
+                            <thead>
+                            <tr class="dise">
+                                <td>序号</td>
+                                <td>材料名称/型号</td>
+                                <td>消耗量(kg)</td>
+                            </tr>
+                            </thead>
+                            <tbody id="xh"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+            <script src="../resources/js/jquery.cardtabs.js" type="text/javascript"></script>
+            <script type='text/javascript'>
+                $('.tabsholder1').cardTabs();
+                $('.tabsholder2').cardTabs({theme: 'inset'});
+                $('.tabsholder3').cardTabs({theme: 'graygreen'});
+                $('.tabsholder4').cardTabs({theme: 'wiki'});
+            </script>
+
+        </div>
+    </div>
+</div>
+
+<script src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/echarts.min.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/platform_asphalt_warningCount.js"></script>
+<script>
+    function checkAll() {
+        var all=document.getElementById('all');//获取到点击全选的那个复选框的id
+        var one=document.getElementsByName('checkname[]');//获取到复选框的名称
+        if(all.checked==true){//因为获得的是数组，所以要循环 为每一个checked赋值
+            for(var i=0;i<one.length;i++){
+                one[i].checked=true;
+            }
+
+        }else{
+            for(var j=0;j<one.length;j++){
+                one[j].checked=false;
+            }
+        }
+    }
+</script>
+						
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    var option = {
+
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['采集数据曲线','生产配比重量曲线','级配上限','级配下限','级配中值']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['0.075','0.15','0.3','0.6','1.18','2.36','4.75','9.5','13.2','16','19','26.5','31.5','37.5','53']
+        },
+        yAxis: {
+            type: 'value',
+            show: true,
+            min: '0',
+            max:'100',
+            splitNumber: 4,
+            maxInterval: 25
+        },
+        series: []
+    };
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

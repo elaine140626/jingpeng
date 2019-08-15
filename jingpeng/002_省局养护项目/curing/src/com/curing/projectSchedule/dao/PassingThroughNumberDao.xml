@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.PassingThroughNumberDao">
+	<!-- 工程进度（过路过户涵工程数量表）List取得 -->
+	<select id="getPassingThroughNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PassingThroughNumberEntity">
+		SELECT
+		    ptn.Id                           -- 主键
+		  , ptn.ProjectId                    -- 项目id
+		  , ptn.CoreNumber                   -- 中心桩号
+		  , ptn.BridgeName                   -- 孔数-孔径（孔-米）
+		  , ptn.SupportingC25Concrete        -- 位置
+		  , ptn.SupportingRebar              -- L（m）
+		  , ptn.AliformC15Concrete           -- 工程数量M15浆砌片石端墙基础（m³）
+		  , ptn.AliformM10Wall               -- 工程数量M15浆砌片石端墙墙身（m³）
+		  , ptn.AliformM10Basics             -- 工程数量C25砼帽（m³）
+		  , ptn.AliformM10Veneer             -- 工程数量C25硬化面（m³）
+		  , ptn.RubblePaving                 -- 工程数量涂料（㎡）
+		  , ptn.Rubble                       -- 工程数量C20砼管基（m³）
+		  , ptn.Gravel                       -- 工程数量管节数（个）
+		  , ptn.BridgeBrand                  -- 工程数量钢筋（Kg）
+		  , ptn.Mason                        -- 工程数量C30管节（m³）
+		  , ptn.Backfilling                  -- 工程数量中部砂砾垫层（m³）
+		  , ptn.Earthwork2                   -- 工程数量透水性材料（m³）
+		  , ptn.Earthwork                    -- 工程数量挖基土方（m³）
+		  , ptn.Remarks
+		  , ptn.IsDel
+		  , ptn.Creater
+		  , ptn.CreaterDate
+		  , ptn.Reviser
+		  , ptn.ReviserDate 
+		FROM
+		  PassingThroughNumber as ptn 
+		  left join V_EntryTree as ve 
+		    on ptn.ProjectId = ve.pid 
+		WHERE
+		  ptn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and ptn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and ptn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and ptn.coreNumber like concat('%',#{coreNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and ptn.bridgeName like concat('%',#{bridgeName},'%') -- 根据孔数-孔查询
+		  </if>
+		  <if test="supportingC25Concrete!=null and supportingC25Concrete!=''">
+		    and ptn.supportingC25Concrete like concat('%',#{supportingC25Concrete},'%') -- 根据位置查询
+		  </if>
+		   order by ptn.CreaterDate desc
+	</select>
+	
+		<select id="getPassingThroughNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		    ptn.CoreNumber                   -- 中心桩号
+		  , ptn.BridgeName                   -- 孔数-孔径（孔-米）
+		  , ptn.SupportingC25Concrete        -- 位置
+		  , ptn.SupportingRebar              -- L（m）
+		  , ptn.AliformC15Concrete           -- 工程数量M15浆砌片石端墙基础（m³）
+		  , ptn.AliformM10Wall               -- 工程数量M15浆砌片石端墙墙身（m³）
+		  , ptn.AliformM10Basics             -- 工程数量C25砼帽（m³）
+		  , ptn.AliformM10Veneer             -- 工程数量C25硬化面（m³）
+		  , ptn.RubblePaving                 -- 工程数量涂料（㎡）
+		  , ptn.Rubble                       -- 工程数量C20砼管基（m³）
+		  , ptn.Gravel                       -- 工程数量管节数（个）
+		  , ptn.BridgeBrand                  -- 工程数量钢筋（Kg）
+		  , ptn.Mason                        -- 工程数量C30管节（m³）
+		  , ptn.Backfilling                  -- 工程数量中部砂砾垫层（m³）
+		  , ptn.Earthwork2                   -- 工程数量透水性材料（m³）
+		  , ptn.Earthwork                    -- 工程数量挖基土方（m³）
+		  , ptn.Remarks
+		FROM
+		  PassingThroughNumber as ptn 
+		  left join V_EntryTree as ve 
+		    on ptn.ProjectId = ve.pid 
+		WHERE
+		  ptn.IsDel = 0
+		   order by ptn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（过路过户涵工程数量表）合计 -->
+	<select id="getPassingThroughNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.PassingThroughNumberSum">
+		SELECT
+		    sum(ptn.SupportingRebar)      as SupportingRebarSum       -- L（m）
+		  , sum(ptn.AliformC15Concrete)   as AliformC15ConcreteSum    -- 工程数量M15浆砌片石端墙基础（m³）
+		  , sum(ptn.AliformM10Wall)       as AliformM10WallSum        -- 工程数量M15浆砌片石端墙墙身（m³）
+		  , sum(ptn.AliformM10Basics)     as AliformM10BasicsSum      -- 工程数量C25砼帽（m³）
+		  , sum(ptn.AliformM10Veneer)     as AliformM10VeneerSum      -- 工程数量C25硬化面（m³）
+		  , sum(ptn.RubblePaving)         as RubblePavingSum          -- 工程数量涂料（㎡）
+		  , sum(ptn.Rubble)               as RubbleSum                -- 工程数量C20砼管基（m³）
+		  , sum(ptn.Gravel)               as GravelSum                -- 工程数量管节数（个）
+		  , sum(ptn.BridgeBrand)          as BridgeBrandSum           -- 工程数量钢筋（Kg）
+		  , sum(ptn.Mason)                as MasonSum                 -- 工程数量C30管节（m³）
+		  , sum(ptn.Backfilling)          as BackfillingSum           -- 工程数量中部砂砾垫层（m³）
+		  , sum(ptn.Earthwork2)           as Earthwork2Sum            -- 工程数量透水性材料（m³）
+		  , sum(ptn.Earthwork)            as EarthworkSum             -- 工程数量挖基土方（m³）
+		FROM
+		 PassingThroughNumber as ptn 
+		  left join V_EntryTree as ve 
+		    on ptn.ProjectId = ve.pid 
+		WHERE
+		  ptn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and ptn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and ptn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and ptn.coreNumber like concat('%',#{coreNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and ptn.bridgeName like concat('%',#{bridgeName},'%') -- 根据孔数-孔查询
+		  </if>
+		  <if test="supportingC25Concrete!=null and supportingC25Concrete!=''">
+		    and ptn.supportingC25Concrete like concat('%',#{supportingC25Concrete},'%') -- 根据位置查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（过路过户涵工程数量表） -->
+	<insert id="insertPassingThroughNumber" parameterType="com.curing.projectSchedule.model.PassingThroughNumberEntity">
+		INSERT 
+		INTO PassingThroughNumber ( 
+			Id
+		  , ProjectId
+		  , CoreNumber
+		  , BridgeName
+		  , SupportingC25Concrete
+		  , SupportingRebar
+		  , AliformC15Concrete
+		  , AliformM10Wall
+		  , AliformM10Basics
+		  , AliformM10Veneer
+		  , RubblePaving
+		  , Rubble
+		  , Gravel
+		  , BridgeBrand
+		  , Mason
+		  , Backfilling
+		  , Earthwork2
+		  , Earthwork
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{CoreNumber}
+		  , #{BridgeName}
+		  , #{SupportingC25Concrete}
+		  , #{SupportingRebar}
+		  , #{AliformC15Concrete}
+		  , #{AliformM10Wall}
+		  , #{AliformM10Basics}
+		  , #{AliformM10Veneer}
+		  , #{RubblePaving}
+		  , #{Rubble}
+		  , #{Gravel}
+		  , #{BridgeBrand}
+		  , #{Mason}
+		  , #{Backfilling}
+		  , #{Earthwork2}
+		  , #{Earthwork}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		);
+	</insert>
+	
+	<!-- 更新工程进度（过路过户涵工程数量表） -->
+	<update id="updatePassingThroughNumber" parameterType="com.curing.projectSchedule.model.PassingThroughNumberEntity">
+		UPDATE PassingThroughNumber 
+		SET
+		    CoreNumber = #{CoreNumber}
+		  , BridgeName = #{BridgeName}
+		  , SupportingC25Concrete = #{SupportingC25Concrete}
+		  , SupportingRebar = #{SupportingRebar}
+		  , AliformC15Concrete = #{AliformC15Concrete}
+		  , AliformM10Wall = #{AliformM10Wall}
+		  , AliformM10Basics = #{AliformM10Basics}
+		  , AliformM10Veneer = #{AliformM10Veneer}
+		  , RubblePaving = #{RubblePaving}
+		  , Rubble = #{Rubble}
+		  , Gravel = #{Gravel}
+		  , BridgeBrand = #{BridgeBrand}
+		  , Mason = #{Mason}
+		  , Backfilling = #{Backfilling}
+		  , Earthwork2 = #{Earthwork2}
+		  , Earthwork = #{Earthwork}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（过路过户涵工程数量表） -->
+	<update id="deletePassingThroughNumber" parameterType="com.curing.projectSchedule.model.PassingThroughNumberEntity">
+		UPDATE PassingThroughNumber
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+</mapper>

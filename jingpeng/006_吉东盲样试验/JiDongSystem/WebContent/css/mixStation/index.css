@@ -1,0 +1,265 @@
+/*header*/
+
+.top {
+	width: 100%;
+	min-width: 1280px;
+	height: 87px;
+	background: #104b8d;
+	border-bottom: 3px solid #01356f;
+}
+
+.top_index {
+	width: 100%;
+	height: 87px;
+	background: #104b8d;
+	border-bottom: 3px solid #01356f;
+}
+
+.topleft {
+	float: left;
+	font-size: 36px;
+	color: #FFF;
+	font-weight: bold;
+	padding-top: 22px;
+	padding-left: 50px;
+	text-shadow: 3px 0 5px #092062;
+}
+
+.topright {
+	float: right;
+	color: #FFF;
+	font-size: 14px;
+	padding-top: 50px;
+	padding-right: 50px;
+}
+
+.userid {
+	padding-left: 20px;
+	margin-right: 12px;
+	background: url(../../image/images/icon.png) no-repeat -18px -18px;
+}
+
+a.userid {
+	color: #8cc2ed;
+}
+
+.out {
+	padding-left: 20px;
+	margin-left: 20px;
+	color: #fff;
+	background: url(../../image/images/icon.png) no-repeat -16px -46px;
+}
+
+.shezhi {
+	padding-left: 20px;
+	margin-left: 20px;
+	color: #fff;
+	background: url(../../image/images/shezhi.png) no-repeat left center;
+}
+
+.out:hover,
+.shezhi:hover {
+	color: #fff;
+}
+
+.top_btn {
+	float: right;
+	margin-right: 0;
+}
+
+.lq_btn {
+	background: #206eb7;
+	/* border-bottom: 3px solid #01356f; */
+}
+
+.lq_btn,
+.sn_btn {
+	float: left;
+	display: block;
+	width: 120px;
+	height: 40px;
+	line-height: 40px;
+	margin-top: 30px;
+	text-align: center;
+	color: #fff;
+	position: relative;
+	border-radius: 3px;
+	/* border: 1px solid #4e8d98; */
+}
+
+.lq_btn a,
+.sn_btn a {
+	color: #fff;
+	display: block;
+}
+
+.sn_btn {
+	margin-left: 10px;
+	margin-right: 20px;
+}
+
+.hvr-bounce-to-top {
+	background: #206eb7;
+	display: inline-block;
+	vertical-align: middle;
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+	position: relative;
+	-webkit-transition-property: color;
+	transition-property: color;
+	-webkit-transition-duration: 0.5s;
+	transition-duration: 0.5s;
+}
+
+.focusbtn {
+	background: #289ef8;
+	border-radius: 3px;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+	text-decoration: none;
+}
+
+/*contain*/
+
+.contain {
+	width: 100%;
+	height: calc(100% - 137px);
+}
+
+/*左侧banner*/
+.leftbj {
+	background: url(../../image/images/navbj.jpg) repeat-y;
+	height: 100%;
+	margin-left: 0px;
+	overflow: auto;
+}
+
+.leftnav_g {
+	float: left;
+	width: 110px;
+	margin-top: 80px;
+	color: #fff;
+	position: absolute;
+}
+
+.leftnav_g ul {
+	padding: 0;
+	text-align: center;
+	margin-top: 25px;
+}
+
+.leftnav_g ul li {
+	width: 110px;
+	height: 85px;
+	margin: 20px 0;
+	position: relative;
+}
+
+.leftnav_g ul li a {
+	display: block;
+	padding-top: 35px;
+	color: #fff;
+	transition: 0.3s;
+}
+
+.leftnav_g ul li .nav1 {
+	background: url(../../image/images/t1.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav1:hover,
+.leftnav_g .focus_a {
+	color: #00fefb;
+	background: url(../../image/images/t11.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav2 {
+	background: url(../../image/images/t2.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav2:hover,
+.leftnav_g .focus_b {
+	color: #00fefb;
+	background: url(../../image/images/t22.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav3 {
+	background: url(../../image/images/t3.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav4 {
+	background: url(../../image/images/t4.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav3:hover,
+.leftnav_g .focus_c {
+	color: #00fefb;
+	background: url(../../image/images/t33.png) no-repeat center top;
+}
+
+.leftnav_g ul li .nav4:hover,
+.leftnav_g .focus_d {
+	color: #00fefb;
+	background: url(../../image/images/t44.png) no-repeat center top;
+}
+
+.leftnav_g .focus_a {
+	color: #00fefb;
+	background: url(../../image/images/t11.png) no-repeat center top;
+}
+
+
+.leftnav_g ul li .down {
+	position: absolute;
+	width: 120px;
+	background: #104b8d;
+	top: 0;
+	left: 100px;
+	display: none;
+	z-index: 1000;
+}
+
+.leftnav_g ul li:hover .down {
+	display: block;
+}
+
+.leftnav_g ul li .down a {
+	display: block;
+	color: #303030;
+	color: #fff;
+	padding: 10px 0;
+}
+
+.leftnav_g ul li .down a:hover,
+.leftnav_g ul li .down .click {
+	color: #00fefb;
+}
+
+/*footer*/
+
+.bottom {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	background: #ededed;
+	font-size: 12px;
+}
+
+.bottom a {
+	color: #555454;
+	padding: 0 10px;
+}
+
+.bottom a:hover {
+	color: #555454;
+}

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.map.MapDao">
+    <select id="getCarTrajectoryXY" parameterType="java.util.Map" resultType="com.oil.model.map.MapCar">
+		SELECT
+			t.id,
+			t.PlateNumber,
+			f.FleetName,
+			f.id as Fid,
+			v.CreaterDate,
+			t.ReturnState,
+			c.id as CarId,
+			v.GpsNumber,
+			cu.CoordinateX as EndAddressX,
+			cu.CoordinateY as EndAddressY,
+			v.coordinateX as coordinateX,
+			v.coordinateY as coordinateY
+		FROM
+			transportlist t
+		LEFT JOIN carInfo c ON t.PlateNumber = c.PlateNumber
+		LEFT JOIN fleetinfo f on c.FleetId = f.id
+		LEFT JOIN carsupervise v ON c.id = v.CarId
+		LEFT JOIN customertransports cu ON cu.Transports = t.EndAddress
+		where t.type != 2 and t.IsDel = 0 and t.IsMention != 1 and v.IsDel = 0
+		<if test="gpsNumber != null and gpsNumber != ''">
+		and v.gpsNumber = #{gpsNumber} 
+		</if>
+		<if test="userId != null and userId != ''">
+				and t.creater = #{userId}
+		</if>
+		<if test="fid != null and fid != ''">
+				and f.id = #{fid} 
+		</if>
+		<if test="carId!=null and carId!=''">
+		  	and c.id IN
+		  	<foreach collection="carId" item="item" index="index" open="(" separator="," close=")">
+				#{item}									 
+			</foreach>
+		</if>	
+			and v.CreaterDate >= t.OutgoingTime
+		and t.id in (
+			select 
+				MAX(t.id) 
+			from transportlist t 
+			LEFT JOIN carInfo c ON t.PlateNumber = c.PlateNumber
+			LEFT JOIN carsupervise v ON c.id = v.CarId where t.IsDel = 0 and v.IsDel = 0
+			GROUP BY v.GpsNumber
+			)
+		 
+		  ORDER BY t.id ,v.CreaterDate DESC;
+		
+	</select>
+	
+	<!-- 获取分组ID -->
+	<select id="getCarTrajectoryId"  parameterType="java.util.Map" resultType="com.oil.model.map.MapCar">
+				SELECT
+			t.id,
+			t.PlateNumber,
+			f.FleetName,
+			f.id as Fid,
+			v.CreaterDate
+		FROM
+			transportlist t
+		LEFT JOIN carInfo c ON t.PlateNumber = c.PlateNumber
+		LEFT JOIN fleetinfo f on c.FleetId = f.id
+		LEFT JOIN carsupervise v ON c.id = v.CarId
+		LEFT JOIN customertransports cu ON cu.Transports = t.EndAddress
+		where t.type != 2 and t.IsDel = 0 and t.IsMention != 1 and v.IsDel = 0
+		<if test="gpsNumber != null and gpsNumber != ''">
+		and v.gpsNumber = #{gpsNumber} 
+		</if>
+		<if test="userId != null and userId != ''">
+				and t.creater = #{userId}
+		</if>
+		<if test="fid != null and fid != ''">
+				and f.id = #{fid} 
+		</if>
+		<if test="carId!=null and carId!=''">
+		  	and c.id IN
+		  	<foreach collection="carId" item="item" index="index" open="(" separator="," close=")">
+				#{item}									 
+			</foreach>
+		</if>	
+			and v.CreaterDate >= t.OutgoingTime
+		and t.id in (
+			select 
+				MAX(t.id) 
+			from transportlist t 
+			LEFT JOIN carInfo c ON t.PlateNumber = c.PlateNumber
+			LEFT JOIN carsupervise v ON c.id = v.CarId where t.IsDel = 0 and v.IsDel = 0
+			GROUP BY v.GpsNumber
+			)
+			GROUP BY v.GpsNumber
+		  ORDER BY t.id ,v.CreaterDate DESC;
+	
+	</select>
+	
+	<!-- 车队,车辆查询 -->
+	<select id="getFleetCars" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			t.Id,
+			f.id as fid,
+			f.FleetName as fleetName,
+			c.id as cid,
+			c.PlateNumber as plateNumber
+		FROM	transportlist t
+		LEFT JOIN carinfo c
+		on c.PlateNumber = t.PlateNumber
+		LEFT JOIN fleetinfo f
+		on f.id = c.FleetId
+		where  1=1
+		<if test="fid != null and fid != ''">
+		  and f.id = #{fid} 
+		  group by c.PlateNumber
+		</if>
+		<if test="isSelectFleet == 1">
+		GROUP BY fid
+		</if>
+	</select>
+	
+	<select id="getCarPlateNumber" resultType="java.util.Map">
+			SELECT
+				PlateNumber,
+				Id
+			from carinfo 
+			where IsBinding = 1 and IsDel = 0
+	</select>
+	
+	<insert id="addCarsupervise" parameterType="java.util.Map">
+	
+		INSERT INTO carsupervise( 
+		    GpsNumber
+		  , CarId
+		  , coordinateX
+		  , coordinateY
+		  , CreaterDate
+		) 
+		VALUES ( 
+		    #{gpsNumber}
+		  , #{carId}
+		  , #{coordinateX}
+		  , #{coordinateY}
+		  , #{createrDate}
+		)
+	</insert>
+	<!-- 添加设备编号绑定 -->
+	<insert id="addPdacarinfo" parameterType="java.util.Map">
+	INSERT INTO pdacarinfo( 
+		    PlateNumber
+		  , GpsNumber
+		  ,	Creater
+		  , IsDel
+		  , CreaterDate
+		) 
+		VALUES ( 
+		    #{plateNumber}
+		  , #{gpsNumber}
+		  , #{creater}
+		  ,	0
+		  , NOW()
+		)
+	</insert>
+	<!-- 添加设备编号历史记录 -->
+	<insert id="addPdaCarInfoHistory" parameterType="java.util.Map">
+	INSERT INTO PdaCarInfoHistory( 
+		    PlateNumber
+		  , GpsNumber
+		  , IsDel
+		  ,	Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		    #{plateNumber}
+		  , #{gpsNumber}
+		  , 0
+		  , #{creater}
+		  , NOW()
+		)
+	</insert>
+	<!-- 修改设备绑定 -->
+	<update id="updatepdacarinfo" parameterType="java.util.Map">
+		UPDATE pdacarinfo 
+		SET
+		  	PlateNumber = #{plateNumber}
+		WHERE
+		  GpsNumber = #{gpsNumber}
+	</update>
+	
+	<!-- 修改车辆绑定GPS标识 -->
+	<update id="updateCarinfoIsBinding" parameterType="java.util.Map">
+		UPDATE carinfo 
+		SET
+		  	IsBinding = #{isBinding}
+		WHERE
+		  PlateNumber = #{plateNumber}
+	</update>
+	<!-- 删除绑定 -->
+	<update id="delPdacarinfo" parameterType="java.util.Map">
+		UPDATE pdacarinfo 
+		SET
+		   IsDel = 1
+		WHERE
+		  id = #{id}
+	</update>
+	<!-- 查询历史记录 -->
+	<select id="getPdaCarInfoHistory" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			Id as id,
+			PlateNumber as plateNumber,
+			GpsNumber as gpsNumber,
+			Creater   as creater,
+		    CreaterDate as createrDate
+		from PdaCarInfoHistory
+		where GpsNumber = #{gpsNumber} 
+		ORDER BY id DESC
+	</select>
+	
+		<!-- 删除更换车辆的GPS轨迹 -->
+	<update id="delCarsupervise" parameterType="java.util.Map">
+	 UPDATE carsupervise 
+		SET
+		   IsDel = 1
+		WHERE
+		  GpsNumber = #{gpsNumber} and CreaterDate &lt;  #{createrDate} 
+	</update>
+	
+	<!-- 查询当前设备编号信息 -->
+	<select id="getPdacarinfo" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			p.Id as id,
+			p.PlateNumber as plateNumber,
+			p.GpsNumber as gpsNumber,
+			p.Creater   as creater,
+		    p.CreaterDate as createrDate,
+			c.Id as cid
+		from pdacarinfo p
+		LEFT JOIN carinfo c
+			on c.PlateNumber = p.PlateNumber
+			where GpsNumber = #{gpsNumber} 
+	</select>
+	
+	<!-- 车辆GPS登陆验证  -->
+	<select id="GPSlogin" resultType="java.util.Map" parameterType="java.util.Map">
+		SELECT
+			UserName,
+			Id,
+			RoleCode
+		from pdauserinfo
+		where UserName= #{userName} and PassWord = #{passWord} 
+	</select>
+	
+	<select id="getCustomertransports" resultType="java.util.Map" parameterType="java.util.Map">
+		select 
+		Id as id ,
+		Transports as transports,
+		CoordinateX as coordinateX,
+		CoordinateY as coordinateY
+		from customertransports
+		where 1=1
+		<if test="id != null and id != ''">
+				and id = #{id} 
+		</if>
+	</select>
+</mapper>

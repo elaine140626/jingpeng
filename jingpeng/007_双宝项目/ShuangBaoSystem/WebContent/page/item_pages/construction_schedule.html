@@ -1,0 +1,190 @@
+<!--施工进度-->
+<script type="text/javascript" src="../../js/jquery-upload-file/js/jquery.uploadfile.js"></script>
+<script type="text/javascript" src="../../js/jquery-upload-file/ajaxfileupload.js"></script>
+<script src="../../js/HighwayPlatform/TestRoom/construction_schedule.js" type="text/javascript" charset="utf-8"></script>
+<form action="" method="get" class="sousuo"id="">
+	<label>施工单位：</label>
+	<select class="search_select" id="constructionOrgs">
+		<option value="">请选择</option>
+	</select>
+	<label>录入日期：</label>
+	<input type="text" size="20" class="search_input" id="startTime">
+	<label>--</label>
+	<input type="text" size="20" class="search_input" id="endTime">
+	<input id="select" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search()">
+	<input class="btncha" onclick="show2()" type="button" value="新增进度数据" style="float: right;">
+	<input class="btncha" data-toggle="modal" onclick="show1()" type="button" value="工程设计量维护" style="float: right; width:105px">
+</form>
+<div class="lq_main">
+	<div class="lq_biao">
+		 <table id="list" width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+			<thead>
+				<tr>
+					<th width="10%" class="xh" scope="col">序号</th>
+					<th width="25%" scope="col">操作</th>
+					<th width="15%" scope="col">标段名称</th>
+					<th width="15%" scope="col">录入人</th>
+					<th width="20%" scope="col">录入时间</th>
+					<th width="15%" scope="col">是否已上传图片</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<div class="modal fade" id="Modal1" >
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>工程设计量维护</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt3" style="padding: 0 20px;">
+				<form id="addForm" method="post">
+					<div style="margin:10px">
+						<label>施工单位：</label>
+						<select id="uniqueIdentifier" name="uniqueIdentifier" class="search_select" onchange="changeUniqueIdentifier()">
+							<!-- <option value="SA1" selected="selected">A1标段试验室</option>
+							<option value="SA2">A2标段试验室</option>
+							<option value="SA3">A3标段试验室</option>
+							<option value="SA4">A4标段试验室</option> -->
+						</select>
+					</div>
+					<table style="text-align:center" width="100%" border="1" cellpadding="0" cellspacing="0" class="fazhi">
+						<tr>
+							<th width="20%" scope="col">序号</th>
+							<th width="40%" colspan="2" scope="col">结构名称</th>
+							<th width="20%" scope="col">设计量</th>
+							<th width="20%" scope="col">单位</th>
+						</tr>
+						<tr>
+							<td rowspan="3">1</td>
+							<td rowspan="3">路基</td>
+							<td>填方</td>
+							<td><input type="text" onchange="getSubgrade_Total()" id="subgrade_Fill" name="subgrade_Fill" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="subgrade_FillUnit" name="subgrade_FillUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>挖方</td>
+							<td><input type="text" onchange="getSubgrade_Total()"  id="subgrade_Excavation" name="subgrade_Excavation" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="subgrade_ExcavationUnit" name="subgrade_ExcavationUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>总量</td>
+							<td><input type="text" readonly="readonly" id="subgrade_Total" name="subgrade_Total" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="subgrade_TotalUnit" name="subgrade_TotalUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td rowspan="2">2</td>
+							<td rowspan="2">垫层</td>
+							<td>左幅</td>
+							<td><input type="text" id="cushion_LeftAmplitude" name="cushion_LeftAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="cushion_LeftAmplitudeUnit" name="cushion_LeftAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>右幅</td>
+							<td><input type="text" id="cushion_RightAmplitude" name="cushion_RightAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="cushion_RightAmplitudeUnit" name="cushion_RightAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td rowspan="2">3</td>
+							<td rowspan="2">底基层</td>
+							<td>左幅</td>
+							<td><input type="text" id="subbase_LeftAmplitude" name="subbase_LeftAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="subbase_LeftAmplitudeUnit" name="subbase_LeftAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>右幅</td>
+							<td><input type="text" id="subbase_RightAmplitude" name="subbase_RightAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="subbase_RightAmplitudeUnit" name="subbase_RightAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td rowspan="2">4</td>
+							<td rowspan="2">基层</td>
+							<td>左幅</td>
+							<td><input type="text" id="substrate_LeftAmplitude" name="substrate_LeftAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="substrate_LeftAmplitudeUnit" name="substrate_LeftAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>右幅</td>
+							<td><input type="text" id="substrate_RightAmplitude" name="substrate_RightAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="substrate_RightAmplitudeUnit" name="substrate_RightAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td rowspan="2">5</td>
+							<td rowspan="2">下面层</td>
+							<td>左幅</td>
+							<td><input type="text" id="lowerLayer_LeftAmplitude" name="lowerLayer_LeftAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="lowerLayer_LeftAmplitudeUnit" name="lowerLayer_LeftAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>右幅</td>
+							<td><input type="text" id="lowerLayer_RightAmplitude" name="lowerLayer_RightAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="lowerLayer_RightAmplitudeUnit" name="lowerLayer_RightAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td rowspan="2">6</td>
+							<td rowspan="2">中面层</td>
+							<td>左幅</td>
+							<td><input type="text" id="mesosphere_LeftAmplitude" name="mesosphere_LeftAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="mesosphere_LeftAmplitudeUnit" name="mesosphere_LeftAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>右幅</td>
+							<td><input type="text" id="mesosphere_RightAmplitude" name="mesosphere_RightAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="mesosphere_RightAmplitudeUnit" name="mesosphere_RightAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td rowspan="2">7</td>
+							<td rowspan="2">上面层</td>
+							<td>左幅</td>
+							<td><input type="text" id="upperLayer_LeftAmplitude" name="upperLayer_LeftAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="upperLayer_LeftAmplitudeUnit" name="upperLayer_LeftAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+						<tr>
+							<td>右幅</td>
+							<td><input type="text" id="upperLayer_RightAmplitude" name="upperLayer_RightAmplitude" style="width:70%" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)"></td>
+							<td><input type="text" id="upperLayer_RightAmplitudeUnit" name="upperLayer_RightAmplitudeUnit" style="width:70%" value="m³"></td>
+						</tr>
+					</table>
+					<div style="text-align:center;margin:10px">
+						<input class="btncha" type="button" value="保存" onclick="save()">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="Modal2" >
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>图片上传</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt3" style="padding: 20px;">
+				<input type="file" id="myBlogImage"  multiple="multiple" name="myfiles"/>
+				<div style="text-align:center;margin:10px">
+					<input class="btncha" type="button" value="保存" id="saveImg" onclick="uploadImg()">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+     jeDate({
+         dateCell:"#startTime",
+         format:"YYYY-MM-DD",
+         isinitVal:false,
+         isTime:true, 
+	   	 isClear:false,
+     })
+    jeDate({
+        dateCell:"#endTime",
+        format:"YYYY-MM-DD",
+        isinitVal:false,
+        isTime:true,
+        isClear:false,
+    })
+</script>

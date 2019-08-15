@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.dispath.InstroeDao">
+	<!-- 根据用户名称获取对应的销售合同 -->
+	<select id="getSalesContractList" parameterType="java.util.Map"
+		resultType="SalesContractEntity">
+		SELECT DISTINCT * from(
+			SELECT
+			s.Id as id -- 入库单id
+			, s.ContractId as contractId -- 销售合同id
+			, c.ContractNumber as contractNumber -- 合同编号
+			, CONCAT(pi.Province,'-',ci.CityName,'-',cus.CustomerName) as customerName -- 客户名称
+			from
+			storagemeasure s -- 调度入库表
+			left join contractinfo c -- 合同信息表
+			on s.ContractId = c.Id -- 合同id
+			and c.IsDel = 0
+			left join customerinfo as cus -- 客户信息表
+			on c.CustomerId = cus.Id
+			left join userinfo as ui
+			on c.UserInfoId = ui.Id
+			left join cityinfo as ci
+			on cus.CityId = ci.Id
+			left join provinceinfo as pi
+			on ci.ProvinceId = pi.Id
+			where
+			1 = 1
+			and c.IsDel = 0
+			AND s.IsDel = 0
+		<if test="keyword != null and keyword != ''">
+			and (c.ContractNumber like concat('%',#{keyword},'%') or c.ContractName
+			like concat('%',#{keyword},'%'))
+		</if>
+		-- GROUP BY c.ContractNumber
+			UNION
+			SELECT
+			s.Id as id -- 入库单id
+			, s.ContractId as contractId -- 销售合同id
+			, c.ContractNumber as contractNumber -- 合同编号
+			, CONCAT(pi.Province,'-',ci.CityName,'-',cus.CustomerName) as customerName -- 客户名称
+			from
+			storagemeasure s -- 调度入库表
+			left join contractinfo c -- 合同信息表
+			on s.ContractId = c.Id -- 合同id
+			and c.IsDel = 0
+			left join customerinfo as cus -- 客户信息表
+			on c.CustomerId = cus.Id
+			left join userinfo as ui
+			on c.UserInfoId = ui.Id
+			left join cityinfo as ci
+			on cus.CityId = ci.Id
+			left join provinceinfo as pi
+			on ci.ProvinceId = pi.Id
+			where
+			1 = 1
+			and c.IsDel = 0
+			AND s.IsDel = 0
+		<if test="keyword != null and keyword != ''">
+			and (c.ContractNumber like concat('%',#{keyword},'%') or c.ContractName
+			like concat('%',#{keyword},'%'))
+		</if>
+		-- GROUP BY customerName
+		) t ORDER BY t.customerName
+	</select>
+
+	<select id="getStoragemeasure" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select
+		c.Id as id -- 入库单id
+		, CONCAT(pi.Province,'-',ci.CityName,'-',cus.CustomerName) as customerName -- 客户名称
+		from
+		storagemeasure s -- 调度入库表
+		left join contractinfo c -- 合同信息表
+		on s.ContractId = c.Id -- 合同id
+		and c.IsDel = 0
+		left join customerinfo as cus -- 客户信息表
+		on c.CustomerId = cus.Id
+		left join userinfo as ui
+		on c.UserInfoId = ui.Id
+		left join cityinfo as ci
+		on cus.CityId = ci.Id
+		left join provinceinfo as pi
+		on ci.ProvinceId = pi.Id
+		where
+		1 = 1
+		and c.IsDel = 0
+		AND s.IsDel = 0
+		ORDER BY customerName
+	</select>
+
+	<select id="getSalesContractLists" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select
+		s.ContractId as contractId -- 销售合同id
+		, c.ContractNumber as contractNumber -- 合同编号
+		from
+		storagemeasure s -- 调度入库表
+		left join contractinfo c -- 合同信息表
+		on s.ContractId = c.Id -- 合同id
+		and c.IsDel = 0
+		where
+		c.Id = #{contractId}
+		and c.IsDel = 0
+		AND s.IsDel = 0
+		ORDER BY c.ContractNumber
+	</select>
+	<!-- 获取调度单已有车牌号 -->
+	<select id="getPlateNumberList" parameterType="java.util.Map"
+		resultType="String">
+		select distinct s.PlateNumber from storagemeasure s where s.IsDel = 0 -- 调度出库表
+	</select>
+	<!-- 获取页面list信息 -->
+	<select id="getInfoList" parameterType="java.util.Map"
+		resultType="InstroeEntity">
+		SELECT * FROM (
+		SELECT
+		s.Id as id -- id
+		, s.SerialID as serialID -- 流水号
+		, s.ContractId as contractId -- 销售合同id
+		, IFNULL(CONCAT(pi.Province,'-',ci.CityName,'-',cus.CustomerName), "") as client -- 客户名称
+		, IFNULL(s.CustomerAlias, "") as customerAlias -- 客户别称
+		, s.ProductID as productID -- 物料id
+		, m.MaterielName as materielName -- 物料名称
+		, m.MaterielModel as materielModel -- 规格型号
+		, s.PlateNumber as plateNumber -- 车牌号码
+		, s.DeliveryMan as deliveryMan -- 送货人
+		, s.DeliveryManPhone as deliveryManPhone -- 送货电话
+		, s.CarOwner as carOwner -- 车主
+		, s.CarOwnerTelephone as carOwnerTelephone -- 车主电话
+		, s.Remarks as remarks -- 备注
+		, s.PurchaseContractId as purchaseContractId -- 采购合同id
+		, s.Amount as amount -- 数量
+		, s.Priority as priority -- 优先级 0正常/ 1 优先
+		, s.EnterTypeMark as enterTypeMark -- 入库单类型标识 0：入库单 1：未入厂出库单对应的入库单 2:来料加工 3：退货
+		, s.ValidFlag as validFlag -- 有效标识/0无效/1有效
+		, s.CartWeighType as cartWeighType -- 是否大车称重
+		, s.IsExamine as isExamine -- 是否审核合格 0:是 1:否
+		, s.EnterDate as enterDate -- 入厂时间
+		, c.ContractNumber as contractNumber -- 销售合同编号
+		, p.SerialID as billNumber -- 采购合同编号
+		, s.CancellationCause as cancellationCause -- 作废原因
+		, s.Creater as creater -- 创建人
+		, s.StartAddressId as startAddressId -- 起运地Id
+		, s.SupplierDeviation as supplierDeviation -- 供应物料允许偏差
+		, s.Suttle as suttle -- 净重
+		, s.TareWeight as tareWeight -- 皮重
+		, s.GrossWeight as grossWeight -- 毛重
+		, sta.StartAddress as startAddress -- 起运地点
+		FROM
+		storagemeasure s -- 调度入库单
+		left join contractinfo c -- 合同信息表
+		on s.ContractId = c.Id -- 销售合同id
+		and c.IsDel = 0
+		left join customerinfo as cus -- 客户信息表
+		on c.CustomerId = cus.Id
+		left join userinfo as ui
+		on c.UserInfoId = ui.Id
+		left join cityinfo as ci
+		on cus.CityId = ci.Id
+		left join provinceinfo as pi
+		on ci.ProvinceId = pi.Id
+		left join purchasecontract p -- 采购合同
+		on s.PurchaseContractId = p.Id -- 采购合同id
+		and p.IsDel = 0
+		left join materielinfo m -- 物料信息表
+		on s.ProductID = m.Id -- 物料id
+		and m.IsDel = 0
+		LEFT JOIN
+		startaddress sta ON s.StartAddressId = sta.Id
+		AND sta.IsDel = 0
+		where
+		s.IsDel = 0
+		<if test="id != null and id != 0">
+			and s.Id = #{id}
+		</if>
+		<if test="type != null and type != ''">
+			AND <![CDATA[s.RealityDeviation > s.SupplierDeviation]]>
+			AND s.IsExamine is null
+		</if>
+		<if test="contractNumber != null and contractNumber != ''">
+			and c.ContractNumber = #{contractNumber}
+		</if>
+		<if test="plateNumber != null and plateNumber != ''">
+			and s.PlateNumber = #{plateNumber}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			and <![CDATA[ DATE_FORMAT(s.EnterDate, '%Y-%m-%d') >=  #{startTime}  ]]>
+		</if>
+		<if test="endTime != null and endTime != ''">
+			and <![CDATA[ DATE_FORMAT(s.EnterDate, '%Y-%m-%d') <=  #{endTime}  ]]>
+		</if>
+		<if test="contractId != null and contractId != 0">
+			and s.ContractId = #{contractId}
+		</if>
+		<if test="plateNumbers != null and plateNumbers != ''">
+			and s.PlateNumber like concat('%',#{plateNumbers},'%')
+		</if>
+		<if test="materielType != null and materielType != ''">
+			AND s.ProductID IN (SELECT Id FROM materielinfo WHERE MaterielType =
+			#{materielType})
+		</if>
+		order by s.Id desc
+		) t
+		WHERE 1=1
+		<if test="client != null and client != ''">
+			and t.client = #{client}
+		</if>
+	</select>
+	<!-- 入库单作废或者删除 -->
+	<update id="updateValidFlag" parameterType="java.util.Map">
+		UPDATE storagemeasure
+		SET
+		<if test="flag == 0">
+			ValidFlag = 0
+		</if>
+		<if test="flag == 1">
+			IsDel = 1
+		</if>
+		, Reviser = #{userId}
+		<if test="cancellationCause != null and cancellationCause != ''">
+			, CancellationCause = #{cancellationCause}
+		</if>
+		, ReviserDate = now()
+		WHERE
+		1=1
+		<if test="id != null and id != 0">
+			and Id = #{id}
+		</if>
+		<if test="outWarehouseId != null and outWarehouseId != 0">
+			and OutWarehouseId = #{outWarehouseId}
+		</if>
+	</update>
+	<!-- 新增入库单信息 -->
+	<insert id="addImportMeasure" parameterType="InstroeEntity">
+		INSERT
+		INTO storagemeasure(
+		SerialID -- 流水号
+		, ContractId -- 销售合同id
+		, Client -- 客户名称
+		, CustomerAlias -- 客户别称
+		, ProductID -- 物料id
+		, PlateNumber -- 车牌号码
+		, DeliveryMan -- 送货人
+		, DeliveryManPhone -- 送货人电话
+		, CarOwner -- 车主
+		, CarOwnerTelephone -- 车主电话
+		, Remarks -- 备注
+		, PurchaseContractId -- 采购合同
+		, SupplierId -- 供应商id
+		, SupplierSuttle -- 实际净重
+		, Suttle -- 净重
+		, Amount -- 数量
+		, OutWarehouseId -- 出库单id
+		, Priority -- 优先级
+		, EnterTypeMark -- 入库单标识
+		, CartWeighType -- 是否大车称重
+		, ValidFlag -- 有效标识
+		, IsDel -- 删除标识
+		, Creater -- 创建人
+		, CreaterDate -- 创建时间
+		, StartAddressId -- 创建时间
+		, SupplierDeviation -- 创建时间
+		<if test="orderDetailedId != null and orderDetailedId != ''">
+			, OrderDetailedId -- 销售订单明细id
+		</if>
+		)
+		VALUES (
+		#{serialID}
+		, #{contractId}
+		, #{client}
+		, #{customerAlias}
+		, #{productID}
+		, #{plateNumber}
+		, #{deliveryMan}
+		, #{deliveryManPhone}
+		, #{carOwner}
+		, #{carOwnerTelephone}
+		, #{remarks}
+		, #{purchaseContractId}
+		, #{supplierId}
+		, #{supplierSuttle}
+		, #{suttle}
+		, #{amount}
+		, #{outWarehouseId}
+		, #{priority}
+		, #{enterTypeMark}
+		, #{cartWeighType}
+		, #{validFlag}
+		, 0
+		, #{creater}
+		, now()
+		, #{StartAddressId}
+		, #{SupplierDeviation}
+		<if test="orderDetailedId != null and orderDetailedId != ''">
+			, #{orderDetailedId}
+		</if>
+		);
+	</insert>
+	<!-- 更新入库单信息 -->
+	<update id="updateImportMeasure" parameterType="InstroeEntity">
+		UPDATE storagemeasure
+		SET
+		CustomerAlias = #{customerAlias} -- 客户别称
+		, ProductID = #{productID} -- 物料id
+		, PlateNumber = #{plateNumber} -- 车牌号码
+		, DeliveryMan = #{deliveryMan} -- 送货人
+		, DeliveryManPhone = #{deliveryManPhone} -- 送货人电话
+		, CarOwner = #{carOwner} -- 车主
+		, CarOwnerTelephone = #{carOwnerTelephone} -- 车主电话
+		, Remarks = #{remarks} -- 备注
+		, Amount = #{amount} -- 数量
+		, Priority = #{priority} -- 优先级
+		, CartWeighType = #{cartWeighType} -- 是否大车称重
+		<if test="purchaseContractId != null and purchaseContractId != 0">
+			, PurchaseContractId = #{purchaseContractId} -- 采购合同
+		</if>
+		, Reviser = #{reviser} -- 修改人
+		, ReviserDate = now() -- 修改时间
+		, StartAddressId = #{startAddressId} -- 修改时间
+		, SupplierDeviation = #{supplierDeviation} -- 修改时间
+		WHERE
+		1=1
+		<if test="id != null and id != 0">
+			and Id = #{id}
+		</if>
+		<if test="outWarehouseId != null and outWarehouseId != 0">
+			and OutWarehouseId = #{outWarehouseId}
+		</if>
+	</update>
+	<!-- 销售合同信息 -->
+	<select id="getContractList" parameterType="java.util.Map"
+		resultType="ContractEntity">
+		SELECT
+		c.Id as id -- 合同id
+		, c.ContractNumber as contractNumber -- 合同编号
+		, c.ContractName as contractName -- 合同名称
+		, c.CustomerId as customerId -- 客户id
+		, CONCAT(pi.Province,'-',ci.CityName,'-',cus.CustomerName) as customerName -- 客户名称
+		, c.SaleNumber as saleNumber -- 销售数量
+		, c.ContractState as contractState -- 合同状态
+		, c.UserInfoId as userInfoId -- 销售员id
+		, s.CompanyName as salesCompanyName -- 销售公司名称
+		, DATE_FORMAT(c.ContractDate, '%Y-%m-%d') as contractDate -- 合同日期
+		, c.Remarks as remarks -- 备注
+		, c.ContractRoute as contractRoute -- 合同路径
+		, case when c.IsIncoming = 0 then "是" else "否" end as isIncoming -- 是否来料加工
+		FROM
+		contractinfo c
+		left join customerinfo t
+		on t.Id = c.CustomerId
+		and t.IsDel = 0
+		left join customerinfo as cus -- 客户信息表
+		on c.CustomerId = cus.Id
+		left join userinfo as ui
+		on c.UserInfoId = ui.Id
+		left join cityinfo as ci
+		on cus.CityId = ci.Id
+		left join provinceinfo as pi
+		on ci.ProvinceId = pi.Id
+		left join salecompany s
+		on s.Id = c.SalesCompanyId
+		and s.IsDel = 0
+		WHERE
+		c.IsDel = 0
+		<if test="id != null and id != 0">
+			and c.Id = #{id}
+		</if>
+	</select>
+	<!-- 获取无法选中的车辆信息 -->
+	<select id="queryCarInUse" resultType="map">
+		SELECT
+		DISTINCT sm.PlateNumber
+		FROM
+		storagemeasure as sm -- 调度入库单
+		where
+		sm.ValidFlag = 1
+		and sm.EnterTypeMark != 1
+		and sm.WeighType = '1'
+		and sm.Suttle is null
+		and sm.IsDel = 0
+		union
+		SELECT
+		DISTINCT em.PlateNumber
+		FROM
+		exportmeasure as em -- 调度出库单
+		where
+		em.ValidFlag = 1
+		and em.WeighType = '1'
+		and em.OutTypeMark = 0
+		and em.OutType IN (0,1,3,4,5)
+		and em.Suttle is null
+		and em.IsDel = 0
+	</select>
+	<select id="queryBillNumber" parameterType="java.util.Map"
+		resultType="map">
+		select * from transportlist where SerialID = #{serialID} AND IsDel = 0
+	</select>
+	<update id="updateInBoundWeight" parameterType="map">
+		UPDATE storagemeasure set GrossWeight = #{grossWeight}, Suttle = #{sullte},
+		TareWeight = #{tareWeight}, EnterDate = #{factoryTime} WHERE Id = #{id}
+	</update>
+	<select id="getInBoundWeight" parameterType="map"
+		resultType="map">
+		SELECT
+		GrossWeight,
+		Suttle,
+		TareWeight,
+		DATE_FORMAT(EnterDate,'%Y-%m-%d') FactoryTime
+		FROM
+		storagemeasure
+		WHERE
+		Id = #{id}
+	</select>
+	<update id="updateExamine" parameterType="map">
+		UPDATE storagemeasure
+		SET
+		IsExamine = #{isExamine}
+		WHERE
+		Id = #{id}
+	</update>
+
+</mapper>

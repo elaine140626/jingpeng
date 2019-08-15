@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.CrossingPillarDao">
+	<!-- 工程进度（道口标柱设置一览表）List取得 -->
+	<select id="getCrossingPillarList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.CrossingPillarEntity">
+		SELECT
+		  cp.Id
+		  , cp.ProjectId                             -- 项目id
+		  , cp.CoreNumber                                -- 设置位置中心桩号
+		  , cp.AcrossForm                                -- 交叉形式
+		  , cp.AcrossLeft                                -- 被交叉道路宽度左
+		  , cp.AcrossRight                               -- 被交叉道路宽度右
+		  , cp.Amount                                    -- 应设数量（个）
+		  , cp.Remarks                                   -- 备注
+		  , cp.IsDel
+		  , cp.Creater
+		  , cp.CreaterDate
+		  , cp.Reviser
+		  , cp.ReviserDate 
+		FROM
+		  CrossingPillar as cp 
+		  left join V_EntryTree as ve 
+		    on cp.ProjectId = ve.pid 
+		WHERE
+		  cp.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and cp.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and cp.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and cp.coreNumber like concat('%',#{coreNumber},'%') -- 根据中心桩号查询
+		  </if>
+		  <if test="acrossForm!=null and acrossForm!=''">
+		    and cp.acrossForm like concat('%',#{acrossForm},'%') -- 根据交叉形式查询
+		  </if>
+		   order by cp.CreaterDate desc
+	</select>
+	
+		<select id="getCrossingPillarListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  cp.CoreNumber                                -- 设置位置中心桩号
+		  , cp.AcrossForm                                -- 交叉形式
+		  , cp.AcrossLeft                                -- 被交叉道路宽度左
+		  , cp.AcrossRight                               -- 被交叉道路宽度右
+		  , cp.Amount                                    -- 应设数量（个）
+		  , cp.Remarks                                   -- 备注
+		FROM
+		  CrossingPillar as cp 
+		  left join V_EntryTree as ve 
+		    on cp.ProjectId = ve.pid 
+		WHERE
+		  cp.IsDel = 0
+		   order by cp.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（道口标柱设置一览表）合计 -->
+	<select id="getCrossingPillarSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.CrossingPillarSum">
+		SELECT
+		  sum(cp.AcrossLeft)     as AcrossLeftSum          -- 被交叉道路宽度左
+		  , sum(cp.AcrossRight)  as AcrossRightSum         -- 被交叉道路宽度右
+		  , sum(cp.Amount)       as AmountSum              -- 应设数量（个）
+		FROM
+		  CrossingPillar as cp 
+		  left join V_EntryTree as ve 
+		    on cp.ProjectId = ve.pid
+		WHERE
+		  cp.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and cp.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and cp.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and cp.coreNumber like concat('%',#{coreNumber},'%') -- 根据中心桩号查询
+		  </if>
+		  <if test="acrossForm!=null and acrossForm!=''">
+		    and cp.acrossForm like concat('%',#{acrossForm},'%') -- 根据交叉形式查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（道口标柱设置一览表） -->
+	<insert id="insertCrossingPillar" parameterType="com.curing.projectSchedule.model.CrossingPillarEntity">
+		INSERT 
+		INTO CrossingPillar ( 
+			Id
+		  , ProjectId
+		  , CoreNumber
+		  , AcrossForm
+		  , AcrossLeft
+		  , AcrossRight
+		  , Amount
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{CoreNumber}
+		  , #{AcrossForm}
+		  , #{AcrossLeft}
+		  , #{AcrossRight}
+		  , #{Amount}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		); 
+	</insert>
+	
+	<!-- 更新工程进度（道口标柱设置一览表） -->
+	<update id="updateCrossingPillar" parameterType="com.curing.projectSchedule.model.CrossingPillarEntity">
+		UPDATE CrossingPillar 
+		SET
+		    CoreNumber = #{CoreNumber}
+		  , AcrossForm = #{AcrossForm}
+		  , AcrossLeft = #{AcrossLeft}
+		  , AcrossRight = #{AcrossRight}
+		  , Amount = #{Amount}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（道口标柱设置一览表） -->
+	<update id="deleteCrossingPillar" parameterType="com.curing.projectSchedule.model.CrossingPillarEntity">
+		UPDATE CrossingPillar 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

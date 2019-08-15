@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.MarkingLineNumberDao">
+	<!-- 工程进度（标线工程数量表）List取得 -->
+	<select id="getMarkingLineNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.MarkingLineNumberEntity">
+		SELECT
+		  mln.Id
+		  , mln.ProjectId                                 -- 项目id
+		  , mln.ProjectType                               -- 项目分类
+		  , mln.ProjectName                               -- 项目名称
+		  , mln.MarkingMaterial                           -- 标线材料
+		  , getContentByCode('bxgcsl', mln.MarkingMaterial) as MarkingMaterialName -- 标线材料名
+		  , mln.MarkingType                               -- 标线类型
+		  , mln.Spec                                      -- 规格
+		  , mln.Unit                                      -- 单位
+		  , mln.Amount                                    -- 数量
+		  , mln.RealLength                                -- 实段长度
+		  , mln.EmptyLength                               -- 虚段长度
+		  , mln.SolidLineLength                           -- 实线长度
+		  , mln.SolidLineArea                             -- 实线面积
+		  , mln.Remarks                                   -- 备注
+		  , mln.IsDel
+		  , mln.Creater
+		  , mln.CreaterDate
+		  , mln.Reviser
+		  , mln.ReviserDate 
+		FROM
+		  MarkingLineNumber as mln 
+		  left join V_EntryTree as ve 
+		    on mln.ProjectId = ve.pid
+		WHERE
+		  mln.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and mln.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and mln.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="projectType!=null and projectType!=''">
+		    and mln.projectType like concat('%',#{projectType},'%') -- 根据项目分类查询
+		  </if>
+		  <if test="projectName!=null and projectName!=''">
+		    and mln.projectName like concat('%',#{projectName},'%') -- 根据项目名称查询
+		  </if>
+		  <if test="markingMaterial!=null and markingMaterial!=''">
+		    and mln.markingMaterial like concat('%',#{markingMaterial},'%') -- 根据材料标线查询
+		  </if>
+		  <if test="markingType!=null and markingType!=''">
+		    and mln.markingType like concat('%',#{markingType},'%') -- 根据标线线型查询
+		  </if> 
+		  order by mln.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（标线工程数量表）合计 -->
+	<select id="getMarkingLineNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.MarkingLineNumberSum">
+		SELECT
+		  sum(mln.Spec) as SpecSum                        -- 规格
+		  , sum(mln.Amount) as AmountSum                  -- 数量
+		  , sum(mln.RealLength) as RealLengthSum          -- 实段长度
+		  , sum(mln.EmptyLength) as EmptyLengthSum        -- 虚段长度
+		  , sum(mln.SolidLineLength) as SolidLineLengthSum -- 实线长度
+		  , sum(mln.SolidLineArea) as SolidLineAreaSum    -- 实线面积
+		FROM
+		  MarkingLineNumber as mln 
+		  left join V_EntryTree as ve 
+		    on mln.ProjectId = ve.pid
+		WHERE
+		  mln.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and mln.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and mln.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="projectType!=null and projectType!=''">
+		    and mln.projectType like concat('%',#{projectType},'%') -- 根据项目分类查询
+		  </if>
+		  <if test="projectName!=null and projectName!=''">
+		    and mln.projectName like concat('%',#{projectName},'%') -- 根据项目名称查询
+		  </if>
+		  <if test="markingMaterial!=null and markingMaterial!=''">
+		    and mln.markingMaterial like concat('%',#{markingMaterial},'%') -- 根据材料标线查询
+		  </if>
+		  <if test="markingType!=null and markingType!=''">
+		    and mln.markingType like concat('%',#{markingType},'%') -- 根据标线线型查询
+		  </if> 
+	</select>
+	
+	<!-- 新增工程进度（标线工程数量表） -->
+	<insert id="insertMarkingLineNumber" parameterType="com.curing.projectSchedule.model.MarkingLineNumberEntity">
+		INSERT 
+		INTO MarkingLineNumber( 
+			Id
+		  , ProjectId
+		  , ProjectType
+		  , ProjectName
+		  , MarkingMaterial
+		  , MarkingType
+		  , Spec
+		  , Unit
+		  , Amount
+		  , RealLength
+		  , EmptyLength
+		  , SolidLineLength
+		  , SolidLineArea
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{ProjectType}
+		  , #{ProjectName}
+		  , #{MarkingMaterial}
+		  , #{MarkingType}
+		  , #{Spec}
+		  , #{Unit}
+		  , #{Amount}
+		  , #{RealLength}
+		  , #{EmptyLength}
+		  , #{SolidLineLength}
+		  , #{SolidLineArea}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（标线工程数量表） -->
+	<update id="updateMarkingLineNumber" parameterType="com.curing.projectSchedule.model.MarkingLineNumberEntity">
+		UPDATE MarkingLineNumber 
+		SET
+		  ProjectType = #{ProjectType}
+		  , ProjectName = #{ProjectName}
+		  , MarkingMaterial = #{MarkingMaterial}
+		  , MarkingType = #{MarkingType}
+		  , Spec = #{Spec}
+		  , Unit = #{Unit}
+		  , Amount = #{Amount}
+		  , RealLength = #{RealLength}
+		  , EmptyLength = #{EmptyLength}
+		  , SolidLineLength = #{SolidLineLength}
+		  , SolidLineArea = #{SolidLineArea}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（标线工程数量表） -->
+	<update id="deleteMarkingLineNumber" parameterType="com.curing.projectSchedule.model.MarkingLineNumberEntity">
+		UPDATE MarkingLineNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

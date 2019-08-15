@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+	content="Interior-Design-Responsive-Website-Templates-Edge">
+<title>绥化市公路智慧管理平台</title>
+<link rel="stylesheet" href="../css/common/bootstrap.min.css">
+<link rel="stylesheet" href="../css/common/sweet-alert.css">
+<link rel="favicon" href="../image/images/icon.ico">
+<link rel="favicon" href="../image/images/favicon.png">
+<link rel="stylesheet" href="../css/common/font-awesome.min.css">
+<link rel="stylesheet" href="../css/common/bootstrap-theme.css" media="screen">
+<link rel="stylesheet" href="../css/common/swiper.min.css">
+<link rel="stylesheet" href="../css/common/index.css">
+<script type="text/javascript" src="../js/common/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../js/common/swiper.min.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/HighwayPlatform/index.js"></script>
+<script type="text/javascript" src="../js/sweet-alert.min.js"></script>
+
+</head>
+
+<style type="text/css">
+.modal-dialog {
+	width: 300px;
+	margin: 30px auto;
+}
+
+.modal {
+	position: absolute;
+	top: 250px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 1050;
+	display: none;
+	overflow: hidden;
+	-webkit-overflow-scrolling: touch;
+	outline: 0;
+}
+
+.tan_dx_title {
+	border-top-left-radius: 6px;
+	border-top-right-radius: 6px;
+}
+
+.tan_dx_title h3 {
+	color: #fff;
+}
+
+.tan_dx_txt {
+	padding: 10px 20px;
+}
+</style>
+</head>
+
+<body>
+	<!-- header -->
+	<div class="container header">
+		<div class="col-lg-5">
+			<div class="navbar-header logo_hei">绥化市公路智慧管理平台</div>
+		</div>
+		<div class="yonghu col-lg-7" style="float: right;">
+			<a href="../page/centerLogin/user.html"><span></span>用户注册</a> <a
+				href="../page/centerLogin/userinfo.html"><span></span>用户管理</a> <a href="javascript:;" onclick="outLogin()"><span></span>安全退出</a>
+		</div>
+	</div>
+
+	<!-- banner -->
+	<header id="head">
+		<div class="fluid_container">
+			<div class="swiper-container" id="swiper1">
+			</div>
+
+		</div>
+	</header>
+
+	<section class="container">
+		<div class="row" id="testOrMixBlock">
+		</div>
+	</section>                                                       
+	<section class="news-box top-margin" style="background: #F5F5F5">
+		<div class="container">
+			<div class="row" id="index_block">
+				
+			</div>
+	</section>
+	<section class="aboutUs">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 index_pic">
+					
+				</div>
+				<div class="col-md-6 about_p">
+					
+				</div>
+			</div>
+
+		</div>
+	</section>
+
+	<footer id="footer">
+		<div class="footer2">Copyright &copy; 2018.Company name All
+			rights reserved.More Templates 京澎科技</div>
+	</footer>
+	<script>
+		
+	</script>
+</body>
+
+</html>

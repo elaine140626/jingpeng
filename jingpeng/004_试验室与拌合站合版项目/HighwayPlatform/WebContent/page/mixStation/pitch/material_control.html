@@ -1,0 +1,154 @@
+<!-- 沥青原材料管理 -->
+<script src="../../js/mixStation/pitch/material_control.js" type="text/javascript" charset="utf-8"></script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：<span id="location"></span>（<span class="banhez" id="locationText"></span>） &gt; 原材料管理</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<!-- <div class="shu_btn">
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+				<div class="dtree_Tree">
+					<div class="dTreeNode rootNode">
+						<a>吉东公路盲样试验室</a>
+					</div>
+					<div id="dd0-1" class="clip" style="display:block;">
+						<div class="dTreeNode"><img src="../../image/img/joinbottom.gif" alt="">
+							<a id="sd1" class="node" href="#" onmouseover="window.status='authority';return true;" onmouseout="window.status='';return true;">
+								<input type="checkbox" desc="ZS1中心试验室" name="authority" id="authority_2" cshow="ZS1中心试验室" value="ZS1" onclick="javascript: d.checkNode(2,0,false,&quot;ZS1中心试验室&quot;,this.checked);"
+								 checked="checked">
+								<span class="dtree_node" node_id="2">ZS1中心试验室</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<form action="" method="get" class="sousuo">
+			<label>物料类型：</label>
+			<select size="1" id="material_Mold">
+				<option selected="selected" value="">全部</option>
+				<option value="0">原材料</option>
+				<option value="1">产成品</option>
+				<!--   <option value="2">半成品</option> -->
+			</select>
+			<label>物料名称：</label>
+			<input type="text" id="material_Name" class="search_input rightwbj" list="materialNames">
+			<dataList id="materialNames" class="search_input" style="padding: 0;"></dataList>
+			<label>物料型号：</label>
+			<input type="text" id="material_Model" class="search_input rightwbj" list="materialModels">
+			<dataList id="materialModels" class="search_input" style="padding: 0;"></dataList>
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+		</form>
+		</div>
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="show('')">新增录入</a></div>
+			<div class="table-a-right table-b-right">
+				<div id="materialList_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="materialList"
+					 role="grid" aria-describedby="materialList_info">
+						<thead>
+							<tr role="row">
+								<th scope="col" width="5%">序号</th>
+								<th scope="col" width="10%">操作</th>
+								<th scope="col" width="10%">物料编码</th>
+								<th scope="col" width="20%">物料名称/型号</th>
+								<th scope="col" width="10%">密度</th>
+								<th scope="col" width="10%">计量单位</th>
+								<th scope="col" width="10%">物料类型</th>
+								<th scope="col" width="10%">创建人</th>
+								<th scope="col" width="15%">创建时间</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3 id="modalTitle"></h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt">
+				<form id="addForm">
+					<input name="materialType" type="hidden" id="str_material_Type" value="">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+						<tbody>
+							<tr>
+								<td width="37%" align="right">物料编码：<br></td>
+								<td width="63%">
+									<input name="materialCode" type="text" id="str_material_Code" placeholder="输入物料编码" required="required"
+									 maxlength="40"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr>
+								<td align="right">物料名称：</td>
+								<td><input name="mateNameId" type="text" id="str_material_Names" list="str_material_Name" placeholder="输入物料名称" required="required"
+									 maxlength="40" ><span style="color: red">&nbsp;&nbsp;*</span>
+									<dataList id="str_material_Name" class="search_input" style="padding: 0;"></dataList>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">规格型号：</td>
+								<td><input name="mateModelId" type="text" id="str_material_Models" list="str_material_Model" placeholder="输入规格型号" required="required"
+									 maxlength="40"><span style="color: red">&nbsp;&nbsp;*</span>
+									 <dataList id="str_material_Model" class="search_input" style="padding: 0;"></dataList>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">密度：<br></td>
+								<td><input name="density" type="number" id="d_density" placeholder="输入密度" required="required" onkeyup="num(this)"
+									 maxlength="8"></td>
+							</tr>
+							<tr>
+								<td align="right">计量单位：<br></td>
+								<td><input name="measureUnit" type="text" id="str_measure_Unit" list="str_material_Units" placeholder="输入计量单位" required="required"
+									 maxlength="40"><span style="color: red">&nbsp;&nbsp;*</span></td>
+									<dataList id="str_material_Units" class="search_input" style="padding: 0;"></dataList>
+							</tr>
+							<tr>
+								<td align="right">物料类型：</td>
+								<td>
+									<select id="str_material_Mold" name="materialMold" size="1">
+										<option value="0" selected="selected">原材料</option>
+										<option value="1">产成品</option>
+										<!-- <option value="2">半成品</option> -->
+									</select>
+									<span style="color: red">&nbsp;*</span>
+								</td>
+							</tr>
+							<tr id="continuous">
+								<td colspan="2" align="center"><input name="" type="checkbox" value="" id="continuouSure" class="danxuan">是否连续添加</td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center"><input type="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="add()"></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#toggle').on('click', function(event) {
+		event.stopPropagation();
+		$(this).siblings('#content').toggle();
+		var tag = $(this).siblings('#content');
+		var flag = true;
+		$(document).bind("click", function(e) {
+			var target = $(e.target);
+			if (target.closest(tag).length == 0 && flag == true) {
+				$(tag).hide();
+				flag = false;
+			}
+		});
+	});
+</script>

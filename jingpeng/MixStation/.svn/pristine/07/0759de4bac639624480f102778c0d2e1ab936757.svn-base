@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<!-- for-mobile-apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+		function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //for-mobile-apps -->
+<link href="../resources/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="../resources/css/style_index.css" rel="stylesheet" type="text/css" media="all" />
+<!-- js -->
+<script type="text/javascript" src="../resources/js/jquery-2.1.4.min.js"></script>
+<!-- //js -->
+<!-- start-smoth-scrolling -->
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		$(".scroll").click(function(event){		
+			event.preventDefault();
+			$('html,body').animate({scrollTop:$(this.hash).offset().top},1000);
+		});
+	});
+</script>
+<!-- start-smoth-scrolling -->
+</head>
+	
+<body>
+<!-- header -->
+	<div class="header" id="ban">
+		<div class="container-fluid tou">
+		    <div class="container">
+		    <h1><a href="index.html">珲乌高速吉林至机场段改扩建工程管理平台</a></h1>
+		    <span class="guanli"><a href="../User/platformUserinfo.html">用户管理</a></span>
+		    <span class="zhuce"><a href="../Register/platformRegister.html">用户注册</a></span>
+		    </div>
+		</div>
+<!-- //header -->
+<!-- banner -->
+	<div class="banner" style="margin-top:85px;">
+		<div class="container">
+			<div class="wthree_banner_info">
+				<section class="slider">
+					<div class="flexslider">
+						<ul class="slides">
+							<li>
+								<div class="wthree_banner_info_grid">
+									<p>信息化监控指挥中心目标</p>
+									<h3>实现对项目建设从施工安全、工程质量、进度、试验检测管理等多方面的有效控制，提高交通道路施工建设信息化水平，形成管理精细化、智能化、高效化、统一开放的交通建设施工数据信息管控平台。</h3>
+								</div>
+							</li>
+							<li>
+								<div class="wthree_banner_info_grid">
+									<p>信息化监控指挥中心目标</p>
+									<h3>为项目各职能单位提供联动机制，利用多样化的数据交互模式，建立多级信息化管理系统，主动对质量、进度、安全等方面的隐患事件进行预警、处置，实现由被动到主动，由单一、片面监控到综合、安全管控的创新发展。</h3>
+								</div>
+							</li>
+							<li>
+								<div class="wthree_banner_info_grid">
+									<p>信息化监控指挥中心目标</p>
+									<h3>将事后检查改变为事前监督、事中监控，把握质量动态，为合格工程保驾护航。</h3>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</section>
+						<!-- flexSlider -->
+							<link rel="stylesheet" href="../resources/css/flexslider.css" type="text/css" media="screen" property="" />
+							<script defer src="../resources/js/jquery.flexslider.js"></script>
+							<script type="text/javascript">
+							$(window).load(function(){
+							  $('.flexslider').flexslider({
+								animation: "slide",
+								start: function(slider){
+								  $('body').removeClass('loading');
+								}
+							  });
+							});
+						  </script>
+						<!-- //flexSlider -->
+			</div>
+		</div>
+	</div>
+<!-- //banner -->
+<!-- banner-bottom -->
+	<div class="banner-bottom">
+		<div class="container">
+			<div class="agile_banner_bottom_grids">
+				<div class="col-md-3 agile_banner_bottom_grid">
+					<a href="../Andr/platform_asphalt_statistics.html"><div class="agile_banner_bottom_grid1 hvr-rectangle-out">
+						<span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>
+					</div></a>
+					<h3><a href="../Andr/platform_asphalt_statistics.html">沥青混合料</a></h3>
+				</div>
+				<div class="col-md-3 agile_banner_bottom_grid">
+					<a href="../cemAndr/platform_cement_statistics.html"><div class="agile_banner_bottom_grid1 hvr-rectangle-out">
+						<span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+					</div></a>
+					<h3><a href="../cemAndr/platform_cement_statistics.html">水泥混凝土</a></h3>
+				</div>
+				<div class="col-md-3 agile_banner_bottom_grid">
+					<a href="../waterstabilityAndr/platform_waterstability_statistics.html"><div class="agile_banner_bottom_grid1 hvr-rectangle-out">
+						<span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+					</div></a>
+					<h3><a href="../waterstabilityAndr/platform_waterstability_statistics.html">水泥稳定土</a></h3>
+				</div>
+				<div class="col-md-3 agile_banner_bottom_grid">
+					<a href="../Platform/vedio.html"><div class="agile_banner_bottom_grid1 hvr-rectangle-out" onclick="vedio();">
+						<span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>
+					</div></a>
+					<h3><a href="../Platform/vedio.html">视频监控系统</a></h3>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+<!-- //banner-bottom -->
+<!-- welcome -->
+	<div class="welcome">
+		<div class="container">
+			<div class="col-md-6 agileits_welcome_grid_left">
+				<h2 style="font-family:'微软雅黑';">中铁十二局集团有限公司</h2>
+				<p>中铁十二局集团有限公司是世界500强企业——中国铁建股份有限公司旗下综合实力最强的成员单位。集团公司具有铁路、房建和市政施工总承包“三特级”，铁道行业、建筑行业设计和市政行业“三甲级”资质；旗下一公司具有公路施工总承包特级资质和公路行业甲级设计资质，建筑安装公司具有房建施工总承包特级资质和建筑行业甲级设计资质；同时还具备公路、水利水电、市政公用、通信工程等施工总承包一级，隧道、桥梁、路基、路面、地基与基础、机场场道、铺轨架梁、轨道交通、机电设备安装、地质灾害治理等专业承包一级等各类资质百余项，拥有对外承包工程经营资格证书。企业经营范围涉及工程施工、规划设计、物流贸易、线路维养、资本运营、地产开发等多个领域和专业。</i></p>
+				<p>企业是国内桥隧施工劲旅，年桥隧施工能力合计500公里以上。先后承建或参建跨黄河大桥11座、跨长江大桥11座、跨海湾大桥3座，在松花江、珠江等江河上建桥多座；承建了青藏铁路第一长桥——全长11.8公里的清水河特大桥、创三项世界纪录的沪杭客专跨高速公路转体桥等著名工程。承建10公里以上特长隧道60多座，在兰武铁路乌鞘岭隧道、宜万铁路齐岳山隧道、郑西客专张茅隧道、广深港客专狮子洋隧道、厦深铁路梁山隧道等工程施工中攻克了大量世界级施工难题，企业研发的专利技术“三台阶七步开挖法”......</p>
+            </div>
+			<div class="col-md-6 agileits_welcome_grid_right" style="text-align:right;"><img src="../resources/images/a2.jpg"></div>
+			<div class="clearfix"> </div>
+		</div>
+	</div>
+<!-- //welcome -->
+<!-- welcome-bottom -->
+	<div class="welcome-bottom">
+		<div class="container">
+			<!-- <h3 style="font-family:'微软雅黑';">动态数据监控</h3>
+		  	<p>萤石开放平台是基于海康威视萤石云平台业务的开放平台，提供外部合作伙伴稳定、持续的基于视频的综合性服务，例如智能设备管理、实时视频、录像回放、视频直播、视频分享、第三方微信服务号接入、流媒体服务、云存储服务、报警推送、智能分析等，一站式解决宝宝关爱、老人看护、店铺守护等基于视频的综合性应用。</p>
+            -->
+			<div class="more" style="margin-top: 275px;">
+				<!-- <a href="../index.html" class="hvr-bounce-to-top">了解更多</a> -->
+			</div> 
+	  </div>
+</div>
+<!-- //welcome-bottom -->
+<!-- updates -->
+	<div class="updates">
+		<div class="container">
+			<div class="agileits_updates_grids">
+				<div class="col-md-6 agileits_updates_grid_left">
+					<h3>生产<span>统计</span></h3>
+					<div class="agileits_updates_grid_left_grid">
+						<div class="col-xs-3 agileits_updates_grid_left1">
+							<h4>沥青<span id="lqdate">5-30<i>2018.</i></span></h4>
+						</div>
+						<div class="col-xs-9 agileits_updates_grid_left1">
+							<h5><a href="single.html">沥青拌合站</a></h5>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="lqtet">
+                              <tr>
+                                <td width="24%">生产总盘数：</td>
+                                <td width="25%"><span id="lqtotal">0</span></td>
+                                <td width="23%">混合料总量：</td>
+                                <td width="28%"><span id="lqz">0</span>kg</td>
+                              </tr>
+                              <tr>
+                                <td>沥青用量：</td>
+                                <td><span id="lqy">0</span>kg</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                              </tr>
+                            </table>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+					<div class="agileits_updates_grid_left_grid">
+						<div class="col-xs-3 agileits_updates_grid_left1">
+							<h4>水泥<span id="sndate">5-30<i>2018.</i></span></h4>
+						</div>
+						<div class="col-xs-9 agileits_updates_grid_left1">
+							<h5><a href="single.html">水泥拌合站</a></h5>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="lqtet">
+                              <tr>
+                                <td width="24%">生产总盘数：</td>
+                                <td width="25%"><span id="sntotal">0</span></td>
+                                <td width="23%">混合料总量：</td>
+                                <td width="28%"><span id="snz">0</span>kg</td>
+                              </tr>
+                              <tr>
+                                <td>水泥用量：</td>
+                                <td><span id="sny">0</span>kg</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                              </tr>
+                            </table>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+					<div class="agileits_updates_grid_left_grid">
+						<div class="col-xs-3 agileits_updates_grid_left1">
+							<h4>水稳<span id="swdate">5-30<i>2018.</i></span></h4>
+						</div>
+						<div class="col-xs-9 agileits_updates_grid_left1">
+							<h5><a href="single.html">水稳拌合站</a></h5>
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="lqtet">
+                              <tr>
+                                <td width="24%">混合料总量：</td>
+                                <td width="25%"><span id="swz">0</span></td>
+                                <td width="23%">水泥用量：</td>
+                                <td width="28%"><span id="swy">0</span>kg</td>
+                              </tr>
+                              <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                              </tr>
+                            </table>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+				</div>
+				<div class="col-md-6 agileits_updates_grid_right">
+					<h3>施工<span>现场</span></h3>
+					<ul id="flexiselDemo1">			
+						<li>
+							<img src="../resources/images/1.jpg" alt=" " class="img-responsive" />
+						</li>
+						<li>
+							<img src="../resources/images/3.jpg" alt=" " class="img-responsive" />
+						</li>
+						<li>
+							<img src="../resources/images/4.jpg" alt=" " class="img-responsive" />
+						</li>
+					</ul>
+					<script type="text/javascript">
+							$(window).load(function() {
+								$("#flexiselDemo1").flexisel({
+									visibleItems:3,
+									animationSpeed: 1000,
+									autoPlay: true,
+									autoPlaySpeed: 3000,    		
+									pauseOnHover: true,
+									enableResponsiveBreakpoints: true,
+									responsiveBreakpoints: { 
+										portrait: { 
+											changePoint:480,
+											visibleItems: 1
+										}, 
+										landscape: { 
+											changePoint:640,
+											visibleItems:2
+										},
+										tablet: { 
+											changePoint:768,
+											visibleItems: 3
+										}
+									}
+								});
+								
+							});
+					</script>
+					<script type="text/javascript" src="../resources/js/jquery.flexisel.js"></script>
+					<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+					  <div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="headingOne">
+						  <h4 class="panel-title asd" style="font-family:'微软雅黑';">
+							<a class="pa_italic" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><i class="glyphicon glyphicon-minus" aria-hidden="true"></i>预警信息
+							</a>
+						  </h4>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+						  	<div class="panel-body panel_text">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0" id="tab">
+								<!-- 
+                                  <tr>
+                                    <td width="28%">一工区沥青拌合站</td>
+                                    <td width="18%">生产总盘数：</td>
+                                    <td width="8%" align="left">240</td>
+                                    <td width="17%" align="right">合格盘数：</td>
+                                    <td width="6%">240</td>
+                                    <td width="15%" align="right">合格率：</td>
+                                    <td width="8%">100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr>
+                                  <tr>
+                                    <td>一工区水稳拌合站</td>
+                                    <td>生产总盘数：</td>
+                                    <td align="left">240</td>
+                                    <td align="right">合格盘数：</td>
+                                    <td>240</td>
+                                    <td align="right">合格率：</td>
+                                    <td>100%</td>
+                                  </tr> -->
+                                </table>
+						  	</div>
+						</div>
+					  </div>
+					</div>
+				</div>
+				<div class="clearfix"> </div>
+			</div>
+		</div>
+	</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+<!-- for bootstrap working -->
+	<script src="../resources/js/bootstrap.js"></script>
+<!-- //for bootstrap working -->
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/platform_index.js"></script>
+</body>
+</html>

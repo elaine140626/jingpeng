@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>养护项目管理系统</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="css/main_css.css"/>
+		<link rel="stylesheet" type="text/css" href="css/zTreeStyle.css">
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="css/sweet-alert.css">
+		<script type="text/javascript">
+			var user;
+			$(function() {
+				user = getUserInfo();
+				$("#userName").html(user.userName)
+				if(user.userName == null){
+					location.href = "/curing/pages/login/login.html";
+				}
+				var cityId = user.cityId;
+				var countyId = user.countyId
+				if(cityId != 0 || countyId != 0){
+					$("#shengShi").css('display','none');
+					$("#shengShi2").css('display','none');
+					$("#userMeg").css('display','none');
+				}
+			});	
+			
+			/**获取当前登录用户信息**/
+			function getUserInfo(){
+				var userInfo = "";
+				 $.ajax({
+						type: 'POST',
+						url: 'Login/getUser.action',
+						data: "",
+						dataType: 'json',
+						async:false,
+						success: function(data){
+							if(data != ""){
+								userInfo = data;
+							}
+						}
+					});	
+				// 用户id
+				return userInfo;
+			}		
+			
+			/**个人信息**/
+			function myselfinfo() {
+				location.href = "pages/login/userInfo.html?flag=1";
+			}
+			/**退出系统**/
+			function outLogin(){
+				if(confirm("您确定要退出本系统吗？")) {
+					location.href = "/curing/pages/login/login.html";
+				}			
+			}
+
+			function jumpArea(href) {
+				var tex = '';
+				$('#rightMain').attr('src', "");
+				$('#nav_module').find('img').attr('src', 'img/common/module_' + (href + 1) + '.png');
+				$('#TabPage2 li').each(function(i, ele) {
+					if(i != href) {
+						$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '.png');
+						$(ele).find('span').css({
+							color: '#fff'
+						});
+						$(ele).css({
+							background: '#044599'
+						});
+					} else {
+						$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '_hover.png');
+						$(ele).css({
+							background: '#fff'
+						});
+						$(ele).find('span').css({
+							color: '#044599'
+						});
+						tex = $(ele).find('span').html()
+					}
+
+				});
+				$('.item').hide();
+				$('#rightMain').hide();
+				if(href == 0) {
+					$('.item1').show();
+				} else if(href == 1) {
+					$('.item2').show();
+				} else if(href == 2) {
+					$('.item3').show();
+				} else if(href == 3) {
+					$('.item4').show();
+				} else if(href == 4) {
+					$('.item5').show();
+				} else if(href == 5) {
+					$('.item6').show();
+				} else if(href == 6) {
+					$('.item7').show();
+				} else if(href == 7) {
+					$('.item8').show();
+				}
+				$('#top_nav').show();
+				$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">' + tex + '</span>');
+
+			}
+		</script>
+	</head>
+
+	<body>
+		<div id="top">
+			<div id="top_logo">
+				<a class="title" href="indexNew.html">养护项目管理系统</a>
+				<!-- <img alt="logo" src="img/common/logo.jpg" width="274" height="49" style="vertical-align:middle;"> -->
+			</div>
+			<div id="top_links">
+				<div id="top_close">
+					<a href="javascript:void(0);" onclick="outLogin()" target="_parent">
+						<img alt="退出系统" title="退出系统" src="img/common/out.png" >
+					</a>
+				</div>
+				<div id="top_op">
+					<ul>
+						<li onclick="myselfinfo()">
+							<img alt="当前用户" src="img/common/user.png" style="margin-top: -5px;">：<span id="userName"></span>
+							<span id="rolecode"></span>&nbsp;&nbsp;<span id=username></span>
+						</li>
+						<li id="userMeg">
+							<a href="pages/login/userInfoList.html">用户管理</a>
+						</li>
+					</ul>
+				</div>			
+			</div>
+		</div>
+		<!-- side menu start -->
+		<div id="side">
+			<div id="left_menu">
+				<ul id="TabPage2" style="height:90px; margin-top:50px;">
+					<li class="selected">
+						<img alt="工程基本信息" title="工程基本信息" src="img/common/1_hover.png">
+						<span class="tab1">工程基本信息</span>
+					</li>
+					<li title="工程设计资料">
+						<img alt="工程设计资料" title="工程设计资料" src="img/common/2.png">
+						<span class="tab1">工程设计资料</span>
+					</li>
+					<li title="工程招标">
+						<img alt="工程招标" title="工程招标" src="img/common/3.png">
+						<span class="tab1">工程招标</span>
+					</li>
+					<li title="工程中期">
+						<img alt="工程中期" title="工程中期" src="img/common/4.png">
+						<span class="tab1">工程中期</span>
+					</li>
+					<li title="工程计量">
+						<img alt="工程计量" title="工程计量" src="img/common/5.png">
+						<span class="tab1">工程计量</span>
+					</li>
+					<li title="工程进度">
+						<img alt="工程进度" title="工程进度" src="img/common/6.png">
+						<span class="tab1">工程进度</span>
+					</li>
+					<li title="沥青供应">
+						<img alt="沥青供应" title="沥青供应" src="img/common/7.png">
+						<span class="tab1">沥青供应</span>
+					</li>
+					<li title="系统设置">
+						<img alt="系统设置" title="系统设置" src="img/common/8.png">
+						<span class="tab1">系统设置</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				var flag = 1;
+				$('#TabPage2 li').click(function() {
+					$('#rightMain').attr('src', "");
+					var index = $(this).index();
+					$('#nav_module').find('img').attr('src', 'img/common/module_' + (index + 1) + '.png');
+					$('#TabPage2 li').each(function(i, ele) {
+						if(i != index) {
+							$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '.png');
+							$(ele).find('span').css({
+								color: '#fff'
+							});
+							$(ele).css({
+								background: '#044599'
+							});
+						} else {
+							$(ele).find('img').attr('src', 'img/common/' + (index + 1) + '_hover.png');
+							$(ele).css({
+								background: '#fff'
+							});
+							$(ele).find('span').css({
+								color: '#044599'
+							});
+						}
+
+					});
+					$('.item').hide();
+					$('#rightMain').hide();
+					if(index == 0) {
+						$('.item1').show();
+					} else if(index == 1) {
+						$('.item2').show();
+					} else if(index == 2) {
+						$('.item3').show();
+					} else if(index == 3) {
+						$('.item4').show();
+					} else if(index == 4) {
+						$('.item5').show();
+					} else if(index == 5) {
+						$('.item6').show();
+					} else if(index == 6) {
+						$('.item7').show();
+					} else if(index == 7) {
+						$('.item8').show();
+					}
+					$('#top_nav').show();
+					$('#now_area').hide();
+					$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">' + $(this).find('span').html() + '</span>');
+
+				});
+				$('.item .tabs a').click(function() {
+					var jumpHref = $(this).attr('data-href');
+					var itemId = $(this).parent('.tabs').parents('.item').attr('data-itemId');
+					$('#rightMain').attr('src', jumpHref);
+					$('#now_area').show();
+					$('#now_area').attr('onclick', 'jumpArea(' + itemId + ')');
+					$('.item').hide();
+					$('#top_nav').hide();
+					$('#rightMain').show();
+				})
+			});
+		</script>
+		<!-- side menu start -->
+		<div id="main">
+			<!-- <div id="now_area" style="display: none;">返回</div> -->
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">工程基本信息</span></span>
+			</div>
+			<div class="item1 item" data-itemId="0" style="display: block;">
+				<div class="tabs">
+					<a href="javascript:;" class="gcjbxx" data-href="pages/projectInfo/projectInfoSummary.html">工程基本信息</a>
+				</div>
+			</div>
+			<div class="item2 item" data-itemId="1">
+				<!-- 道路设计工程量 -->
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/roadbedProtectionNumber.html">路基防护工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/bridge_deck.html">桥面处理工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/culvertMaintenanceNumber.html">涵洞维修工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/bridgeRetainingWallNumber.html">桥梁挡墙工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/subgradeKilometreEarthworkNumber.html">路基每公里土石方工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/overhaulPavementNumber.html">大修路面工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/subgradeEarthworkNumber.html">路基土石方工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/roadSurfaceNumber.html">路面工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/sideDitchNumber.html">边沟工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/protectiveWallNumber.html">防护墙工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/diseaseTreatmentNumber.html">旧路面病害处治</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/crossRoadbedNumber.html">平面交叉路基路面</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/greenNumber.html">绿化工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/constructionSidewalkNumber.html">施工便道路面工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/temporarySignsNumber.html">临时标志</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/passingCulvertNumber.html">石砌边沟过路涵</a>
+				</div>
+				<br>
+				<!-- 桥梁设计工程量 -->				
+				<div class="tabs" style="float:left">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/bridgeTop.html">桥工程量(上)</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/bridgeBottom.html">桥工程量(下)</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/bridgeGuard.html">桥工程量(防护工程)</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/plateCulvertNumber.html">板涵工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/pipeCulvertNumber.html">管涵工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/passingThroughNumber.html">过路过户涵</a>
+				</div>
+				<!-- 交通工程设计工程量 -->
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/CrossingPillar.html">道口标柱</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/steelGuardrail.html">钢护栏工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/MarkingLineNumber.html">标线工程</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcsjzl" data-href="pages/projectSchedule/signBoardNumber.html">标志牌工程</a>
+				</div>		
+			</div>
+			<div class="item3 item" data-itemId="2">
+				<div class="tabs">
+					<a href="javascript:;" class="gczb" data-href="pages/projectMetering/ProjectTenderingSummary.html">工程招标</a>
+				</div>
+			</div>
+			<div class="item4 item" data-itemId="3">
+				<div class="tabs">
+					<a href="javascript:;" class="gczq" data-href="pages/projectSchedule/supervisionApplication.html">工程监督申请</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gczq" data-href="pages/projectSchedule/construction.html">施工组织设计</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gczq" data-href="">开工报告</a>
+				</div>
+			</div>
+			<div class="item5 item" data-itemId="4">
+				<div class="tabs">
+					<a href="javascript:;" class="gcjl" data-href="pages/projectSchedule/subheadNumberMoney.html">子目号管理</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjl" data-href="pages/projectSchedule/sevenDaily.html">七日报</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjl" data-href="pages/projectMetering/engineeringSettlement.html">工程价款结算帐单</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjl" data-href="pages/projectMetering/completionAmount.html">投资计划完成金额情况</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjl" data-href="pages/projectMetering/quantities.html">投资计划工程量投资额完成情况</a>
+				</div>
+			</div>
+			<div class="item6 item" data-itemId="5">
+				<div class="tabs">
+					<a href="javascript:;" class="gcjd" data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=1">第一批计划进度</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjd" data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=2">第二批计划进度</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjd" data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=3">第三批计划进度</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjd" data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=7">全省</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="gcjd" data-href="pages/statisticsForms/dangerousBridge.html">险桥</a>
+				</div>
+			</div>
+			<div class="item7 item" data-itemId="6">
+				<div class="tabs">
+					<a href="javascript:;" class="lqgy" data-href="pages/asphaltSupply/asphaltSupply.html">沥青供应</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" class="lqgy" data-href="pages/asphaltSupply/asphaltPurchasing.html">沥青采购</a>
+				</div>
+			</div>
+			<div class="item8 item" data-itemId="7">
+				<div class="tabs" id="shengShi">
+					<a href="javascript:;" class="xtsz" data-href="pages/systemInfo/engineeringManagement.html?type=0">市管理</a>
+				</div>
+				<div class="tabs" id="shengShi2">
+					<a href="javascript:;" class="xtsz" data-href="pages/systemInfo/engineeringManagement.html?type=1">县区管理</a>
+				</div>
+				<div class="tabs" id="xiangmu">
+					<a href="javascript:;" class="xtsz" data-href="pages/systemInfo/engineeringManagement.html?type=2">项目管理</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=sex">性别 管理</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=yhje">用户角色 管理</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=bxgcsl">标线工程数量</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcxm">工程项目</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=jhpc">计划批次</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=jsxz">建设性质</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=jsdj">技术等级</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=xzdj">行政等级</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=xmly">项目来源</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=xmfl">项目分类</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=pwlx">批文类型</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcldw">工程量单位</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=zbxz">招标性质</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">结算工程价款</a>
+				</div>
+<!-- 				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?typegcjl=">支付动员预付款</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">抵扣动员预付款</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">抵扣质量保证金</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">抵扣农民工工资</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">抵扣沥青材料款</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">净收工程价款</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">变更计量款支付</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gcjl">冲减变更计量款</a>
+				</div> -->
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=jsxz">建设性质</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=xmxz">项目性质</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=gx90">改性90#类别</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=qt90">其他90#类别</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=rhlqlb">乳化沥青类别</a>
+				</div>
+				<div class="tabs">
+					<a  class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfoList.html?type=zjly">资金来源</a>
+				</div>
+				<!-- <div class="tabs">
+					<a href="javascript:;" class="xtsz" data-href="pages/systemInfo/dataDictionarySystemInfo.html">数据字典管理</a>
+				</div> -->
+			</div>
+			<iframe name="right" id="rightMain" style="display: none;" src="" frameborder="no" scrolling="auto" width="100%" height="100%" allowtransparency="true"></iframe>
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,60 @@
+package com.blindSample.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.blindSample.dao.TestUserInfoDao;
+import com.blindSample.service.TestUserInfoService;
+import com.blindSample.model.APPUserInfo;
+import com.blindSample.model.TestSetDetailed;
+import com.blindSample.model.TestUser_Info;
+
+@Service
+@Transactional
+public class TestUserInfoServiceImpl implements TestUserInfoService{
+	@Autowired
+	private TestUserInfoDao testUserInfoDao;
+	
+	public List<Map<String, Object>> getTestRoomName(Map<String, Object> map){
+		return testUserInfoDao.getTestRoomName(map);	
+	}
+	
+	public List<Map<String, Object>> getTestUserName(Map<String, Object> map){
+		return testUserInfoDao.getTestUserName(map);
+	}
+	
+	public int addTestName(TestUser_Info testUser_Info) {
+		return testUserInfoDao.addTestName(testUser_Info);
+	}
+	
+	public int addTestRoot(Map<String, Object> map) {
+		return testUserInfoDao.addTestRoot(map);
+	}
+	public List<TestUser_Info> getUserLogin(TestUser_Info testUser_Info) {
+		return testUserInfoDao.getUserLogin(testUser_Info);
+	}
+	
+	public List<Map<String, Object>> getUserInformation(Map<String, Object> map){
+		return testUserInfoDao.getUserInformation(map);
+	}
+	
+	public int testUserdel(TestUser_Info testUser_Info) {
+		return testUserInfoDao.testUserdel(testUser_Info);
+	}
+	
+	public List<Map<String, Object>> getTestNameUpdate(Map<String, Object> map){
+		return testUserInfoDao.getTestNameUpdate(map);
+	}
+	
+	public int updateTestUser(TestUser_Info testUser_Info) {
+		return testUserInfoDao.updateTestUser(testUser_Info);
+	}
+	
+	public int deleteUserSubtable(TestSetDetailed testSetDetailed) {
+		return testUserInfoDao.deleteUserSubtable(testSetDetailed);
+	}
+}

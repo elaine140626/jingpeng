@@ -1,0 +1,409 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body {
+	font-family: SimSun;
+	font-size: 14px;
+}
+
+img {
+	width: 100%;
+	height: 100%;
+}
+
+/*最小字体*/
+
+.font-min {
+	font-size: 12px;
+	line-height: 12px;
+}
+
+/*16号字体*/
+
+.font16 {
+	font-size: 22px;
+}
+
+
+/*仿宋体字*/
+
+.fontFangSong {
+	font-family: "FangSong", SimSun;
+}
+
+/*共通部分*/
+
+.tableContain {
+	width: 197.2px;
+	height: 1024px;
+	margin: 0 auto;
+	transform:scale(0.85,0.85);
+}
+
+.table {
+	width: 197px;
+	margin: 0px 0px 0px -20px;
+}
+
+.header {
+	width: 100%;
+	/*overflow: hidden;*/
+	position: relative;
+}
+
+.page,
+.testNum {
+	text-align: right;
+	height: 19px;
+	line-height: 19px;
+}
+
+.erweima {
+	width: 60px;
+	height: 60px;
+	position: absolute;
+	right: 0;
+	top: 40px;
+}
+
+.title {
+	width: 100%;
+	height: 25px;
+	margin-top: -66px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.testMsg {
+	width: 100%;
+	overflow: hidden;
+	font-size: 10px;
+}
+
+.testRoom {
+	width: 90%;
+	float: left;
+	height: 50%;
+	overflow: hidden;
+}
+
+.testRoom .roomName {
+	width: 40%;
+	text-align: center;
+	line-height: 20px;
+	float: left;
+}
+
+.testRoom .roomname {
+	width: 60%;
+	float: left;
+	line-height: 20px;
+}
+
+.tables {
+	width: 190px;
+	/* height: 683px; */
+	border: 1px solid #000;
+	margin-top: 0px;
+}
+.commonTable1 {
+	height: 171px;
+}
+.commonTable1 > div {
+	height: 27.5px ;
+	width: 100%;
+}
+.commonTable1 > div > div {
+	float: left;
+	text-align: center;
+	line-height: 27.5px;
+	height: 100%;
+}
+.commonTable1 .commonTable1-line {
+	border-bottom: 1px solid #000;
+}
+
+.commonTable1 .commonTable1-line:not(:last-child) div:nth-child(odd) {
+	width: calc(15% - 1px);
+	border-right: 1px solid #000;
+}
+
+.commonTable1 .commonTable1-line:not(:last-child) div:nth-child(2) {
+	width: calc(44% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable1 .commonTable1-line:not(:last-child) div:last-child {
+	width: 26%;
+}
+.commonTable1 .commonTable1-line:last-child div:first-child {
+	width: calc(22% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable1 .commonTable1-line:last-child div:last-child {
+	width: 78%;
+}
+.commonTable1 > div > div:nth-child(even) {
+	font-family: "FangSong", SimSun;
+}
+.commonTable2 {
+	text-align: center;
+}
+.commonTable2 .commonTable2-line {
+	height: 85px ;
+	width: 100%;
+	border-bottom: 1px solid #000;
+}
+.commonTable2 .commonTable2-line:first-child div{
+	line-height:35px;
+}
+.commonTable2 .commonTable2-line div{
+	float: left;
+	text-align: center;
+	line-height: 18px;
+	height: 100%;
+	font-size: 10px;
+}
+/* .commonTable2 .commonTable2-line:not(:first-child) div{
+	font-family: "FangSong", SimSun;
+} */
+.commonTable2 .commonTable2-line div:first-child{
+	width: calc(8% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable2 .commonTable2-line div:nth-child(2){
+	width: calc(32% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable2 .commonTable2-line div:nth-child(3){
+	width: calc(9% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable2 .commonTable2-line div:nth-child(4){
+	width: calc(17% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable2 .commonTable2-line div:nth-child(5){
+	width: calc(17% - 1px);
+	border-right: 1px solid #000;
+}
+.commonTable2 .commonTable2-line div:nth-child(6){
+	width: 17%
+}
+.commonTable2 .commonTable2-line div{
+	float: left;
+	text-align: center;
+	line-height: 12px;
+	height: 100%;
+}
+/* .commonTable3 {
+	width: 100%;
+	font-size: 10px;
+} */
+.commonTable3 .commonTable3-line {
+	width:100%;
+	height:45px;
+	border-bottom: 1px solid #000;
+	font-size: 10px;
+}
+.commonTable3 .commonTable3-line div:first-child{
+	width:calc(15% - 1px);
+	float:left;
+	line-height:45px;
+	border-right: 1px solid #000;
+	text-align:center;
+}
+.commonTable3 .commonTable3-line div:last-child{
+	width:85%;
+	float:left;
+	line-height:15px;
+	text-align:center;
+}
+.footer {
+	width: 197px;
+	height: 30px;
+}
+.line {
+	width:50%;
+	height:20px;
+	line-height:220px;
+	margin-left: 25px;
+	position: relative;
+}
+.footer .block {
+	width: 197px;
+	height: 30px;
+	line-height: 16px;
+	float: left;
+	font-size: 10px;
+	position: relative;
+}
+.footer .block .blockTitle {
+	margin-left: 1px;
+	float: left;
+}
+
+.footer .block .blockContain {
+	width: 58px;
+	height: 30px;
+	margin-top: 1px;
+	float: left;
+}
+.gongzhang {
+	width: 150px;
+	height: 150px;
+	/* position: absolute;
+	bottom: -43px; */
+    margin-left: 65px;
+}
+.gongzhang img{
+	width:100%;
+	height:100%;
+	margin-left: -68px;
+}
+.differentArea {
+	width: 100%;
+	height: 86px;
+}
+
+/*最小字体    试验室名称    */
+.font-roomname-22 {
+	display: inline-block;
+	font-size: 14px;
+	line-height:30px;
+}
+.font-roomname-50 {
+	display: inline-block;
+	font-size: 12px;
+	line-height:12px;
+}
+.font-roomname-60 {
+	font-size: 12px;
+	width: 118%;
+    position: relative;
+    left: -10%;
+    line-height: 12px;
+	display: inline-block;
+	transform: scale(0.85);
+}
+.font-roomname-70 {
+	font-size: 12px;
+	width: 140%;
+    position: relative;
+    left: -20%;
+    line-height: 12px;
+	display: inline-block;
+	transform: scale(0.7);
+}
+.font-roomname-100 {
+	font-size: 12px;
+	width: 150%;
+    position: relative;
+    left: -25%;
+    line-height: 11px;
+	display: inline-block;
+	transform: scale(0.6);
+}
+/*最小字体    工程部位/用途,试验条件    */
+.font-long-20{
+	font-size: 14px;
+	line-height: 30.5px;
+	display: inline-block;
+}
+.font-long-45{
+	font-size: 12px;
+	line-height: 15px;
+	display: inline-block;
+}
+.font-long-75{
+	font-size: 12px;
+	width: 115%;
+    position: relative;
+    left: -8%;
+    height: 80%;
+    line-height: 11px;
+	display: inline-block;
+	transform: scale(0.85);
+}
+.font-long-110{
+	font-size: 10px;
+	width: 136%;
+    position: relative;
+    left: -18%;
+    line-height: 11px;
+	display: inline-block;
+	transform: scale(0.7);
+}
+.font-long-140{
+	font-size: 12px;
+	width: 152%;
+    position: relative;
+    left: -26%;
+    height: 45%;
+    line-height: 10px;
+	display: inline-block;
+	transform: scale(0.65);
+}
+.font-long-170{
+	font-size: 13px;
+	width: 200%;
+	height: 80%;
+    position: relative;
+    left: -50%;
+    line-height: 10px;
+	display: inline-block;
+	transform: scale(0.5);
+}
+.font-long-200{
+	font-size: 12px;
+	width: 200%;
+	height: 50%;
+    position: relative;
+    left: -50%;
+    line-height: 10px;
+	display: inline-block;
+	transform: scale(0.5);
+}
+
+/*最小字体  样品描述  */
+.font-short-11{
+	font-size: 14px;
+	line-height: 30.5px;
+	display: inline-block;
+}
+.font-short-26{
+	font-size: 12px;
+	line-height: 15px;
+	display: inline-block;
+}
+.font-short-42{
+	font-size: 12px;
+	width: 105%;
+    position: relative;
+    left: -2%;
+    line-height: 10px;
+	display: inline-block;
+	transform: scale(0.9);
+}
+.font-short-63{
+	font-size: 12px;
+	width: 158%;
+    position: relative;
+    left: -29%;
+    line-height: 12px;
+    margin-top:-3%;
+	display: inline-block;
+	transform: scale(0.6);
+}
+.font-short-100{
+	font-size: 12px;
+	width: 185%;
+    position: relative;
+    left: -43%;
+    line-height: 12px;
+    margin-top:-7%;
+	display: inline-block;
+	transform: scale(0.5);
+}

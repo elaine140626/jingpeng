@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.meshInfo.MeshSizeDao">
+	<select id="queryMeshSizeList" parameterType="com.mixingStation.model.meshInfo.MeshSizeInfo" resultType="com.mixingStation.model.meshInfo.MeshSizeInfo">
+		SELECT
+			id Id,
+			mesh_size meshSize,
+			org_id orgId 
+		FROM
+			mesh_size_info 
+		WHERE
+			valid_flag = 1 
+			AND org_id = #{orgId} 
+		ORDER BY
+			mesh_size DESC
+	</select> 
+	<select id="queryMeshSizeDataList" parameterType="Integer" resultType="com.mixingStation.model.meshInfo.MeshSizeDataAnalysis">
+		SELECT
+			id id,
+			mesh_id meshId,
+			ware1,
+			ware2,
+			ware3,
+			ware4,
+			ware5,
+			ware6,
+			cold_ware1 coldWare1,
+			cold_ware2 coldWare2,
+			hot_ware hotWare,
+			upper_limit upperLimit,
+			lower_limit lowerLimit
+		FROM
+			mesh_size_data_analysis
+		where 	
+			valid_flag = 1
+			AND analysis_id = #{analysisId}
+	</select> 
+	<insert id="insertMeshSizeList" useGeneratedKeys="true" keyProperty="id" parameterType="com.mixingStation.model.meshInfo.MeshSizeInfo">
+		INSERT INTO mesh_size_info ( 
+			org_id,
+			mesh_size,
+			operator, 
+			create_date,
+			valid_flag 
+		)
+		VALUES ( 
+			#{orgId},
+			#{meshSize},
+			#{operator},
+			#{createDate},
+			1
+		)
+	</insert> 
+	<update id="updateMeshSizeList" parameterType="com.mixingStation.model.meshInfo.MeshSizeInfo">
+		UPDATE 
+			mesh_size_info 
+		SET 
+			mesh_size = #{meshSize},
+			modifier = #{modifier},
+			modify_date = #{modifyDate}
+		WHERE
+			id = #{id}
+	</update> 
+	<update id="deleteMeshSizeList" parameterType="com.mixingStation.model.meshInfo.MeshSizeInfo">
+		UPDATE 
+			mesh_size_info 
+		SET 
+			valid_flag = 0,
+			modifier = #{modifier},
+			modify_date = #{modifyDate}
+		WHERE
+			id = #{id}
+	</update> 
+	<insert id="insertMeshSizeDataAnalysis" useGeneratedKeys="true" keyProperty="id"  parameterType="com.mixingStation.model.meshInfo.MeshSizeDataAnalysis">
+		INSERT INTO mesh_size_data_analysis ( 
+			org_id,
+			mesh_id,
+			analysis_id,
+			ware1,
+			ware2,
+			ware3,
+			ware4,
+			ware5,
+			ware6,
+			cold_ware1,
+			cold_ware2,
+			hot_ware,
+			upper_limit,
+			lower_limit,
+			operator, 
+			create_date,
+			valid_flag 
+		)
+		VALUES ( 
+			#{orgId},
+			#{meshId},
+			#{analysisId},
+			#{ware1},
+			#{ware2},
+			#{ware3},
+			#{ware4},
+			#{ware5},
+			#{ware6},
+			#{coldWare1},
+			#{coldWare2},
+			#{hotWare},
+			#{upperLimit},
+			#{lowerLimit},
+			#{operator},
+			#{createDate},
+			1
+		)
+	</insert> 
+	<delete id="deleteGradationInfo" parameterType="com.mixingStation.model.asphalt.AsphaltGrading">
+		DELETE FROM mesh_size_data_analysis WHERE analysis_id = #{id}  
+	</delete> 
+</mapper>

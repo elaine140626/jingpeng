@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="../../js/html5shiv.js"></script>
+	<script type="text/javascript" src="../../js/respond.min.js"></script>
+	
+	<![endif]-->
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="../../js/zTree/v3/css/metroStyle/metroStyle.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/search.css" />
+	
+	<!--[if IE 6]>
+	<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<title>空白页</title>
+	</head>
+	<body>
+		<nav class="breadcrumb">
+			<i class="Hui-iconfont">&#xe67f;</i>首页 
+			<span class="c-gray en">&gt;</span>工程信息 
+			<span class="c-gray en">&gt;</span>工程信息
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);"title="刷新">
+				<i class="Hui-iconfont">&#xe68f;</i>
+			</a>
+		</nav>
+		<div class="page-container">
+			<div class="col-xs-4 col-sm-2 mt-20">
+				<ul id="EntryTree" class="ztree" style="width: 240px;overflow: auto; min-height: 600px;"></ul>
+			</div>
+			<div class="col-xs-8 col-sm-10 ">
+				<form id="form1" method="post">		
+				<div class="text-c search-line">
+					<div class="col-xs-6 col-sm-4 mt-20">
+						计划年份：
+						<input name="planTimeStr" id="planTimeStr" style="width:120px;" onfocus="WdatePicker({ })" class="input-text Wdate"/>
+						~
+						<input name="planTimeEnd" id="planTimeEnd" style="width:120px;" onfocus="WdatePicker({ })" class="input-text Wdate"/>
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						计划批次：<span class="select-box inline">
+						<select id="planBatch" name="planBatch" class="select" style="width:240px;"></select>
+						</span>	
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						建设性质：<span class="select-box inline">
+						<select id="buildNature" name="buildNature" class="select" style="width:240px;"></select>
+						</span>	
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						项目来源：<span class="select-box inline">
+						<select id="projectSource" name="projectSource" class="select" style="width:240px;"></select>
+						</span>	
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						项目分类：<span class="select-box inline">
+						<select id="projectType" name="projectType" class="select" style="width:240px;"></select>
+						</span>	
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						行政等级：<span class="select-box inline">
+						<select id="administrationGrade" name="administrationGrade" class="select" style="width:240px;"></select>
+						</span>	
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						技术等级：<span class="select-box inline">
+						<select id="technicalGrade" name="technicalGrade" class="select" style="width:240px;"></select>
+						</span>	
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						<button name="" id="" class="btn btn-success search-btn" type="button" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					</div>
+				
+				</div>
+			    </form>
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> 
+					<span class="l">
+						<a class="btn btn-primary radius" onclick="add();"href="javascript:;">
+							<i class="Hui-iconfont">&#xe600;</i> 添加工程信息
+						</a>
+					</span>
+				</div>
+				<div class="mt-20" style="width: 100%; overflow-x: scroll;">
+					<table id="table1" style="width: 2100px;" class="scoll-table table table-border table-bordered table-bg table-hover table-sort table-responsive">
+						<thead>
+							<tr class="text-c">
+								<th><p style="width: 80px;">序号</p></th>
+								<th><p style="width: 60px;">操作</p></th>
+								<th><p style="width: 100px;">项目编号</p></th>
+								<th><p style="width: 100px;">所属市</p></th>
+								<th><p style="width: 100px;">路线名称</p></th>
+								<th><p style="width: 100px;">工程项目</p></th>
+								<th><p style="width: 100px;">原线路名称</p></th>
+								<th><p style="width: 100px;">计划批次</p></th>
+								<th><p style="width: 100px;">工程所在地</p></th>
+								<th><p style="width: 300px;">起讫点及桩号</p></th>
+								<th><p style="width: 100px;">建设性质</p></th>
+								<th><p style="width: 100px;">技术等级</p></th>
+								<th><p style="width: 100px;">宽度</p></th>
+								<th><p style="width: 100px;">行政等级</p></th>
+								<th><p style="width: 100px;">计划年份</p></th>
+								<th><p style="width: 100px;">项目来源</p></th>
+								<th><p style="width: 100px;">项目分类</p></th>
+								<th><p style="width: 100px;">质量目标</p></th>
+								<th><p style="width: 100px;">批文种类</p></th>
+								<th><p style="width: 100px;">文件预览</p></th>
+								<th><p style="width: 120px;">备注</p></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+			    </div>
+			</div>	
+		</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.min.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script> 
+	<script type="text/javascript" src="../../js/zTree/v3/js/jquery.ztree.all-3.5.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>
+	<script type="text/javascript" src="../../js/datatables/1.10.0/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/entryTree.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/projectInfo/projectInfoSummary.js"></script>
+	</body>
+</html>

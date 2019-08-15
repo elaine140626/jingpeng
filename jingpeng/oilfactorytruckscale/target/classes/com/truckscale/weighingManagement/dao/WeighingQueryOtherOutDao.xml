@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.truckscale.weighingManagement.dao.WeighingQueryOtherOutDao">
+	<!-- 查询其它出库单列表 -->
+	<select id="getWeighingQueryOtherOut"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOtherOutEntity">
+		select
+			Id
+	 		,PlateNumber		
+			,Serial_ID		
+		 	,Client			
+		 	,Unit			
+		 	,MaterielName	
+		 	,MaterielModel	
+			,TareWeight					
+			,GrossWeight				
+			,Suttle							
+		 	,DeliveryMan		
+		 	,DeliveryManPhone		
+		 	,FleetName				
+		 	,Consignee			
+			,ConsigneePhone		
+		 	,TestReport				
+			,Temperature				
+			,QualityInspector	
+		 	,DATE_FORMAT(MeasureTime,'%Y-%m-%d %H:%i:%s') as MeasureTime			
+		 	,IsSelfMention			
+			,FacingSlipNum		
+			,FacingSlipNum2		
+			,FacingSlipNum3		
+			,FacingSlipNum4		
+			,Remarks			
+			,DriverAutograph		
+			,IsDel								
+			,Creater			
+		 	,CreaterDate						
+		 	,Reviser			
+			,ReviserDate			
+		from
+			exportmeasureother
+		WHERE 
+			IsDel = 0
+		<if test="id != null and id != ''"> 
+			and Id = #{id} 
+		</if> 
+		<if test = "startTime != null and startTime != ''" >
+			and <![CDATA[  DATE_FORMAT(MeasureTime,'%Y-%m-%d')  >= #{startTime} ]]>
+		</if> 
+		<if test = "endTime != null and endTime != ''" >
+			and <![CDATA[  DATE_FORMAT(MeasureTime,'%Y-%m-%d')  <= #{endTime} ]]> 
+		</if>
+		<if test="client != null and client != ''"> 
+			and Client= #{client} 
+		</if>
+		<if test="plateNumber != null and plateNumber != ''"> 
+			and PlateNumber = #{plateNumber} 
+		</if>
+		<if test="deliveryMan != null and deliveryMan != ''"> 
+			and DeliveryMan = #{deliveryMan} 
+		</if>
+		<if test="fleetName != null and fleetName != ''"> 
+			and FleetName = #{fleetName} 
+		</if>
+		<if test="materielName != null and materielName != ''"> 
+			and MaterielName = #{materielName} 
+		</if>
+		<if test="materielModel != null and materielModel != ''"> 
+			and MaterielModel = #{materielModel} 
+		</if>
+		order by Id desc
+	</select>
+	<insert id="insertWeighingQueryOtherOut" parameterType="com.truckscale.weighingManagement.model.WeighingQueryOtherOutEntity">
+		INSERT 
+		INTO exportmeasureother( 
+			 PlateNumber		
+			,Serial_ID		
+		 	,Client			
+		 	,Unit			
+		 	,MaterielName	
+		 	,MaterielModel	
+			,TareWeight					
+			,GrossWeight				
+			,Suttle							
+		 	,DeliveryMan		
+		 	,DeliveryManPhone		
+		 	,FleetName				
+		 	,Consignee			
+			,ConsigneePhone		
+		 	,TestReport				
+			,Temperature				
+			,QualityInspector	
+		 	,MeasureTime			
+		 	,IsSelfMention			
+			,FacingSlipNum		
+			,FacingSlipNum2		
+			,FacingSlipNum3		
+			,FacingSlipNum4		
+			,Remarks			
+			,DriverAutograph
+			,IsDel		
+			,Creater			
+		 	,CreaterDate						
+		) 
+		VALUES ( 
+		 	  #{plateNumber}	
+			, #{serial_ID}
+		 	, #{client}
+		 	, #{unit}
+		 	, #{materielName}
+		 	, #{materielModel}
+			, #{tareWeight}			
+			, #{grossWeight}		
+			, #{suttle}				
+		 	, #{deliveryMan}
+		 	, #{deliveryManPhone}		
+		 	, #{fleetName}		
+		 	, #{consignee}	
+			, #{consigneePhone}	
+		 	, #{testReport}		
+			, #{temperature}		
+			, #{qualityInspector}	
+		 	, #{measureTime}	
+		 	, #{isSelfMention}		
+			, #{facingSlipNum}	
+			, #{facingSlipNum2}	
+			, #{facingSlipNum3}	
+			, #{facingSlipNum4}	
+			, #{remarks}		
+			, #{driverAutograph}
+			, 0 
+		    , #{creater}
+		    ,  now()
+		) 
+	</insert>
+	<!-- 编辑其他出库单信息  -->
+	<update id="updateWeighingQueryOtherOut" parameterType="com.truckscale.weighingManagement.model.WeighingQueryOtherOutEntity">
+		UPDATE exportmeasureother
+		SET
+		 	 PlateNumber      = #{plateNumber}		
+			,Serial_ID        = #{serial_ID}		
+		 	,Client	          = #{client}		
+		 	,Unit             = #{unit}			
+		 	,MaterielName     = #{materielName}	
+		 	,MaterielModel    = #{materielModel}	
+			,TareWeight       = #{tareWeight}					
+			,GrossWeight      = #{grossWeight}				
+			,Suttle           = #{suttle}							
+		 	,DeliveryMan      = #{deliveryMan}		
+		 	,DeliveryManPhone = #{deliveryManPhone}		
+		 	,FleetName        = #{fleetName}				
+		 	,Consignee        = #{consignee}			
+			,ConsigneePhone   = #{consigneePhone}	
+		 	,TestReport       = #{testReport}				
+			,Temperature      = #{temperature}				
+			,QualityInspector = #{qualityInspector}	
+		 	,MeasureTime      = #{measureTime}			
+		 	,IsSelfMention    = #{isSelfMention}			
+			,FacingSlipNum    = #{facingSlipNum}		
+			,FacingSlipNum2   = #{facingSlipNum2}		
+			,FacingSlipNum3   = #{facingSlipNum3}		
+			,FacingSlipNum4   = #{facingSlipNum4}		
+			,Remarks          = #{remarks}			
+			,DriverAutograph  = #{driverAutograph}		
+		    ,Reviser          = #{reviser}			
+		    ,ReviserDate      = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 删除其它出库单信息  -->
+	<update id="deleteWeighingQueryOtherOut" parameterType="java.util.Map">
+		UPDATE exportmeasureother
+		SET
+		    IsDel = 1               
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 司机签名 -->
+	<update id="deleteElectronicsName" parameterType="java.util.Map">
+		update exportmeasureother set DriverAutograph = null
+		where Id = #{id}
+	</update>
+	<!-- 小票打印 -->
+	<select id="getWeighingQueryOtherInfo" parameterType="java.util.Map" resultType="com.truckscale.weighingManagement.model.WeighingQueryOtherOutEntity">
+		select
+			Id
+	 		,PlateNumber		
+			,Serial_ID		
+		 	,Client			
+		 	,Unit			
+		 	,MaterielName	
+		 	,MaterielModel	
+			,TareWeight					
+			,GrossWeight				
+			,Suttle							
+		 	,DeliveryMan		
+		 	,DeliveryManPhone		
+		 	,FleetName				
+		 	,Consignee			
+			,ConsigneePhone		
+		 	,TestReport				
+			,Temperature				
+			,QualityInspector	
+		 	,DATE_FORMAT(MeasureTime,'%Y-%m-%d %H:%i:%s') as MeasureTime			
+		 	,IsSelfMention			
+			,FacingSlipNum		
+			,FacingSlipNum2		
+			,FacingSlipNum3		
+			,FacingSlipNum4		
+			,Remarks			
+			,DriverAutograph		
+			,IsDel								
+			,Creater			
+		 	,CreaterDate						
+		 	,Reviser			
+			,ReviserDate			
+		from
+			exportmeasureother
+		WHERE 
+			IsDel = 0
+			AND Id = #{id}
+	</select>
+</mapper>

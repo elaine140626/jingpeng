@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.productionManagement.CompleteConfirmDao">	
+	<!-- 计划调度表获取(生产完成确认) -->
+	<select id="getCompleteConfirm" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		SELECT
+		  * 
+		FROM
+		  v_planmeasure as vpm 
+		where
+		  vpm.IsDel = 0
+		  and (vpm.IsQualified = 0 or (vpm.IsAdjust = 1 and vpm.IsQualified = 1))
+		  <if test="id!=null and id!=''">
+		  and vpm.Id = #{id}                              -- 按照id查询
+		  </if>	
+		  <if test="materielName!=null and materielName!=''">
+		  and vpm.MaterielName like '%${materielName}%'   -- 产品名称
+		  </if>	
+		  <if test="materielModel!=null and materielModel!=''">
+		  and vpm.MaterielModel like '%${materielModel}%' -- 产品规格
+		  </if>	
+		  <if test="isComplete != null and isComplete != ''">
+		  and vpm.IsComplete = #{isComplete}               -- 状态
+		  </if>	  
+		order by vpm.ReviserDate desc	  
+	</select>
+</mapper>

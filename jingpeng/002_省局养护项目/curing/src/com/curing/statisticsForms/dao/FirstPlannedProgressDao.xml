@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.statisticsForms.dao.FirstPlannedProgressDao">
+	<!-- 第一批计划进度List取得 -->
+	<select id="getFirstPlannedProgressList" parameterType="java.util.Map" resultType="com.curing.statisticsForms.model.FirstPlannedProgressEntity">
+		select
+		  ci.Id as CityId                                 -- 市id
+		  , ci.CityName                                   -- 市名字
+		  , ifnull(tab1.EngineeringCount, 0) + ifnull(tab2.EngineeringCount, 0) as TotalCount -- 总项数
+		  , ifnull(tab1.StartNumber, 0) + ifnull(tab2.StartNumber, 0) as TotalStartNumber -- 开工数
+		  , case 
+		    when ifnull(tab1.EngineeringCount, 0) + ifnull(tab2.EngineeringCount, 0) != 0 
+		    then ( 
+		      ifnull(tab1.StartNumber, 0) + ifnull(tab2.StartNumber, 0)
+		    ) / ( 
+		      ifnull(tab1.EngineeringCount, 0) + ifnull(tab2.EngineeringCount, 0)
+		    ) * 100 
+		    else 0 
+		    end as TotalStartRate                         -- 开工率(%)
+		  , ifnull(tab1.InvestmentProvince, 0) + ifnull(tab2.InvestmentProvince, 0) as TotalProvince -- 省补总投资(万元)
+		  , ifnull(fpp.PavementFinish, 0) + ifnull(fpp.TunnelFinish, 0) as TotalFinish -- 完成总投资(万元)
+		  , case 
+		    when ifnull(tab1.InvestmentProvince, 0) + ifnull(tab2.InvestmentProvince, 0) != 0 
+		    then ( 
+		      ifnull(fpp.PavementFinish, 0) + ifnull(fpp.TunnelFinish, 0)
+		    ) / ( 
+		      ifnull(tab1.InvestmentProvince, 0) + ifnull(tab2.InvestmentProvince, 0)
+		    ) * 100 
+		    else 0 
+		    end as TotalSchedule                          -- 工程进度(%)
+		  , ifnull(tab1.EngineeringAmount, 0) as PavementAmount -- 路面工程计划量（km）
+		  , ifnull(tab1.EngineeringCount, 0) as PavementCount -- 路面工程计划量（项）
+		  , ifnull(tab1.StartNumber, 0) as PavementStartNumber -- 路面工程开工数
+		  , ifnull(tab1.StartRate, 0) as PavementStartRate -- 路面工程开工率（%）
+		  , ifnull(tab1.InvestmentProvince, 0) as PavementProvince -- 路面工程省补总投资（万元）
+		  , ifnull(fpp.PavementFinish, 0) as PavementFinish -- 路面工程完成投资（万元）
+		  , ifnull( 
+		    fpp.PavementFinish / tab1.InvestmentProvince * 100
+		    , 0
+		  ) as PavementSchedule                           -- 路面工程工程进度（%
+		  , ifnull(tab2.EngineeringAmount, 0) as TunnelAmount -- 桥隧工程计划量（km）
+		  , ifnull(tab2.EngineeringCount, 0) as TunnelCount -- 桥隧工程计划量（项）
+		  , ifnull(tab2.StartNumber, 0) as TunnelStartNumber -- 桥隧工程开工数
+		  , ifnull(tab2.StartRate, 0) as TunnelStartRate  -- 桥隧工程开工率（%）
+		  , ifnull(tab2.InvestmentProvince, 0) as TunnelProvince -- 桥隧工程省补总投资（万元）
+		  , ifnull(fpp.TunnelFinish, 0) as TunnelFinish   -- 桥隧工程完成投资（万元）
+		  , ifnull( 
+		    fpp.TunnelFinish / tab2.InvestmentProvince * 100
+		    , 0
+		  ) as TunnelSchedule                             -- 桥隧工程工程进度（%）
+		  , fpp.ImageProgress                             -- 工程形象进度（%）
+		  , fpp.ProjectProgress                           -- 项目进展情况
+		from
+		  CityInfo as ci                                  -- 市信息表
+		  left join ( 
+		    select
+		      ci.Id                                       -- 市id
+		      , ci.CityName                               -- 市名字
+		      , sum(pis.EngineeringAmount) as EngineeringAmount -- 路面工程计划量（km）
+		      , sum(pis.EngineeringCount) as EngineeringCount -- 路面工程计划量（项）
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) as StartNumber                            -- 路面工程开工数
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) * 100 / sum(pis.EngineeringCount) as StartRate -- 路面工程开工率（%）
+		      , sum(pis.InvestmentProvince) as InvestmentProvince -- 路面工程省补总投资（万元）
+		    from
+		      CityInfo as ci                              -- 市信息表
+		      left join CountyInfo as co                  -- 县信息表
+		        on ci.Id = co.CityId 
+		        and co.IsDel = 0 
+		      left join EntryName as en                   -- 项目信息表
+		        on co.Id = en.CityId 
+		        and en.IsDel = 0 
+		      left join ProjectInfoSummary as pis         -- 工程信息
+		        on en.Id = pis.ProjectId 
+		        and pis.IsDel = 0 
+		        and pis.Engineering in ('0')              -- 路面工程
+		        <if test="PlanBatch == 1 or PlanBatch == 2 or PlanBatch == 3">
+		        and pis.PlanBatch = #{PlanBatch}          -- 计划批次
+		        </if>
+		        <if test="PlanBatch == 7">
+		        and pis.PlanBatch in ('1','2','3')        -- 全省
+		        </if>	
+		    where
+		      ci.IsDel = 0 
+		    group by
+		      ci.Id
+		      , ci.CityName
+		  ) as tab1 
+		    on ci.Id = tab1.Id 
+		  left join ( 
+		    select
+		      ci.Id                                       -- 市id
+		      , ci.CityName                               -- 市名字
+		      , sum(pis.EngineeringAmount) as EngineeringAmount -- 桥隧工程计划量（km）
+		      , sum(pis.EngineeringCount) as EngineeringCount -- 桥隧工程计划量（项）
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) as StartNumber                            -- 桥隧工程开工数
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) * 100 / sum(pis.EngineeringCount) as StartRate -- 桥隧工程开工率（%）
+		      , sum(pis.InvestmentProvince) as InvestmentProvince -- 桥隧工程省补总投资（万元）
+		    from
+		      CityInfo as ci                              -- 市信息表
+		      left join CountyInfo as co                  -- 县信息表
+		        on ci.Id = co.CityId 
+		        and co.IsDel = 0 
+		      left join EntryName as en                   -- 项目信息表
+		        on co.Id = en.CityId 
+		        and en.IsDel = 0 
+		      left join ProjectInfoSummary as pis         -- 工程信息
+		        on en.Id = pis.ProjectId 
+		        and pis.IsDel = 0 
+		        and pis.Engineering in ('2', '3')         -- 桥隧工程
+		        <if test="PlanBatch == 1 or PlanBatch == 2 or PlanBatch == 3">
+		        and pis.PlanBatch = #{PlanBatch}          -- 计划批次
+		        </if>
+		        <if test="PlanBatch == 7">
+		        and pis.PlanBatch in ('1','2','3')        -- 全省
+		        </if>	
+		    where
+		      ci.IsDel = 0 
+		    group by
+		      ci.Id
+		      , ci.CityName
+		  ) as tab2 
+		    on ci.Id = tab2.Id 
+		  left join FirstPlannedProgress as fpp 
+		    on ci.Id = fpp.CityId 
+		    and fpp.IsDel = 0 
+		    and fpp.PlanBatch = #{PlanBatch}              -- 第一批
+		where
+		  ci.IsDel = 0 
+		  <if test="CityName != null and CityName != '' ">                                   
+		  and ci.CityName like concat('%', #{CityName}, '%')
+		  </if>
+		order by
+		  ci.Id
+	</select>
+	
+	<!-- 第一批计划进度合计 -->
+	<select id="getFirstPlannedProgressSum" parameterType="java.util.Map" resultType="com.curing.statisticsForms.model.FirstPlannedProgressSum">
+		select
+		  sum( 
+		    ifnull(tab1.EngineeringCount, 0) + ifnull(tab2.EngineeringCount, 0)
+		  ) as TotalCountSum                              -- 总项数
+		  , sum( 
+		    ifnull(tab1.StartNumber, 0) + ifnull(tab2.StartNumber, 0)
+		  ) as TotalStartNumberSum                        -- 开工数
+		  , case 
+		    when sum( 
+		      ifnull(tab1.EngineeringCount, 0) + ifnull(tab2.EngineeringCount, 0)
+		    ) != 0 
+		    then sum( 
+		      ifnull(tab1.StartNumber, 0) + ifnull(tab2.StartNumber, 0)
+		    ) / sum( 
+		      ifnull(tab1.EngineeringCount, 0) + ifnull(tab2.EngineeringCount, 0)
+		    ) * 100 
+		    else 0 
+		    end as TotalStartRateSum                      -- 开工率(%)
+		  , sum( 
+		    ifnull(tab1.InvestmentProvince, 0) + ifnull(tab2.InvestmentProvince, 0)
+		  ) as TotalProvinceSum                           -- 省补总投资(万元)
+		  , sum( 
+		    ifnull(fpp.PavementFinish, 0) + ifnull(fpp.TunnelFinish, 0)
+		  ) as TotalFinishSum                             -- 完成总投资(万元)
+		  , case 
+		    when sum( 
+		      ifnull(tab1.InvestmentProvince, 0) + ifnull(tab2.InvestmentProvince, 0)
+		    ) != 0 
+		    then sum( 
+		      ifnull(fpp.PavementFinish, 0) + ifnull(fpp.TunnelFinish, 0)
+		    ) / sum( 
+		      ifnull(tab1.InvestmentProvince, 0) + ifnull(tab2.InvestmentProvince, 0)
+		    ) * 100 
+		    else 0 
+		    end as TotalScheduleSum                       -- 工程进度(%)
+		  , sum(ifnull(tab1.EngineeringAmount, 0)) as PavementAmountSum -- 路面工程计划量（km）
+		  , sum(ifnull(tab1.EngineeringCount, 0)) as PavementCountSum -- 路面工程计划量（项）
+		  , sum(ifnull(tab1.StartNumber, 0)) as PavementStartNumberSum -- 路面工程开工数
+		  , ifnull( 
+		    sum(tab1.StartNumber) / sum(tab1.EngineeringCount) * 100
+		    , 0
+		  ) as PavementStartRateSum                       -- 路面工程开工率（%）
+		  , sum(ifnull(tab1.InvestmentProvince, 0)) as PavementProvinceSum -- 路面工程省补总投资（万元）
+		  , sum(ifnull(fpp.PavementFinish, 0)) as PavementFinishSum -- 路面工程完成投资（万元）
+		  , ifnull( 
+		    sum(fpp.PavementFinish) / sum(tab1.InvestmentProvince) * 100
+		    , 0
+		  ) as PavementScheduleSum                        -- 路面工程工程进度（%)
+		  , sum(ifnull(tab2.EngineeringAmount, 0)) as TunnelAmountSum -- 桥隧工程计划量（km）
+		  , sum(ifnull(tab2.EngineeringCount, 0)) as TunnelCountSum -- 桥隧工程计划量（项）
+		  , sum(ifnull(tab2.StartNumber, 0)) as TunnelStartNumberSum -- 桥隧工程开工数
+		  , ifnull( 
+		    sum(tab2.StartNumber) / sum(tab2.EngineeringCount) * 100
+		    , 0
+		  ) as TunnelStartRateSum                         -- 桥隧工程开工率（%）
+		  , sum(ifnull(tab2.InvestmentProvince, 0)) as TunnelProvinceSum -- 桥隧工程省补总投资（万元）
+		  , sum(ifnull(fpp.TunnelFinish, 0)) as TunnelFinishSum -- 桥隧工程完成投资（万元）
+		  , ifnull( 
+		    sum(fpp.TunnelFinish) / sum(tab2.InvestmentProvince) * 100
+		    , 0
+		  ) as TunnelScheduleSum                          -- 桥隧工程工程进度（%）
+		  , ifnull(sum(fpp.ImageProgress) / count(*), 0) as ImageProgressSum -- 工程形象进度（%）
+		from
+		  CityInfo as ci                                  -- 市信息表
+		  left join ( 
+		    select
+		      ci.Id                                       -- 市id
+		      , ci.CityName                               -- 市名字
+		      , sum(pis.EngineeringAmount) as EngineeringAmount -- 路面工程计划量（km）
+		      , sum(pis.EngineeringCount) as EngineeringCount -- 路面工程计划量（项）
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) as StartNumber                            -- 路面工程开工数
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) * 100 / sum(pis.EngineeringCount) as StartRate -- 路面工程开工率（%）
+		      , sum(pis.InvestmentProvince) as InvestmentProvince -- 路面工程省补总投资（万元）
+		    from
+		      CityInfo as ci                              -- 市信息表
+		      left join CountyInfo as co                  -- 县信息表
+		        on ci.Id = co.CityId 
+		        and co.IsDel = 0 
+		      left join EntryName as en                   -- 项目信息表
+		        on co.Id = en.CityId 
+		        and en.IsDel = 0 
+		      left join ProjectInfoSummary as pis         -- 工程信息
+		        on en.Id = pis.ProjectId 
+		        and pis.IsDel = 0 
+		        and pis.Engineering in ('0')              -- 路面工程
+		        <if test="PlanBatch == 1 or PlanBatch == 2 or PlanBatch == 3">
+		        and pis.PlanBatch = #{PlanBatch}          -- 计划批次
+		        </if>
+		        <if test="PlanBatch == 7">
+		        and pis.PlanBatch in ('1','2','3')        -- 全省
+		        </if>	
+		    where
+		      ci.IsDel = 0 
+		    group by
+		      ci.Id
+		      , ci.CityName
+		  ) as tab1 
+		    on ci.Id = tab1.Id 
+		  left join ( 
+		    select
+		      ci.Id                                       -- 市id
+		      , ci.CityName                               -- 市名字
+		      , sum(pis.EngineeringAmount) as EngineeringAmount -- 桥隧工程计划量（km）
+		      , sum(pis.EngineeringCount) as EngineeringCount -- 桥隧工程计划量（项）
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) as StartNumber                            -- 桥隧工程开工数
+		      , sum( 
+		        case 
+		          when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		          then pis.EngineeringCount 
+		          else 0 
+		          end
+		      ) * 100 / sum(pis.EngineeringCount) as StartRate -- 桥隧工程开工率（%）
+		      , sum(pis.InvestmentProvince) as InvestmentProvince -- 桥隧工程省补总投资（万元）
+		    from
+		      CityInfo as ci                              -- 市信息表
+		      left join CountyInfo as co                  -- 县信息表
+		        on ci.Id = co.CityId 
+		        and co.IsDel = 0 
+		      left join EntryName as en                   -- 项目信息表
+		        on co.Id = en.CityId 
+		        and en.IsDel = 0 
+		      left join ProjectInfoSummary as pis         -- 工程信息
+		        on en.Id = pis.ProjectId 
+		        and pis.IsDel = 0 
+		        and pis.Engineering in ('2', '3')         -- 桥隧工程
+		        <if test="PlanBatch == 1 or PlanBatch == 2 or PlanBatch == 3">
+		        and pis.PlanBatch = #{PlanBatch}          -- 计划批次
+		        </if>
+		        <if test="PlanBatch == 7">
+		        and pis.PlanBatch in ('1','2','3')        -- 全省
+		        </if>	
+		    where
+		      ci.IsDel = 0 
+		    group by
+		      ci.Id
+		      , ci.CityName
+		  ) as tab2 
+		    on ci.Id = tab2.Id 
+		  left join FirstPlannedProgress as fpp 
+		    on ci.Id = fpp.CityId 
+		    and fpp.IsDel = 0 
+		    and fpp.PlanBatch = #{PlanBatch}               -- 第一批
+		where
+		  ci.IsDel = 0                                    
+		  <if test="CityName != null and CityName != '' ">                                   
+		  and ci.CityName like concat('%', #{CityName}, '%')
+		  </if>
+	</select>
+	
+	<!-- 第一批计划进度 单条取得 -->
+	<select id="getFirstPlannedProgressByCityId" parameterType="java.util.Map" resultType="com.curing.statisticsForms.model.FirstPlannedProgress">
+		SELECT
+		  Id
+		  , CityId                                        -- 市id
+		  , PavementFinish                                -- 路面工程完成投资（万元）
+		  , TunnelFinish                                  -- 隧道工程完成投资（万元）
+		  , ProjectProgress                               -- 项目进展情况
+		  , ImageProgress                                 -- 工程形象进度（%）
+		  , PlanBatch                                     -- 计划批次（数据字典）
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		  , Reviser
+		  , ReviserDate 
+		FROM
+		  FirstPlannedProgress 
+		WHERE
+		  IsDel = 0
+		  and CityId = #{CityId}
+		  and PlanBatch = #{PlanBatch}	
+	</select>
+	
+	<!-- 新增第一批计划进度 -->
+	<insert id="insertFirstPlannedProgress" parameterType="com.curing.statisticsForms.model.FirstPlannedProgress">
+		INSERT 
+		INTO FirstPlannedProgress( 
+		  Id
+		  , CityId
+		  , PavementFinish
+		  , TunnelFinish
+		  , ProjectProgress
+		  , ImageProgress
+		  , PlanBatch
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  , #{CityId}
+		  , #{PavementFinish}
+		  , #{TunnelFinish}
+		  , #{ProjectProgress}
+		  , #{ImageProgress}
+		  , #{PlanBatch}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		)  
+	</insert>
+	
+	<!-- 删除第一批计划进度 -->
+	<update id="deleteFirstPlannedProgress" parameterType="com.curing.statisticsForms.model.FirstPlannedProgress">
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  CityId = #{CityId}
+	</update>
+		
+</mapper>

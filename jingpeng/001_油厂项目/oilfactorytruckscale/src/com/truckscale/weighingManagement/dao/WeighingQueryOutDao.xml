@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.truckscale.weighingManagement.dao.WeighingQueryOutDao">
+	<!-- 查询称重列表 -->
+	<select id="getWeighingQueryOut"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+		select
+				 e.Id 						    
+				,c.CustomerName as Client
+				,DATE_FORMAT(e.CreaterDate,'%Y-%m-%d %H:%i:%s') as DispatchDate	
+				,e.PlateNumber
+				,m.MaterielName
+				,m.MaterielModel
+,IF(e.outType = 3,DATE_FORMAT(e.CreaterDate,'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(e.TareMeasureTime,'%Y-%m-%d %H:%i:%s'))as TareMeasureTime
+,IF(e.outType = 3,DATE_FORMAT(e.CreaterDate,'%Y-%m-%d %H:%i:%s'),DATE_FORMAT(e.GrossMeasureTime,'%Y-%m-%d %H:%i:%s'))as GrossMeasureTime
+				,e.TareWeight	
+		  	,e.GrossWeight
+				,e.Suttle
+				,e.DeliveryMan
+				,e.DeliveryManPhone
+				,sd.TransportBalance
+				,e.OutType
+				,sc.CompanyName
+				,e.Address
+				,f.FleetName
+				,car.Driver1
+				,e.Temperature
+				,e.FacingSlipNum
+				,e.FacingSlipNum2
+				,e.FacingSlipNum3
+				,e.FacingSlipNum4
+				,e.Remarks
+				,con.IsRelation -- 是否关联其它公司 0是 1否
+			from ExportMeasure e  								 			-- 调度出库单
+			left join materielinfo m on e.ProductID = m.Id 					-- 物料信息表
+			and m.IsDel = 0
+			left join salesorder s on e.SalesOrderId = s.Id  				-- 销售订单表
+			and s.IsDel = 0
+			left join contractinfo con on s.ContractId = con.Id 			-- 合同信息表
+			and con.IsDel = 0
+			left join salecompany sc on con.RelationCompanyId = sc.Id -- 销售公司表
+			and sc.IsDel = 0
+			left join salesorderdetailed sd on e.OrderDetailedId = sd.Id -- 销售订单明细表
+		  	and sd.IsDel = 0
+			left join carinfo car on e.PlateNumber = car.PlateNumber -- 车辆表
+			and car.IsDel = 0
+			left join fleetinfo f on car.FleetId = f.Id	-- 车队信息表
+			and f.IsDel = 0
+			left JOIN customerinfo c on e.Client = c.CustomerCode  -- 客户表
+			and c.IsDel = 0
+			where
+				  e.IsDel = 0
+			and e.Suttle is not null		  
+		<if test="id != null and id != ''"> 
+			and e.Id = #{id} 
+		</if> 
+		<if test = "startTime != null and startTime != ''" >
+			and <![CDATA[  DATE_FORMAT(e.TareMeasureTime,'%Y-%m-%d')  >= #{startTime} ]]>
+		</if> 
+		<if test = "endTime != null and endTime != ''" >
+			and <![CDATA[  DATE_FORMAT(e.TareMeasureTime,'%Y-%m-%d')  <= #{endTime} ]]> 
+		</if>
+		<if test="customerName != null and customerName != ''"> 
+			and c.CustomerName= #{customerName} 
+		</if>
+		<if test="plateNumber != null and plateNumber != ''"> 
+			and e.PlateNumber = #{plateNumber} 
+		</if>
+		<if test="companyName != null and companyName != ''"> 
+			and sc.CompanyName = #{companyName} 					
+		</if>
+		<if test="driverName != null and driverName != ''"> 
+			and car.Driver1 = #{driverName} 
+		</if>
+		<if test="fleetName != null and fleetName != ''"> 
+			and f.FleetName = #{fleetName} 
+		</if>
+		<if test="materielName != null and materielName != ''"> 
+			and m.materielName = #{materielName} 
+		</if>
+		<if test="materielModel != null and materielModel != ''"> 
+			and m.MaterielModel = #{materielModel} 
+		</if>
+		<if test="outType != null and outType != ''"> 
+			and e.OutType = #{outType} 
+		</if>
+		ORDER BY e.CreaterDate desc
+	</select>
+	<!-- 编辑称重信息  -->
+	<update id="updateWeighingQueryOut" parameterType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+		UPDATE exportmeasure
+		SET
+			 Temperature = #{temperature}
+			,FacingSlipNum = #{facingSlipNum}
+			,FacingSlipNum2 = #{facingSlipNum2}
+			,FacingSlipNum3 = #{facingSlipNum3}
+			,FacingSlipNum4 = #{facingSlipNum4}
+			,Remarks =  #{remarks}
+		    ,Reviser = #{reviser}
+		    ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 删除称重信息  -->
+	<update id="deleteWeighingQueryOut" parameterType="java.util.Map">
+		UPDATE ExportMeasure
+		SET
+		     IsDel = 1               -- 删除标识
+		    ,ReviserDate = NOW() 
+		WHERE
+			 Id = #{id}
+	</update>
+	<!-- 查询正常出库单的打印信息 -->
+	<select id="getWeighingQueryOutPrintInfo" parameterType="java.util.Map" resultType="com.truckscale.weighingManagement.model.WeighingQueryOutPrint">
+		SELECT
+			e.Id               AS id,-- 自增长id
+			e.Serial_ID        AS serialId,-- 流水号
+			e.PlateNumber      AS plateNumber,-- 车牌号码
+			DATE_FORMAT(e.TareMeasureTime,'%Y-%m-%d %H:%i:%s') AS tareMeasureTime,	
+			DATE_FORMAT(e.CreaterDate,'%Y-%m-%d %H:%i:%s') AS createrDate,
+			cus.CustomerName   AS customerName,-- 客户名称
+			sc.CompanyName     AS supplierName,-- 供料单位
+			m.MaterielName    AS materielName,-- 产品名称
+			m.MaterielModel   AS materielModel,-- 规格型号
+			e.TareWeight       AS tareWeight,-- 皮重（t）
+			e.GrossWeight      AS grossWeight,-- 毛重（t）
+			e.Suttle           AS suttle,-- 净重（t）
+			e.DeliveryMan      AS carrierName,-- 承运人
+			e.DeliveryManPhone AS carrierTelephone,-- 承运人电话
+			f.FleetName        AS fleetName,-- 车队名称
+			e.Consignee        AS consignee,-- 收货人
+			e.ConsigneePhone   AS consigneePhone,-- 收货人电话
+			t.TestReportNumber AS testReportNumber,-- 检测报告编号
+			e.FacingSlipNum    AS facingSlipNum,-- 封签号
+			e.FacingSlipNum2   AS facingSlipNum2,-- 封签号2
+			e.FacingSlipNum3   AS facingSlipNum3,-- 封签号3
+			e.FacingSlipNum4   AS facingSlipNum4,-- 封签号4
+			e.Temperature      AS temperature,-- 温度
+			e.Remarks          AS remarks,-- 备注
+			case 
+				when e.OutType = 0 then "正常出库" 
+				when e.OutType = 1 then "调拨出库"
+				when e.OutType = 3 then "空发出库"
+				when e.OutType = 4 then "兑换出库"
+				else "" end    AS outType, -- 出库单状态 0：正常 1：调拨 2：退货 3:空发 4:兑换 5.兑换时调拨
+			case when sod.TransportBalance = 1 then "是" else "否" end AS transportBalance, -- 是否自提
+			sco.CompanyName   AS otherCompanyName, -- 其它公司名称
+			e.DriverAutograph AS driverAutograph, -- 司机图片
+			sod.IsExchange, -- 是否兑换 0是 1否
+			m2.MaterielName    AS materielName2,-- 兑换产品名称
+			m2.MaterielModel   AS materielModel2, -- 兑换规格型号
+			sod.ExchangeWeight AS exchangeWeight, -- 兑换重量（净重）
+			sod.Proportion AS proportion, -- 兑换比例
+			e.TareOperator AS tareOperator, -- 皮重司磅员（检斤员）
+			sod.Remarks    AS orderDetailedRemarks -- 销售订单明细备注
+		FROM
+			exportmeasure e -- 调度出库单表
+		LEFT JOIN salesorder s -- 销售订单表
+		ON e.SalesOrderId = s.Id
+		AND s.IsDel = 0
+		LEFT JOIN SalesOrderDetailed sod -- 销售订单明细表
+		ON e.OrderDetailedId = sod.Id
+		AND sod.IsDel = 0
+		AND s.Id = sod.SalesOrderId
+		LEFT JOIN contractinfo c -- 合同信息
+		ON s.ContractId = c.Id
+		AND c.IsDel = 0
+		LEFT JOIN salecompany sc -- 销售公司
+		ON c.SalesCompanyId = sc.Id
+		AND sc.IsDel = 0
+		LEFT JOIN salecompany sco -- 其他公司
+		ON c.RelationCompanyId = sco.Id
+		AND sco.IsDel = 0
+		LEFT JOIN customerinfo AS cus -- 客户信息表
+		ON e.Client = cus.CustomerCode
+		AND cus.IsDel = 0
+		LEFT JOIN materielinfo m -- 物料信息表
+		ON e.ProductID = m.Id
+		AND m.IsDel = 0
+		LEFT JOIN materielinfo m2 -- 兑换物料信息表
+		ON sod.MaterielId = m2.Id
+		AND m2.IsDel = 0
+		LEFT JOIN TestReport t -- 检测报告单
+		ON e.Id = t.ExportStorageId
+		AND t.IsDel = 0
+		LEFT JOIN carinfo car -- 车辆表
+		ON e.PlateNumber = car.PlateNumber
+		AND car.IsDel = 0
+		LEFT JOIN fleetinfo f -- 车队信息表
+		ON f.Id = car.FleetId
+		AND f.IsDel = 0
+		WHERE
+			e.IsDel = 0
+			<if test="outType != null and outType != ''">
+				AND e.OutType = #{outType}
+			</if>
+			<if test="id != null and id != 0">
+				AND e.Id = #{id}
+			</if>
+	</select>
+	<!-- 调拨出库单打印信息 -->
+	<select id="getNoweighEntityPrintInfo" parameterType="java.util.Map" resultType="com.truckscale.weighingManagement.model.NoweighEntity">
+		SELECT
+			n.id AS id -- id 
+			,
+			t.ContractId AS contractId -- 合同id
+			,
+			n.SalesOrderId AS salesOrderId -- 销售订单id
+			,
+			n.SerialID AS serialId -- 流水号
+			,
+			n.SettlementWeight AS settlementWeight -- 结算重量
+			,
+			cus.CustomerCode AS customerCode -- 客户编号
+			,
+			cus.CustomerName AS customerName -- 客户名称
+			,
+			n.Consignee AS consignee -- 收货人
+			,
+			n.ConsigneePhone AS consigneePhone -- 收货电话
+			,
+			n.ConsigneeAddress AS consigneeAddress -- 收货地址
+			,
+			n.MaterielInfoId AS materielInfoId -- 物料id
+			,
+			m.MaterielName AS materielName -- 物料名称
+			,
+			m.MaterielModel AS materielModel -- 规格型号
+			,
+			CASE
+				WHEN n.TransportBalance = 1 THEN
+					"是"
+				ELSE
+					"否"
+				END AS transportBalance -- 运输结算情况（数据字典）0:我方承担运费 1:客户自提 2:我方垫付运费 3:其他
+			,
+			 n.CarName AS carName -- 车牌号码
+			,
+			 n.Deliverer AS deliveryMan -- 送货人
+			,
+			 n.DeliveryPhone AS deliveryManPhone -- 送货电话
+			,
+			 n.Remarks AS remarks -- 备注
+			,
+			 n.DispatchOutWarehouseId AS dispatchOutWarehouseId -- 出库单id
+			,
+			 tp.TestReportNumber AS testReportNumber -- 检测报告编号
+			,
+			 n.Type AS type -- 类型（数据字典） 0:正常 1:调拨
+			,
+			 n.AllotWeight AS allotWeight -- 调拨重量
+			,
+			CASE
+				WHEN s.OutType = 0 THEN
+					"正常出库"
+				WHEN s.OutType = 1 THEN
+					"调拨出库"
+				WHEN s.OutType = 3 THEN
+					"空发出库"
+				WHEN s.OutType = 4 THEN
+					"兑换出库"
+				ELSE
+					""
+			END AS outType -- 出库单状态 0：正常 1：调拨 2：退货 3:空发 4:兑换 5.兑换时调拨
+			,
+			 sc.CompanyName AS companyName -- 销售公司名称
+			,
+			 sco.CompanyName AS otherCompanyName -- 其它公司
+			,
+			 s.TareWeight AS tareWeight -- 皮重（t）
+			,
+			 (s.TareWeight + n.AllotWeight) AS grossWeight -- 毛重（t）
+			,
+			 n.AllotWeight AS suttle -- 净重（t）
+			,
+			 s.FacingSlipNum AS facingSlipNum -- 封签号
+			,
+			 s.FacingSlipNum2 AS facingSlipNum2-- 封签号2
+			,
+			 s.FacingSlipNum3 AS facingSlipNum3 -- 封签号3
+			,
+			 s.FacingSlipNum4 AS facingSlipNum4-- 封签号4
+			,
+			 s.Temperature AS temperature-- 温度
+			,
+			 DATE_FORMAT(s.TareMeasureTime,'%Y-%m-%d %H:%i:%s') as tareMeasureTime	
+			,
+			 f.FleetName  AS fleetName-- 车队名称
+			,
+			 s.DriverAutograph AS driverAutograph -- 司机图片
+			,
+			 s.TareOperator AS tareOperator -- 皮重司磅员（检斤员）
+			,
+			 t1.Remarks    AS orderDetailedRemarks -- 销售订单明细备注 
+		FROM
+				noweighoutwarehouse n -- 未称重出库单表
+			LEFT JOIN exportMeasure s -- 调度出库表
+			ON s.Id = n.DispatchOutWarehouseId
+			AND s.IsDel = 0
+			LEFT JOIN salesorder t -- 销售订单表
+			ON s.SalesOrderId = t.Id -- 销售订单id
+
+			AND t.IsDel = 0
+			LEFT JOIN contractinfo c -- 合同信息表
+			ON t.ContractId = c.Id -- 合同id
+			AND c.IsDel = 0
+			LEFT JOIN salecompany sc -- 销售公司
+			ON c.SalesCompanyId = sc.Id
+			AND sc.IsDel = 0
+			LEFT JOIN salecompany sco -- 其他公司
+			ON c.RelationCompanyId = sco.Id
+			AND sco.IsDel = 0
+			LEFT JOIN customerinfo AS cus -- 客户信息表
+			ON n.Client = cus.CustomerCode
+			AND cus.IsDel = 0
+			LEFT JOIN materielinfo m -- 物料信息表
+			ON n.MaterielInfoId = m.Id -- 物料id
+			AND m.IsDel = 0
+			LEFT JOIN testreport tp -- 检测报告单
+			ON s.Id = tp.ExportStorageId -- 检测报告id
+			AND tp.IsDel = 0
+			LEFT JOIN salesorderdetailed t1 -- 销售订单明细表
+			ON t.Id = t1.SalesOrderId
+			AND t1.IsDel = 0
+			AND s.OrderDetailedId = t1.Id
+			LEFT JOIN carinfo car -- 车辆表
+			ON n.CarName = car.PlateNumber
+			AND car.IsDel = 0
+			LEFT JOIN fleetinfo f -- 车队信息表
+			ON f.Id = car.FleetId
+			AND f.IsDel = 0
+		WHERE
+			n.IsDel = 0
+			AND n.Type = 1
+			<if test="outType != null and outType != ''">
+				AND s.OutType = #{outType}
+			</if>
+			<if test="id != null and id != 0">
+				AND n.DispatchOutWarehouseId = #{id}
+			</if>
+	</select>
+	<!-- 检测报告单信息 -->
+	<select id="getTestreportInfo" parameterType="java.util.Map" resultType="com.truckscale.weighingManagement.model.Testreport">
+		select
+		  t.id -- 检测报告id
+		 , t.SaleOrOut as saleOrOut -- 销售订单或出库单标识（数据字典）
+		 , t.TestPersonnelId as testPersonnelId -- 检测人id
+		 , t.ExportStorageId as exportStorageId -- 出/入库单id
+		 , t.ReportRenown as reportRenown -- 报告名头
+     	 , t.ProductModel as productModel -- 产品型号
+     	 , t.UsePlace as usePlace -- 使用地点
+     	 , t.TestReportNumber as testReportNumber -- 检测报告编号
+		 , DATE_FORMAT(t.TestDate,'%Y-%m-%d') as TestDate -- 检测日期
+		 , t.IndexType as indexType -- 指标类型
+		 , t.Conclusion as conclusion -- 结论
+		 , t.ReportRemarks as reportRemarks -- 报告备注
+		 , t.InsideRemarks as insideRemarks -- 内部备注
+		 , t.ReviewerId as reviewerId -- 复核人id
+		 , t.InspectionSupervisorId as inspectionSupervisorId -- 检测负责人id
+		 , t.DetectionUnitId as detectionUnitId -- 检测单位id
+		 , DATE_FORMAT(e.TareMeasureTime,'%Y年%m月%d日') as factoryTime -- 皮重称重时间
+		 , DATE_FORMAT(e.CreaterDate,'%Y年%m月%d日') as createrDate
+		 , t.IsDel as isDel
+		 , t.Exchange as exchange -- 兑换前后 0:兑换前 1:兑换后
+		from
+		  testreport t -- 检测报告单
+			LEFT JOIN exportmeasure e -- 调度出库单
+			ON t.ExportStorageId = e.Id
+			AND e.IsDel = 0
+		where
+			t.IsDel = 0 
+			AND t.ExportStorageId = #{id}
+			AND t.Exchange = #{exchange}
+	</select>
+	<!-- 检测报告单销售订单明细 -->
+	<select id="getTestreportsaledetailedInfo" parameterType="java.util.Map" resultType="com.truckscale.weighingManagement.model.Testreportsaledetailed">
+		select
+		  t.id -- 检测报告单销售订单明细表
+		 , t.TestReportId as testReportId -- 检测报告id
+		 , t.MaterielId  as materielId -- MaterielId
+		 , t.TestProject as testProject -- 检测项目（数据字典）
+		 , t.DetectionIndexId as detectionIndexId -- 检测指标id
+		 , t.SkillRequire as skillRequire -- 技术要求
+		 , t.TestResult as testResult -- 检测结果
+		 , t.ResultDetermine as resultDetermine -- 结果判定
+		 , d.TestingItems as testingItems -- 检测项目
+		 , d.IndexUnit as indexUnit -- 单位
+		 , d.TestMethod as testMethod -- 试验方法
+		from
+		  testreportsaledetailed t -- 检测报告单销售订单明细表
+				LEFT JOIN detectionIndex d -- 检测指标表
+				ON t.DetectionIndexId	= d.Id
+				AND d.IsDel = 0
+		where
+			t.IsDel = 0 
+		  AND  t.TestReportId = #{testReportId}
+	</select>
+	<!-- 获取电子公章检测单位表 -->
+	<select id="getCachetCompany" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			  c.Id               as id
+	    	, c.TestCompany      as testCompany -- 检测单位        
+			, c.ElectronicsName  as electronicsName -- 电子签名
+			, c.Creater          as creater
+			, c.CreaterDate      as createrDate
+			, c.Reviser          as reviser
+			, c.ReviserDate      as reviserDate
+		FROM cachetcompany c -- 电子公章检测单位表        
+		WHERE 
+			c.IsDel = 0
+	   ORDER BY c.CreaterDate DESC
+	</select>
+	 <!-- 获取全部人员电子公章 -->
+	<select id="getCachetPersonnel" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+	        c.Id                 as id
+	        , c.CachetName       as cachetName -- 姓名   
+			, c.ElectronicsName  as electronicsName -- 电子签名
+			, c.Creater          as creater
+			, c.CreaterDate      as createrDate
+			, c.Reviser          as reviser
+			, c.ReviserDate      as reviserDate
+		FROM cachetPersonnel c -- 电子公章人员表            
+		WHERE 
+			c.IsDel = 0
+	    ORDER BY c.CreaterDate DESC
+	</select>
+	
+	<select id="ClientList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+			select
+			DISTINCT
+				c.CustomerName as Client
+			from ExportMeasure   e								 			-- 调度出库单
+			left JOIN customerinfo c on e.Client = c.CustomerCode
+			and c.IsDel = 0
+			where
+				 e.IsDel = 0
+			ORDER BY e.CreaterDate desc
+	</select>
+	<select id="PlateNumberList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+			select
+			DISTINCT
+				PlateNumber
+			from ExportMeasure   								 			-- 调度出库单
+			where
+				 IsDel = 0
+			ORDER BY CreaterDate desc
+	</select>
+	<select id="CompanyNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+			select
+			DISTINCT
+				sc.CompanyName
+			from ExportMeasure e  								 			-- 调度出库单
+			left join salesorder s on e.SalesOrderId = s.Id  				-- 销售订单表
+			and s.IsDel = 0
+			left join contractinfo con on s.ContractId = con.Id 			-- 合同信息表
+			and con.IsDel = 0
+			left join salecompany sc on con.RelationCompanyId = sc.Id -- 销售公司表
+			and sc.IsDel = 0
+			where
+				  e.IsDel = 0
+	</select>
+	<select id="Driver1List" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+		select
+		DISTINCT
+				car.Driver1
+			from ExportMeasure e  								 			-- 调度出库单
+			left join carinfo car on e.PlateNumber = car.PlateNumber -- 车辆表
+			and car.IsDel = 0
+			where
+				  e.IsDel = 0
+			ORDER BY e.CreaterDate desc
+	</select>
+	<select id="FleetNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+	select
+	DISTINCT
+				f.FleetName
+			from ExportMeasure e  								 			-- 调度出库单
+			left join carinfo car on e.PlateNumber = car.PlateNumber -- 车辆表
+			and car.IsDel = 0
+			left join fleetinfo f on car.FleetId = f.Id	-- 车队信息表
+			and f.IsDel = 0
+			where
+				  e.IsDel = 0
+	</select>
+		<select id="MaterielNameList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+				select
+				DISTINCT
+				m.MaterielName
+			from ExportMeasure e  								 			-- 调度出库单
+			left join materielinfo m on e.ProductID = m.Id 					-- 物料信息表
+			where
+				  e.IsDel = 0
+			ORDER BY e.CreaterDate desc
+	</select>
+			<select id="MaterielModelList" parameterType="java.util.Map"
+		resultType="com.truckscale.weighingManagement.model.WeighingQueryOutEntity">
+				select
+				DISTINCT
+				m.MaterielModel
+			from ExportMeasure e  								 			-- 调度出库单
+			left join materielinfo m on e.ProductID = m.Id 					-- 物料信息表
+			where
+				  e.IsDel = 0
+			ORDER BY e.CreaterDate desc
+	</select>
+</mapper>

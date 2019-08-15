@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.CrossRoadbedNumberDao">
+	<!-- 工程进度（平面交叉路基路面工程数量表）List取得 -->
+	<select id="getCrossRoadbedNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.CrossRoadbedNumberEntity">
+		SELECT
+		  crn.Id
+		  , crn.ProjectId                                 -- 项目id
+		  , crn.PileNumber                                -- 中心桩号及起讫桩号
+		  , crn.CrossRoadName                             -- 被交叉路名称
+		  , crn.AcrossForm                                -- 交叉形式
+		  , crn.Corner                                    -- 交角（°）
+		  , crn.WidthLeft                                 -- 被交叉道路宽度左
+		  , crn.WidthRight                                -- 被交叉道路宽度右
+		  , crn.CornerRadiusR1                            -- 转弯半径R1（m）
+		  , crn.CornerRadiusR2                            -- 转弯半径R2（m）
+		  , crn.RoadWidth                                 -- 路面宽度
+		  , crn.RebuildLength                             -- 改建长度
+		  , crn.Concrete                                  -- 工程数量4cm细粒式沥青混凝土
+		  , crn.ModifiedAsphalt                           -- 工程数量4cm改性沥青砼
+		  , crn.OrdinaryAsphalt                           -- 工程数量6cm普通沥青砼
+		  , crn.StickyLayer                               -- 工程数量粘层油
+		  , crn.PermeableLayer                            -- 工程数量透层油
+		  , crn.Seal                                      -- 工程数量封层油
+		  , crn.CementGravel20cm                          -- 工程数量20cm水泥稳定砂砾
+		  , crn.NaturalGravel15cm                         -- 工程数量15cm天然砂砾
+		  , crn.NaturalGravel20cm                         -- 工程数量20cm天然砂砾
+		  , crn.Excavation                                -- 工程数量挖方
+		  , crn.Fill                                      -- 工程数量填方
+		  , crn.Remarks                                   -- 备注
+		  , crn.IsDel
+		  , crn.Creater
+		  , crn.CreaterDate
+		  , crn.Reviser
+		  , crn.ReviserDate 
+		FROM
+		  CrossRoadbedNumber as crn 
+		  left join V_EntryTree as ve 
+		    on crn.ProjectId = ve.pid 
+		WHERE
+		  crn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and crn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and crn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and crn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="crossRoadName!=null and crossRoadName!=''">
+		    and crn.crossRoadName like concat('%',#{crossRoadName},'%')     -- 根据被交叉路名称查询
+		  </if>
+		  <if test="acrossForm!=null and acrossForm!=''">
+		    and crn.acrossForm like concat('%',#{acrossForm},'%') -- 根据交叉形式查询
+		  </if>
+		   order by crn.CreaterDate desc
+	</select>
+	
+		<select id="getCrossRoadbedNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		 crn.PileNumber                                -- 中心桩号及起讫桩号
+		  , crn.CrossRoadName                             -- 被交叉路名称
+		  , crn.AcrossForm                                -- 交叉形式
+		  , crn.Corner                                    -- 交角（°）
+		  , crn.WidthLeft                                 -- 被交叉道路宽度左
+		  , crn.WidthRight                                -- 被交叉道路宽度右
+		  , crn.CornerRadiusR1                            -- 转弯半径R1（m）
+		  , crn.CornerRadiusR2                            -- 转弯半径R2（m）
+		  , crn.RoadWidth                                 -- 路面宽度
+		  , crn.RebuildLength                             -- 改建长度
+		  , crn.Concrete                                  -- 工程数量4cm细粒式沥青混凝土
+		  , crn.ModifiedAsphalt                           -- 工程数量4cm改性沥青砼
+		  , crn.OrdinaryAsphalt                           -- 工程数量6cm普通沥青砼
+		  , crn.StickyLayer                               -- 工程数量粘层油
+		  , crn.PermeableLayer                            -- 工程数量透层油
+		  , crn.Seal                                      -- 工程数量封层油
+		  , crn.CementGravel20cm                          -- 工程数量20cm水泥稳定砂砾
+		  , crn.NaturalGravel15cm                         -- 工程数量15cm天然砂砾
+		  , crn.NaturalGravel20cm                         -- 工程数量20cm天然砂砾
+		  , crn.Excavation                                -- 工程数量挖方
+		  , crn.Fill                                      -- 工程数量填方
+		  , crn.Remarks                                   -- 备注
+		FROM
+		  CrossRoadbedNumber as crn 
+		  left join V_EntryTree as ve 
+		    on crn.ProjectId = ve.pid 
+		WHERE
+		  crn.IsDel = 0
+		   order by crn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（平面交叉路基路面工程数量表）合计 -->
+	<select id="getCrossRoadbedNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.CrossRoadbedNumberSum">
+		SELECT
+		  sum(crn.Corner) as CornerSum                    -- 交角（°）
+		  , sum(crn.WidthLeft) as WidthLeftSum            -- 被交叉道路宽度左
+		  , sum(crn.WidthRight) as WidthRightSum          -- 被交叉道路宽度右
+		  , sum(crn.CornerRadiusR1) as CornerRadiusR1Sum  -- 转弯半径R1（m）
+		  , sum(crn.CornerRadiusR2) as CornerRadiusR2Sum  -- 转弯半径R2（m）
+		  , sum(crn.RoadWidth) as RoadWidthSum            -- 路面宽度
+		  , sum(crn.RebuildLength) as RebuildLengthSum    -- 改建长度
+		  , sum(crn.Concrete) as ConcreteSum              -- 工程数量4cm细粒式沥青混凝土
+		  , sum(crn.ModifiedAsphalt) as ModifiedAsphaltSum -- 工程数量4cm改性沥青砼
+		  , sum(crn.OrdinaryAsphalt) as OrdinaryAsphaltSum -- 工程数量6cm普通沥青砼
+		  , sum(crn.StickyLayer) as StickyLayerSum        -- 工程数量粘层油
+		  , sum(crn.PermeableLayer) as PermeableLayerSum  -- 工程数量透层油
+		  , sum(crn.Seal) as SealSum                      -- 工程数量封层油
+		  , sum(crn.CementGravel20cm) as CementGravel20cmSum -- 工程数量20cm水泥稳定砂砾
+		  , sum(crn.NaturalGravel15cm) as NaturalGravel15cmSum -- 工程数量15cm天然砂砾
+		  , sum(crn.NaturalGravel20cm) as NaturalGravel20cmSum -- 工程数量20cm天然砂砾
+		  , sum(crn.Excavation) as ExcavationSum          -- 工程数量挖方
+		  , sum(crn.Fill) as FillSum                      -- 工程数量填方
+		FROM
+		  CrossRoadbedNumber as crn 
+		  left join V_EntryTree as ve 
+		    on crn.ProjectId = ve.pid
+		WHERE
+		  crn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and crn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and crn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and crn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="crossRoadName!=null and crossRoadName!=''">
+		    and crn.crossRoadName like concat('%',#{crossRoadName},'%')     -- 根据被交叉路名称查询
+		  </if>
+		  <if test="acrossForm!=null and acrossForm!=''">
+		    and crn.acrossForm like concat('%',#{acrossForm},'%') -- 根据交叉形式查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（平面交叉路基路面工程数量表） -->
+	<insert id="insertCrossRoadbedNumber" parameterType="com.curing.projectSchedule.model.CrossRoadbedNumberEntity">
+		INSERT 
+		INTO CrossRoadbedNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , CrossRoadName
+		  , AcrossForm
+		  , Corner
+		  , WidthLeft
+		  , WidthRight
+		  , CornerRadiusR1
+		  , CornerRadiusR2
+		  , RoadWidth
+		  , RebuildLength
+		  , Concrete
+		  , ModifiedAsphalt
+		  , OrdinaryAsphalt
+		  , StickyLayer
+		  , PermeableLayer
+		  , Seal
+		  , CementGravel20cm
+		  , NaturalGravel15cm
+		  , NaturalGravel20cm
+		  , Excavation
+		  , Fill
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{CrossRoadName}
+		  , #{AcrossForm}
+		  , #{Corner}
+		  , #{WidthLeft}
+		  , #{WidthRight}
+		  , #{CornerRadiusR1}
+		  , #{CornerRadiusR2}
+		  , #{RoadWidth}
+		  , #{RebuildLength}
+		  , #{Concrete}
+		  , #{ModifiedAsphalt}
+		  , #{OrdinaryAsphalt}
+		  , #{StickyLayer}
+		  , #{PermeableLayer}
+		  , #{Seal}
+		  , #{CementGravel20cm}
+		  , #{NaturalGravel15cm}
+		  , #{NaturalGravel20cm}
+		  , #{Excavation}
+		  , #{Fill}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（平面交叉路基路面工程数量表） -->
+	<update id="updateCrossRoadbedNumber" parameterType="com.curing.projectSchedule.model.CrossRoadbedNumberEntity">
+		UPDATE CrossRoadbedNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , CrossRoadName = #{CrossRoadName}
+		  , AcrossForm = #{AcrossForm}
+		  , Corner = #{Corner}
+		  , WidthLeft = #{WidthLeft}
+		  , WidthRight = #{WidthRight}
+		  , CornerRadiusR1 = #{CornerRadiusR1}
+		  , CornerRadiusR2 = #{CornerRadiusR2}
+		  , RoadWidth = #{RoadWidth}
+		  , RebuildLength = #{RebuildLength}
+		  , Concrete = #{Concrete}
+		  , ModifiedAsphalt = #{ModifiedAsphalt}
+		  , OrdinaryAsphalt = #{OrdinaryAsphalt}
+		  , StickyLayer = #{StickyLayer}
+		  , PermeableLayer = #{PermeableLayer}
+		  , Seal = #{Seal}
+		  , CementGravel20cm = #{CementGravel20cm}
+		  , NaturalGravel15cm = #{NaturalGravel15cm}
+		  , NaturalGravel20cm = #{NaturalGravel20cm}
+		  , Excavation = #{Excavation}
+		  , Fill = #{Fill}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（平面交叉路基路面工程数量表） -->
+	<update id="deleteCrossRoadbedNumber" parameterType="com.curing.projectSchedule.model.CrossRoadbedNumberEntity">
+		UPDATE CrossRoadbedNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

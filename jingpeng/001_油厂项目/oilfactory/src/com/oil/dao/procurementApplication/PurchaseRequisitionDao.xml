@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.procurementApplication.PurchaseRequisitionDao">
+	<!-- tree的查询 -->
+	<select id="getTreeList" resultType="PurchaseRequisition" parameterType="java.util.Map">
+		SELECT DISTINCT
+			p.Id               as   id,            -- 采购申请单id
+			p.GoodsName        as   goodsName,      -- 物资id
+			mi.MaterielName    as   materielName,  -- 物料名称
+			mi.MaterielModel   as   materielModel  -- 物料型号
+		FROM
+			purchaserequisition p
+		LEFT JOIN materielinfo mi ON p.GoodsName = mi.Id
+		AND mi.IsDel = 0
+		WHERE
+			p.IsDel = 0 
+			<if test="keyword != null and keyword != ''">
+			and (mi.MaterielName like concat('%',#{keyword},'%') or mi.MaterielModel like concat('%',#{keyword},'%'))
+			</if>
+		-- GROUP BY p.GoodsName
+		ORDER BY
+			p.Id desc, p.GoodsName
+	</select>
+	
+	<!-- 获取页面List信息 -->
+	<select id="getInfoList" resultType="PurchaseRequisition" parameterType="java.util.Map">
+		SELECT DISTINCT
+			p.Id                      as  id,                  -- 采购申请单id
+			p.SerialID                as  serialID,            -- 采购申请单据编号（流水号）
+			DATE_FORMAT(p.ApplyDate, '%Y-%m-%d')               as  applyDate,           -- 申请日期
+			p.Applicant               as  applicant,           -- 申请人
+			p.ApplyDepartment         as  applyDepartment,     -- 申请部门
+			p.GoodsName               as  goodsName,           -- 申请采购物资id
+			p.Model                   as  model,               -- 规格型号
+			p.ApplyNumber             as  applyNumber,         -- 申请数量
+			p.Purpose                 as  purpose,             -- 用途
+			p.IsUrgentState           as  isUrgentState,       -- 紧急状态
+			DATE_FORMAT(p.EstimatedTime, '%Y-%m-%d')          as  estimatedTime,       -- 预计到位时间
+			p.ApplicantRemarks        as  applicantRemarks,    -- 申请人备注
+			p.EntryClerkApplicant     as  entryClerkApplicant, -- 录入员（申请人）
+			p.PurchaseLevel           as  purchaseLevel,       -- 物料采购级别（数据字典
+			p.ConsumablesShow         as  consumablesShow,     -- 耗品后显示
+			p.Inquirer                as  inquirer,            -- 询价人
+			p.Inquirer1               as  inquirer1,           -- 询价方1
+			p.Univalent1              as  univalent1,          -- 单价1
+			p.Money1                  as  money1,              -- 金额1
+			p.OtherInfo1              as  otherInfo1,          -- 其他信息1
+			p.Assess1                 as  assess1,             -- 评价1
+			p.Inquirer2               as  inquirer2,           -- 询价方2
+			p.Univalent2              as  univalent2,          -- 单价2
+			p.Money2                  as  money2,              -- 金额2
+			p.OtherInfo2              as  otherInfo2,          -- 其他信息2
+			p.Assess2                 as  assess2,             -- 评价2
+			p.Inquirer3               as  inquirer3,           -- 询价方3
+			p.Univalent3              as  univalent3,          -- 单价3
+			p.Money3                  as  money3,              -- 金额3
+			p.OtherInfo3              as  otherInfo3,          -- 其他信息3
+			p.Assess3                 as  assess3,             -- 评价3
+			p.BuyerRemarks            as  buyerRemarks,        -- 采购员备注
+			p.EntryClerkPurchaser     as  entryClerkPurchaser, -- 录入员（采购人）
+			DATE_FORMAT(p.EntryClerkDate, '%Y-%m-%d')          as  entryClerkDate,      -- 录入时间
+			p.Creater                 as  creater,             -- 创建人
+			p.CreaterDate             as  createrDate,         -- 创建日期
+			p.Reviser                 as  reviser,             -- 修改人
+			p.ReviserDate             as  reviserDate,         -- 修改日期
+			m.MaterielName            as  materielName,        -- 物料名称
+			m.MaterielModel           as  materielModel,       -- 物料型号
+		FROM 
+			purchaserequisition p
+		LEFT JOIN materielinfo m ON p.GoodsName = m.Id
+		AND m.IsDel = 0
+		WHERE
+			p.IsDel = 0
+		<if test="id != null and id != 0">
+			AND p.Id = #{id}
+		</if>
+		<if test="serialID != null and serialID != ''">
+			AND p.SerialID  like concat('%',#{serialID},'%')
+		</if>
+		<if test="materielName != null and materielName !=''">
+			AND m.MaterielName = #{materielName}
+		</if>
+		<if test="materielModel != null and materielModel != ''">
+			AND m.MaterielModel = #{materielModel}
+		</if>
+		Order by p.Id desc
+	</select>
+	
+	<!-- 采购申请单删除 -->
+	<update id="deletePurchaseRequisition" parameterType="java.util.Map">
+	    UPDATE purchaserequisition 
+			SET
+			    IsDel = 1
+			    , Reviser = #{userId}
+			    ,ReviserDate = now()
+			WHERE
+			  id = #{id}
+	</update>
+	
+	<!-- 数据字典查询 -->
+	<select id="getAllDatadictionaty" resultType="Datadictionaty">
+		select * from datadictionary where Type in('jjzt','cgjb')
+	</select>
+	
+	<!-- 物料名称 -->
+	<select id="getMaterielinfoList" parameterType="java.util.Map" resultType="MaterielinfoEntity">
+		select
+		    mai.Id                as id                   -- 物料id
+		  , mai.MaterielName      as materielName         -- 物料名称
+		  , mai.MaterielModel     as materielModel        -- 规格型号
+		from
+		  materielinfo as mai                             -- 物料信息表
+		where mai.IsDel = 0
+		<if test="id != null and id != 0">
+			and mai.Id = #{id}
+		</if>
+		-- GROUP BY mai.MaterielName
+		order by mai.Id desc, mai.MaterielName
+	</select>
+	
+	<!-- 物料型号 -->
+	<select id="getMaterielModel" parameterType="java.util.Map" resultType="MaterielinfoEntity">
+		select
+		    mai.Id                as id                   -- 物料id
+		  , mai.MaterielName      as materielName         -- 物料名称
+		  , mai.MaterielModel     as materielModel        -- 规格型号
+		from
+		  materielinfo as mai                             -- 物料信息表
+		where mai.IsDel = 0
+		<if test="materielNameId != null and materielNameId != 0">
+			and mai.MaterielName = #{materielNameId}
+		</if>
+		<if test="materielModelId != null and materielModelId != 0">
+			and mai.MaterielModel = #{materielModelId}
+		</if>
+		order by mai.Id desc
+	</select>
+	
+	<insert id="addPurchaseRequisition" parameterType="PurchaseRequisition">
+		INSERT INTO purchaserequisition(
+			SerialID,            -- 采购申请单据编号（流水号）
+			ApplyDate,           -- 申请日期
+			Applicant,           -- 申请人
+			ApplyDepartment,     -- 申请部门
+			GoodsName,           -- 申请采购物资id
+			Model,               -- 规格型号
+			ApplyNumber,         -- 申请数量
+			Purpose,             -- 用途
+			IsUrgentState,       -- 紧急状态
+			EstimatedTime,       -- 预计到位时间
+			ApplicantRemarks,    -- 申请人备注
+			EntryClerkApplicant, -- 录入员（申请人）
+			PurchaseLevel,       -- 物料采购级别（数据字典
+			ConsumablesShow,     -- 耗品后显示
+			Inquirer,            -- 询价人
+			Inquirer1,           -- 询价方1
+			Univalent1,          -- 单价1
+			Money1,              -- 金额1
+			OtherInfo1,          -- 其他信息1
+			Assess1,             -- 评价1
+			Inquirer2,           -- 询价方2
+			Univalent2,          -- 单价2
+			Money2,              -- 金额2
+			OtherInfo2,          -- 其他信息2
+			Assess2,             -- 评价2
+			Inquirer3,           -- 询价方3
+			Univalent3,          -- 单价3
+			Money3,              -- 金额3
+			OtherInfo3,          -- 其他信息3
+			Assess3,             -- 评价3
+			BuyerRemarks,        -- 采购员备注
+			EntryClerkPurchaser, -- 录入员（采购人）
+			EntryClerkDate,      -- 录入时间
+			Creater,             -- 创建人
+			CreaterDate,         -- 创建日期
+			IsDel
+		)
+		values(
+			#{serialID},
+			#{applyDate},
+			#{applicant},
+			#{applyDepartment},
+			#{goodsName},
+			#{model},
+			#{applyNumber},
+			#{purpose},
+			#{isUrgentState},
+			#{estimatedTime},
+			#{applicantRemarks},
+			#{entryClerkApplicant},
+			#{purchaseLevel},
+			#{consumablesShow},
+			#{inquirer},
+			#{inquirer1},
+			#{univalent1},
+			#{money1},
+			#{otherInfo1},
+			#{assess1},
+			#{inquirer2},
+			#{univalent2},
+			#{money2},
+			#{otherInfo2},
+			#{assess2},
+			#{inquirer3},
+			#{univalent3},
+			#{money3},
+			#{otherInfo3},
+			#{assess3},
+			#{buyerRemarks},
+			#{entryClerkPurchaser},
+			#{entryClerkDate},
+			#{creater},
+			NOW(),
+			0
+		)
+	</insert>
+	
+	<!-- 修改采购申请单 -->
+	<update id="updatePurchaseRequisition" parameterType="PurchaseRequisition">
+		UPDATE purchaserequisition
+			SET
+			SerialID=#{serialID},                       -- 采购申请单据编号（流水号）
+			ApplyDate=#{applyDate},                     -- 申请日期
+			Applicant=#{applicant},                     -- 申请人
+			ApplyDepartment=#{applyDepartment},         -- 申请部门
+			GoodsName=#{goodsName},                     -- 申请采购物资id
+			Model=#{model},                             -- 规格型号
+			ApplyNumber=#{applyNumber},                 -- 申请数量
+			Purpose=#{purpose},                         -- 用途
+			IsUrgentState=#{isUrgentState},             -- 紧急状态
+			EstimatedTime=#{estimatedTime},             -- 预计到位时间
+			ApplicantRemarks=#{applicantRemarks},       -- 申请人备注
+			EntryClerkApplicant=#{entryClerkApplicant}, -- 录入员（申请人）
+			PurchaseLevel=#{purchaseLevel},             -- 物料采购级别（数据字典
+			ConsumablesShow=#{consumablesShow},         -- 耗品后显示
+			Inquirer=#{inquirer},                       -- 询价人
+			Inquirer1=#{inquirer1},                     -- 询价方1
+			Univalent1=#{univalent1},                   -- 单价1
+			Money1=#{money1},                           -- 金额1
+			OtherInfo1=#{otherInfo1},                   -- 其他信息1
+			Assess1=#{assess1},                         -- 评价1
+			Inquirer2=#{inquirer2},                     -- 询价方2
+			Univalent2=#{univalent2},                   -- 单价2
+			Money2=#{money2},                           -- 金额2
+			OtherInfo2=#{otherInfo2},                   -- 其他信息2
+			Assess2=#{assess2},                         -- 评价2
+			Inquirer3=#{inquirer3},                     -- 询价方3
+			Univalent3=#{univalent3},                   -- 单价3
+			Money3=#{money3},                           -- 金额3
+			OtherInfo3=#{otherInfo3},                   -- 其他信息3
+			Assess3=#{assess3},                         -- 评价3
+			BuyerRemarks=#{buyerRemarks},               -- 采购员备注
+			EntryClerkPurchaser=#{entryClerkPurchaser}, -- 录入员（采购人）
+			EntryClerkDate=#{entryClerkDate},           -- 录入时间
+			Reviser=#{reviser},                         -- 创建人
+			ReviserDate=NOW(),                          -- 创建日期
+			IsDel=0
+		WHERE
+			Id = #{id}
+	</update>
+	
+	<!-- 查询采购合同明细 -->
+	<select id="getAllPurchaseorderinfo" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from purchaseorderinfo where IsDel = 0
+		<if test="purchaseRequisitionId != null and purchaseRequisitionId != 0">
+			and PurchaseRequisitionId = #{purchaseRequisitionId}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,63 @@
+<!-- 盲样试验  -->
+<script src="../../js/HighwayPlatform/TestRoom/blindSampleDetection.js"
+	type="text/javascript" charset="utf-8"></script>
+<form action="" method="get" class="sousuo" id="blind_detection">
+	<label>试验名称：</label>
+	<select name="" id="testPageInfosList" class="search_select">
+		<option value="">请选择</option>
+	</select>
+	<label>试验状态</label>
+	<select id="testStateList" class="search_select">
+		<option value=''>请选择</option>
+		<option value='0'>抽样完成</option>
+		<option value='1'>收样完成</option>
+		<option value='2'>试验完成</option>
+	</select>
+	<label>试验日期：</label>
+	<input type="text" size="20" class="search_input" id="startTime">
+	<label>--</label>
+	<input type="text" size="20" class="search_input" id="endTime">
+	<input id="select" type="button" value="查&nbsp;&nbsp;询" class="btncha blind_btn">
+</form>
+<div class="lq_main">
+	<div class="lq_biao">
+		<table id="list" width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+			<thead>
+				<tr>
+					<th scope="col" class="xh">序号</th>
+					<th scope="col">试验室名称</th>
+					<th scope="col">试验类别</th>
+					<th scope="col">试验名称</th>
+					<th scope="col">试验状态</th>
+					<th scope="col">样品名称</th>
+					<th scope="col" id="constructionunit">施工单位</th>
+					<th scope="col" id="engineeringname">工程名称</th>
+					<th scope="col" id="purpose">工程部位/用途</th>
+					<th scope="col">试验日期</th>
+					<th scope="col">试验员</th>
+					<th scope="col">结果判定</th>
+					<th scope="col">采集方式</th>
+					<th scope="col">抽样人</th>
+					<th scope="col">抽样时间</th>
+					<th scope="col">详情</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+     jeDate({
+         dateCell:"#startTime",
+         format:"YYYY-MM-DD",
+         isinitVal:false,
+         isTime:true, 
+	   	 isClear:false,
+     })
+    jeDate({
+        dateCell:"#endTime",
+        format:"YYYY-MM-DD",
+        isinitVal:false,
+        isTime:true,
+        isClear:false,
+    })
+</script>

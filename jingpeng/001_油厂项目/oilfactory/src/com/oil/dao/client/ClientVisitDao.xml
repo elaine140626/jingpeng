@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.client.ClientVisitDao">
+	<!-- 添加拜访信息数据 -->
+   <insert id="addClientVisit" parameterType="Client_back">
+		INSERT 
+		INTO visitinfo( 
+		  `CustomerId`
+		  , `VisitDate`
+		  , `VisitForm`
+		  , `UserInfoId`
+		  , `VisitContent`
+		  , `IsVisit`
+		  , `Remarks`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		  #{customerId}
+		  , #{visitDate}
+		  , #{visitForm}
+		  , #{userInfoId}
+		  , #{visitContent}
+		  , 1
+		  , #{remarks}
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!-- 查询全部拜访形式信息数据 -->
+	<select id="getVisitContent"  resultType="Datadictionary">
+		select * from Datadictionary where type = '3'
+	</select>
+	
+	<!-- 通过Id查询拜访信息数据 -->
+	<select id="getVisitContentByCode" parameterType="String"  resultType="Datadictionary">
+		select * from Datadictionary where type = '3' AND code=#{code}
+	</select>
+	
+	<!-- 查询全部客户信息数据 -->
+	<select id="getCustomerInfo"  resultType="Customerinfo">
+		select 
+		Id AS uuid,
+		Customername,
+		CustomerCode
+ 		from Customerinfo 
+ 		where IsDel = 0
+ 		order by Id desc
+	</select>
+	
+	<!-- 查询全部拜访信息数据 -->
+	<select id="getClientVisit"  resultType="Client_back">
+	SELECT
+			b.Id,
+			b.CustomerId,
+			b.VisitDate,
+			b.VisitForm,
+			b.VisitContent,
+			b.UserInfoId,
+			b.IsVisit,
+			b.IsDel,
+			b.Remarks,
+			c.IsDel AS cIsDel,
+			u. NAME AS userInfoName
+		FROM
+			visitinfo b
+		LEFT JOIN customerinfo c ON b.CustomerId = c.id
+		LEFT JOIN userinfo u ON b.UserInfoId = u.id
+		WHERE
+			b.IsDel = 0
+		AND 
+			b.IsVisit = 1
+		ORDER BY b.Id DESC
+	</select>
+	
+	<!-- 通过ID查询全部拜访信息数据 -->
+	<select id="getClientVisitById" parameterType="int"  resultType="Client_back">
+		SELECT
+			b.Id,
+			b.CustomerId,
+			b.VisitDate,
+			b.VisitForm,
+			b.VisitContent,
+			b.UserInfoId,
+			c.Name AS userInfoName,
+			b.IsVisit,
+			b.IsDel,
+			b.Remarks,
+			a.IsDel AS cIsDel
+		FROM
+			visitinfo b,
+			customerinfo a,
+			userinfo c
+		WHERE
+			b.CustomerId = a.Id
+		AND b.IsVisit = '1'
+		AND b.IsDel = 0
+		AND b.UserInfoId = c.Id	
+		AND b.id = #{id}
+	</select>
+	
+	<!-- 通过id获取客户信息数据 -->
+	<select id="getCustomerinfoById" parameterType="int"  resultType="Customerinfo">
+		select * from Customerinfo where  Id=#{id}
+	</select>
+	
+	<!--修改拜访客户信息 -->
+	<update id="updateClientVisit" parameterType="Client_back">
+		update visitinfo set
+		CustomerId = #{customerId},
+		VisitDate = #{visitDate},
+		VisitForm =#{visitForm},
+		UserInfoId = #{userInfoId},
+		VisitContent = #{visitContent},
+		IsVisit = 1,
+		Remarks =#{remarks}
+		WHERE Id= #{id}
+	</update>
+	
+	<!--删除拜访客户信息 -->
+	<update id="delClientVisit" parameterType="int">
+		update visitinfo set 
+		IsDel = 1
+		WHERE Id= #{id}
+	</update>
+	
+	<!-- 根据名称模糊查询 -->
+	<select id="findCustomerinfoByName" parameterType="String" resultType="Client_back">
+		SELECT
+			b.Id,
+			b.CustomerId,
+			b.VisitDate,
+			b.VisitForm,
+			b.VisitContent,
+			c.Name AS userInfoName,
+			b.IsVisit,
+			b.IsDel,
+			b.Remarks,
+			a.IsDel AS cIsDel
+		FROM
+			customerinfo a,
+			visitinfo b,
+			userinfo c
+		WHERE
+			a.Id = b.CustomerId
+		AND b.IsVisit = 1
+		AND b.IsDel = 0
+		AND b.UserInfoId = c.Id	
+		<if test="customerName !=null  and customerName != '' ">
+		AND a.CustomerCode like '%${customerName}%'
+		</if>
+		ORDER BY b.Id DESC
+	</select>
+	
+		<!-- 获取客户信息数据 -->
+    <select id="getClient_back" resultType="java.util.Map">
+		SELECT 
+		DISTINCT
+			p.Province,
+			c.CustomerName,
+			c.CustomerCode,
+			c.Id,
+			ci.ProvinceId
+		FROM
+			visitinfo v
+			LEFT JOIN customerinfo c ON v.CustomerId = c.Id
+			LEFT JOIN cityinfo ci ON c.CityId = ci.Id
+			LEFT JOIN provinceinfo p ON ci.ProvinceId = p.Id
+		WHERE
+			c.IsDel = 0
+		AND 
+			v.IsDel = 0
+		and
+			v.IsVisit = 1
+		ORDER BY
+			ci.ProvinceId desc
+	</select>
+
+	<select id="findByNameAndId"  parameterType="String" resultType="Client_back">
+<!-- 	SELECT
+			a.Id,
+			a.CustomerId,
+			b.customerName AS customerName,
+			a.VisitDate,
+			a.VisitForm,
+			a.VisitContent,
+			a.UserInfoId,
+			d.Name AS userInfoName,
+			a.IsVisit,
+			a.Remarks,
+			b.IsDel as cIsDel
+		FROM
+		visitinfo a
+		LEFT JOIN customerinfo b
+		on a.CustomerId = b.Id
+		LEFT JOIN provinceinfo c
+		on b.CityId = c.Id
+		LEFT JOIN userinfo d
+		on a.UserInfoId = d.Id	
+		where 
+		a.IsVisit = 1
+		and a.IsDel =0 -->
+		SELECT
+			a.Id,
+			a.CustomerId,
+			b.customerName AS customerName,
+			b.CustomerCode,
+			a.VisitDate,
+			a.VisitForm,
+			a.VisitContent,
+			a.UserInfoId,
+			u.Name AS userInfoName,
+			a.IsVisit,
+			a.Remarks,
+			b.IsDel as cIsDel,
+			c.Province
+		FROM
+		visitinfo as a
+		LEFT JOIN customerinfo as b ON  a.CustomerId = b.id
+		LEFT JOIN cityinfo as ci on b.CityId = ci.Id
+		LEFT JOIN provinceinfo as c on  ci.ProvinceId = c.Id
+		LEFT JOIN userinfo as u on  a.UserInfoId = u.id
+		where a.isDel =0
+		and a.IsVisit = 1
+		<if test="pid != 'null'">
+			<if test="pid == '客户信息'">
+				AND c.Province = #{id}
+			</if>
+			<if test="pid != '客户信息' ">
+				and b.Id = #{id}
+				AND c.Province =#{pid}
+			</if>
+		</if>
+		order by a.Id desc
+	</select>
+</mapper>

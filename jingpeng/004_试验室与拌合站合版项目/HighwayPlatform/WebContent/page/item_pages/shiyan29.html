@@ -1,0 +1,565 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>细集料试验</title>
+<link href="../../css/record.css" rel="stylesheet"
+	type="text/css">
+<link rel="stylesheet" href="../../css/systyle.css">
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+<style type="text/css">
+.inputClass{
+	text-align: center;
+    width: 100%;
+    height:96%;
+    border: none;
+}
+.search_select {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+    text-align: center;
+    text-align-last: center;
+    
+}
+.search_select1 {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+    text-align: center;
+    text-align-last: center;
+}
+.search_select2 {
+    width: 100% !important;
+    height:96% !important;
+    border: none !important;
+    color:black;
+    text-align: center;
+    text-align-last: center;
+}
+.table_4 td{
+    text-align: center;
+    border: 1px solid #000;
+    border-collapse: collapse;
+    border-top:none;
+}
+</style>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei" style="position: relative;float:right;">	
+		</div>
+		<div id="istestcollection" class="jilu_title">
+		   细集料试验自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">细集料试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="16%">试验依据</td>
+					<td width="34%"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td width="34%"><input class="inputClass" type="text" id="testDate"></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td><label id="sampleName"></label></td>
+					<td>试件数量</td>
+					<td><label id="sampleCount"></label></td>
+				</tr>
+				<tr>
+					<td>试验员</td>
+					<td><label id="testOperator"></label></td>
+					<td>直径</td>
+					<td><label id="diameter"></label></td>
+				</tr>
+				<tr>
+					<td>集料种类</td>
+					<td><label id="aggregate_Type"></label></td>
+					<td>集料规格</td>
+					<td><label id="aggregate_Specification"></label></td>
+				</tr>
+			</table>
+		</div>
+		 <div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_4">
+			  <tr>
+			    <td width="16%">施工单位</td>
+			    <td width="16%"><label id="constructionUnit"></label></td>
+			    <td width="18%">工程名称</td>
+			    <td width="16%"><label id="engineeringName"></label></td>
+			    <td width="18%">工程部位/用途</td>
+			    <td width="16%"><label id="purpose"></label></td>
+			  </tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="8%">序号</td>
+						<td width="23%">试验项目</td>
+						<td width="23%">技术指标</td>
+						<td width="23%">检测项目</td>
+						<td width="23%">检测结果</td>
+					</tr>
+				</thead>
+				<tbody>
+                <tr>
+						<td>1</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project1">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index1">
+						    <option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item1'></td>
+						<td>
+						    <select class="search_select" id="detection_Result1" disabled="disabled">
+						      <option value=""></option>
+						      <option value="1">合格</option>
+						      <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project2">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index2">
+						    <option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item2'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result2" disabled="disabled">
+						    <option value=""></option>
+						    <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project3">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index3">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item3'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result3" disabled="disabled">
+						    <option value=""></option>
+						    <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project4">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index4">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item4'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result4" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project5">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index5">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item5'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result5" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>6</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project6">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index6">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item6'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result6" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>7</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project7">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index7">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item7'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result7" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>8</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project8">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index8">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item8'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result8" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>9</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project9">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index9">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item9'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result9" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>10</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project10">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index10">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item10'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result10" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>11</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project11">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index11">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item11'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result11" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>12</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project12">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index12">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item12'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result12" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>13</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project13">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index13">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item13'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result13" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>14</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project14">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index14">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item14'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result14" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>15</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project15">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index15">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item15'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result15" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>16</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project16">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index16">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item16'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result16" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>17</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project17">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index17">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item17'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result17" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>18</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project18">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index18">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item18'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result18" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>19</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project19">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index19">
+							<option value=''>请选择</option>
+							</select>
+						</td> 
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item19'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result19" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>20</td>
+						<td>
+							<select onchange="changeTest_Project(this)" class="search_select1" id="test_Project20">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td>
+						    <select class="search_select2" id="technical_Index20">
+							<option value=''>请选择</option>
+							</select>
+						</td>
+						<td><input onkeyup="keepNumOrFloat(this)" onblur="checkPoint(this)" onchange="changeTest_Item(this)" class="inputClass" type="text" id='test_Item20'></td>       
+						<td>
+						    <select class="search_select" id="detection_Result20" disabled="disabled">
+						     <option value=""></option>
+						     <option value="1">合格</option>
+						     <option value="0">不合格</option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="saveBtnShow" class="fanhui" style="float:left;">
+			<input id="save" type="button" value="保&nbsp;&nbsp;存" class="btncha">
+		</div>
+	<!-- 	<div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div> -->
+	</div>
+	<script src="../../js/common/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="../../js/DataTables/datatables.js"></script>
+	<script src="../../js/HighwayPlatform/TestRoom/common.js" type="text/javascript"></script>
+	<script type="text/javascript" src="../../js/HighwayPlatform/TestRoom/shiyan29.js"></script>
+	<script type="text/javascript" src="../../js/jedate/jedate.js"></script>
+	<script type="text/javascript">
+	    jeDate({
+	        dateCell:"#testDate",
+	        format:"YYYY-MM-DD",
+	        isinitVal:false,
+	        isTime:true, 
+	   	 isClear:false,
+	    })
+	</script>
+</body>
+</html>

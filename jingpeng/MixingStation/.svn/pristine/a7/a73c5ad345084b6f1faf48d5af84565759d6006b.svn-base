@@ -1,0 +1,72 @@
+/*--------------------------------------------------|
+| dTree 2.05 | www.destroydrop.com/javascript/tree/ |
+|---------------------------------------------------|
+| Copyright (c) 2002-2003 Geir Landr?               |
+|--------------------------------------------------*/
+
+.dtree {
+	white-space: nowrap;
+    width:300px;
+	position:absolute;
+	top:49px;
+	left:0;
+	z-index:1000;
+	background-color:rgba(255,255,255,0.9);
+	border:1px solid #d3d3d3;
+	border-top:0;
+	border-bottom-right-radius:3px;
+	border-bottom-left-radius:3px;
+	font-size:14px;
+/*	display:none;*/
+}
+.dtree img {
+	border: 0px;
+	vertical-align: middle;
+}
+.dtree a {
+	color: #333;
+	text-decoration: none;
+}
+.dtree a.node, .dtree a.nodeSel {
+	white-space: nowrap;
+	padding: 1px 2px 1px 2px;
+}
+.dtree a.node:hover, .dtree a.nodeSel:hover {
+	color: #333;
+	text-decoration: underline;
+}
+.dtree a.nodeSel {
+	background-color: #c0d2ec;
+}
+.dtree .clip {
+	overflow: hidden;
+}
+.rootNode {
+	font-family:"微软雅黑";
+	color: #666;
+
+}
+.dtree_Tree {
+	padding:10px 20px 10px;
+/*    width:300px;*/
+	font-family:"微软雅黑";
+    overflow-y:auto;   
+}
+
+.dTreeNode{
+	padding:5px 0;
+}
+
+/*--------------------------------------------------|
+| 增加的样式,选择节点显示在下面                     - |
+|--------------------------------------------------*/
+div {display: block;}
+#ulSelected .remove { background-image: url(img/remove.gif); }
+#ulSelected li { float: left; }
+#ulSelected .selectedUser { background-position: right; background-repeat: no-repeat; background-color: transparent; padding-right: 9px; cursor: default; }
+
+ul { list-style-type: none; margin: 0px; padding: 0px; }
+li { display: list-item;text-align: -webkit-match-parent;}
+
+.selectorResult{padding-left:50px; float:left;}
+element.style {  cursor: pointer;}

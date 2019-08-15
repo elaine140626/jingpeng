@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.weighingManagement.dao.SerialNumberDao">
+<select id="getSerialNumber"  resultType="String">
+	select
+	  right(number, 3) as number 
+	from
+	  SerialNumber 
+	where
+	  left (number, 8) = DATE_FORMAT(now(), '%Y%m%d')
+	order by number desc
+	limit 1
+</select>
+<insert id='insertSerialNumber' parameterType="java.util.Map">
+ 	insert into SerialNumber (number) value(#{number})
+</insert>
+</mapper>

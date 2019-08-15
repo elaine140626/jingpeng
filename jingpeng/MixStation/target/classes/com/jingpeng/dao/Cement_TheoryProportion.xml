@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cement">
+
+	<select id="getCement_TheoryProportion" parameterType="java.util.HashMap"
+		resultType="cement_TheoryProportion">
+		SELECT
+		v.Material_Model material_Model,
+		v.Material_Name material_Name,
+		c.Id i_id,
+		c.Prop_Code str_prop_Code,
+		c.Product_ID i_product_Id,
+		c.Design_Strength str_design_Strength,
+		c.Water_Cement_Ratio d_water_Cement_Ratio,
+		c.Sand_Ratio d_sand_Ratio,
+		c.Slump_Low i_slump_Low,
+		c.Slump_High i_slump_High,
+		c.Remarks str_remarks,
+		c.Operator str_operator,
+		c.Create_Date str_create_Date,
+		c.Modifier str_modifier,
+		c.Modify_Date str_modify_Date,
+		CAST (c.Slump_Low AS VARCHAR) + '-' + CAST (c.Slump_High AS VARCHAR)
+		str_tld
+		FROM
+		Cement_TheoryProportion c
+		LEFT JOIN V_MaterialInfo v ON v.Id = c.Product_ID
+		WHERE
+		1 = 1
+		<if test="productName != null and productName != ''">
+			AND v.material_Name like '%${productName}%'
+		</if>
+		<if test="productModel != null and productModel != ''">
+			AND v.material_Model like '%${productModel}%'
+		</if>
+		<if
+			test="theoreticalProportionNumber != null and theoreticalProportionNumber != ''">
+			AND c.Prop_Code like '%${theoreticalProportionNumber}%'
+		</if>
+
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND c.Org_ID IN (" separator="," close=")">
+			#{item}
+		</foreach>
+
+		AND c.Valid_Flag = 1
+		ORDER BY
+		c.Id DESC
+	</select>
+	
+	<select id="select_Asph_TargetPropDetailed" parameterType="asph_TargetProportion" resultType="java.util.Map">
+	    select c.TheoProp_ID,p.ConsProp_ID 
+         from Cement_Production_Plan p left join
+              Cement_ConstructionProportion c on c.Id = p.ConsProp_ID   
+        where p.Valid_Flag = 1 
+        	and p.IsCancel = 0
+          and c.TheoProp_ID  = #{i_theoProp_Id}
+          <!--   and c.TheoProp_ID = 38 -->
+	</select>
+	
+	<select id="getRawMaterial" parameterType="java.util.Map"
+		resultType="v_MaterialInfo">
+		SELECT DISTINCT
+		mateName_id i_mateName_id,
+		material_Name
+		str_material_Name
+		FROM
+		V_MaterialInfo
+		WHERE 1=1
+		<if test="flag != '0'">
+			<foreach collection="names" index="index" item="item"
+				open=" AND material_Name NOT IN (" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		AND org_Id=#{i_org_Id}
+		AND material_Mold = '0'
+		AND Material_Type = '1'
+	</select>
+
+	<select id="getCement_TheoryProportionById" parameterType="cement_TheoryProportion"
+		resultType="cement_TheoryProportion">
+
+		SELECT v.id i_product_Id,v.Material_Model material_Model ,v.Material_Name
+		material_Name, c.Id i_id,c.Prop_Code str_prop_Code,c.Product_ID
+		i_product_Id,c.Design_Strength
+		str_design_Strength,c.Water_Cement_Ratio
+		d_water_Cement_Ratio,c.Sand_Ratio d_sand_Ratio,c.Slump_Low
+		i_slump_Low,c.Slump_High i_slump_High,c.Remarks str_remarks,c.Operator
+		str_operator,c.Create_Date str_create_Date,c.Modifier
+		str_modifier,c.Modify_Date str_modify_Date
+
+		FROM Cement_TheoryProportion
+		c ,V_MaterialInfo v WHERE c.Valid_Flag=1 and c.Org_ID =#{i_org_Id} and
+		v.Id = c.Product_ID and c.Id=#{i_id}
+
+	</select>
+
+	<select id="getCementProportionCode" parameterType="cement_TheoryProportion"
+		resultType="cement_TheoryProportion">
+
+		SELECT id i_id FROM Cement_TheoryProportion WHERE Prop_Code =
+		#{str_prop_Code} AND Valid_Flag =1 AND Org_ID =#{i_org_Id}
+
+	</select>
+
+	<select id="getCement_TheoryDetailByProporId" parameterType="cement_ConsPropDetailed"
+		resultType="cement_ConsPropDetailed">
+
+		SELECT
+		v.Material_Name + v.Material_Model Material,
+		d.Construction_Weight d_weight,
+		d.Manufacturer str_Manufacturer,
+		d.Material_Origin str_material_Origin
+		FROM
+		Cement_ConsPropDetailed d
+		LEFT JOIN V_MaterialInfo v ON d.Materials_ID = v.Id
+		WHERE
+		d.ConsProp_ID = 1
+		AND d.Valid_Flag = #{i_theoProp_Id}
+
+
+
+	</select>
+	
+	<select id="getYclList" parameterType="cement_ConsPropDetailed" resultType="java.util.Map">
+
+		<!-- select distinct m.Material_Name,m.Material_Model,d.*
+		from Cement_ConsPropDetailed d left join
+     		V_MaterialInfo m on m.Id = d.Materials_ID
+		where d.ConsProp_ID =  -->
+		
+		 select distinct m.Material_Name 
+   from Cement_ConsPropDetailed d left join 
+        V_MaterialInfo m on m.Id = d.Materials_ID 
+  where d.ConsProp_ID = #{i_id}
+
+	</select>
+	
+	<select id="getAllMaterials_id" parameterType="java.util.Map" resultType="java.util.Map">
+
+		select Materials_ID from Cement_ConsPropDetailed where ConsProp_ID = #{i_id}
+
+	</select>
+	
+	<select id="getYclModelList" parameterType="java.util.Map" resultType="java.util.Map">
+		select distinct m.Material_Model,m.Material_Name,d.Materials_ID,d.ConsProp_ID 
+		from Cement_ConsPropDetailed d left join 
+		V_MaterialInfo m on m.Id = d.Materials_ID 
+		where d.ConsProp_ID =#{i_id} and m.Material_Name=#{Material_Name}
+ 
+
+
+	</select>
+
+	<insert id="addCement_TheoryProportion" parameterType="java.util.Map"
+		useGeneratedKeys="true" keyProperty="i_id">
+
+		INSERT INTO
+		Cement_TheoryProportion(Org_ID,Prop_Code,Product_ID,Design_Strength,Water_Cement_Ratio,Sand_Ratio,Slump_Low,Slump_High,Remarks,Operator,Create_Date)
+
+		VALUES (CAST(#{i_org_Id} AS int),#{str_prop_Code},CAST(#{i_product_Id}
+		AS int),#{str_design_Strength},CAST(#{d_water_Cement_Ratio} AS
+		decimal(16,3)),CAST(#{d_sand_Ratio} AS decimal(16,3)),
+		CAST(#{i_slump_Low} AS int),CAST(#{i_slump_High} AS
+		int),#{str_remarks},#{str_operator},
+		CONVERT(varchar(100),GETDATE(),
+		20))
+	</insert>
+	
+
+	<update id="updateCement_TheoryProportion" parameterType="java.util.Map">
+		UPDATE
+		Cement_TheoryProportion SET Product_ID=CAST(#{i_product_Id} AS
+		int),Design_Strength=#{str_design_Strength},Water_Cement_Ratio=#{d_water_Cement_Ratio},
+		Sand_Ratio=CAST(#{d_sand_Ratio} AS
+		decimal(16,3)),Slump_Low=CAST(#{i_slump_Low} AS
+		int),Slump_High=CAST(#{i_slump_High} AS int),Remarks=#{str_remarks},
+		Modifier=#{str_modifier},Modify_Date=#{str_modify_Date},Operator=#{str_operator}
+
+		where Id =CAST(#{i_id} AS int)
+
+	</update>
+
+	<update id="deletD" parameterType="java.util.Map">
+
+		UPDATE Cement_TheoPropDetailed SET Valid_Flag=0 where TheoProp_ID =
+		CAST(#{i_id} AS int)
+
+	</update>
+
+	<update id="deletCement_TheoryProportion" parameterType="cement_TheoryProportion">
+
+		UPDATE Cement_TheoryProportion SET Valid_Flag=0 where id =#{i_id}
+
+	</update>
+
+</mapper>

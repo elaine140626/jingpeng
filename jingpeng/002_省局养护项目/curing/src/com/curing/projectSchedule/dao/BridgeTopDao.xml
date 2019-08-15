@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.BridgeTopDao">
+	<!-- 工程进度（小桥上部工程量汇总表）List取得 -->
+	<select id="getBridgeTopList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeTopEntity">
+		SELECT
+		    bt.Id                           -- id
+		  , bt.ProjectId                    -- 项目id
+		  , bt.CoreNumber                   -- 中心桩号
+		  , bt.BridgeName                   -- 桥名
+		  , bt.SteelStrand                  -- 上部板φj15.2钢绞线（Kg）
+		  , bt.CushionBlock                 -- 上部板减震垫块（块）
+		  , bt.UpRebar                      -- 上部板钢筋（Kg）
+		  , bt.UpC30Concrete                -- 上部板C30混凝土（m3）
+		  , bt.UpC40Concrete                -- 上部板C40混凝土（m3）
+		  , bt.DeckRebar                    -- 桥面铺装、钝角加强及铰缝钢筋（Kg）
+		  , bt.DeckC40Concrete              -- 桥面铺装、钝角加强及铰缝C40混凝土（m3）
+		  , bt.DeckWaterproof               -- 桥面铺装、钝角加强及铰缝防水层（㎡）
+		  , bt.DeckContinuityRebar          -- 桥面连续钢筋（Kg）
+		  , bt.RailingRebar                 -- 防撞墙/栏杆钢筋（Kg）
+		  , bt.RailingC40Concrete           -- 防撞墙/栏杆C40混凝土（m3）
+		  , bt.RailingSteels                -- 防撞墙/栏杆钢材（Kg）
+		  , bt.RailingCoating               -- 防撞墙/栏杆防腐彩色涂料（㎡）
+		  , bt.DrainPipeSleeve              -- 泄水管套
+		  , bt.Remarks                      -- 备注
+		  , bt.IsDel                        -- 删除标记
+		  , bt.Creater
+		  , bt.CreaterDate
+		  , bt.Reviser
+		  , bt.ReviserDate 
+		FROM
+		  BridgeTop as bt
+		  left join V_EntryTree as ve 
+		    on bt.ProjectId = ve.pid 
+		WHERE
+		  bt.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and bt.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and bt.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and bt.coreNumber like concat('%',#{coreNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and bt.bridgeName like concat('%',#{bridgeName},'%')     -- 根据位置查询
+		  </if>
+		   order by bt.CreaterDate desc
+	</select>
+	
+		<select id="getBridgeTopListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   bt.CoreNumber                   -- 中心桩号
+		  , bt.BridgeName                   -- 桥名
+		  , bt.SteelStrand                  -- 上部板φj15.2钢绞线（Kg）
+		  , bt.CushionBlock                 -- 上部板减震垫块（块）
+		  , bt.UpRebar                      -- 上部板钢筋（Kg）
+		  , bt.UpC30Concrete                -- 上部板C30混凝土（m3）
+		  , bt.UpC40Concrete                -- 上部板C40混凝土（m3）
+		  , bt.DeckRebar                    -- 桥面铺装、钝角加强及铰缝钢筋（Kg）
+		  , bt.DeckC40Concrete              -- 桥面铺装、钝角加强及铰缝C40混凝土（m3）
+		  , bt.DeckWaterproof               -- 桥面铺装、钝角加强及铰缝防水层（㎡）
+		  , bt.DeckContinuityRebar          -- 桥面连续钢筋（Kg）
+		  , bt.RailingRebar                 -- 防撞墙/栏杆钢筋（Kg）
+		  , bt.RailingC40Concrete           -- 防撞墙/栏杆C40混凝土（m3）
+		  , bt.RailingSteels                -- 防撞墙/栏杆钢材（Kg）
+		  , bt.RailingCoating               -- 防撞墙/栏杆防腐彩色涂料（㎡）
+		  , bt.DrainPipeSleeve              -- 泄水管套
+		  , bt.Remarks                      -- 备注
+		FROM
+		  BridgeTop as bt
+		  left join V_EntryTree as ve 
+		    on bt.ProjectId = ve.pid 
+		WHERE
+		  bt.IsDel = 0
+		   order by bt.CreaterDate desc
+	</select>
+	
+	
+	<!-- 工程进度（小桥上部工程量汇总表）合计 -->
+	<select id="getBridgeTopSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeTopSum">
+		SELECT
+		    sum(bt.SteelStrand)            as BridgeNameSum                -- 上部板φj15.2钢绞线（Kg）       
+		  , sum(bt.CushionBlock)           as CushionBlockSum              -- 上部板减震垫块（块）
+		  , sum(bt.UpRebar)                as UpRebarSum                   -- 上部板钢筋（Kg）
+		  , sum(bt.UpC30Concrete)          as UpC30ConcreteSum             -- 上部板C30混凝土（m³）
+		  , sum(bt.UpC40Concrete)          as UpC40ConcreteSum             -- 上部板C40混凝土（m³）
+		  , sum(bt.DeckRebar)              as DeckRebarSum                 -- 桥面铺装、钝角加强及铰缝钢筋（Kg）
+		  , sum(bt.DeckC40Concrete)        as DeckC40ConcreteSum           -- 桥面铺装、钝角加强及铰缝C40混凝土（m³）
+		  , sum(bt.DeckWaterproof)         as DeckWaterproofSum            -- 桥面铺装、钝角加强及铰缝防水层（㎡）
+		  , sum(bt.DeckContinuityRebar)    as DeckContinuityRebarSum       -- 桥面连续钢筋（Kg）
+		  , sum(bt.RailingRebar)           as RailingRebarSum              -- 防撞墙/栏杆钢筋（Kg）
+		  , sum(bt.RailingC40Concrete)     as RailingC40ConcreteSum        -- 防撞墙/栏杆C40混凝土（m³）
+		  , sum(bt.RailingSteels)          as RailingSteelsSum             -- 防撞墙/栏杆钢材（Kg）
+		  , sum(bt.RailingCoating)         as RailingCoatingSum            -- 防撞墙/栏杆防腐彩色涂料（㎡）
+		  , sum(bt.DrainPipeSleeve)        as DrainPipeSleeveSum           -- 泄水管套
+		FROM
+		  BridgeTop as bt
+		  left join V_EntryTree as ve 
+		    on bt.ProjectId = ve.pid 
+		WHERE
+		  bt.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and bt.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and bt.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="coreNumber!=null and coreNumber!=''">
+		    and bt.coreNumber like concat('%',#{coreNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and bt.bridgeName like concat('%',#{bridgeName},'%')     -- 根据位置查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（小桥上部工程量汇总表） -->
+	<insert id="insertBridgeTop" parameterType="com.curing.projectSchedule.model.BridgeTopEntity">
+		INSERT 
+		INTO BridgeTop ( 
+			Id
+		  , ProjectId
+		  , CoreNumber
+		  , BridgeName
+		  , SteelStrand
+		  , CushionBlock
+		  , UpRebar
+		  , UpC30Concrete
+		  , UpC40Concrete
+		  , DeckRebar
+		  , DeckC40Concrete
+		  , DeckWaterproof
+		  , DeckContinuityRebar
+		  , RailingRebar
+		  , RailingC40Concrete
+		  , RailingSteels
+		  , RailingCoating
+		  , DrainPipeSleeve
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES (
+		 REPLACE(UUID(),'-','') 
+		  , #{ProjectId}
+		  , #{CoreNumber}
+		  , #{BridgeName}
+		  , #{SteelStrand}
+		  , #{CushionBlock}
+		  , #{UpRebar}
+		  , #{UpC30Concrete}
+		  , #{UpC40Concrete}
+		  , #{DeckRebar}
+		  , #{DeckC40Concrete}
+		  , #{DeckWaterproof}
+		  , #{DeckContinuityRebar}
+		  , #{RailingRebar}
+		  , #{RailingC40Concrete}
+		  , #{RailingSteels}
+		  , #{RailingCoating}
+		  , #{DrainPipeSleeve}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		);
+	</insert>
+	
+	<!-- 更新工程进度（小桥上部工程量汇总表） -->
+	<update id="updateBridgeTop" parameterType="com.curing.projectSchedule.model.BridgeTopEntity">
+		UPDATE BridgeTop 
+		SET
+		    CoreNumber = #{CoreNumber}
+		  , BridgeName = #{BridgeName}
+		  , SteelStrand = #{SteelStrand}
+		  , CushionBlock = #{CushionBlock}
+		  , UpRebar = #{UpRebar}
+		  , UpC30Concrete = #{UpC30Concrete}
+		  , UpC40Concrete = #{UpC40Concrete}
+		  , DeckRebar = #{DeckRebar}
+		  , DeckC40Concrete = #{DeckC40Concrete}
+		  , DeckWaterproof = #{DeckWaterproof}
+		  , DeckContinuityRebar = #{DeckContinuityRebar}
+		  , RailingRebar = #{RailingRebar}
+		  , RailingC40Concrete = #{RailingC40Concrete}
+		  , RailingSteels = #{RailingSteels}
+		  , RailingCoating = #{RailingCoating}
+		  , DrainPipeSleeve = #{DrainPipeSleeve}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（小桥上部工程量汇总表） -->
+	<update id="deleteBridgeTop" parameterType="com.curing.projectSchedule.model.BridgeTopEntity">
+		UPDATE BridgeTop 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

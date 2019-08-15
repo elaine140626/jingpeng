@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.asphalt.Asphalt_GradingDao">
+
+	<select id="getasphalt_Gradings" parameterType="java.util.Map" resultType="Asphalt_GradingModel">
+		SELECT
+			ag.Id i_id,
+			o.Org_Name str_org_Name,
+			ag.Grade_Code str_grade_Code,
+			v.Material_Name str_material_Name,
+			v.Material_Model str_material_Model,
+			CONVERT(varchar(20),ag.Create_Date,120) str_create_Date,
+			CONVERT(varchar(20),ag.Modify_Date,120) str_modify_Date,
+			v.Material_Name+'-'+v.Material_Model materNameAndModel,
+			ag.remarks str_remarks,
+			ag.Operator as str_operator
+		FROM
+			Asphalt_Grading ag
+			LEFT JOIN V_MaterialInfo v ON ag.Product_ID = v.Id
+			LEFT JOIN Organization_Info o ON o.Id = ag.Org_Id
+		WHERE 1=1 
+			<if test="str_material_Name != null and str_material_Name != ''">
+				AND v.material_Name like '%${str_material_Name}%'
+			</if>
+			<if test="str_material_Model != null and str_material_Model != ''">
+				AND v.material_Model like '%${str_material_Model}%'
+			</if>
+			<if test="str_grade_Code != null and str_grade_Code != ''">
+				AND ag.Grade_Code like '%${str_grade_Code}%'
+			</if>
+			<foreach collection="org_Ids" index="index" item="item" open=" AND ag.Org_Id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+			AND ag.Valid_Flag = 1
+		 	<!-- AND v.Material_Type = 0 -->
+		 	ORDER BY ag.id DESC
+	</select>
+	
+	<select id="getAsphalt_GradingById" parameterType="Asphalt_GradingModel" resultType="Asphalt_GradingModel">
+
+		SELECT
+			id i_id,
+			Org_Id i_org_Id,
+			Grade_Code str_grade_Code,
+			Product_ID i_product_Id,
+			Operator str_operator,
+			Create_Date str_create_Date,
+			Modifier str_modifier,
+			Modify_Date str_modify_Date,
+			Unique_Code str_unique_Code
+		FROM
+			Asphalt_Grading 
+		WHERE Valid_Flag =1 
+		AND id= #{i_id}
+	</select>
+	
+	<select id="select_Asph_TargetPropDetailed" parameterType="asph_TargetProportion" resultType="asph_TargetProportion">
+	    select pp.Targ_PropID,p.Prod_ID,p.Grad_Id 
+		from Production_Plan p left join 
+		       Asphalt_Prod_Proportion pp on pp.Id = p.Prod_ID
+		 where   
+		 		 p.Grad_ID = #{i_id}
+			     and
+				 p.Valid_Flag = 1 and p.IsCancel = 0
+				<!--pp.Targ_PropID = #{i_id}
+                	p.Grad_Id = #{i_id} -->
+	</select>
+	
+	<select id="getAsphalt_GradDetailedById" parameterType="Asphalt_GradingModel" resultType="Asphalt_GradingModel">
+	
+			SELECT
+			b.Grad_ID i_grad_Id,
+			b.Warehouse_Num str_warehouse_Num,
+			b.A0_075 d_a0_075,
+			b.A0_15 d_a0_15,
+			b.A0_3 d_a0_3,
+			b.A0_6 d_a0_6,
+			b.A1_18 d_a1_18,
+			b.A2_36 d_a2_36,
+			b.A4_75 d_a4_75,
+			b.A9_5 d_a9_5,
+			b.A13_2 d_a13_2,
+			b.A16 d_a16,
+			b.A19 d_a19,
+			b.A26_5 d_a26_5, 
+			b.A31_5 d_a31_5,
+			b.A37_5 d_a37_5,
+			b.A53 d_a53,
+			a.product_Id i_product_Id,
+			a.grade_Code str_grade_Code,
+			a.remarks str_remarks,
+			m.Material_Name str_material_Name,
+		    m.Material_Model str_material_Model
+		FROM 
+		Asphalt_Grading a
+		left join Asphalt_GradDetailed b on a.id= b.grad_Id
+		left join V_MaterialInfo m on a.Product_ID=m.id
+		WHERE a.Valid_Flag=1 AND a.Id=#{i_id}
+	</select>
+	
+	<select id="getAsphalt_GradCode" parameterType="Asphalt_GradingModel" resultType="Asphalt_GradingModel">
+	
+		SELECT Id i_Id from Asphalt_Grading WHERE Grade_Code = #{str_grade_Code} and Org_Id =#{i_org_Id};
+	
+	</select>
+	
+	<select id="getAsphalt_Prod_Proportion" parameterType="asphalt_Prod_Proportion" resultType="asphalt_Prod_Proportion">
+	
+		SELECT o.Org_Name str_org_Name,a.Proportion_Code str_proportion_Code,v.Material_Name str_material_Name,v.Material_Model str_material_Model,a.Create_Date str_create_Date,a.Modify_Date str_modify_Date FROM Asphalt_Prod_Proportion a ,Organization_Info o , V_MaterialInfo  v WHERE a.Org_ID = o.Id AND v.Id = a.Product_ID and a.Org_ID =#{i_org_Id};
+	
+	</select>
+	
+	<select id="getAsphalt_Gradingcode" parameterType="asphalt_Grading" resultType="asphalt_Grading">
+	
+		SELECT id i_id FROM Asphalt_Grading  WHERE Grade_Code = #{str_grade_Code} AND Org_Id = #{i_org_Id}
+	
+	</select>
+
+
+	<insert id="addAsphalt_Grading" parameterType="asphalt_Grading" useGeneratedKeys="true" keyProperty="i_id" >
+	
+	 INSERT INTO Asphalt_Grading (Org_Id,Grade_Code,Product_ID,Create_Date,remarks,Operator)
+		VALUES (#{i_org_Id},#{str_grade_Code},#{i_product_Id},CONVERT(varchar(100),GETDATE(),20),#{str_remarks},#{str_operator})
+	</insert>
+	
+	<insert id="addAsphalt_GradDetailed"  parameterType="java.util.List">
+		INSERT INTO Asphalt_GradDetailed (Grad_ID,Warehouse_Num,A0_075,A0_15,A0_3,A0_6,A1_18,A2_36,A4_75,A9_5,A13_2,A16,A19,A26_5,A31_5,A37_5,A53)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.i_grad_Id},#{item.str_warehouse_Num},#{item.d_a0_075},#{item.d_a0_15},#{item.d_a0_3},
+			#{item.d_a0_6},#{item.d_a1_18},#{item.d_a2_36},#{item.d_a4_75},#{item.d_a9_5},#{item.d_a13_2},
+			#{item.d_a16},#{item.d_a19},#{item.d_a26_5},#{item.d_a31_5},#{item.d_a37_5},#{item.d_a53})
+		</foreach>
+	</insert>
+	
+	<update id="updateAsphalt_GradDetailed" parameterType="asphalt_Grading">
+	
+		UPDATE asphalt_Grading  SET 
+		product_Id = #{i_product_Id}, remarks = #{str_remarks}, modify_Date=CONVERT(varchar(100),GETDATE(),20)
+		WHERE id= #{i_id}
+	
+	</update>
+	
+	
+	<update id="deletAsphalt_Grading" parameterType="asphalt_Grading">
+	
+		UPDATE Asphalt_Grading  SET Valid_Flag=0
+			where Id =#{i_id}
+	
+	</update>
+	
+	<update id="deletAsphalt_GradDetailed" parameterType="asphalt_Grading">
+	
+		UPDATE Asphalt_GradDetailed  SET Valid_Flag=0
+			where Id =#{i_id}
+	
+	</update>
+
+</mapper>

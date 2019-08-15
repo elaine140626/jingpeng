@@ -1,0 +1,314 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/granular_composition.js" type="text/javascript" charset="utf-8"></script>
+<style>
+	.selcetSearch{
+		width: 65px;
+		border: none;
+		text-align: center;
+		position:absolute;
+		z-index:1;
+		margin: -10px 0px 0px -33px;
+	}
+	@media (min-width: 992px) {
+		.modal-lg {
+		    width: 1200px;
+		}
+	}
+		
+</style>
+<div class="luru" data-toggle="modal" onclick="getSelectView()">
+	<a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn">级配设定</a>
+</div>
+<div class="lq_biao">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="asphalt_gradId">
+		<thead>
+			<tr>
+				<th scope="col" class="xh" width="5%">序号</th>
+				<th scope="col" width="10%">操作</th>
+				<th scope="col" width="15%">拌和站名称</th>
+				<th scope="col" width="15%">级配编号</th>
+				<th scope="col" width="15%">混合料名称/型号</th>
+				<th scope="col" width="10%">生产配合比编号</th>
+				<th scope="col" width="6%">是否启用</th>
+				<th scope="col" width="6%">录入人</th>
+				<th scope="col" width="13%">录入时间</th>
+				<th scope="col" width="10%">备注</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div class="modal fade" id="loginModal" >
+	<div class="modal-dialog modal-lg" >
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>级配设定</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt3" style="padding: 0 20px;">
+				<form id="addForm">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fazhi" id="gradTable1">
+						<tr>
+							<td width="30%" align="right">拌合站名称：</td>
+							<td width="70%" align="left">
+								<select name="orgId" id="orgId" style="width: 348px" onchange="getOrgId(this.value)">
+								</select>
+								<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">生产配合比编号：</td>
+							<td align="left">
+							<select name="mixNumber" id="mixNumber" style="width: 348px" onchange="getmaterialInfo()">
+							</select>
+							<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">混合料名称/型号：</td>
+							<td align="left">
+							<input name="materialName" type="text" id="materialName" placeholder="请输入混合料名称" maxlength="15" style="width:168px;" readonly="readonly">
+							<span>&nbsp;</span>
+							<input name="materialModel" type="text" id="materialModel" placeholder="请输入混合料型号" maxlength="15" style="width:168px;" readonly="readonly">
+							<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">级配编号：</td>
+							<td align="left">
+							<input name="gradeCode" type="text" id="gradeCode" placeholder="请输入级配编号" maxlength="40" style="width:348px;">
+							<span style="color:red;">*</span>
+							</td>
+						</tr>
+						<tr>
+							<td align="right">备注：</td>
+							<td align="left">
+							<input name="remarks" type="text" id="remarks" placeholder="" maxlength="200" style="width:348px;">
+							</td>
+						</tr>
+					</table>
+					<table width="100%" border="1" cellpadding="0" cellspacing="0" class="fazhi" style="text-align:center;margin: 0px 0px 30px 0px;" id="gradTable2">
+						<tr>
+							<td width="10%"><img alt="" src="../../image/images2/jipeitou.jpg" width="100%"/></td>
+							<td width="6%"><select id="meshSize1" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize2" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize3" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize4" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize5" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize6" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize7" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize8" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize9" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize10" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize11" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize12" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize13" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize14" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+							<td width="6%"><select id="meshSize15" name="meshId" class="selcetSearch" onmousedown="if(this.options.length>15){this.size=10}" data-edit-select="1" onblur="this.size=0" onchange="this.size=0"></select></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">1#仓</td>
+							<td width="6%"><input type="text" id="ware11" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware12" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware13" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware14" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware15" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware16" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware17" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware18" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware19" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware110" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware111" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware112" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware113" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware114" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware115" name="ware1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">2#仓</td>
+							<td width="6%"><input type="text" id="ware21" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware22" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware23" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware24" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware25" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware26" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware27" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware28" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware29" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware210" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware211" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware212" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware213" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware214" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware215" name="ware2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">3#仓</td>
+							<td width="6%"><input type="text" id="ware31" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware32" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware33" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware34" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware35" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware36" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware37" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware38" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware39" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware310" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware311" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware312" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware313" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware314" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware315" name="ware3" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">4#仓</td>
+							<td width="6%"><input type="text" id="ware41" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware42" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware43" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware44" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware45" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware46" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware47" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware48" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware49" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware410" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware411" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware412" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware413" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware414" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware415" name="ware4" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">5#仓</td>
+							<td width="6%"><input type="text" id="ware51" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware52" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware53" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware54" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware55" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware56" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware57" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware58" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware59" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware510" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware511" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware512" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware513" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware514" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware515" name="ware5" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">6#仓</td>
+							<td width="6%"><input type="text" id="ware61" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware62" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware63" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware64" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware65" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware66" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware67" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware68" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware69" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware610" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware611" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware612" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware613" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware614" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="ware615" name="ware6" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">冷粉1</td>
+							<td width="6%"><input type="text" id="coldPowder11" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder12" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder13" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder14" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder15" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder16" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder17" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder18" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder19" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder110" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder111" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder112" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder113" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder114" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder115" name="coldPowder1" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">冷粉2</td>
+							<td width="6%"><input type="text" id="coldPowder21" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder22" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder23" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder24" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder25" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder26" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder27" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder28" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder29" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder210" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder211" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder212" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder213" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder214" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="coldPowder215" name="coldPowder2" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">热粉</td>
+							<td width="6%"><input type="text" id="hotPowder1" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder2" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder3" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder4" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder5" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder6" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder7" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder8" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder9" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder10" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder11" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder12" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder13" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder14" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="hotPowder15" name="hotPowder" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">级配上限</td>
+							<td width="6%"><input type="text" id="upperLimit1" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit2" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit3" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit4" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit5" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit6" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit7" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit8" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit9" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit10" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit11" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit12" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit13" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit14" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="upperLimit15" name="upperLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+						<tr>
+							<td width="10%" bgcolor="#A9A9A9">级配下限</td>
+							<td width="6%"><input type="text" id="lowerLimit1" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit2" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit3" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit4" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit5" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit6" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit7" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit8" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit9" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit10" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit11" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit12" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit13" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit14" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+							<td width="6%"><input type="text" id="lowerLimit15" name="lowerLimit" style="width: 100%;border: none;text-align: center;" maxlength="10" onkeyup="clearNoDecimal(this,6,2)" onblur="checkPoint(this)"/></td>
+						</tr>
+					</table>
+					<div class="fazhi" align="center" id="gradSave">
+						<input type="button" id="sdff" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addGranular()">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

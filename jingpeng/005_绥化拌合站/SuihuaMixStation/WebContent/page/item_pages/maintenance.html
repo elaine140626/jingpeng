@@ -1,0 +1,182 @@
+
+<script src="../../js/HighwayPlatform/TestRoom/testbed.js" type="text/javascript" charset="utf-8"></script>	
+<script src="../../js/HighwayPlatform/TestRoom/indexMaintenance.js" type="text/javascript"></script>
+<ul id="myTab" class="nav nav-tabs">
+	<li class="active">
+		<a href="#cement" data-toggle="tab"><strong>水泥胶砂强度</strong></a>
+	</li>
+	<li>
+		<a href="#pitch" data-toggle="tab"><strong>沥青三大指标</strong></a>
+	</li>
+	<li>
+		<a href="#matthus" data-toggle="tab"><strong>马歇尔</strong></a>
+	</li>
+	<li>
+		<a href="#strength" data-toggle="tab"><strong>钢筋抗拉强度、屈服强度、伸长率</strong></a>
+	</li>
+	<li>
+		<a href="#bend" data-toggle="tab"><strong>钢筋接头抗拉强度、冷弯</strong></a>
+	</li>
+</ul>
+<div id="TabContain" class="tab-content">
+	<div class="tab-pane fade in active" id="cement">
+		<form id="cement_addForm" class="addform">
+			<label>水泥品种</label>
+			<input name="cementtype" type="text" id="cementtype" placeholder="输入水泥品种" required="required" maxlength="40" list="list">
+			<datalist id="list"></datalist>
+			<label>强度等级</label>
+			<input name="cementstrengthgrade" type="text" id="cementstrengthgrade" placeholder="输入强度等级" required="required" maxlength="40">
+			<label>抗压强度3d</label>
+			<input name="comptrength3" type="text" id="comptrength3" placeholder="输入抗压强度3d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+			<label>抗压强度28d</label>
+			<input name="comptrength28" type="text" id="comptrength28" placeholder="输入抗压强度28d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+			<label>抗折强度3d</label>
+			<input name="rupturestrength3" type="text" id="rupturestrength3" placeholder="输入抗折强度3d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+			<label>抗折强度28d</label>
+			<input name="rupturestrength28" type="text" id="rupturestrength28" placeholder="输入抗折强度28d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+			<input id="cementButton" name="button" type="button" value="保  存" class="btncha" onclick="addCement();">
+		</form>
+		<div class="lq_biao">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" id="cementMortarStrength">
+				<thead>
+					<tr class="shuanghang">
+						<th width="6%" class="xh" sope="col">序号</th>
+						<th width="15%" scope="col">水泥品种</th>
+						<th width="13%" scope="col">强度等级</th>
+						<th width="13%" colspan="2" scope="col" class="neibj0">
+							<div class="div1">抗压强度</div>
+							<div>
+								<ul class="tian3">
+									<li>3d</li>
+									<li>28d</li>
+								</ul>
+							</div>
+						</th>
+						<th width="12%" colspan="2" scope="col" class="neibj0">
+							<div class="div1">抗折强度</div>
+							<div>
+								<ul class="tian3">
+									<li>3d</li>
+									<li>28d</li>
+								</ul>
+							</div>
+						</th>
+						<th width="17%" scope="col">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="pitch">
+		<form id="pitch_addForm" class="addform">
+			<label>沥青种类</label>
+			<input name="asphalttype" type="text" id="asphalttype" placeholder="输入沥青种类" required="required" maxlength="20">
+			<label>针入度下限</label>
+			<input name="penetlowerlimit" type="text" id="penetlowerlimit" placeholder="输入针入度下限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>针入度上限</label>
+			<input name="penetupperlimit" type="text" id="penetupperlimit" placeholder="输入针入度上限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>软化点</label>
+			<input name="softenpoint" type="text" id="softenpoint" placeholder="输入软化点" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<input id="button" name="button" type="button" value="保  存" class="btncha" onclick="addAsphalt();">
+		</form>
+		<div class="lq_biao">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="asphalt">
+				<thead>
+					<tr>
+						<th width="6%" class="xh" scope="col">序号</th>
+						<th width="15%" scope="col">沥青种类</th>
+						<th width="13%" scope="col">针入度</th>
+						<th width="13%" scope="col">软化点</th>
+						<th width="17%" scope="col">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="matthus">
+		<form id="matthus_addForm" class="addform">
+			<label>稳定度下限</label>
+			<input name="stablowerlimit" type="text" id="stablowerlimit" placeholder="输入稳定度下限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>稳定度上限</label>
+			<input name="stabupperlimit" type="text" id="stabupperlimit" placeholder="输入稳定度上限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>流值下限</label>
+			<input name="flowlowerlimit" type="text" id="flowlowerlimit" placeholder="输入流值下限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>流值上限</label>
+			<input name="flowupperlimit" type="text" id="flowupperlimit" placeholder="输入流值上限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<input id="button" name="button" type="button" value="保  存" class="btncha" onclick="addMarshall();">
+		</form>
+		<div class="lq_biao">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="marshall">
+				<thead>
+					<tr>
+						<th width="6%" class="xh" scope="col">序号</th>
+						<th width="15%" scope="col">马歇尔</th>
+						<th width="13%" scope="col">流值</th>
+						<th width="17%" scope="col">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="strength">
+		<form id="strength_addForm" class="addform">
+			<label>钢筋牌号</label>
+			<input name="strengthgrade" type="text" id="strengthgrade" placeholder="输入钢筋牌号" required="required" maxlength="40">
+			<label>直径下限</label>
+			<input name="diameter1" type="text" id="diameter1" placeholder="输入直径下限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>直径上限</label>
+			<input name="diameter2" type="text" id="diameter2" placeholder="输入直径上限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>屈服强度</label>
+			<input name="yieldstrth" type="text" id="yieldstrth" placeholder="输入屈服强度" required="required" maxlength="15" onkeyup="keepNum(this)">
+			<label>极限强度</label>
+			<input name="tensilestrength" type="text" id="tensilestrength" placeholder="输入极限强度" required="required" maxlength="15" onkeyup="keepNum(this)">
+			<input name="ist1000201" type="hidden" id="ist1000201" value="0">
+			<input id="button" name="button" type="button" value="保  存" class="btncha" onclick="addRebar();">
+		</form>
+		<div class="lq_biao">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="rebar">
+				<thead>
+					<tr>
+						<th width="6%" class="xh" scope="col">序号</th>
+						<th width="15%" scope="col">钢筋牌号</th>
+						<th width="13%" scope="col">直径</th>
+						<th width="13%" scope="col">屈服强度</th>
+						<th width="13%" scope="col">极限强度</th>
+						<th width="17%" scope="col">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="tab-pane fade" id="bend">
+		<form id="bend_addForm" class="addform">
+			<label>钢筋牌号</label>
+			<input name="strengthgrade" type="text" id="strengthgrade1" placeholder="输入钢筋牌号" required="required" maxlength="40">
+			<label>直径下限</label>
+			<input name="diameter1" type="text" id="diameter11" placeholder="输入直径下限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)">
+			<label>直径上限</label>
+			<input name="diameter2" type="text" id="diameter21" placeholder="输入直径上限" required="required" maxlength="40" onkeyup="keepDecimal(this)" onblur="checkPoint(this)"><label>极限强度</label>
+			<input name="tensilestrength" type="text" id="tensilestrength1" placeholder="输入极限强度" required="required" maxlength="15" onkeyup="keepNum(this)">
+			<input name="ist1000201" type="hidden" id="ist1000201" value="1">
+			<input id="button" name="button" type="button" value="保  存" class="btncha" onclick="addRebarJoint();">
+		</form>
+		<div class="lq_biao">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="rebarJoint">
+				<thead>
+					<tr>
+						<th width="6%" class="xh" scope="col">序号</th>
+						<th width="15%" scope="col">钢筋牌号</th>
+						<th width="13%" scope="col">直径</th>
+						<th width="13%" scope="col">极限强度</th>
+						<th width="17%" scope="col">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#myTab li').click(function() {
+		var tabName = $(this).find('a').attr('href');
+	})
+</script>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../../js/oilfactory/screenDisplay/css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../js/oilfactory/screenDisplay/css/screen1.css"/>
+		<script src="../../js/oilfactory/screenDisplay/js/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/oilfactory/screenDisplay/js/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/oilfactory/screenDisplay/js/screen1.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.scrollTbody {         
+				display:block;         
+				height:316px;       
+				overflow:hidden;        
+				width:100%;     
+			}
+		</style>
+	</head>
+	<script type="text/javascript"> 
+	//先在table的最后增加一行，然后再把第一行中的数据填充到新增加的行中，最后再删除table的第一行
+	function change(table){
+		var row = table.insertRow(table.rows.length);//在table的最后增加一行,table.rows.length是表格的总行数
+		for(j=0;j<table.rows[0].cells.length;j++){//循环第一行的所有单元格的数据，让其加到最后新加的一行数据中（注意下标是从0开始的）
+		var cell = row.insertCell(j);//给新插入的行中添加单元格
+		cell.innerHTML = table.rows[0].cells[j].innerHTML;//设置新单元格的内容，这个根据需要，自己设置
+		}
+		table.deleteRow(0);//删除table的第一行
+	};
+	function tableInterval(){
+		var table = document.getElementById("dataList");//获得表格
+		change(table);//执行表格change函数，删除第一行，最后增加一行，类似行滚动
+	};
+	setInterval("tableInterval()",5000);//每隔2秒执行一次change函数，相当于table在向上滚动一样
+
+	</script>
+	<body class="body1">
+		<div id="pie">
+		</div>
+		<div id="table1">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>生产批次</th>
+						<th>产品名称</th>
+						<th>产品规格</th>
+						<th>生产计划量</th>
+						<th>单位</th>
+						<th>订货单位编号</th>
+					</tr>
+				</thead>
+				<tbody id="dataList" class="scrollTbody">
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>

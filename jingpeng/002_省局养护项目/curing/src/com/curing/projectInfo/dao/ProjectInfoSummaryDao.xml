@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectInfo.dao.ProjectInfoSummaryDao">
+	<!-- 工程信息List取得 -->
+	<select id="getProjectInfoSummaryList" parameterType="java.util.Map" resultType="com.curing.projectInfo.model.ProjectInfoSummaryEntity">
+		SELECT
+		   pis.Id                       -- Id
+		  , pis.ProjectId               -- 项目id
+		  , ve.ProjectNumber            -- 项目编号
+		  , ve.ProjectName              -- 项目名称
+		  , ve.CityName                 -- 所属市
+		  , pis.LineName                -- 路线名称
+		  , pis.Engineering             -- 工程项目（数据字典）
+		  , getContentByCode('gcxm', pis.Engineering) as EngineeringName                  -- 工程项目名称
+		  , pis.AgoName                 -- 原线路名称
+		  , pis.PlanBatch               -- 计划批次（数据字典）
+		  , getContentByCode('jhpc', pis.PlanBatch) as PlanBatchName                      -- 计划批次名称
+		  , pis.Location                -- 工程所在地
+		  , pis.PileNumber              -- 起讫点及桩号
+		  , pis.BuildNature             -- 建设性质
+		  , getContentByCode('jsxz', pis.BuildNature) as BuildNatureName                  -- 建设性质名称
+		  , pis.TechnicalGrade          -- 技术等级
+		  , getContentByCode('jsdj', pis.TechnicalGrade) as TechnicalGradeName            -- 技术等级名称
+		  , pis.Width                   -- 宽度
+		  , pis.AdministrationGrade     -- 行政等级（数据字典）
+		  , getContentByCode('xzdj', pis.AdministrationGrade) as AdministrationGradeName  -- 行政等级名称
+		  , pis.PlanTime                -- 计划年份
+		  , pis.ProjectSource           -- 项目来源
+		  , getContentByCode('xmly', pis.ProjectSource) as ProjectSourceName              -- 项目来源名称
+		  , pis.ProjectType             -- 项目分类
+		  , pis.QualityTarget           -- 质量目标 0:合格 1:优良
+		  , pis.ApprovalsType           -- 批文类型（数据字典）
+		  , pis.UploadPicture           -- 上传图片
+		  , pis.EngineeringUnit         -- 工程量单位（数据字典） 
+		  , getContentByCode('gcldw', pis.EngineeringUnit) as EngineeringUnitName         -- 工程量单位名称
+		  , pis.EngineeringAmount       -- 工程量计划数量
+		  , pis.EngineeringCount        -- 工程量（/座）
+		  , pis.InvestmentTotal         -- 投资额合计
+		  , pis.InvestmentProvince      -- 投资额省补总投资
+		  , pis.InvestmentMinistry      -- 投资额部投资
+		  , pis.DesignUnit              -- 设计单位
+		  , pis.ConstructionUnit        -- 施工单位
+		  , pis.SupervisorUnit          -- 监理单位
+		  , DATE_FORMAT(pis.StartDate, '%Y-%m-%d') as StartDate                           -- 开工日期
+		  , DATE_FORMAT(pis.EndDate, '%Y-%m-%d') as EndDate                               -- 竣工日期
+		  , pis.Remarks                 -- 备注
+		  , pis.TenderingNature         -- 招标性质
+		  , getContentByCode('zbxz', pis.TenderingNature) as TenderingNatureName          -- 招标性质名称
+		  , pis.TenderingCompany        -- 招标单位
+		  , pis.TenderingAgent          -- 招标代理
+		  , pis.TenderingRelease        -- 招标公告平台发布
+		  , pis.TenderingReleaseAddress -- 招标公告发布平台地址
+		  , pis.WinningBidCompany       -- 中标单位公示
+		  , pis.WinningBidCompanyAddress-- 中标单位公示地址
+		  , pis.ContractSign            -- 合同签订 0:已签 1:未签
+		  , pis.UploadPicture2          -- 上传图片（工程招标）
+		  , pis.Remarks2                -- 备注（工程招标）
+		  , pis.IsDel
+		  , pis.Creater
+		  , pis.CreaterDate
+		  , pis.Reviser
+		  , pis.ReviserDate 
+		FROM
+		  projectinfosummary pis
+		LEFT JOIN V_EntryTree ve        -- 树形
+		  ON pis.ProjectId = ve.pid 
+		WHERE
+		  pis.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and pis.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and pis.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId !=null and cityId !=''">
+		    and ve.ciid = #{cityId}                       -- 根据id查询
+		  </if>
+		  <if test="countyId !=null and countyId !=''">
+		    and ve.couid = #{countyId}                    -- 根据id查询
+		  </if>
+		  <if test="planBatch!=null and planBatch!=''">
+		    and pis.PlanBatch = #{planBatch}              -- 根据计划批次查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and pis.BuildNature = #{buildNature}          -- 根据建设性质查询
+		  </if>
+		  <if test="projectSource!=null and projectSource!=''">
+		    and pis.ProjectSource = #{projectSource}      -- 根据项目来源查询
+		  </if>
+		  <if test="projectType!=null and projectType!=''">
+		    and pis.ProjectType like concat('%',#{projectType},'%')   -- 根据项目分类查询
+		  </if>
+		  <if test="administrationGrade!=null and administrationGrade!=''">
+		    and pis.AdministrationGrade = #{administrationGrade}      -- 根据行政等级查询
+		  </if>
+		  <if test="technicalGrade!=null and technicalGrade!=''">
+		    and pis.TechnicalGrade = #{technicalGrade}    -- 根据技术等级查询
+		  </if>
+		  <if test="planTimeStr!=null and planTimeStr!=''">
+		    and pis.PlanTime &gt;= #{planTimeStr}         -- 根据计划年份查询
+		  </if>
+		  <if test="planTimeEnd!=null and planTimeEnd!=''">
+		    and pis.PlanTime &lt;= #{planTimeEnd}         -- 根据计划年份查询
+		  </if>
+		  <if test="TenderingCompany != null and TenderingCompany != ''">
+	       and pis.TenderingCompany like concat('%',#{TenderingCompany},'%')   -- 招标单位
+	     </if>
+	     <if test="TenderingAgent != null and TenderingAgent != ''">
+	       and pis.TenderingAgent like concat('%',#{TenderingAgent},'%')       -- 招标代理
+	     </if> 
+	     <if test="TenderingRelease != null and TenderingRelease != ''">
+	       and pis.TenderingRelease like concat('%',#{TenderingRelease},'%')   -- 招标平台发布
+	     </if>
+	     <if test="WinningBidCompany != null and WinningBidCompany != ''">
+	       and pis.WinningBidCompany like concat('%',#{WinningBidCompany},'%') -- 中标单位公示 
+	     </if>
+	     <if test="ContractSign != null and ContractSign != ''">
+	       and pis.ContractSign = #{ContractSign}           -- 合同签订
+	     </if>
+		order by pis.CreaterDate desc
+	</select>
+	
+	<!-- 新增工程信息 -->
+	<insert id="insertProjectInfoSummary" parameterType="com.curing.projectInfo.model.ProjectInfoSummaryEntity">
+		INSERT 
+		INTO ProjectInfoSummary( 
+		  Id
+		  , ProjectId
+		  , LineName
+		  , Engineering
+		  , AgoName
+		  , PlanBatch
+		  , Location
+		  , PileNumber
+		  , BuildNature
+		  , TechnicalGrade
+		  , Width
+		  , AdministrationGrade
+		  , PlanTime
+		  , ProjectSource
+		  , ProjectType
+		  , QualityTarget
+		  , ApprovalsType
+		  , UploadPicture
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES (
+			REPLACE(UUID(),'-','') 
+		  , #{ProjectId}
+		  , #{LineName}
+		  , #{Engineering}
+		  , #{AgoName}
+		  , #{PlanBatch}
+		  , #{Location}
+		  , #{PileNumber}
+		  , #{BuildNature}
+		  , #{TechnicalGrade}
+		  , #{Width}
+		  , #{AdministrationGrade}
+		  , #{PlanTime}
+		  , #{ProjectSource}
+		  , #{ProjectType}
+		  , #{QualityTarget}
+		  , #{ApprovalsType}
+		  , #{UploadPicture}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 
+	</insert>
+
+	<!-- 更新工程信息 -->
+	<update id="updateProjectInfoSummary" parameterType="com.curing.projectInfo.model.ProjectInfoSummaryEntity">
+		UPDATE ProjectInfoSummary 
+		SET
+		  <if test="LineName != null and LineName != ''">
+		  	LineName = #{LineName},
+		  </if>
+		  <if test="Engineering != null and Engineering != ''">
+		  	Engineering = #{Engineering},
+		  </if>
+		  <if test="AgoName != null and AgoName != ''">
+		  	AgoName = #{AgoName},
+		  </if>
+		   <if test="PlanBatch != null and PlanBatch != ''">
+		   	PlanBatch = #{PlanBatch},
+		   </if>
+		   <if test="Location != null and Location != ''">
+		   	Location = #{Location},
+		   </if>
+		   <if test="PileNumber != null and PileNumber != ''">
+		   	PileNumber = #{PileNumber},
+		   </if>
+		   <if test="BuildNature != null and BuildNature != ''">
+		   	BuildNature = #{BuildNature},
+		   </if>
+		   <if test="TechnicalGrade != null and TechnicalGrade != ''">
+		   	TechnicalGrade = #{TechnicalGrade},
+		   </if>
+		   <if test="Width != null and Width != ''">
+		   	Width = #{Width},
+		   </if>
+		   <if test="AdministrationGrade != null and AdministrationGrade != ''">
+		   	AdministrationGrade = #{AdministrationGrade},
+		   </if>
+		   <if test="PlanTime != null and PlanTime != ''">
+		   	PlanTime = #{PlanTime},
+		   </if>
+		   <if test="ProjectSource != null and ProjectSource != ''">
+		   	ProjectSource = #{ProjectSource},
+		   </if>
+		   <if test="ProjectType != null and ProjectType != ''">
+		   	ProjectType = #{ProjectType},
+		   </if>
+		   <if test="QualityTarget != null">
+		   	QualityTarget = #{QualityTarget},
+		   </if>
+		   <if test="ApprovalsType != null and ApprovalsType != ''">
+		   	ApprovalsType = #{ApprovalsType},
+		   </if>
+		   <if test="UploadPicture != null and UploadPicture != ''">
+		   	UploadPicture = #{UploadPicture},
+		   </if>
+		   <if test="TenderingNature != null and TenderingNature != ''">
+		   	TenderingNature = #{TenderingNature},
+		   </if>
+		   <if test="TenderingCompany != null and TenderingCompany != ''">
+		   	TenderingCompany = #{TenderingCompany},
+		   </if>
+		   <if test="TenderingAgent != null and TenderingAgent != ''">
+		   	TenderingAgent = #{TenderingAgent},
+		   </if>
+		   <if test="TenderingRelease != null and TenderingRelease != ''">
+		   	TenderingRelease = #{TenderingRelease},
+		   </if>
+		   <if test="TenderingReleaseAddress != null and TenderingReleaseAddress != ''">
+		   	TenderingReleaseAddress = #{TenderingReleaseAddress},
+		   </if>
+		   <if test="WinningBidCompany != null and WinningBidCompany != ''">
+		   	WinningBidCompany = #{WinningBidCompany},
+		   </if>
+		   <if test="WinningBidCompanyAddress != null and WinningBidCompanyAddress != ''">
+		   	WinningBidCompanyAddress = #{WinningBidCompanyAddress},
+		   </if>
+		   <if test="ContractSign != null">
+		   	ContractSign = #{ContractSign},
+		   </if>
+		   <if test="UploadPicture2 != null and UploadPicture2 != ''">
+		   	UploadPicture2 = #{UploadPicture2},
+		   </if>
+		   <if test="Remarks2 != null and Remarks2 != ''">
+		   	Remarks2 = #{Remarks2},
+		   </if>
+		   <if test="Remarks != null and Remarks != ''">
+		   	Remarks = #{Remarks},
+		   </if>
+		   Reviser = #{Reviser},
+		   ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 删除工程信息 -->
+	<update id="deleteProjectInfoSummary" parameterType="com.curing.projectInfo.model.ProjectInfoSummaryEntity">
+		UPDATE ProjectInfoSummary
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+</mapper>

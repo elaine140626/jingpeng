@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.FleetInfoDao">
+
+	<!-- 查询车队信息数据 -->
+	<select id="getFleetInfo" resultType="FleetInfo">
+		select * from FleetInfo where IsDel = 0 ORDER BY Id DESC
+	</select>
+	
+	<!-- 通过id查询车队信息数据 -->
+	<select id="getFleetInfoById" resultType="FleetInfo" parameterType="int">
+		select * from FleetInfo where id= #{id} and IsDel = 0
+	</select>
+		
+	<!-- 通过车队查询车辆信息数据 -->
+	<select id="getCarInfo" resultType="CarInfo" parameterType="FleetInfo">
+		select * from CarInfo where fleetId = #{id} and IsDel = 0
+	</select>
+
+	<!-- 添加车队信息-->
+	<insert id="addFleetInfo" parameterType="FleetInfo">
+		INSERT 
+		INTO FleetInfo( 
+		  `FleetNumber`
+		  , `FleetName`
+		  , `Contacts`
+		  , `Telephone`
+		  , `Remarks`
+		  , `IsDel`
+		  , `Creater`
+		  , `CreaterDate`
+		  , `Reviser`
+		  , `ReviserDate`
+		) 
+		VALUES ( 
+		  #{fleetNumber}
+		  , #{fleetName}
+		  , #{contacts}
+		  , #{telephone}
+		  , #{remarks}
+		  , #{isDel}
+		  , #{creater}
+		  , #{createrDate}
+		  , #{reviser}
+		  , #{reviserDate}
+		) 
+		<selectKey resultType="Integer" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() AS Id
+        </selectKey>
+	</insert>
+
+	<!-- 添加车辆信息-->
+	<insert id="addCarInfo" parameterType="CarInfo">
+		INSERT 
+		INTO CarInfo(
+		`FleetId` 
+		  ,`CarNumber`
+		  , `PlateNumber`
+		  , `LoadTon`
+		  , `IsLargeCar`
+		  , `Driver1`
+		  , `Telephone1`
+		  , `Driver2`
+		  , `Telephone2`
+		  , `Remarks`
+		  , `IsBinding`
+		  , `IsDel`
+		  , `Creater`
+		  , `CreaterDate`
+		  , `Reviser`
+		  , `ReviserDate`
+		) 
+		VALUES (
+		#{fleetId} 
+		  , #{carNumber}
+		  , #{plateNumber}
+		  , #{loadTon}
+		  , #{isLargeCar}
+		  , #{driver1}
+		  , #{telephone1}
+		  , #{driver2}
+		  , #{telephone2}
+		  , #{remarks}
+		  ,	1
+		  , #{isDel}
+		  , #{creater}
+		  , #{createrDate}
+		  , #{reviser}
+		  , #{reviserDate}
+		) 
+	</insert>
+	
+	<!-- 删除车队信息数据 -->
+	<update id="delFleetInfo" parameterType="FleetInfo">
+	update FleetInfo set
+		FleetName = #{fleetName},
+		Contacts = #{contacts},
+		Telephone =#{telephone},
+		Remarks = #{remarks},
+		IsDel = #{isDel},
+		Creater = #{creater},
+		CreaterDate = #{createrDate},
+		Reviser = #{reviser},
+		ReviserDate = #{reviserDate}
+		where id = #{id}
+	<!-- 	delete from oilfactory.FleetInfo where id=#{id} -->
+	</update>
+	<!-- 删除车辆信息数据 -->
+	<update id="delCarInfo" parameterType="CarInfo">
+	update CarInfo set
+		CarNumber = #{carNumber},
+		PlateNumber = #{plateNumber},
+		LoadTon = #{loadTon},
+		IsLargeCar =#{isLargeCar},
+		Driver1 = #{driver1},
+		Telephone1 = #{telephone1},
+		Driver2 = #{driver2},
+		Telephone2 = #{telephone2},
+		IsDel = #{isDel},
+		Creater = #{creater},
+		CreaterDate = #{createrDate},
+		Reviser = #{reviser},
+		ReviserDate = #{reviserDate}
+		where FleetId = #{fleetId}
+		<!-- delete from oilfactory.CarInfo where fleetId=#{id} -->
+	</update>
+	
+	<update id="updateFleetInfo" parameterType="FleetInfo">
+		update FleetInfo set
+		FleetNumber = #{fleetNumber},
+		FleetName = #{fleetName},
+		Contacts = #{contacts},
+		Telephone =#{telephone},
+		Remarks = #{remarks},
+		Creater = #{creater},
+		CreaterDate = #{createrDate},
+		Reviser = #{reviser},
+		ReviserDate = #{reviserDate}
+		where id = #{id}
+	</update>
+	
+	<update id="updateCarInfo" parameterType="CarInfo">
+		update CarInfo set
+		CarNumber = #{carNumber},
+		PlateNumber = #{plateNumber},
+		LoadTon = #{loadTon},
+		IsLargeCar =#{isLargeCar},
+		Driver1 = #{driver1},
+		Telephone1 = #{telephone1},
+		Driver2 = #{driver2},
+		Telephone2 = #{telephone2},
+		Creater = #{creater},
+		CreaterDate = #{createrDate},
+		Reviser = #{reviser},
+		ReviserDate = #{reviserDate}
+		where FleetId = #{fleetId}
+		and Id = #{id}
+	</update>
+	<update id="delCarInfoById" parameterType="int">
+	update CarInfo set IsDel = 1 where Id = #{id}
+		<!-- delete from oilfactory.CarInfo where fleetId=#{id} -->
+	</update>
+	
+		<!-- 根据名称模糊查询 -->
+	<select id="findFleetInfoByName" parameterType="String" resultType="FleetInfo">
+		select * from FleetInfo where IsDel = 0
+		<if test="fleetName !=null  and fleetName != '' ">
+			and FleetName LIKE '%${fleetName}%'
+		</if>
+		ORDER BY Id DESC
+	</select>
+	
+	<!-- 车辆删除校验查询 -->
+	<select id="getAllCarName" resultType="java.util.Map" parameterType="java.util.Map">
+		select  PlateNumber from exportMeasure where IsDel = 0
+		<if test="plateNumber != null and plateNumber != ''">
+			and PlateNumber = #{plateNumber}
+		</if>
+			UNION ALL
+		select  PlateNumber  from storagemeasure where IsDel = 0
+		<if test="plateNumber != null and plateNumber != ''">
+			and PlateNumber = #{plateNumber}
+		</if>
+	</select>
+	
+	<!-- 通过车辆id查询车辆 -->
+	<select id="getCarInfoById" parameterType="java.util.Map" resultType="CarInfo">
+		select * from carinfo where IsDel = 0
+		<if test="id != null and id != 0">
+			and Id = #{id}
+		</if>
+	</select>
+	<!-- 通过车辆编号查询车辆 -->
+	<select id="getCarInfoByCarNumber" parameterType="java.util.Map" resultType="CarInfo">
+		select * from carinfo where IsDel = 0 and CarNumber = #{carNumber}
+	</select>
+	<!-- 通过车队id查询车辆信息 -->
+	<select id="getAllCarInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from carinfo where IsDel = 0
+		<if test="fleetId != null and fleetId != 0">
+			and FleetId = #{fleetId}
+		</if>
+		<if test="plateNumber != null and plateNumber != ''">
+			and plateNumber = #{plateNumber}
+		</if>
+	</select>
+</mapper>

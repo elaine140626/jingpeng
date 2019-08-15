@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.transportation.TranSportListStoragemeasureDao">
+	
+	<!-- 添加运输单 -->
+	<insert id="addTranSportList" useGeneratedKeys="true" keyProperty="Id" parameterType="java.util.Map">
+		INSERT 
+		INTO transportlist(
+		DispatchOutWarehouseId 
+		  ,	BillNumber
+		  , SerialID
+		 <!--  , Company -->
+		  , TransportParty
+		  , MaterielId
+		  , Model
+		  , CarOwner
+		  , CarOwnerTelephone
+		 <!--  , StartAddress -->
+		  , EndAddress
+		  , SettlementKilometre
+		  , Weigh
+		  , CollectWeigh
+		  , FreightPrice
+		  , FreightMoney
+		  , escortPrice
+		  , EscortDays
+		  , EscortMoney
+		  , PlateNumber
+		  <!-- , SaleType -->
+		  , Reviser
+		  , IsDel
+		  , Remarks
+		  , TransportRoute
+		  , type
+		  , SettleDate
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{dispatchOutWarehouseId}
+		  , #{billNumber}
+		  , #{serialID}
+<!-- 		  , #{company} -->
+		  , #{transportParty}
+		  , #{materielId}
+		  , #{model}
+		  , #{carOwner}
+		  , #{carOwnerTelephone}
+		 <!--  , #{startAddress} -->
+		  , #{endAddress}
+		  , #{settlementKilometre}
+		  , #{weigh}
+		  , #{collectWeigh}
+		  , #{freightPrice}
+		  , #{freightMoney}
+		  , #{escortPrice}
+		  , #{escortDays}
+		  , #{escortMoney}
+		  , #{plateNumber}
+		 <!--  , #{saleType} -->
+		  , #{reviser}
+		  , 0
+		  ,	#{remarks}
+		  , #{transportRoute}
+		  , #{type}
+		  ,	#{settleDate}
+		  , #{creater}
+		  , NOW()
+		) 
+	</insert>
+	<!-- 修改运输单 -->
+	<update id="updateTranSportList" parameterType="java.util.Map">
+		UPDATE transportlist 
+		SET
+<!-- 			BillNumber = #{billNumber}
+		  , Company = #{company}
+		  , SerialID = #{serialID} -->
+		   TransportParty = #{transportParty}
+		  , MaterielId = #{materielId}
+		  , Model = #{model}
+		  , CarOwner = #{carOwner}
+		  , CarOwnerTelephone = #{carOwnerTelephone}
+		<!--   , StartAddress = #{startAddress} -->
+		  , EndAddress = #{endAddress}
+		  , Kilometre = #{kilometre}
+		  , SettlementKilometre = #{settlementKilometre}
+		  , Weigh = #{weigh}
+		  , CollectWeigh = #{collectWeigh}
+		  , FreightPrice = #{freightPrice}
+		  , FreightMoney = #{freightMoney}
+		  , EscortDays = #{escortDays}
+		  , EscortMoney = #{escortMoney}
+		  , PlateNumber = #{plateNumber}
+		  <!-- , SaleType = #{saleType} -->
+		  , Remarks = #{remarks}
+		  , TransportRoute = #{transportRoute}
+		  , type = #{type}
+		  , SettleDate = #{settleDate}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 删除运输单 -->
+	<update id="delTranSportList" parameterType="java.util.Map">
+		UPDATE transportlist 
+		SET
+			IsDel = 1
+		  , ReviserDate = NOW()
+		WHERE
+		  BillNumber = #{BillNumber}
+	</update>
+	
+	<!-- 查询出入库车牌 -->
+	<select id="getPlate" resultType="java.util.Map">
+<!-- 		select  PlateNumber from exportMeasure where IsDel = 0
+ 			UNION  -->
+		select  PlateNumber  from storagemeasure where IsDel = 0 and ValidFlag = 1  AND TareWeight NOT IN ('null', 0)  AND GrossWeight NOT IN ('null', 0)
+		 GROUP BY PlateNumber
+	
+	</select>
+	
+	<!-- 查询入库信息 -->
+	<select id="getExOrStPlateNumber" parameterType="java.util.Map" resultType="java.util.Map">
+SELECT
+	  s.Id                      as id                   -- id
+	  , s.SerialID              as SerialId             -- 流水号
+	  , s.PlateNumber           as plateNumber          -- 车牌号码
+	  , s.DeliveryMan              as carOwner             -- 车主
+	  , s.DeliveryManPhone     as carOwnerTelephone    -- 车主电话
+	  , m.MaterielNameId        as materielNameId       -- 物料名称id
+	  , m.MaterielModelId       as materielModelId      -- 规格型号id
+	  , ma.MaterielName         as materielName         -- 物料名称
+	  , mm.MaterielModel        as materielModel        -- 规格型号
+	  , s.Remarks               as remarks              -- 备注
+	  , s.ValidFlag             as validFlag            -- 有效标识/0无效/1有效
+	  , DATE_FORMAT(s.EnterDate,'%Y-%m-%d %H:%i:%s')   as enterDate            -- 入厂时间
+	  , IFNULL(s.Suttle,0.00)	as Suttle				-- 净重
+		, 0.00   as amount				-- 结算重
+	  ,	sa.Id					as uid					-- 客户ID
+	  ,	NULL					as outType				-- 是否调拨(没有调拨字段 随便加的)
+	  , NULL					as allotWeight
+	  , NULL     				as outTypeMark
+	  , NULL as transportBalance
+		, NULL as nowTransportBalance
+		, NULL as startAddress
+		, NULL as transports
+		, NULL as distance
+		, IFNULL(s.GrossWeight,0.00) as grossWeight
+		, IFNULL(sa.SupplierName,'') as supplierName
+		, s.EnterTypeMark as enterTypeMark
+		, IFNULL(s.Client,'') as client
+	FROM
+	  storagemeasure s               -- 调度入库单
+	left join purchasecontract c         -- 合同信息表
+		on s.PurchaseContractId = c.Id           -- 销售合同id
+	left join supplier sa        
+	  on sa.Id = c.SupplierId      
+	left join materielinfo m         -- 物料信息表
+	on s.ProductID = m.Id            -- 物料id
+	left join materielnameinfo ma    -- 物料名称表
+	on m.MaterielNameId = ma.Id      -- 物料名称id
+	left join materielmodelinfo mm   -- 物料型号表
+	on m.MaterielModelId = mm.Id     -- 规格型号id
+	LEFT JOIN transportlist tr on tr.SerialID = s.SerialID
+	AND tr.IsDel = 0
+	where s.IsDel = 0 and (tr.Id is null or tr.IsDel = 1) AND s.TareWeight NOT IN ('null', 0)  AND s.GrossWeight NOT IN ('null', 0)
+	<if test="plateNumber!=null and plateNumber!=''">
+				and s.PlateNumber =  #{plateNumber}
+	</if>
+		GROUP BY
+	s.SerialID
+	</select>
+	
+	<!-- 查询运输单状态 查找为空时 是入库状态 -->
+	<select id="getIsExAndSt"  parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+	    s.Id                    as id                   -- 出库单id
+	  , s.Serial_ID             as SerialId             -- 流水号 
+	  , s.PlateNumber           as plateNumber          -- 车牌号码  
+	  , s.CarOwner              as carOwner             -- 车主
+	  , s.CarOwnerTelephone     as carOwnerTelephone    -- 车主电话
+	  , m.MaterielNameId        as materielNameId       -- 物料名称id
+	  , m.MaterielModelId       as materielModelId      -- 规格型号id
+	  , ma.MaterielName         as materielName         -- 物料名称
+	  , mm.MaterielModel        as materielModel        -- 规格型号
+	  , s.Remarks               as remarks              -- 备注
+	  , s.ValidFlag             as validFlag            -- 有效标识 0无效 1有效
+		, s.FactoryTime           as factoryTime          -- 出厂时间
+		, s.OutTypeMark           as outTypeMark          -- 出库单类型标识 0：出库单 1：未入厂出库单
+	FROM
+	  exportMeasure s                -- 调度出库表
+	left join salesorder t           -- 销售订单表
+	  on s.SalesOrderId = t.Id       -- 销售订单id
+	  and t.IsDel = 0
+	left join salesorderdetailed t1  -- 销售订单明细表
+	  on t.Id = t1.SalesOrderId
+	  and t1.IsDel = 0
+    left join userinfo u             -- 用户信息表
+	  on u.Id = t.UserInfoId         -- 销售员id
+	  and u.IsDel = 0
+	left join contractinfo c         -- 合同信息表
+	  on t.ContractId = c.Id         -- 合同id
+	  and c.IsDel = 0
+	left join materielinfo m         -- 物料信息表
+	  on s.ProductID = m.Id          -- 物料id
+	  and m.IsDel = 0
+	left join materielnameinfo ma    -- 物料名称表
+	  on m.MaterielNameId = ma.Id    -- 物料名称id
+	  and ma.IsDel = 0
+	left join materielmodelinfo mm   -- 物料型号表
+	  on m.MaterielModelId = mm.Id   -- 规格型号id
+	  and mm.IsDel = 0
+	where  s.IsDel = 0 
+	and s.Serial_ID =  #{serialID}
+	ORDER BY Id
+	</select>
+	
+	
+	<!-- 查询结算类型 -->
+	<select id="getSaleType" resultType="Datadictionary">
+		
+		select * from datadictionary where Type = 'yushudan'
+	
+	</select>
+	
+	<!-- 查找车队 -->
+	<select id="getFleetinfo" resultType="Fleetinfo">
+		
+		select id,FleetName from fleetinfo where IsDel = 0
+	
+	</select>
+	
+	<!-- 查找物料信息 -->
+	<select id="getMaterielinfo" resultType="MaterielInfo">
+		SELECT
+				a.Id,
+				a.MaterielNumber,
+				b.MaterielName AS MaterielName,
+				c.MaterielModel AS MaterielModel,
+				a.IsDel
+			FROM
+				materielinfo a
+			LEFT JOIN materielnameinfo b ON a.MaterielNameId = b.Id
+			AND b.IsDel = 0
+			LEFT JOIN materielmodelinfo c ON a.MaterielModelId = c.Id
+			AND c.IsDel = 0
+			LEFT JOIN WarehouseInfo d ON a.WarehouseId = d.Id
+			AND d.IsDel = 0
+			WHERE
+				a.IsDel = 0
+	</select>
+	
+	<!-- 查询运输单信息 -->
+<select id="getTranSportList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+	t.id,
+	t.billNumber,
+	t.startAddress,
+	t.endAddress,
+	t.plateNumber,
+	t.transportParty,
+	t.remarks,
+	t.transportRoute,
+	t.serialID,
+	t.dispatchOutWarehouseId,
+	t.materielId,
+	t.model,
+	t.weigh,
+	t.collectWeigh,
+	t.kilometre,
+	t.settlementKilometre,
+	t.freightPrice,
+	t.freightMoney,
+	t.escortDays,
+	t.escortPrice,
+	t.escortMoney,
+	t.type,
+	rk.DeliveryMan as deliveryMan,
+	rk.DeliveryManPhone as deliveryManPhone,
+	DATE_FORMAT(t.SettleDate,'%Y-%m-%d %H:%i:%s') as SettleDate,
+	ck.factoryTime,
+	DATE_FORMAT(rk.enterDate,'%Y-%m-%d %H:%i:%s')   as enterDate, 
+	ifnull(se.AllotWeight ,0)as DAllotWeight,
+	ifnull(se.SettlementWeight ,0) as DSettlementWeight,
+	ifnull(se.StartAddress ,'') as DStartAddress,
+	ifnull(se.EndAddress ,'') as DEndAddress,
+	ifnull(se.Distance ,0) as DDistance,
+	ifnull(se.FreightPrice ,0) as DFreightPrice,
+	ifnull(se.FreightMoney ,0)as DFreightMoney,
+	ifnull(se.EscortPrice ,0) as DEscortPrice,
+	ifnull(se.EscortDays ,0) as DEscortDays,
+	ifnull(se.EscortMoney ,0)as DEscortMoney,
+	ck.outType	as outType,
+	ma.MaterielName as materielName,
+	mm.MaterielModel as materielModel,
+	u.id as ruid, 
+	cu.id as chuid,
+	ck.OutTypeMark as outTypeMark,
+	ck.OutType				as OutType,				-- 类别
+	up.FileName as fileName,
+	sal.TransportBalance as transportBalance,
+	now.TransportBalance as nowTransportBalance,
+	rk.Client as client,
+	rk.EnterTypeMark as enterTypeMark,
+	supp.SupplierName as supplierName
+FROM
+	transportlist t
+LEFT JOIN
+	exportmeasure ck ON t.SerialID = ck.Serial_ID
+	left join salesorderdetailed sal           -- 销售明细订单表
+	  on ck.OrderDetailedId = sal.Id       -- 销售明细订单id
+LEFT JOIN
+	storagemeasure rk ON t.SerialID = rk.SerialID
+LEFT JOIN
+	NoWeighOutWarehouse se ON t.DispatchOutWarehouseId = se.DispatchOutWarehouseId  
+
+left join outemptyrelation ot         -- 空发信息表
+	  on ot.OutWarehouseId = ck.Id      -- 空发id
+left join noweighoutwarehouse now 
+		on now.DispatchOutWarehouseId = ck.Id
+left join contractinfo c         -- 合同信息表
+	on rk .ContractId = c.Id           -- 销售合同id
+left join CustomerInfo u         -- 客户信息表
+	on u.Id = c.CustomerId         -- 入库客户id
+left join salesorder st           -- 销售订单表
+	  on ck.SalesOrderId = st.Id       -- 销售订单id
+left join CustomerInfo cu             -- 客户信息表
+	  on cu.Id = st.CustomerId         -- 客户id
+left join uploadfile up             -- 上传信息表
+	  on up.SerialID = t.SerialID      -- 上传流水
+left join materielnameinfo ma    -- 物料名称表
+	on ma.id = t.materielId      -- 物料名称id
+left join materielmodelinfo mm   -- 物料型号表
+	on mm.id = t.model     -- 规格型号id
+	left join purchasecontract purch         -- 合同信息表
+		on rk.PurchaseContractId = purch.Id           -- 销售合同id
+	left join supplier supp        
+	  on supp.Id = purch.SupplierId    
+
+where t.IsDel = 0 and t.type = 2
+<if test="id!=null and id!=''">
+	and t.Id =  #{id}
+</if>
+<if test="JbillNumber!=null and JbillNumber!=''">
+	and t.BillNumber = #{JbillNumber}
+</if>	
+<if test="billNumber!=null and billNumber!=''">
+	and t.BillNumber like concat('%',#{billNumber},'%') 
+</if>
+<if test="plateNumber!=null and plateNumber!=''">
+	and t.PlateNumber like concat('%',#{plateNumber},'%') 
+</if>
+<if test="type!=null and type!=''">
+	and t.type =  #{type}
+</if>
+GROUP BY
+	t.serialID
+ORDER BY
+	t.billNumber,t.DispatchOutWarehouseId
+</select>
+
+	<!-- 查询客户运距信息 -->
+	<select id="getTransportsById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			cust.Id,
+			cus.CustomerName,
+			cust.StartAddress,
+			cust.Transports,
+			cust.Distance,
+			cust.Remarks,
+			cust.IsDel,
+			cus.IsDel as cIsDel
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cust.CustomerId = cus.Id
+		WHERE
+			cust.IsDel = 0	
+			<if test="id!=null and id!=''">
+				AND cust.CustomerId = #{id}
+			</if>
+			<if test="StartAddress!=null and StartAddress!=''">
+				AND cust.StartAddress = #{startAddress}
+			</if>
+			<if test="kid!=null and kid!=''">
+				AND	cust.id =  #{kid}
+			</if>
+	</select>
+	
+	<!-- 根据调拨出库单Id添加未称重信息 -->
+	<update id="updateNoWeighOut" parameterType="java.util.Map">
+		UPDATE NoWeighOutWarehouse 
+		SET
+			AllotWeight = #{allotWeight}
+		  , SettlementWeight = #{settlementWeight}
+		 <!--  , StartAddress = #{startAddress} -->
+		  , EndAddress = #{endAddress}
+		  , Distance = #{distance}
+		  , FreightPrice = #{freightPrice}
+		  , FreightMoney = #{freightMoney}
+		  , EscortPrice = #{escortPrice}
+		  , EscortDays = #{escortDays}
+		  , EscortMoney = #{escortMoney}
+		WHERE
+		  DispatchOutWarehouseId = #{dispatchOutWarehouseId}
+	</update>
+	
+	<!-- 添加上传文件 -->
+	<insert id="adduploadfile" parameterType="java.util.Map">
+		INSERT 
+		INTO uploadfile(
+		SerialID 
+		  ,	FileName
+		  , FileRoute
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{serialID}
+		  , #{fileName}
+		  , #{fileRoute}
+		  , 0
+		  , #{creater}
+		  , NOW()
+		) 
+	</insert>
+	
+		<!-- 查询上传文件信息 -->
+	<select id="getUploadfile" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			Id as id,
+			SerialID as serialID,
+			FileName as fileName,
+			FileRoute as fileRoute
+		FROM
+			uploadfile  where IsDel = 0
+			<if test="serialID!=null and serialID!=''">
+				AND	SerialID =  #{serialID}
+			</if>
+	</select>
+	
+		<!-- 删除上传文件信息 -->
+	<delete id="delUploadfile" parameterType="java.util.Map">
+	 delete FROM uploadfile  WHERE SerialID = #{serialID}
+	</delete>
+	
+	<update id="updateExportmeasureIsTransport" parameterType="java.util.Map">
+		UPDATE exportmeasure 
+		SET
+			TransportListId =  #{Id}
+		WHERE
+		  Serial_ID = #{serialID}
+	</update>
+	
+	<update id="updateStoragemeasureIsTransport" parameterType="java.util.Map">
+		UPDATE storagemeasure 
+		SET
+			TransportListId = #{Id}
+		WHERE
+		  SerialID = #{serialID}
+	</update>
+	
+			<!-- 查询是否存在出库单-->
+	<select id="getEXById" parameterType="java.util.Map" resultType="java.util.Map">
+			SELECT
+		ex.Id 
+	FROM
+		exportmeasure ex
+	WHERE
+		Serial_ID = #{serialID} 
+		and ex.IsDel = 0
+UNION all
+
+				SELECT
+		st.Id 
+	FROM
+		storagemeasure st
+	WHERE
+		SerialID = #{serialID}
+	AND IsDel = 0	
+	</select>
+	
+	
+				<!-- 查询出库单是否含有未称重-->
+	<select id="exIsHaveNoweighoutwarehouse" parameterType="java.util.Map" resultType="java.util.Map">
+			SELECT
+		now.Id 
+	FROM
+		noweighoutwarehouse now 
+	left join exportMeasure ex           
+	  		on now.DispatchOutWarehouseId = ex.Id    
+	WHERE
+		ex.Serial_ID = #{SerialId}   
+		and  now.IsDel = 0
+	</select>
+	
+</mapper>

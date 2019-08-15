@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script type="text/javascript" src="../../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/quality/productionProcessDetection_edit.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: left;
+			}
+			
+			.ui_text_lt {
+				width: 60%;
+			}
+			
+			.ui_input_txt01 {
+				width: 45%;
+			}
+			
+			.ui_select01 {
+				width: 47%;
+			}
+			
+			.text {
+				height: 80px;
+				resize: none
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				 * 取消
+				 */
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				}
+			});
+
+		</script>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<input type="hidden" name="fyID" value="14458625716623" id="fyID" />
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					生产过程检测
+				</div>
+				<div class="ui_content">
+					<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+						<tr>
+							<td class="ui_text_rt">质检是否合格：</td>
+							<td class="ui_text_lt">
+								<select id="IsQualified" name="IsQualified" class="ui_input_txt02" style="padding: 0;" onchange="changeIsQualified()">
+									<option value="0">是</option>
+									<option value="1">否</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">是否调整：</td>
+							<td class="ui_text_lt">
+								<select id="IsAdjust" name="IsAdjust" class="ui_input_txt02" style="padding: 0;">
+									<option value="0">是</option>
+									<option value="1">否</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td class="ui_text_lt">
+								&nbsp;<input id="submitbutton" type="button" onclick="save()" value="保存" class="ui_input_btnsave"/> 
+								&nbsp;<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

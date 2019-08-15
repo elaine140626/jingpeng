@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<!--沥青混合料-->
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<title></title>
+		<link rel="stylesheet" href="../../css/common/bootstrap.min.css">
+		<link rel="StyleSheet" href="../../css/common/dtree.css" />
+		<link rel="StyleSheet" href="../../css/common/dtree2.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common/common.css" />
+		<link rel="stylesheet" href="../../css/common/asphalt.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common/asphalt_pages.css" />
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script src="../../js/common/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jedate/jedate.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/HighwayPlatform/MixStation/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/HighwayPlatform/MixStation/dtree2.js"></script>
+		<script src="../../js/DataTables/datatables.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/HighwayPlatform/MixStation/asphalt/asphalt.js" type="text/javascript" charset="utf-8"></script>
+
+	</head>
+
+	<body>
+		<!--header-->
+		<div class="container-fluid top">
+			<div class="topleft"></div>
+			<div class="topright">
+				<a href="#" class="userid">你好！</a>
+				<a href="../../page/centerLogin/userinfo.html" class="shezhi">用户管理</a>
+				<!-- <a href="../../page/login.html" class="out">安全退出</a> -->
+				<a href="javascript:;" class="out" onclick="outLogin()"><span></span>安全退出</a>
+			</div>
+		</div>
+		<!--container 开始-->
+		<div class="container-fluid contain">
+			<div class="row leftbj">
+				<div class="leftnav_g">
+					<ul>
+						<li class="left">
+							<a href="../../page/index.html" class="nav1">首页</a>
+						</li>
+					</ul>
+				</div>
+				<div class="rightcon">
+					<div class="rightcon_wz">
+						<div class="location">
+							<div class="loca">您的位置：</div>
+							<input id="orgIds" name="orgIds" type="hidden"></input>
+							<span id="testbedName">
+								<span class="sele" style="font-weight: 700;color: #039;">
+								<span id="isOrName">(</span>
+						        <span id="station"></span>
+						        <span id="isOrName1">)</span></span>
+						        <span class="arr">&nbsp;&nbsp;>&nbsp;&nbsp;</span><span id="bannerName">生产统计</span>
+							</span>
+							<div class="shunav">
+								<div class="shu_btn">
+									<span class="shu_ban" id="toggle">拌和站</span>
+									<div class="dtree" id="content" style="display:none;">									
+									<script type="text/javascript">
+									    var orgName = new Array();
+										$.ajax({
+											type : "POST",
+											url : "../../PlatformAsphaltData/getOrgId.action",
+											async:false,
+											data : {},
+											dataType : "json",
+											success : function(data) {
+												d = new dTree('d', true);
+												var html = "";
+												var org_Ids = "";
+												for(var i = 0; i < data.length; i++) {
+													if(data[i].org_Type == "1" || data[i].org_Type == 1) {
+														d.add(data[i].Id, -1, data[i].Org_Name, true, false);
+													} else {
+														d.add(data[i].Id, data[i].Parent_Id, 'authority', data[i].Id, data[i].Org_Name ,false, false);
+														orgName.push(data[i].Org_Name);
+														html += "<span class='s'>"+'、'+data[i].Org_Name+"</span>";
+														org_Ids += ","+data[i].Id;
+													}
+												}
+												$("#orgIds").val(org_Ids);
+												$("#station").html(html);
+												// 判断第一个显示是否是"、"
+												if($("#station").html().substr(16,1) == "、"){
+													html = $("#station").html().substr(0,16)+$("#station").html().substr(17,$("#station").html().length);
+													$("#station").html(html);
+												}
+												document.write(d);
+							                    d.openAll();
+											}
+										}); 	
+										// 设置checkBox全部选中
+										var authority = document.getElementsByName("authority");
+										for (var i = 0; i < authority.length; i++) {
+											var aut = authority[i]
+											$("#" + aut.id).attr("checked",
+													"checked");
+										}
+										var children = document.getElementsByName("children");
+										for (var i = 0; i < children.length; i++) {
+											var aut = children[i]
+											$("#" + aut.id).attr("checked",
+													"checked");
+										}
+										</script>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+
+				</div>
+				<form action="" method="get" class="sousuo" id="asphalt_search">
+					<label>生产时间：</label>
+					<input type="text" size="20" class="search_input" id="startTime" readonly="readonly">
+					<label>--</label>
+					<input type="text" size="20" class="search_input" id="endTime" readonly="readonly">
+					<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha asphalt_search_btn" onclick="searchSum();">
+				</form>
+				<div class="rightcon_content">
+
+				</div>
+			</div>
+		</div>
+		<!--container 结束-->
+		<!--footer-->
+		<div class="bottom">
+			<a href="#">关于 我们</a>|
+			<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+		</div>
+	</body>
+	</body>
+	<script type="text/javascript">
+		var firstUrl;
+		var jumpUrl = '';
+		var viewUrl = URL_Request("viewUrl");
+		var contain = $('.rightcon_content');
+		var status = '';
+		getProjectName();
+		$('#toggle').on('click', function(event) {
+			event.stopPropagation();
+			$(this).siblings('#content').toggle();
+			var tag = $(this).siblings('#content');
+
+			var flag = true;
+			$(document).bind("click", function(e) {
+				var target = $(e.target);
+				if(target.closest(tag).length == 0 && flag == true) {
+					$(tag).hide();
+					flag = false;
+				}
+			});
+		});
+		jeDate({
+			dateCell: "#startTime",
+			format: "YYYY-MM-DD",
+			isinitVal: false,
+			isTime: true,
+			isClear: false,
+		})
+		jeDate({
+			dateCell: "#endTime",
+			format: "YYYY-MM-DD",
+			isinitVal: false,
+			isTime: true,
+			isClear: false,
+		})
+		//production_statistics.html  生产统计页面
+		//production_data.html  生产数据页面
+		//materials_consumption.html  原材料消耗页面
+		//warning_information.html  预警信息查询
+		//warning_deviation.html   预警偏差设置
+	</script>
+	
+	<script type="text/javascript">
+		var org_Ids = $("#orgIds").val();
+		//dtree选中事件
+		d.checkNode = function (id,i_parent_Id,flag,str,obj) {			
+			// 获取所有tree项
+			var objList = d.aNodes;
+			if(obj == true) {
+				org_Ids += ","+id
+				var html = "<span class='s'>"+'、'+str+"</span>"
+				$("#station").append(html)
+			} else {
+				org_Ids = org_Ids.replace(","+id,"")
+				$(".s").each(function() {
+					if ($(this).text() == str || $(this).text() == "、"+str) {
+						$(this).remove();
+					}
+				});
+			}
+			$("#orgIds").val(org_Ids);
+			// 全部取消时
+			if($("#station").html() == null || $("#station").html() == ""){
+				$("#isOrName").hide();
+				$("#isOrName1").hide();
+			} else {
+				$("#isOrName").show();
+				$("#isOrName1").show();
+			}
+			// 判断第一个显示是否是"、"
+			if($("#station").html().substr(16,1) == "、"){
+				html = $("#station").html().substr(0,16)+$("#station").html().substr(17,$("#station").html().length);
+				$("#station").html(html);
+			}
+		}
+		
+		function outLogin() {
+			$.ajax({
+				type : "POST",
+				url : "../../UserInfo/delUserSession.action",
+				data : {},
+				dataType : "json",
+				success : function(data) {
+					if (data.code == 'error') {
+						// 失败信息
+						swal("操作失败", data.message, data.code);
+					} else {
+						// 首页
+						$(location).attr('href', '../centerLogin/centerLogin.html');
+					}
+				}
+			});
+		}
+	</script>
+
+</html>

@@ -1,0 +1,38 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html,
+body {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 1920px;
+	height: 1080px;
+}
+body {
+	background: url(../img/img1.png) no-repeat center center;
+	background-size: 100% 100%;
+}
+/* 生产信息 */
+
+.body1 #pie {
+	width: 25%;
+	height: 40%;
+	position: absolute;
+	left: 8%;
+	top: 32%;
+}
+
+.body1 #table1 {
+	width: 56%;
+	height: 62%;
+	position: absolute;
+	left: 36%;
+	top: 22%;
+	overflow: hidden;
+}
+

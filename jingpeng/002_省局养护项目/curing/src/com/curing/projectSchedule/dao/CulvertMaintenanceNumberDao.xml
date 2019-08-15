@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.CulvertMaintenanceNumberDao">
+	<!-- 工程进度（涵洞维修工程数量表）List取得 -->
+	<select id="getCulvertMaintenanceNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.CulvertMaintenanceNumberEntity">
+		SELECT
+		  cmn.Id
+		  , cmn.ProjectId                                 -- 项目id
+		  , cmn.PileNumber                                -- 原构造物情况桩号
+		  , cmn.Aperture                                  -- 原构造物情况孔径
+		  , cmn.Angle                                     -- 原构造物情况角度
+		  , cmn.Type                                      -- 原构造物情况类型
+		  , cmn.Silt                                      -- 淤泥（m³）
+		  , cmn.Concrete                                  -- C30混凝土（m³）
+		  , cmn.BondedRebars                              -- 长35cm间距30cmφ12植筋（根）
+		  , cmn.Rubble                                    -- M10浆砌片石（m³）
+		  , cmn.Remarks                                   -- 备注
+		  , cmn.IsDel
+		  , cmn.Creater
+		  , cmn.CreaterDate
+		  , cmn.Reviser
+		  , cmn.ReviserDate 
+		FROM
+		  CulvertMaintenanceNumber as cmn 
+		  left join V_EntryTree as ve 
+		    on cmn.ProjectId = ve.pid 
+		WHERE
+		  cmn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and cmn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and cmn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and cmn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="angle!=null and angle!=''">
+		    and cmn.angle  like concat('%',#{angle},'%')     -- 根据角度
+		  </if>
+		  <if test="aperture!=null and aperture!=''">
+		    and cmn.aperture like concat('%',#{aperture},'%') -- 根据孔径
+		  </if>
+		  <if test="type!=null and type!=''">
+		    and cmn.type  like concat('%',#{type},'%') -- 根据类型
+		  </if>
+		   order by cmn.CreaterDate desc
+	</select>
+	<!-- 导出 -->
+		<select id="getCulvertMaintenanceNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   cmn.PileNumber                                -- 原构造物情况桩号
+		  , cmn.Aperture                                  -- 原构造物情况孔径
+		  , cmn.Angle                                     -- 原构造物情况角度
+		  , cmn.Type                                      -- 原构造物情况类型
+		  , cmn.Silt                                      -- 淤泥（m³）
+		  , cmn.Concrete                                  -- C30混凝土（m³）
+		  , cmn.BondedRebars                              -- 长35cm间距30cmφ12植筋（根）
+		  , cmn.Rubble                                    -- M10浆砌片石（m³）
+		  , cmn.Remarks                                   -- 备注
+		FROM
+		  CulvertMaintenanceNumber as cmn 
+		  left join V_EntryTree as ve 
+		    on cmn.ProjectId = ve.pid 
+		WHERE
+		  cmn.IsDel = 0
+		  order by cmn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（涵洞维修工程数量表）合计 -->
+	<select id="getCulvertMaintenanceNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.CulvertMaintenanceNumberSum">
+		SELECT
+		  sum(cmn.Silt) as SiltSum                        -- 淤泥（m³）
+		  , sum(cmn.Concrete) as ConcreteSum              -- C30混凝土（m³）
+		  , sum(cmn.BondedRebars) as BondedRebarsSum      -- 长35cm间距30cmφ12植筋（根）
+		  , sum(cmn.Rubble) as RubbleSum                  -- M10浆砌片石（m³）
+		FROM
+		  CulvertMaintenanceNumber as cmn 
+		  left join V_EntryTree as ve 
+		    on cmn.ProjectId = ve.pid 
+		WHERE
+		  cmn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and cmn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and cmn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  	<if test="pileNumber!=null and pileNumber!=''">
+		    and cmn.pileNumber like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="angle!=null and angle!=''">
+		    and cmn.angle  like concat('%',#{angle},'%')     -- 根据角度
+		  </if>
+		  <if test="aperture!=null and aperture!=''">
+		    and cmn.aperture like concat('%',#{aperture},'%') -- 根据孔径
+		  </if>
+		  <if test="type!=null and type!=''">
+		    and cmn.type like concat('%',#{type},'%') -- 根据类型
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（涵洞维修工程数量表） -->
+	<insert id="insertCulvertMaintenanceNumber" parameterType="com.curing.projectSchedule.model.CulvertMaintenanceNumberEntity">
+		INSERT 
+		INTO CulvertMaintenanceNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , Aperture
+		  , Angle
+		  , Type
+		  , Silt
+		  , Concrete
+		  , BondedRebars
+		  , Rubble
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+			REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{Aperture}
+		  , #{Angle}
+		  , #{Type}
+		  , #{Silt}
+		  , #{Concrete}
+		  , #{BondedRebars}
+		  , #{Rubble}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（涵洞维修工程数量表） -->
+	<update id="updateCulvertMaintenanceNumber" parameterType="com.curing.projectSchedule.model.CulvertMaintenanceNumberEntity">
+		UPDATE CulvertMaintenanceNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , Aperture = #{Aperture}
+		  , Angle = #{Angle}
+		  , Type = #{Type}
+		  , Silt = #{Silt}
+		  , Concrete = #{Concrete}
+		  , BondedRebars = #{BondedRebars}
+		  , Rubble = #{Rubble}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（涵洞维修工程数量表） -->
+	<update id="deleteCulvertMaintenanceNumber" parameterType="com.curing.projectSchedule.model.CulvertMaintenanceNumberEntity">
+		UPDATE CulvertMaintenanceNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

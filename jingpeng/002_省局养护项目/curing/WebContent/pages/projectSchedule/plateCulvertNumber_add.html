@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="../../js/html5shiv.js"></script>
+	<script type="text/javascript" src="../../js/respond.min.js"></script>
+	
+	<![endif]-->
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	
+	<!--[if IE 6]>
+	<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<title>空白页</title>
+	</head>
+	<body>
+	<div class="pd-20">
+	  <form class="form form-horizontal" id="form1" style="margin-top:-20px"  method="post">
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>桩号</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="pileNumber" name="pileNumber" maxlength="15">
+				</div>
+			</div>
+	  	</div>
+	  		  	<div class="row cl">
+	  			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>后台填筑 m3</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="backfilling" name="backfilling" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>圬工m3</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="masonry" name="masonry" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>挖基土方m3</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="earthwork" name="earthwork" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20"> 上部</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">上部板  </div>
+	  		  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="topRebar" name="topRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C30混凝土（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topC30Concrete" name="topC30Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">桥面铺装  </div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topDeckRebar" name="topDeckRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C40混凝土（m3）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="topDeckC40Concrete" name="topDeckC40Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>防水层(m2)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topDeckWaterproof" name="topDeckWaterproof" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">护栏基座 </div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topGuardrailRebar" name="topGuardrailRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C40混凝土（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topGuardrailC40Concrete" name="topGuardrailC40Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">支座锚栓 </div>
+	  		  	<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topBearingRebar" name="topBearingRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C40混凝土（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="topBearingC40Concrete" name="topBearingC40Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>M15浆砌片石台身（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="m15Rubble" name="m15Rubble" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20"> 下部 </div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20"> 台身  </div>
+	  		  <div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>M10浆砌片石台身（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomRubbleBody" name="bottomRubbleBody" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>M10浆砌块石镶面（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomRubbleVeneer" name="bottomRubbleVeneer" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">台帽及挡块 </div>
+	  		  		  	<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomCapRebar" name="bottomCapRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C30混凝土（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomCapC30Concrete" name="bottomCapC30Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">台基础 </div>
+	  		<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomPlatformRebar" name="bottomPlatformRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C20片石（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomPlatformC20Stone" name="bottomPlatformC20Stone" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C20混凝土（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomPlatformC20Concrete" name="bottomPlatformC20Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	
+	  		<div class="cl pd-5 bg-1 bk-gray mt-20">支撑梁</div>  	
+	  		 <div class="row cl">
+			<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>钢筋（Kg)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomBraceRebar" name="bottomBraceRebar" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>混凝土（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="bottomBraceConcrete" name="bottomBraceConcrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20"> 防护工程</div>
+	  		<div class="cl pd-5 bg-1 bk-gray mt-20">八字墙  </div>  	
+	  		 <div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>C15片石混凝土基础（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="guardC15Concrete" name="guardC15Concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  					<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> M10浆砌片石墙身（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="guardM10RubbleBody" name="guardM10RubbleBody" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span> M10浆砌块石镶面（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="guardM10RubbleVeneer" name="guardM10RubbleVeneer" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">铺砌   </div>
+	  		<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>M7.5片石铺砌（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="guardPaving" name="guardPaving" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	
+	  		  	<div class="cl pd-5 bg-1 bk-gray mt-20">隔水墙 </div>
+	  		<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>M7.5号浆砌片石（m3）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="guardRubble" name="guardRubble" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  		  	<div class="cl pd-5 bg-1 bk-gray mt-20">砂砾</div>
+	  		<div class="row cl">
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>m3</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="guardGravel" name="guardGravel" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  		  		
+	  	<div class="row cl">
+	  		<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-3">
+	  			<button id="saveButton" onclick="save();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+	  			<button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+	  		</div>
+	  	</div>
+	  </form>
+	</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script> 
+	<script type="text/javascript" src="../../js/systemJs/projectSchedule/plateCulvertNumber_add.js"></script>
+	</body>
+</html>

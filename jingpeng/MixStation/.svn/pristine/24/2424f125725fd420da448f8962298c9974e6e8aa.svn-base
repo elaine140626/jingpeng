@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>黑龙江盲样试验展示平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree2.css"/>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+</head>
+
+<body>
+<div class="top">
+
+        <div class="topleft">黑龙江盲样试验展示平台</div>
+        <div class="topright">
+            <span class="userid">wangdanwei</span><span>你好！</span>
+            <a href="userinfo.html" target="_blank" class="shezhi">用户管理</a>
+            <a href="#" class="out">安全退出</a>
+        </div>
+</div>
+<div class="container-fluid content">
+
+        <div class="rightcon" style="padding-left:0;">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室 > 用户注册</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="lq_main">
+                	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+                    	<tr class="dise">
+                        <th colspan="2" align="left" scope="col"><span>用户注册</span></th>
+                      </tr>
+                      <tr>
+                        <td width="23%" align="right">用户名：</td>
+                        <td width="77%">
+                        <input type="text" name="textfield2" id="textfield2" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">密码：</td>
+                        <td><input type="password" name="textfield2" id="textfield2" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">确认密码：</td>
+                        <td><input type="password" name="textfield2" id="textfield2" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">姓名：</td>
+                        <td><input type="text" name="textfield2" id="textfield2" placeholder="请输入" class="zhuce_input"></td>
+                      </tr>
+                      
+                      <tr>
+                        <td align="right">权限：</td>
+                        <td>
+                        <div class="dtree" id="dtree_div">
+						<script type="text/javascript">
+                            d = new dTree('d', true);   //参数一: 树名称。参数二：单选多选 true多选  false单选  默认单选               
+                            d.add(0, -1, '试验室');
+                            d.add(1, 0, 'authority', '0001', '一工区', true, false);
+                            d.add(4, 1, 'authority', '0004', '中心试验室1', false, false);
+                            d.add(5, 1, 'authority', '0005', '中心试验室2', false, false);
+                
+                            // dTree实例属性以此为：  节点ID，父类ID，chechbox的名称，chechbox的值，chechbox的显示名称，
+                            //chechbox是否被选中--默认是不选，chechbox是否可用：默认是可用，节点链接：默认是虚链接
+                            d.add(6, 0, 'authority', '0012', '二工区 ', true, false);
+                            d.add(7, 6, 'authority', '0014', '中心试验室1', false, false);
+                            d.add(8, 6, 'authority', '0015', '中心试验室2', false, false);
+                
+                
+                            d.add(11, 0, 'authority', '0016', '三工区 ', true, false);
+                            d.add(13, 11, 'authority', '0018', '中心试验室3', false, false);
+                            d.add(14, 11, 'authority', '0019', '中心试验室4', false, false);
+                            document.write(d);
+                            d.openAll();
+                        </script>
+                        
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="right">&nbsp;</td>
+                        <td><input type="submit" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc"></td>
+                      </tr>
+                    </table>
+
+              </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/	js/script.js"></script>
+
+</body>
+</html>

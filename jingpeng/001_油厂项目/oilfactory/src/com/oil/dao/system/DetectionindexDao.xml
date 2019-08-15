@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.DetectionindexDao">
+
+    <!-- 获取全部检测指标 -->
+	<select id="getDetectionindex" parameterType="java.util.Map" resultType="Detectionindex">
+		SELECT
+	        d.Id            as id
+	        , d.TestingItems as testingItems         
+			, getContentByCode('indexType', d.IndexType) as indexType
+			, d.IndexType as indexTypes
+			, d.IndexUnit  as indexUnit
+			, d.TestMethod as testMethod
+			, d.IsDel      as isDel
+			, d.Creater    as creater
+			, d.CreaterDate as createrDate
+			, d.Reviser    as reviser
+			, d.ReviserDate as reviserDate
+		FROM detectionindex d             
+		WHERE 
+			d.IsDel = 0
+			<if test="id != null and id != ''">
+			AND d.Id = #{id}
+			</if>
+			<if test="indexType != null and indexType != ''">
+			AND d.IndexType = #{indexType}
+			</if>
+	    ORDER BY d.CreaterDate DESC
+	</select>
+	
+	<!-- 根据检测指标模糊查询 -->
+	<select id="findDetectionindexByName" parameterType="String" resultType="Detectionindex">
+		SELECT
+	        d.Id            as id
+	        , d.TestingItems as testingItems         
+			, getContentByCode('indexType', d.IndexType) as indexType
+			, d.IndexType as indexTypes
+			, d.IndexUnit  as indexUnit
+			, d.TestMethod as testMethod
+			, d.IsDel      as isDel
+			, d.Creater    as creater
+			, d.CreaterDate as createrDate
+			, d.Reviser    as reviser
+			, d.ReviserDate as reviserDate
+		FROM detectionindex d             
+		WHERE 
+			d.IsDel = 0	
+		<if test="testingItems !=null  and testingItems != '' ">
+		AND d.TestingItems like '%${testingItems}%'
+		</if>
+		ORDER BY d.CreaterDate DESC
+	</select>
+	
+	<!-- 添加检测指标 -->
+	<insert id="addDetectionindex" parameterType="Detectionindex">
+		INSERT 
+		INTO detectionindex( 
+		  `TestingItems`
+		  , `IndexType`
+		  , `IndexUnit`
+		  , `TestMethod`
+		  , `Creater`
+		  , `CreaterDate`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		   #{testingItems}
+		  , #{indexType}
+		  , #{indexUnit}
+		  , #{testMethod}
+		  , #{creater}
+		  , now()
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!--修改检测指标 -->
+	<update id="updateDetectionindex" parameterType="Detectionindex">
+		update detectionindex set
+		TestingItems = #{testingItems},
+		IndexType = #{indexType},
+		IndexUnit = #{indexUnit},
+		TestMethod =#{testMethod},
+		Reviser = #{reviser},
+		ReviserDate = now()
+		WHERE Id= #{id}
+	</update>
+	
+	<!--删除检测指标 -->
+	<update id="delDetectionindex" parameterType="java.util.Map">
+		update detectionindex set
+		Reviser = #{userId},
+		ReviserDate = now(),
+		IsDel = 1
+		WHERE Id= #{id}
+	</update>
+</mapper>

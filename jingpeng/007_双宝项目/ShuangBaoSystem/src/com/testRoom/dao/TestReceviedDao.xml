@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.TestReceviedDao">
+<select id="getTestRoomList" parameterType="java.util.Map" resultType="TestRoomInfo">
+		SELECT 
+		     id                as id
+		     ,UniqueIdentifier as uniqueidentifier    -- 试验室唯一标识
+		     ,TestRoomName     as testroomname        -- 试验室名称
+		     ,Prefix           as prefix              -- 试验室前缀
+		     ,ParentNode       as ParentNode          -- 试验父类id
+		  FROM TestRoomInfo t                         -- 试验室信息
+		where 1=1 
+		<if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and t.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+		</if>
+</select>
+<select id="getTestOperatorList" parameterType="java.util.Map" resultType="TestInfo">
+	 	 select 
+				ti.UniqueIdentifier,                        -- 试验室唯一标识
+				TestOperator                                -- 试验员
+		from TestInfo ti
+		where 1=1
+		<if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and ti.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+		</if>
+		group by ti.UniqueIdentifier, ti.TestOperator 
+	</select>
+	<select id="getTestNameList" parameterType="java.util.Map" resultType="TestPageInfos">
+		SELECT 
+		    Id             -- 试验名称id
+		    ,TestName      -- 试验名称
+		  FROM TestPageInfos  -- 试验页面详情表
+		  where 1=1
+		  <if test="isAutoTest != null and isAutoTest != ''">
+		   and IsAutoTest = '1' -- 自动采集
+		</if>
+	</select>
+	<select id="getTestInfoList" parameterType="java.util.Map" resultType="TestCollectionEntity">
+		select
+			 t.Id,                       -- id
+			 t.UniqueIdentifier,         -- 试验室唯一标识
+			 t2.TestRoomName,            -- 试验室名称
+			 t1.TestName,                -- 试验名称
+			 t.SampleCode as SampleName, -- 样品名称
+			 t.TestOperator,             -- 试验员
+			 CONVERT(varchar(100), t.CreateDate, 23) as CreateDate,             -- 收样时间
+			 CONVERT(varchar(100), t.TestDate, 23) as TestDate                  -- 试验时间
+		from TestInfo t                  -- 试验室基本信息表
+		left join TestPageInfos t1       -- 试验页面信息表
+		on t.TestNameId = t1.Id          -- 试验名称ID
+		left join TestRoomInfo t2        -- 试验室信息表
+		on t.UniqueIdentifier = t2.UniqueIdentifier -- 试验室唯一标识
+		where 1=1
+		   and t.IsTestBlind = '1'       -- 盲样试验
+		   and t.IsValidData = 1 
+		<if test="testNameId != 0">
+		   and t.TestNameId = #{testNameId} -- 试验名称ID
+		</if>
+		<if test="testOperator != null and testOperator != ''">
+		   and t.TestOperator like '%'+#{testOperator}+'%'       -- 试验员
+		</if>
+		<if test="uniqueIdentifier != null and uniqueIdentifier != ''">
+		   and t.UniqueIdentifier in 
+		   <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}  -- 试验室唯一标识
+           </foreach>   
+		</if>
+		order by t.CreateDate desc
+	</select>
+	<insert id="addTestInfo" parameterType="java.util.Map">
+		insert into TestInfo(
+			UniqueIdentifier            -- 试验室唯一标识
+			,SerialNumber               -- 试验流水号
+			,TestNameId                 -- 试验名称id
+			,SampleCode                 -- 样品编号/名称
+			,TestRules                  -- 试验流程
+			,TestState                  -- 试验状态
+			,CollectionState            -- 采集方式
+			,TestOperator               -- 试验员 
+			,IsTestBlind                -- 是否盲样试验
+			,SampleCount                -- 试件个数
+			,QRCode                     -- 二维码
+			,Operator                   -- 创建人
+			,CreateDate                 -- 创建时间
+		)values(
+		    #{uniqueIdentifier}
+			,dbo.GetSerialNumber(#{serialnumber},#{prefix})
+			,#{testnameid}
+			,#{samplecode}
+			,#{testrules}
+			,#{teststate}
+			,#{collectionstate}
+			,#{testoperator}
+			,#{istestblind}
+			,#{samplecount}
+			,#{qRCode}
+			,#{user_id}
+			,CONVERT(varchar(100),GETDATE(), 20)
+		)	
+	</insert>
+	<select id="getExistFlag" parameterType="java.util.Map" resultType="Integer">
+		select count(*) from TestInfo where QRCode = #{qRCode}
+	</select>
+	<select id="getSampleIntelligence" parameterType="java.util.Map" resultType="SampleIntelligenceEntity">
+		select 
+			bi.SampleName,             -- 样品名称
+			bi.QRCode,                 -- 二维码
+			bi.TestNameId,             -- 试验名称id
+			tpi.TestName,              -- 试验名称
+			tpi.TestTable,             -- 试验关联表
+			tpi.TestRules,             -- 试验流程
+			tpi.IsAutoTest,            -- 是否是自动采集试验: 0不能自动采集,1可自动采集
+			case when bi.SampleCount is null then 0 else bi.SampleCount end as SampleCount,            -- 试件个数
+			bd.*
+		from BlindInfo bi              -- 盲样信息表
+		left join TestPageInfos tpi    -- 试验页面信息表
+		on bi.TestNameId = tpi.Id      -- 试验名称id
+		left join BlindDetailed_01 bd  -- 盲样明细表
+		on bd.BlindId = bi.Id          -- 盲样样品主表的id
+		where bi.QRCode = #{qRCode}    -- 二维码
+	</select>
+	<!-- 水泥胶砂强度  -->
+	<insert id="addTest04006T0" parameterType="java.util.Map">
+	    INSERT
+		INTO Test04006T0( 
+		  SerialNumber            -- 流水号
+		  , CementType            -- 水泥品种
+		  , CementStrengthGrade   -- 水泥强度等级
+		  , Age                   -- 龄期
+		  , Operator              -- 创建人
+		  , CreateDate            -- 创建时间
+		) 
+		VALUES (
+		    dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{cementtype}
+		  , #{cementstrengthgrade}
+		  , #{age} 
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 水泥混凝土抗压强度（立方体） -->
+	<insert id="addTest0500101T0" parameterType="java.util.Map">	                                           
+		INSERT 
+		INTO Test0500101T0(
+	      SerialNumber      -- 流水号
+	      , DesignStrength  -- 设计强度
+	      , SampleSize      -- 试件尺寸(mm)
+	      , MoldDate        -- 试验日期
+	      , Operator
+		  , CreateDate
+			) 
+		VALUES (
+		    dbo.GetSerialNumber(#{serialnumber},#{prefix})
+	      , #{designstrength}
+	      , #{samplesize}
+	      , #{testdate}
+	      , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 砂浆抗压强度试验  -->
+	<insert id="addTest0500102T0" parameterType="java.util.Map">	                                           
+		INSERT 
+		INTO Test0500102T0(
+			SerialNumber     -- 流水号
+			, DesignStrength -- 设计强度
+			, SampleAmount   -- 试件数量
+			, MoldDate       -- 试验日期
+			, Operator
+			, CreateDate
+		) 
+		VALUES (
+			dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		   , #{designstrength}
+		   , #{sampleamount}
+		   , #{testdate}
+		   , #{user_id}
+		   , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 无机结合料稳定材料无侧限抗压强度试验  -->
+	<insert id="addTest07003Test0" parameterType="java.util.Map">	                                           
+		INSERT 
+		INTO Test07003T0(
+		  SerialNumber     -- 流水号
+		  , SpecType       -- 时间类型
+		  , DesignStrth    -- 设计强度
+		  , MoldDate       -- 试验日期
+		  , Operator       -- 创建人
+		  , CreateDate     -- 创建时间
+		  ) 
+		VALUES (
+		   dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		   , #{spectype}
+		   , #{designstrth}
+		   , #{testdate}
+		   , #{user_id}
+		   , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 沥青三大指标试验 -->
+	<insert id="addTest08001T0" parameterType="java.util.Map">	                                           
+		INSERT 
+		INTO Test08001T0(
+		  SerialNumber   -- 流水号
+		  , AsphaltType  -- 沥青种类
+		  , Operator     -- 创建人
+		  , CreateDate   -- 创建时间
+		) 
+		VALUES (
+		   dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		   , #{asphalttype}
+		   , #{user_id}
+		   , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 沥青混合料马歇尔稳定度试验 -->
+	<insert id="addTest0900101T0" parameterType="java.util.Map">	                                           
+		INSERT 
+		INTO Test0900101T0(
+		  SerialNumber    -- 流水号
+		  , MixtureType   -- 混合料种类
+		  , GradationType -- 级配类型
+		  , Operator      -- 创建人
+		  , CreateDate    -- 创建时间
+		) 
+		VALUES (
+		   dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		   , #{mixturetype}
+		   , #{gradationtype}
+		   , #{user_id}
+		   , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 钢筋抗拉强度、屈服强度、伸长率、冷弯试验 -->
+	<insert id="addTest1000101T0" parameterType="java.util.Map">	                                           
+		INSERT INTO Test1000101T0(
+		  SerialNumber    -- 流水号
+		  , StrengthGrade -- 强度等级或牌号
+		  , Diameter      -- 直径
+		  , Operator      -- 创建人
+		  , CreateDate    -- 创建时间
+		)VALUES (
+		   dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		   , #{strengthgrade}
+		   , #{diameter}
+		   , #{user_id}
+		   , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 钢筋接头抗拉强度、冷弯试验  -->
+	<insert id="addTest1000201T0" parameterType="java.util.Map">	                                           
+		INSERT INTO Test1000201T0(
+		  SerialNumber    -- 流水号
+		  , StrengthGrade -- 强度等级或牌号
+		  , Diameter      -- 直径
+		  , Operator      -- 创建人
+		  , CreateDate    -- 创建时间
+		)VALUES (
+		   dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		   , #{strengthgrade}
+		   , #{diameter}
+		   , #{user_id}
+		   , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 粗集料筛分试验  -->
+	<insert id="addTest0200101T0" parameterType="java.util.Map">
+		INSERT 
+		INTO Test0200101T0 ( 
+		    SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		    dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		) 	                                           
+	</insert>
+	<!-- 细集料筛分试验  -->
+	<insert id="addTest0200102T0" parameterType="java.util.Map">
+	    INSERT 
+		INTO Test0200102T0 ( 
+		    SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		    dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)                                            
+	</insert>
+	<!-- 粗集料含泥量试验  -->
+	<insert id="addTest02015T0" parameterType="java.util.Map">
+        INSERT 
+		INTO Test02015T0 ( 
+		    SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)                                  
+	</insert>
+	<!-- 细集料含泥量试验  -->
+	<insert id="addTest02006T0" parameterType="java.util.Map">
+		INSERT 
+		INTO Test02006T0 ( 
+		    SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)                                            
+	</insert>
+	<!-- 粗集料针、片状颗粒含量试验  -->
+	<insert id="addTest02002T0" parameterType="java.util.Map">	
+		INSERT 
+		INTO Test02002T0 ( 
+		    SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Test_Method
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{test_method}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)                                                      
+	</insert>
+	<!-- 粗集料压碎值试验  -->
+	<insert id="addTest0200301T0" parameterType="java.util.Map">        
+	    INSERT 
+		INTO Test0200301T0 ( 
+		    SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)                                    
+	</insert>
+	<!-- 水泥凝结时间-->
+	<insert id="addTest04003T0" parameterType="java.util.Map">	
+		INSERT 
+		INTO Test04003T0 ( 
+		    SerialNumber
+		  , CementType
+		  , CementStrengthGrade
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{cementtype}
+		  , #{cementstrengthgrade}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)                                           
+	</insert>
+	<!-- 粗集料试验-->
+	<insert id="addTest0201T0" parameterType="java.util.Map">
+		INSERT 
+		INTO Test0201T0 ( 
+		  SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		) 
+	</insert>
+	<!-- 细集料试验-->
+	<insert id="addTest0202T0" parameterType="java.util.Map">
+		INSERT 
+		INTO Test0202T0 ( 
+		  SerialNumber
+		  , Aggregate_Type
+		  , Aggregate_Specification
+		  , Operator
+		  , CreateDate
+		) 
+		VALUES ( 
+		  dbo.GetSerialNumber(#{serialnumber},#{prefix})
+		  , #{aggregate_type}
+		  , #{aggregate_specification}
+		  , #{user_id}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		) 
+	</insert>
+</mapper>

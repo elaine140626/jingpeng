@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.login.RegisterDao">
+
+<select id="getUserName" parameterType="user_Info" resultType="user_Info">
+select id from User_Info where Valid_Flag = 1 and user_name=#{str_user_Name}
+
+</select>
+
+<select id="getOrg" resultType="organization_Info">
+select id i_id,Parent_Id i_parent_Id,org_Name str_org_Name from Organization_Info where org_Type = '1'
+</select>
+
+<insert id="addUser" parameterType="user_Info">
+insert into User_Info (User_Name,Password,Name,Is_System,Power_Org_ID,Operator,Create_Date,Valid_Flag) values 
+(#{str_user_Name},#{str_password},#{str_name},0,#{i_power_Org_Id},#{str_name},CONVERT(varchar(100), GETDATE(),20),1)
+</insert>
+</mapper>

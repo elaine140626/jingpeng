@@ -1,0 +1,477 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>黑龙江省高速公路管理局盲样检测管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="./resources/css/bootstrap.css">
+<link rel="stylesheet" href="./resources/css/systyle.css">
+<link rel="StyleSheet" href="./resources/css/dtree.css"/>
+<script type="text/javascript" src="./resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="./resources/js/dtree.js"></script>
+</head>
+
+<body>
+<div class="container-fluid top">
+	<div class="row">
+        <div class="topleft">黑龙江省高速公路管理局盲样检测管理平台</div>
+        <div class="topright">
+            <a href="#" class="userid">wangdanwei</a><span>你好！</span>
+            <a href="#" class="shezhi">用户管理</a>
+            <a href="#" class="out">安全退出</a>
+        </div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="index.html" class="nav1">首页</a></li>
+                <li><a href="shiyan_1.html" class="nav2">试验汇总</a></li>
+                <li><a href="shiyan_2.html" class="nav3">试验查询</a></li>
+                <li><a href="shiyan_5.html" class="focus_f">盲样试验</a></li>
+                <li><a href="shiyan_7.html" class="nav8">盲样设置</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室 > 盲样试验</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+                <div class="shunav">  
+                    <form action="" method="get" class="sousuo">
+                   	  <label style="margin-left:6px;">工程项目名称</label>
+                      <select name="" size="1">
+                   	    <option>请选择</option>
+                   	    <option>黑龙江建设局</option>
+                   	  </select>
+                        <label>施工单位</label>
+                        <select name="" size="1">
+                   	    <option>请选择</option>
+                   	    <option>黑龙江建设局</option>
+                   	  </select>
+                        <label>取样日期</label>
+                        <input type="text" value="2018-4-15" size="20" class="search_input">--
+                        <input type="text" value="2018-4-18" size="20" class="search_input">
+                    </form>
+                  	<span class="sousuo_2">
+                    <input name="input" type="submit" value="查&nbsp;&nbsp;询" class="btncha">
+              		</span>
+              	</div>
+              	<div class="luru"><a href="#" class="hvr-icon-forward globalLoginBtn">收样&nbsp;&nbsp;</a></div>
+                <div class="lq_main">
+                    <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th width="5%" scope="col">序号</th>
+                                <th scope="col">样品编号</th>
+                                <th scope="col">工程项目名称</th>
+                                <th scope="col">施工部位</th>
+                                <th scope="col">施工单位</th>
+                                <th scope="col">检测项目</th>
+                                <th scope="col">试验状态</th>
+                                <th scope="col">是否合格</th>
+                                <th scope="col">取样人</th>
+                                <th scope="col">取样日期</th>
+                                <th scope="col">材料名称</th>
+                                <th scope="col">产地</th>
+                                <th width="8%" scope="col">备注</th>
+                                <th width="8%" scope="col">操作</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td class="fudong">xx中心试验室
+                                <div class="fuchuang">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="fuchuang_table">
+                                              <tr class="fuchuang_tr">
+                                                <th>序号</th>
+                                                <th>检测项目</th>
+                                                <th>技术指标</th>
+                                                <th>检测结果</th>
+                                                <th>结果判定</th>
+                                              </tr>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>AAA项目</td>
+                                                <td>qwertt</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>BBB项目</td>
+                                                <td>qweqew</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                            </table>
+                                      </div>
+                                </td>
+                                <td>黑龙江建设局</td>
+                                <td>面层</td>
+                                <td>黑龙江建设局</td>
+                                <td>沥青-盲样检测</td>
+                                <td>已检</td>
+                                <td>合格</td>
+                                <td>王明</td>
+                                <td>2018-7-5</td>
+                                <td>沥青</td>
+                                <td>沈阳</td>
+                                <td>--</td>
+                                <td class="caozuo20">
+                                	<span class="scgl_del"><a href="#" class="globalLoginBtn2"><img src="images/bao.png" width="16" height="16" alt="结果录入" title="结果录入"></a></span>
+                                	<span class="scgl_del">
+                                    <a href="jilu_2.html" target="_blank"><img src="images/cha.png" width="16" height="18" alt="查看结果" title="查看结果"></a>
+                                    </span>
+                                 
+                                </td>
+                              </tr>
+                              
+                              <tr>
+                                <td>2</td>
+                                <td class="fudong">xx中心试验室
+                                <div class="fuchuang">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="fuchuang_table">
+                                              <tr class="fuchuang_tr">
+                                                <th>序号</th>
+                                                <th>检测项目</th>
+                                                <th>技术指标</th>
+                                                <th>检测结果</th>
+                                                <th>结果判定</th>
+                                              </tr>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>AAA项目</td>
+                                                <td>qwertt</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>BBB项目</td>
+                                                <td>qweqew</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>3</td>
+                                                <td>CCC项目</td>
+                                                <td>qwewre</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                            </table>
+                                      </div>
+                                </td>
+                                <td>黑龙江建设局</td>
+                                <td>面层</td>
+                                <td>黑龙江建设局</td>
+                                <td>沥青-盲样检测</td>
+                                <td>已检</td>
+                                <td class="huangse">不合格</td>
+                                <td>王明</td>
+                                <td>2018-7-5</td>
+                                <td>沥青</td>
+                                <td>沈阳</td>
+                                <td>--</td>
+                                <td class="caozuo20">
+                                	<span class="scgl_del"><a href="#" class="globalLoginBtn2"><img src="images/bao.png" width="16" height="16" alt="结果录入" title="结果录入"></a></span>
+                                	<span class="scgl_del fudong"><a href="jilu_2.html" target="_blank"><img src="images/cha.png" width="16" height="18" alt="查看结果" title="查看结果"></a>
+                                    </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>3</td>
+                                <td class="fudong">xx中心试验室
+                                	<div class="fuchuang">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="fuchuang_table">
+                                              <tr class="fuchuang_tr">
+                                                <th>序号</th>
+                                                <th>检测项目</th>
+                                                <th>技术指标</th>
+                                                <th>检测结果</th>
+                                                <th>结果判定</th>
+                                              </tr>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>AAA项目</td>
+                                                <td>qwertt</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>BBB项目</td>
+                                                <td>qweqew</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                            </table>
+                                      </div>
+                                </td>
+                                <td>黑龙江建设局</td>
+                                <td>面层</td>
+                                <td>黑龙江建设局</td>
+                                <td>沥青-盲样检测</td>
+                                <td>已检</td>
+                                <td>合格</td>
+                                <td>王明</td>
+                                <td>2018-7-5</td>
+                                <td>沥青</td>
+                                <td>沈阳</td>
+                                <td>--</td>
+                                <td class="caozuo20">
+                                	<span class="scgl_del"><a href="#" class="globalLoginBtn2"><img src="images/bao.png" width="16" height="16" alt="结果录入" title="结果录入"></a></span>
+                                	<span class="scgl_del fudong"><a href="jilu_2.html" target="_blank"><img src="images/cha.png" width="16" height="18" alt="查看结果" title="查看结果"></a>
+                                    </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>4</td>
+                                <td class="fudong">xx中心试验室
+                                	<div class="fuchuang">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="fuchuang_table">
+                                              <tr class="fuchuang_tr">
+                                                <th>序号</th>
+                                                <th>检测项目</th>
+                                                <th>技术指标</th>
+                                                <th>检测结果</th>
+                                                <th>结果判定</th>
+                                              </tr>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>AAA项目</td>
+                                                <td>qwertt</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>BBB项目</td>
+                                                <td>qweqew</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>3</td>
+                                                <td>CCC项目</td>
+                                                <td>qwewre</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                            </table>
+                                      </div>
+                                </td>
+                                <td>黑龙江建设局</td>
+                                <td>面层</td>
+                                <td>黑龙江建设局</td>
+                                <td>沥青-盲样检测</td>
+                                <td>已检</td>
+                                <td>合格</td>
+                                <td>王明</td>
+                                <td>2018-7-5</td>
+                                <td>沥青</td>
+                                <td>沈阳</td>
+                                <td>--</td>
+                                <td class="caozuo20">
+                                	<span class="scgl_del"><a href="#" class="globalLoginBtn2"><img src="images/bao.png" width="16" height="16" alt="结果录入" title="结果录入"></a></span>
+                                	<span class="scgl_del fudong"><a href="jilu_2.html" target="_blank"><img src="images/cha.png" width="16" height="18" alt="查看结果" title="查看结果"></a>
+                                    </span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>5</td>
+                                <td class="fudong">xx中心试验室
+                                <div class="fuchuang">
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="fuchuang_table">
+                                              <tr class="fuchuang_tr">
+                                                <th>序号</th>
+                                                <th>检测项目</th>
+                                                <th>技术指标</th>
+                                                <th>检测结果</th>
+                                                <th>结果判定</th>
+                                              </tr>
+                                              <tr>
+                                                <td>1</td>
+                                                <td>AAA项目</td>
+                                                <td>qwertt</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>2</td>
+                                                <td>BBB项目</td>
+                                                <td>qweqew</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                              <tr>
+                                                <td>3</td>
+                                                <td>CCC项目</td>
+                                                <td>qwewre</td>
+                                                <td>合格</td>
+                                                <td>合格</td>
+                                              </tr>
+                                            </table>
+                                      </div>
+                                </td>
+                                <td>黑龙江建设局</td>
+                                <td>面层</td>
+                                <td>黑龙江建设局</td>
+                                <td>沥青-盲样检测</td>
+                                <td>已检</td>
+                                <td>合格</td>
+                                <td>王明</td>
+                                <td>2018-7-5</td>
+                                <td>沥青</td>
+                                <td>沈阳</td>
+                                <td>--</td>
+                                <td class="caozuo20">
+                                	<span class="scgl_del"><a href="#" class="globalLoginBtn2"><img src="images/bao.png" width="16" height="16" alt="结果录入" title="结果录入"></a></span>
+                                	<span class="scgl_del fudong"><a href="jilu_2.html" target="_blank"><img src="images/cha.png" width="16" height="18" alt="查看结果" title="查看结果"></a>
+                                    </span>
+                                </td>
+                              </tr>
+                              
+                            </table>
+                           
+                  </div>
+       		  </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="images/bi.png" width="16" height="16"></span>
+		 	 	<h3>收样信息</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru">
+                  <tr>
+                    <td width="20%" align="right">施工单位</td>
+                    <td width="27%" align="left">
+                    <select name="" size="1"></select></td>
+                    <td width="18%" align="right">工程名称</td>
+                    <td width="35%" align="left"><select name="" size="1"></select></td>
+                  </tr>
+                  <tr>
+                    <td align="right">样品编号</td>
+                    <td align="left"><select name="" size="1"></select></td>
+                    <td align="right">施工部位</td>
+                    <td align="left"><select name="" size="1"></select></td>
+                  </tr>
+                  <tr>
+                    <td align="right">检测项目</td>
+                    <td align="left"><input name="textfield" type="text" id="textfield"></td>
+                    <td align="right">设计强度等级</td>
+                    <td align="left"><select name="" size="1"></select></td>
+                  </tr>
+                  <tr>
+                    <td align="right">试件成型日期</td>
+                    <td align="left"><input name="textfield5" type="text" id="textfield5"></td>
+                    <td align="right">取样数量</td>
+                    <td align="left"><select name="select3" size="1">
+                    </select></td>
+                  </tr>
+                  <tr>
+                    <td align="right">产地</td>
+                    <td align="left"><select name="" size="1"></select></td>
+                    <td align="right">材料名称</td>
+                    <td align="left"><select name="" size="1"></select></td>
+                  </tr>	
+                  <tr>
+                    <td align="right">取样桩号</td>
+                    <td align="left"><select name="select" size="1">
+                    </select></td>
+                    <td align="right">取样日期</td>
+                    <td align="left"><input name="textfield12" type="text" id="textfield12"></td>
+                  </tr>	
+                  <tr>
+                    <td align="right">取样人</td>
+                    <td align="left"><select name="select2" size="1">
+                    </select></td>
+                    <td align="right">备注</td>
+                    <td align="left"><textarea name="" cols="" rows=""></textarea></td>
+                  </tr>	
+                  <tr>
+                  	<td colspan="2" align="right"><img src="images/saoma.png" width="64" height="64"></td>
+                    <td colspan="2" align="left"><button type="button" class="saoma">扫码</button></td>
+                  </tr>
+                  <tr>
+                    <td align="center">&nbsp;</td>
+                    <td colspan="3" align="left"><input type="submit" name="button" id="button" value="保&nbsp;&nbsp;存"></td>
+                  </tr>
+                  
+              </table>
+
+          	</div>
+		</div>
+	</div>
+</div>	
+
+
+<div class="modal fade"  id="loginModal2">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="images/bi.png" width="16" height="16"></span>
+		 	 	<h3>结果录入</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="luru_gg">
+                  <tr>
+                    <th width="10%" scope="col">序号</th>
+                    <th width="19%" scope="col">检测项目</th>
+                    <th width="24%" scope="col">技术指标</th>
+                    <th width="23%" scope="col">检测结果</th>
+                    <th width="24%" scope="col">结果判定</th>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>xxx项目</td>
+                    <td>
+                    <input type="text" name="textfield2" id="textfield2"></td>
+                    <td><input type="text" name="textfield3" id="textfield3"></td>
+                    <td><input type="text" name="textfield4" id="textfield4"></td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>xxx项目</td>
+                    <td><input type="text" name="textfield8" id="textfield8"></td>
+                    <td><input type="text" name="textfield7" id="textfield7"></td>
+                    <td><input type="text" name="textfield6" id="textfield6"></td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>xxx项目</td>
+                    <td><input type="text" name="textfield9" id="textfield9"></td>
+                    <td><input type="text" name="textfield10" id="textfield10"></td>
+                    <td><input type="text" name="textfield11" id="textfield11"></td>
+                  </tr>
+                </table>
+				<div style="text-align:center;"><input type="submit" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" style="margin-bottom:0;"></div>
+       	  </div>
+		</div>
+	</div>
+</div>	
+</div>
+
+<script type="text/javascript" src="./resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./resources/js/jquery.min.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="./resources/js/modal.js"></script>
+<script type="text/javascript" src="./resources/js/script.js"></script>
+</body>
+</html>

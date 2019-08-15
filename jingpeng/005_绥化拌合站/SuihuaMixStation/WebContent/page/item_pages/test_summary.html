@@ -1,0 +1,73 @@
+<!--试验汇总页面-->
+<script src="../../js/HighwayPlatform/TestRoom/testSummary.js"
+	type="text/javascript" charset="utf-8"></script>
+<form action="" method="get" class="sousuo" id="test_summary">
+	<label>试验日期：</label>
+	<input type="text" size="20" class="search_input" id="startTime">
+	<label>--</label>
+	<input type="text" size="20" class="search_input" id="endTime">
+	<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha summary_btn" onclick="getList()">
+</form>
+<div class="charttt" id="echar"></div>
+<div class="lq_main">
+	<div class="lq_biao">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="list">
+			<thead>
+				<tr>
+					<th width="6%" class="xh" scope="col">序号</th>
+					<th width="12%" scope="col">试验室名称</th>
+					<th width="7%" scope="col">试验总数</th>
+					<th width="9%" scope="col">区间内试验数</th>
+					<th width="9%" scope="col">自动采集试验数</th>
+					<th width="9%" scope="col">区间内自动采集试验数</th>
+					<th width="10%" scope="col">盲样试验数</th>
+					<th width="9%" scope="col">区间内盲样试验数</th>
+					<th width="20%" scope="col">详情</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../../image/images/chakan.png" width="16" height="16"></span>
+		 	 	<h3>试验汇总明细</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt" style="padding-top:10px;">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" >
+                  <thead id="thead">
+                  <tr>
+                    <th scope="col">序号</th>
+                    <th scope="col">试验名称</th>
+                    <th scope="col">自动采集试验数量</th>
+                    <th scope="col">盲样试验数量</th>
+                    <th scope="col">区间内自动采集数量</th>
+                    <th scope="col">区间内盲样试验数量</th>
+                  </tr>
+                  </thead>
+                  <tbody id="listDetailed"></tbody>
+                </table>
+       	  </div>
+		</div>
+	</div>
+</div>	
+<script type="text/javascript">
+     jeDate({
+         dateCell:"#startTime",
+         format:"YYYY-MM-DD",
+         isinitVal:false,
+         isTime:true, 
+	   	 isClear:false,
+     })
+    jeDate({
+        dateCell:"#endTime",
+        format:"YYYY-MM-DD",
+        isinitVal:false,
+        isTime:true,
+        isClear:false,
+    })
+</script>

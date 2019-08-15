@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformCementStableDataDao">
+	<!-- 水泥稳定土拌合站的树 -->
+	<select id="getOrgId" parameterType="java.util.List" resultType="java.util.Map">
+		SELECT
+		  o.Id
+		  , o.Org_Name
+		  , o.Parent_Id
+		  , o.org_Type 
+		FROM
+		  Organization_Info o 
+		WHERE
+		  o.Org_Type = 2 
+		  AND o.MixStation_Type = '2' 
+		  <foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+			#{item}
+		  </foreach>
+		UNION ALL 
+		SELECT
+		  a.Id
+		  , a.Org_Name
+		  , a.Parent_Id
+		  , a.org_Type 
+		FROM
+		  Organization_Info a
+		  , ( 
+		    SELECT
+		      o.Parent_Id 
+		    FROM
+		      Organization_Info o 
+		    WHERE
+		      o.Org_Type = 2 
+		      AND o.MixStation_Type = '2' 
+		      <foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+				#{item}
+			  </foreach>
+		  ) b 
+		WHERE
+		  a.Id = b.Parent_Id			
+	</select>
+	
+	<!-- 查询水泥稳定土生产数据列表 -->
+	<select id="getPlatformCementStableData" parameterType="java.util.Map" resultType="PlatformCementStableDataEntity">
+		select
+		  * 
+		from
+		  V_Cement_ProductionData 
+		where
+		  1 = 1
+		  <if test="orgId != null">
+		  	and Org_ID in
+		  	<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		  </if>	   
+		  and str_Collect_Date &gt;= #{startTime} 
+		  and str_Collect_Date &lt;= #{endTime} 
+		  and Valid_Flag = 1
+		  <if test="Analysis_Result == 1">
+		  and i_analysis_Results = '1'
+		  </if>
+		  <if test="Analysis_Result == 2">
+		  and i_analysis_Results != '1'
+		  </if>
+	</select>
+	<!-- 水泥稳定土采集数据明细 -->
+	<select id="getCementStablePropDataAnalysis" parameterType="java.util.Map" resultType="CementStablePropDataAnalysisEntity">
+		  select 
+			v.Material_Name,
+			c.Cons_Prop_Weight,
+			c.Collection_Weight,
+			c.Actual_Proportion
+		 from 
+		 	Cement_ProductionDetailed c,
+		 	V_MaterialInfo v 
+		 where 
+		 	c.Materials_ID = v.Id 
+		 AND
+		    c.Cemment_ID = #{id}
+	</select>
+	
+</mapper>

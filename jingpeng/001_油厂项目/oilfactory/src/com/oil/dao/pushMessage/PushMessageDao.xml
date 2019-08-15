@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.pushMessage.PushMessageDao">
+<!-- 调度出库单 -->
+<select id="getPushMessageNormal" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT DISTINCT 
+		s.Id as salesorderId,s.OrderNumber orderNumber,sa.Id as salesorderdetailedId,sa.OrderDetailedNumber as orderDetailedNumber
+	FROM salesorder s
+	LEFT JOIN salesorderdetailed sa ON s.Id = sa.SalesOrderId AND sa.IsDel = 0 AND sa.IsActualDelivery = 0 AND sa.IsExchange = 1
+	LEFT JOIN exportmeasure e ON e.OrderDetailedId = sa.Id AND e.IsDel = 0
+	WHERE e.OrderDetailedId is null
+	AND	sa.IsDel = 0
+	AND s.OrderState = 0 
+	OR s.OrderState = 4 
+</select>
+<!-- 调度出库单空发 -->
+<select id="getPushMessageEmpty" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT DISTINCT 
+		s.Id as salesorderId,s.OrderNumber orderNumber,sa.Id as salesorderdetailedId,sa.OrderDetailedNumber as orderDetailedNumber
+	FROM salesorder s
+	LEFT JOIN salesorderdetailed sa ON s.Id = sa.SalesOrderId AND sa.IsDel = 0 AND sa.IsActualDelivery = 1
+	LEFT JOIN exportmeasure e ON e.OrderDetailedId = sa.Id AND e.IsDel = 0
+	WHERE e.OrderDetailedId is null
+	AND	sa.IsDel = 0
+	AND s.OrderState = 0 
+	OR s.OrderState = 4 
+</select>
+<!-- 调度出库单兑换 -->
+<select id="getPushMessagExchange" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT DISTINCT 
+		s.Id as salesorderId,s.OrderNumber orderNumber,sa.Id as salesorderdetailedId,sa.OrderDetailedNumber as orderDetailedNumber
+	FROM salesorder s
+	LEFT JOIN salesorderdetailed sa ON s.Id = sa.SalesOrderId AND sa.IsDel = 0 AND sa.IsExchange = 0
+	LEFT JOIN exportmeasure e ON e.OrderDetailedId = sa.Id AND e.IsDel = 0
+	WHERE e.OrderDetailedId is null
+	AND	sa.IsDel = 0
+	AND s.OrderState = 0 
+	OR s.OrderState = 4 
+</select>
+<!-- 其他数据 -->
+<select id="getPushMessageList" parameterType="java.util.Map" resultType="PushMessage">
+	SELECT count(Id) nextProductionCount,'' exportmeasureCount,'' isInspector,'' isExamine,'' isCheck,'' isProduction,'' isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsLowerHair = 1
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,count(DISTINCT e.Id) exportmeasureCount,'' isInspector,'' isExamine,'' isCheck,'' isProduction,'' isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM exportmeasure e LEFT JOIN testreport t ON t.ExportStorageId = e.Id AND t.IsDel = 0 and t.Exchange = 1
+	WHERE t.ExportStorageId is null
+	AND e.IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, count(Id) isInspector,'' isExamine,'' isCheck,'' isProduction,'' isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsLowerHair = 0
+  	<if test="analystOrDirector != null and analystOrDirector == 0">
+ 	  AND analystOrDirector = 0
+ 	</if>
+	AND IsExamine = 1
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, '' isInspector, count(Id) isExamine,'' isCheck,'' isProduction,'' isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsExamine = 1
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, '' isInspector, '' isExamine,count(Id) isCheck,'' isProduction,'' isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsCheck = 1
+	AND IsExamine = 0
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, '' isInspector, '' isExamine,'' isCheck,count(Id) isProduction,'' isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsProduction = 1
+	AND IsCheck = 0
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, '' isInspector, '' isExamine,'' isCheck,'' isProduction,count(Id) isApplication,'' isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsApplication = 1
+	AND IsProduction = 0
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, '' isInspector, '' isExamine,'' isCheck,'' isProduction,'' isApplication,count(Id) isQualified,'' isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE isQualified = 1
+	AND IsApplication = 0
+	AND IsDel = 0
+	AND IsAdjust is null
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount,'' isInspector, '' isExamine,'' isCheck,'' isProduction,'' isApplication,'' isQualified,count(Id) isComplete,'' isConfirmSubmission
+	FROM planmeasure
+	WHERE IsComplete = 1
+	AND (IsQualified = 0 or (IsAdjust = 1 and IsQualified = 1))
+	AND IsDel = 0
+	UNION
+	SELECT '' nextProductionCount,'' exportmeasureCount, '' isInspector, '' isExamine,'' isCheck,'' isProduction,'' isApplication,'' isQualified,'' isComplete,count(Id) isConfirmSubmission
+	FROM planmeasure
+	WHERE IsConfirmSubmission = 1
+	AND IsComplete = 0
+	AND IsDel = 0
+</select>
+</mapper>

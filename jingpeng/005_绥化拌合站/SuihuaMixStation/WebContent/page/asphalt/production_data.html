@@ -1,0 +1,181 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/production_data.js"
+	type="text/javascript" charset="utf-8"></script>
+
+<div class="lq_biao gdt">
+	<div class="sousuo">
+		<label>总盘重量(KG)：</label>
+		<input type="text" id="TotalWeightSum" name="TotalWeightSum" readonly="readonly" class="search_input"/>
+	</div>
+	<div class="sousuo">
+		<label style="margin-left: 24px">1#仓(KG)：</label>
+		<input type="text" id="No1MeterValueSum" name="No1MeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 24px">2#仓(KG)：</label>
+		<input type="text" id="No2MeterValueSum" name="No2MeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 24px">3#仓(KG)：</label>
+		<input type="text" id="No3MeterValueSum" name="No3MeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 24px">4#仓(KG)：</label>
+		<input type="text" id="No4MeterValueSum" name="No4MeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 24px">5#仓(KG)：</label>
+		<input type="text" id="No5MeterValueSum" name="No5MeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 24px">6#仓(KG)：</label>
+		<input type="text" id="No6MeterValueSum" name="No6MeterValueSum" readonly="readonly" class="search_input"/>
+	</div>
+	<div class="sousuo">
+		<label style="margin-left: 27px">冷粉(KG)：</label>
+		<input type="text" id="ColdPMeterValueSum" name="ColdPMeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 18px">冷粉2(KG)：</label>
+		<input type="text" id="ColdP2MeterValueSum" name="ColdP2MeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 27px">热粉(KG)：</label>
+		<input type="text" id="HotPMeterValueSum" name="HotPMeterValueSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 28px">沥青(KG)：</label>
+		<input type="text" id="AsphaltMeterSum" name="AsphaltMeterSum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 5px">外掺剂1(KG)：</label>
+		<input type="text" id="Admixture1Sum" name="Admixture1Sum" readonly="readonly" class="search_input"/>
+		<label style="margin-left: 5px">外掺剂1(KG)：</label>
+		<input type="text" id="Admixture2Sum" name="Admixture2Sum" readonly="readonly" class="search_input"/>
+	</div>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0"
+		class="table-hover table-minwidth table-2000" id="list">
+		<thead>
+			<tr class="table-2000-bt">
+				<th rowspan="2" class="scsj_xh">序号</th>
+				<th rowspan="2">拌和站名称</th>
+				<th rowspan="2" class="cjsj_140">采集时间</th>
+				<th rowspan="2" class="gcbw_100">拌合设备名称</th>
+				<th rowspan="2" class="cpmc_140">产品名称/型号</th>
+				<th rowspan="2">盘重量(KG)</th>
+				<th colspan="6">骨料仓(KG)</th>
+				<th colspan="3">粉料(KG)</th>
+				<th>沥青(KG)</th>
+				<th colspan="2">外掺剂(KG)</th>
+				<th rowspan="2">分析结果</th>
+			</tr>
+			<tr class="table-2000-bt">
+				<th>1#仓</th>
+				<th>2#仓</th>
+				<th>3#仓</th>
+				<th>4#仓</th>
+				<th>5#仓</th>
+				<th>6#仓</th>
+				<th>冷粉</th>
+				<th>冷粉2</th>
+				<th>热粉</th>
+				<th>沥青</th>
+				<th>外掺剂1</th>
+				<th>外掺剂2</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16"
+					height="16"></span>
+				<h3>生产数据明细</h3>
+				<button type="button" id="login_close" class="close"
+					data-dismiss="modal">
+					<span aria-hidden="true" class="tan_close">×</span>
+				</button>
+			</div>
+			<div class="example tan_dx_txt2">
+				<!-- <table width="100%" border="0" cellpadding="0" cellspacing="0" class="zi12" id="info" style="margin:20px">
+					<tr>
+<<<<<<< .mine
+						<td width="15%" align="right">生产配合比编号：</td>
+						<td width="15%" align="right">生产计划编号：</td>
+						<td width="10%"><span id="str_proportion_Code"></span></td>
+						<td width="10%" align="right">级配编号：</td>
+						<td width="18%"><span id="str_grade_Code"></span></td>
+||||||| .r357
+						<!-- <td width="15%" align="right">生产配合比编号：</td>
+						<td width="15%" align="right">生产计划编号：</td>
+						<td width="10%"><span id="str_proportion_Code"></span></td>
+						<td width="10%" align="right">级配编号：</td>
+						<td width="18%"><span id="str_grade_Code"></span></td> -->
+=======
+>>>>>>> .r512
+						<td width="12%" class="ydq">产品名称/型号：</td>
+						<td width="16%"><span id="str_productInfo"></span></td>
+						<td width="10%">盘重量(kg)：</td>
+						<td width="9%"><span id="d_total_Weight"></span></td>
+					</tr>
+				</table> -->
+				<ul id="data_tab" class="nav nav-tabs">
+					<li class="active"><a href="#datas" data-toggle="tab"><strong>采集数据明细</strong></a>
+					</li>
+					<li><a href="#passing" data-toggle="tab"><strong>筛分通过率</strong></a>
+					</li>
+<<<<<<< .mine
+					<li><a href="#material" data-toggle="tab"><strong>原材料消耗</strong></a>
+					</li> -->
+||||||| .r357
+					<li><a href="#material" data-toggle="tab"><strong>原材料消耗</strong></a>
+					</li>-->
+=======
+>>>>>>> .r512
+				</ul>
+				<div class="tabsholder1 tab-content">
+					<div class="tab-pane fade in active" id="datas">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj juzhong bk">
+							<thead>
+								<tr class="dise">
+									<td width="10%">&nbsp;</td>
+									<td width="7%">1#仓</td>
+									<td width="7%">2#仓</td>
+									<td width="7%">3#仓</td>
+									<td width="7%">4#仓</td>
+									<td width="7%">5#仓</td>
+									<td width="7%">6#仓</td>
+									<td width="8%">热粉</td>
+									<td width="8%">冷粉1</td>
+									<td width="8%">冷粉2</td>
+									<td width="8%">沥青</td>
+									<td width="8%">外掺剂1</td>
+									<td width="8%">外掺剂2</td>
+								</tr>
+							</thead>
+							<tbody id="tb"></tbody>
+						</table>
+					</div>
+					<div class="tab-pane fade" id="passing">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj" id="echart1">
+							<tr>
+								<td><div id="shaifen_chart" style="width: 858px; height: 267px;"></div></td>
+							</tr>
+						</table>
+						<table id="echart2" width="100%" border="0" cellpadding="0" cellspacing="0" class="sbj juzhong bk">
+					 		<thead>
+		                        <tr class="dise">
+		                          <td width="20%">筛孔尺寸</td>
+		                          <td width="20%">级配上限</td>
+		                          <td width="20%">级配下限</td>
+		                          <td width="20%">级配中值</td>
+		                          <td width="20%">综合级配</td>
+		                        </tr>
+	                        </thead>
+	                       	<tbody id="tb2">
+							</tbody>
+					   </table>
+					</div>
+					<div class="tab-pane fade" id="material">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0"
+							class="sbj juzhong bk">
+							<thead>
+								<tr class="dise">
+									<td>序号</td>
+									<td>材料名称/型号</td>
+									<td>消耗量(kg)</td>
+								</tr>
+							</thead>
+							<tbody id="xh"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

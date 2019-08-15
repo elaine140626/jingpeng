@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.BridgeRetainingWallNumberDao">
+	<!-- 工程进度（桥梁挡墙工程数量表）List取得 -->
+	<select id="getBridgeRetainingWallNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeRetainingWallNumberEntity">
+		SELECT
+		  brn.Id
+		  , brn.ProjectId                                 -- 项目id
+		  , brn.PileNumber                                -- 桩号
+		  , brn.BridgeName                                -- 桥梁名称
+		  , brn.WallLength                                -- 挡墙长
+		  , brn.StoneBasics                               -- M10片石基础（m³）
+		  , brn.StoneWallBody                             -- M10片石墙身（m³）
+		  , brn.BlockStone                                -- M10浆砌块石镶面（m³）
+		  , brn.Excavation                                -- 挖方（m³）
+		  , brn.BackfillGravel                            -- 回填透水性砾料（m³）
+		  , brn.Remarks                                   -- 备注
+		  , brn.IsDel
+		  , brn.Creater
+		  , brn.CreaterDate
+		  , brn.Reviser
+		  , brn.ReviserDate 
+		FROM
+		  BridgeRetainingWallNumber as brn 
+		  left join V_EntryTree as ve 
+		    on brn.ProjectId = ve.pid
+		WHERE
+		  brn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and brn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and brn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and brn.pileNumber like concat('%',#{pileNumber},'%')     -- 根据桩号
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and brn.bridgeName like concat('%',#{bridgeName},'%') -- 根据名称
+		  </if>
+		   order by brn.CreaterDate desc
+	</select>
+	
+		<select id="getBridgeRetainingWallNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   brn.PileNumber                                -- 桩号
+		  , brn.BridgeName                                -- 桥梁名称
+		  , brn.WallLength                                -- 挡墙长
+		  , brn.StoneBasics                               -- M10片石基础（m³）
+		  , brn.StoneWallBody                             -- M10片石墙身（m³）
+		  , brn.BlockStone                                -- M10浆砌块石镶面（m³）
+		  , brn.Excavation                                -- 挖方（m³）
+		  , brn.BackfillGravel                            -- 回填透水性砾料（m³）
+		  , brn.Remarks                                   -- 备注
+		FROM
+		  BridgeRetainingWallNumber as brn 
+		  left join V_EntryTree as ve 
+		    on brn.ProjectId = ve.pid
+		WHERE
+		  brn.IsDel = 0
+		   order by brn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（桥梁挡墙工程数量表）合计 -->
+	<select id="getBridgeRetainingWallNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.BridgeRetainingWallNumberSum">
+		SELECT
+		  sum(brn.WallLength) as WallLengthSum            -- 挡墙长
+		  , sum(brn.StoneBasics) as StoneBasicsSum        -- M10片石基础（m³）
+		  , sum(brn.StoneWallBody) as StoneWallBodySum    -- M10片石墙身（m³）
+		  , sum(brn.BlockStone) as BlockStoneSum          -- M10浆砌块石镶面（m³）
+		  , sum(brn.Excavation) as ExcavationSum          -- 挖方（m³）
+		  , sum(brn.BackfillGravel) as BackfillGravelSum  -- 回填透水性砾料（m³）
+		FROM
+		  BridgeRetainingWallNumber as brn 
+		  left join V_EntryTree as ve 
+		    on brn.ProjectId = ve.pid
+		WHERE
+		  brn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and brn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and brn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and brn.pileNumber like concat('%',#{pileNumber},'%')     -- 根据桩号
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and brn.bridgeName like concat('%',#{bridgeName},'%') -- 根据名称
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（桥梁挡墙工程数量表） -->
+	<insert id="insertBridgeRetainingWallNumber" parameterType="com.curing.projectSchedule.model.BridgeRetainingWallNumberEntity">
+		INSERT 
+		INTO BridgeRetainingWallNumber ( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , BridgeName
+		  , WallLength
+		  , StoneBasics
+		  , StoneWallBody
+		  , BlockStone
+		  , Excavation
+		  , BackfillGravel
+		  , Remarks
+		  , IsDel
+		  , Reviser
+		  , ReviserDate
+		) 
+		VALUES ( 
+			REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{BridgeName}
+		  , #{WallLength}
+		  , #{StoneBasics}
+		  , #{StoneWallBody}
+		  , #{BlockStone}
+		  , #{Excavation}
+		  , #{BackfillGravel}
+		  , #{Remarks}
+		  , 0
+		  , #{Reviser}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（桥梁挡墙工程数量表） -->
+	<update id="updateBridgeRetainingWallNumber" parameterType="com.curing.projectSchedule.model.BridgeRetainingWallNumberEntity">
+		UPDATE BridgeRetainingWallNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , BridgeName = #{BridgeName}
+		  , WallLength = #{WallLength}
+		  , StoneBasics = #{StoneBasics}
+		  , StoneWallBody = #{StoneWallBody}
+		  , BlockStone = #{BlockStone}
+		  , Excavation = #{Excavation}
+		  , BackfillGravel = #{BackfillGravel}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（桥梁挡墙工程数量表） -->
+	<update id="deleteBridgeRetainingWallNumber" parameterType="com.curing.projectSchedule.model.BridgeRetainingWallNumberEntity">
+		UPDATE BridgeRetainingWallNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

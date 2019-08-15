@@ -1,0 +1,111 @@
+package com.highwayPlatform.controller;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.MixStation.service.AsphaltDataService;
+import com.highwayPlatform.model.ResponseInfo;
+import com.highwayPlatform.service.JpushService;
+import com.highwayPlatform.util.JpushClientUtil;
+
+@Controller
+@RequestMapping("/Jpush")
+public class JpushController {
+	@Autowired
+	AsphaltDataService asphaltDataService;
+
+	@Autowired
+	private JpushService jpushService;
+	
+	// 推送
+	@RequestMapping("/jpush.action")
+	@ResponseBody
+	public ResponseInfo jpush(@RequestParam HashMap<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		Map<String, Object> asphaltData = asphaltDataService.getAsphaltData(map);
+		// 分析结果:0:未分析数据（无生产配合比或级配） 1：正常；2：骨料不合格；3：粉料不合格；4：沥青不合格；5：外掺剂不合格；6：温度不合格；7：拌合时间不合格；8：违规补料；9: 无级配信息; 10: 级配超差
+		// 注：结果内容可以有多个 如（2，3，4，5，6，7）		
+		if (asphaltData.get("analysisResult") != null) {
+			// 分析结果
+			String analysisResult = asphaltData.get("analysisResult").toString();
+			String[] arr = analysisResult.split(",");
+			// 拌合站
+			String orgName = asphaltData.get("orgName").toString();
+			// 采集时间
+			String collectTime = asphaltData.get("collectTime").toString();
+			String content = orgName + " " +collectTime+ " ";
+			boolean flag = false;
+			if (arr.length > 0) {
+				for (int i = 0; i < arr.length; i++) {
+					if("1".equals(arr[i])){
+						content += "正常  ";
+		     		}
+		     		if("2".equals(arr[i])){
+		     			content += "骨料超差  ";
+		     			flag = true;
+		     		}
+		     		if("3".equals(arr[i])){
+		     			content += "粉料超差  ";
+		     			flag = true;
+		     		}
+		     		if("4".equals(arr[i])){
+		     			content += "沥青超差  ";
+		     			flag = true;
+		     		}
+		     		if("5".equals(arr[i])){
+		     			content += "外掺剂超差  ";
+		     			flag = true;
+		     		}
+		     		if("6".equals(arr[i])){
+		     			content += "温度超差  ";
+		     			flag = true;
+		     		}
+				}
+			}
+			if (flag) {
+				// 推送
+				appJpush(asphaltData,"拌合站预警",content);
+				// 推送成功
+				info.setCode("success");
+				info.setMessage("推送成功");
+			} else {
+				// 没有预警
+				info.setCode("normal");
+				info.setMessage("没有预警");
+			}					
+		} else {
+			jpush(map);
+		}
+		
+		return info;
+	}
+		
+	/**
+	 * 推送
+	 */
+    public int appJpush(Map<String, Object> map,String title,String content) {
+		int result = 0;
+		List<Map<String, Object>> userList= jpushService.getAppUser(map);
+		if (userList.size()>0) {
+			Collection<String> collection = new HashSet<String>();
+			for(int i= 0;i<userList.size();i++) {
+				if(userList.get(i)!=null) {
+//					collection.add(userList.get(i).get("UserCode").toString());
+					collection.add(userList.get(i).get("Id").toString());
+				}			
+			}
+			//调用推送接口
+			result = JpushClientUtil.pushMsg(collection,title,content);
+		}	
+		return result;
+	}
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico">
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"
+	type="text/css" />
+<link rel="stylesheet" type="text/css"
+	href="../../js/zTree/v3/css/metroStyle/metroStyle.css" />
+<link rel="stylesheet" type="text/css" href="../../css/search.css" />
+<title>沥青供应</title>
+<style type="text/css">
+.table .text-c th, .table .text-c td {
+    text-align: -webkit-center;
+}
+ td > input{
+ 	width: 100% !important;
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    height: 100%;
+    box-shadow: none;
+    text-indent: 5px;
+ }
+</style>
+</head>
+<body>
+	<div class="pd-20">
+		<form class="form form-horizontal" id="form1"
+			style="margin-top: -20px" method="post">
+			<div class="cl pd-5 bg-1 bk-gray mt-20">沥青供应信息</div>
+			<div class="mt-20">
+				<table id="table1"
+					class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+					<tr class="text-c">
+						<th><p style="width: 80px;">月份</p></th>
+						<th><p style="width: 80px;">4月</p></th>
+						<th><p style="width: 80px;">5月</p></th>
+						<th><p style="width: 80px;">6月</p></th>
+						<th><p style="width: 80px;">7月</p></th>
+						<th><p style="width: 80px;">8月</p></th>
+						<th><p style="width: 80px;">9月</p></th>
+						<th><p style="width: 80px;">10月</p></th>
+					</tr>
+					<tr class="text-c">
+						<th><p style="width: 80px;">月初需求</th>
+						<td><input type="text" id="monthNeedApril" name="monthNeedApril" maxlength="13" onchange="changeDifference(4)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="monthNeedMay" name="monthNeedMay" maxlength="13" onchange="changeDifference(5)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="monthNeedJune" name="monthNeedJune" maxlength="13" onchange="changeDifference(6)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="monthNeedJuly" name="monthNeedJuly" maxlength="13" onchange="changeDifference(7)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="monthNeedAug" name="monthNeedAug" maxlength="13" onchange="changeDifference(8)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="monthNeedSep" name="monthNeedSep" maxlength="13" onchange="changeDifference(9)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="monthNeedOct" name="monthNeedOct" maxlength="13" onchange="changeDifference(10)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+					</tr>
+					<tr class="text-c">
+						<th><p style="width: 80px;">实际需求</th>
+						<td><input type="text" id="actualSupplyApril" name="actualSupplyApril" maxlength="13" onchange="changeDifference(4)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="actualSupplyMay" name="actualSupplyMay" maxlength="13" onchange="changeDifference(5)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="actualSupplyJune" name="actualSupplyJune" maxlength="13" onchange="changeDifference(6)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="actualSupplyJuly" name="actualSupplyJuly" maxlength="13" onchange="changeDifference(7)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="actualSupplyAug" name="actualSupplyAug" maxlength="13" onchange="changeDifference(8)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="actualSupplySep" name="actualSupplySep" maxlength="13" onchange="changeDifference(9)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+						<td><input type="text" id="actualSupplyOct" name="actualSupplyOct" maxlength="13" onchange="changeDifference(10)"
+							onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'/></td>
+					</tr>
+					<tr class="text-c">
+						<th><p style="width: 80px;">仍未供应</th>
+						<td><input type="text" id="differenceApril" name="differenceApril"/></td>
+						<td><input type="text" id="differenceMay"  name="differenceMay"/></td>
+						<td><input type="text" id="differenceJune" name="differenceJune"/></td>
+						<td><input type="text" id="differenceJuly" name="differenceJuly"/></td>
+						<td><input type="text" id="differenceAug"  name="differenceAug"/></td>
+						<td><input type="text" id="differenceSep"  name="differenceSep"/></td>
+						<td><input type="text" id="differenceOct"  name="differenceOct"/></td>
+					</tr>
+					<tr class="text-c">
+						<th><p style="width: 80px;">备注</th>
+						<td colspan="7"><input type="text" maxlength="200" id="remarks" name="remarks"/></td>
+					</tr>
+				</table>
+			</div>
+			<div class="row cl">
+				<div class="col-xs-8 col-sm-8 col-xs-offset-5 col-sm-offset-4">
+					<button  id="saveButton" onclick="save();" class="btn btn-primary radius"
+						type="button">
+						<i class="Hui-iconfont">&#xe632;</i> 保存
+					</button>
+					<button onclick="layer_close();" class="btn btn-default radius"
+						type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript"
+		src="../../js/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript"
+		src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript"
+		src="../../js/zTree/v3/js/jquery.ztree.all-3.5.js"></script>
+	<script type="text/javascript"
+		src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>
+	<script type="text/javascript"
+		src="../../js/datatables/1.10.0/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+	<script type="text/javascript"
+		src="../../js/systemJs/common/entryTree.js"></script>
+	<script type="text/javascript"
+		src="../../js/systemJs/common/datadictionary.js"></script>
+	<script type="text/javascript"
+		src="../../js/systemJs/asphaltSupply/asphaltPurchasing_add.js"></script>
+</body>
+</html>

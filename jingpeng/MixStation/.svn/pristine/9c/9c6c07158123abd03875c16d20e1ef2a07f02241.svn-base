@@ -1,0 +1,346 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>黑龙江盲样试验展示平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree.css"/>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+</head>
+
+<body>
+<div class="top">
+        <div class="topleft">黑龙江盲样试验展示平台</div>
+        <div class="topright">
+            <span class="userid">wangdanwei</span><span>你好！</span>
+            <a href="userinfo2.html" target="_blank" class="shezhi">用户管理</a>
+            <a href="#" class="out">安全退出</a>
+        </div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="index.html" class="nav1">首页</a></li>
+                <li><a href="shiyan_3.html" class="nav4">试验收样</a></li>
+                <li><a href="shiyan_1.html" class="nav2">试验汇总</a></li>
+                <li><a href="shiyan_2.html" class="focus_c">试验查询</a></li>
+                <li><a href="shiyan_4.html" class="nav5">自动采集</a></li>
+                <li><a href="shiyan_5.html" class="nav6">盲样检测</a></li>
+                <li><a href="shiyan_6.html" class="nav7">指标维护</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：试验室<span class="zhongxin">（中心实验室1、中心实验室2）</span> > 试验查询</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+                <div class="shunav">
+                	<div class="shu_btn">
+                    <script type="text/javascript">
+					$(function() {
+						$("#toggle").click(function() {
+							$(this).text($("#content").is(":hidden") ? "试验室" : "试验室");
+							$("#content").slideToggle();
+						});
+					});
+					</script>
+                        <span class="shu_ban" id="toggle">试验室</span>
+                        <div class="dtree" id="content" style="display:none;">
+						<script type="text/javascript">
+                           d = new dTree('d', true);   //参数一: 树名称。参数二：单选多选 true多选  false单选  默认单选               
+                            d.add(0, -1, '黑龙江盲样试验室');
+                            d.add(1, 0, 'authority', '0001', '一工区', true, false);
+                            d.add(4, 1, 'authority', '0004', '001试验室', false, false);
+                            d.add(5, 1, 'authority', '0005', '002试验室', false, false);
+                
+                            // dTree实例属性以此为：  节点ID，父类ID，chechbox的名称，chechbox的值，chechbox的显示名称，
+                            //chechbox是否被选中--默认是不选，chechbox是否可用：默认是可用，节点链接：默认是虚链接
+                            d.add(6, 0, 'authority', '0012', '二工区 ', true, false);
+                            d.add(7, 6, 'authority', '0014', '003001试验室', false, false);
+                            d.add(8, 6, 'authority', '0015', '004001试验室', false, false);
+                
+                
+                            d.add(11, 0, 'authority', '0016', '三工区 ', true, false);
+                            d.add(13, 11, 'authority', '0018', '005001试验室', false, false);
+                            d.add(14, 11, 'authority', '0019', '006001试验室', false, false);
+                            document.write(d);
+                            d.openAll();
+                        </script>
+                    </div>
+                    </div>
+                    <div class="shu_jieguo">
+                        <ul id="ulSelected" class="duihao"></ul>
+                    </div>   
+                    <form action="" method="get" class="sousuo">
+                    	<label>试验名称：</label>
+                        <select name="" class="search_select"><option>请选择</option></select>
+                        <label>试验日期：</label>
+                        <input type="text" value="2018-4-15" size="20" class="search_input">
+                        <label>--</label>
+                      	<input type="text" value="2018-4-18" size="20" class="search_input">
+                    	<input name="" type="submit" value="查&nbsp;&nbsp;询" class="btncha">
+                  	</form>
+                </div>
+                <div class="lq_main">
+                    <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor">
+                              <tr>
+                                <th scope="col" class="xh">序号</th>
+                                <th scope="col">试验室名称</th>
+                                <th scope="col">试验类别</th>
+                                <th scope="col">试验名称</th>
+                                <th scope="col">样品编号</th>
+                                <th scope="col">试件个数</th>
+                                <th scope="col">试验日期</th>
+                                <th scope="col">试验员</th>
+                                <th scope="col">结果判定</th>
+                                <th scope="col">是否自动采集试验</th>
+                                <th scope="col">是否盲样试验</th>
+                                <th scope="col">详情</th>
+                              </tr>
+                              <tr>
+                                <td>1</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>水泥胶砂强度试验（ISO法）试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>是</td>
+                                <td>否</td>
+                                <td class="caozuo20"><a href="shiyan01.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>2</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>水泥混凝土抗压强度试验（立方体）</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>否</td>
+                                <td>是</td>
+                                <td class="caozuo20"><a href="shiyan02.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>3</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>砂浆抗压强度试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>是</td>
+                                <td>否</td>
+                                <td class="caozuo20"><a href="shiyan03.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>4</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>无机结合料稳定材料无侧限抗压强度试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>否</td>
+                                <td>是</td>
+                                <td class="caozuo20"><a href="shiyan04.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>5</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>沥青三大指标试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>是</td>
+                                <td>否</td>
+                                <td class="caozuo20"><a href="shiyan05.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>6</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>沥青混合料马歇尔稳定度试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>否</td>
+                                <td>是</td>
+                                <td class="caozuo20"><a href="shiyan06.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>7</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>钢筋抗拉强度、屈服强度、伸长率、冷弯试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>是</td>
+                                <td>否</td>
+                                <td class="caozuo20"><a href="shiyan07.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td>8</td>
+                                <td>xx中心试验室</td>
+                                <td>沥青</td>
+                                <td>钢筋接头抗拉强度、冷弯试验</td>
+                                <td>JL-201709</td>
+                                <td>5</td>
+                                <td>2017-09-03</td>
+                                <td>王明</td>
+                                <td>无</td>
+                                <td>否</td>
+                                <td>是</td>
+                                <td class="caozuo20"><a href="shiyan08.html">查看</a></td>
+                              </tr>
+                            </table>
+                            </div>
+                    <div class="page">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div>
+          		</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+            	<span><img src="../resources/images2/chakan.png" width="16" height="16"></span>
+		 	 	<h3>生产统计明细</h3>
+                <button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <th scope="col" class="xh">序号</th>
+                    <th scope="col">采集日期</th>
+                    <th scope="col">混合料种类</th>
+                    <th scope="col">生产总盘数</th>
+                    <th scope="col">合格盘数</th>
+                    <th scope="col">不合格盘数</th>
+                    <th scope="col">沥青用量(t)</th>
+                    <th scope="col">生产总量(t)</th>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>6</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>7</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>8</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                  </tr>
+                </table>
+
+       	  </div>
+		</div>
+	</div>
+</div>	
+</div>
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<!--弹窗js-->
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+</body>
+</html>

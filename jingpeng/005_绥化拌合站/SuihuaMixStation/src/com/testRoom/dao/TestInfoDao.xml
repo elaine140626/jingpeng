@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.TestInfoDao">
+	<!--查询当前用户权限的实验室，返回list -->
+	<select id="getTestRoom" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  tri.UniqueIdentifier as UniqueIdentifier
+		  , tri.TestRoomName as TestRoomName 
+		from TestRoomInfo tri 
+		where
+		  1=1 
+		  <if test="uniqueIdentifier !=null and uniqueIdentifier != ''">
+		      and tri.UniqueIdentifier in 
+		      <foreach collection="uniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}
+        	  </foreach>
+       	  </if>
+	</select>
+	<!--查询index数据，返回list -->
+	<select id="getIndexSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  top(1)( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2
+		      and IsValidData = 1 
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+			      and UniqueIdentifier in 
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as sumCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2 
+		      and IsValidData = 1 
+		      and IsTestCollection = 1 
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+			      and UniqueIdentifier in 
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as sumAutoCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2 
+		      and IsValidData = 1 
+		      and IsTestBlind = 1		      
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		      	  and UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as sumBlindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      IsTestCollection = 1 
+		      and IsValidData = 1 
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		      	  and UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as autoCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      IsTestCollection = 1 
+		      and IsQualifiedTest = 1 
+		      and IsValidData = 1
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		      	  and UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and UniqueIdentifier in('')
+        	  </if>
+		  ) as autoQualifiedCount
+		  , (select
+		      count(*) 
+		    from
+		      BlindInfo t 
+		      left join TestInfo t2 
+		        on t2.QRCode = t.QRCode 
+		    where
+		      1 = 1		       
+		       <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		          and t2.UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and t2.UniqueIdentifier in('')
+        	  </if>
+		  ) as blindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo t 
+		      left join TestInfo t2 
+		        on t2.QRCode = t.QRCode 
+		    where
+		      t2.IsQualifiedTest = 1		       
+		      <if test="testRoomNamelist !=null and testRoomNamelist.size()>0">
+		          and t2.UniqueIdentifier in
+			      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+	           		 #{item.UniqueIdentifier}
+	        	  </foreach>
+        	  </if>
+        	  <if test="testRoomNamelist ==null or testRoomNamelist.size() == 0">
+        	  	  and t2.UniqueIdentifier in('')
+        	  </if>
+		  ) as blindQualifiedCount 
+		from
+		  TestInfo	where IsValidData = 1
+	</select>
+	<!--查询汇总列表数据，返回list -->
+	<select id="getTestSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select r.TestRoomName,count(t.Id) as testCount
+	       ,(select COUNT(*) from TestInfo a 
+	       where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsQualifiedTest = 1 and IsValidData = 1 
+	       and CONVERT(varchar (100), TestDate, 23) &gt;=  #{startTime} and CONVERT(varchar (100), TestDate, 23) &lt;=  #{endTime}
+	       <if test="un != null and un != ''">
+           <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+           </foreach>
+           </if>
+	       ) as testHG
+	       ,(select COUNT(*) from TestInfo a 
+	       where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestCollection = 1 and IsValidData = 1 
+	       and CONVERT(varchar (100), TestDate, 23) &gt;=  #{startTime} and CONVERT(varchar (100), TestDate, 23) &lt;=  #{endTime}
+	       <if test="un != null and un != ''">
+           <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+           </foreach>
+           </if>
+	       ) as testZD
+	       ,(select COUNT(*) from TestInfo a 
+	       where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestCollection = 1  and IsValidData = 1
+	       and a.IsQualifiedTest = 1 and CONVERT(varchar (100), TestDate, 23) &gt;=  #{startTime} and CONVERT(varchar (100), TestDate, 23) &lt;=  #{endTime}
+	       <if test="un != null and un != ''">
+           <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+           </foreach>
+           </if>
+	       ) as testZDHE
+	       ,(select COUNT(*) from TestInfo a 
+	       where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1 and IsValidData = 1 
+	       and CONVERT(varchar (100), TestDate, 23) &gt;=  #{startTime} and CONVERT(varchar (100), TestDate, 23) &lt;=  #{endTime}
+	       <if test="un != null and un != ''">
+           <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+           </foreach>
+           </if>
+	       ) as testMY
+	       ,(select COUNT(*) from TestInfo a 
+	       where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1 and IsValidData = 1 
+	       and a.IsQualifiedTest = 1 and CONVERT(varchar (100), TestDate, 23) &gt;=  #{startTime} and CONVERT(varchar (100), TestDate, 23) &lt;=  #{endTime}
+	       <if test="un != null and un != ''">
+           <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+           </foreach>
+           </if>
+	       ) as testMYHE
+		   ,t.UniqueIdentifier uniqueIdentifier
+  		from TestInfo t left join
+       		TestRoomInfo r on r.UniqueIdentifier = t.UniqueIdentifier 
+ 		where t.TestState = 2 and t.IsValidData=1  <!-- and t.UniqueIdentifier = #{uniqueIdentifier} -->
+ 		<if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) >=  #{startTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) <=  #{endTime}  ]]>
+        </if>
+        <if test="un != null and un != ''">
+        <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+        </foreach>
+        </if>
+			group by r.TestRoomName,t.UniqueIdentifier
+	</select>
+	
+	<!--查询汇总列表详细数据，返回list -->
+	<select id="getTestSummaryDetailed" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			i.TestRoomName testRoomName
+			,i.UniqueIdentifier uniqueIdentifier
+			,t.TestNameId testNameId
+			,r.TestName testName
+			,COUNT(t.Id) as countId 
+			,(select COUNT(*) from TestInfo a  where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier  and a.TestState = 2 and a.IsQualifiedTest = 1 <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) >=  #{startTime}  ]]>
+		</if>
+		<if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) <=  #{endTime}  ]]>
+		</if>) as testHE 
+			,(select COUNT(*) from TestInfo a where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.IsTestCollection = 1 and a.TestState = 2 <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) >=  #{startTime}  ]]>
+		</if>
+		<if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) <=  #{endTime}  ]]>
+		</if>) as testZD
+			,(select COUNT(*) from TestInfo a  where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.IsTestCollection = 1 and a.TestState = 2 and a.IsQualifiedTest = 1 <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) >=  #{startTime}  ]]>
+		</if>
+		<if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) <=  #{endTime}  ]]>
+		</if>) as testZDHE 
+			,(select COUNT(*) from TestInfo a where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1 <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) >=  #{startTime}  ]]>
+		</if>
+		<if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) <=  #{endTime}  ]]>
+		</if>) as testMY
+			,(select COUNT(*) from TestInfo a where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1 and a.IsQualifiedTest = 1 <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) >=  #{startTime}  ]]>
+		</if>
+		<if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), a.TestDate, 23) <=  #{endTime}  ]]>
+		</if>) as testMYHE
+		from TestInfo t left join 
+	        TestRoomInfo i on t.UniqueIdentifier=i.UniqueIdentifier left join 
+	        TestPageInfos r on t.TestNameId=r.id
+ 		where t.TestState = 2 and t.IsValidData=1 
+		<if test="TestRoomName != null and TestRoomName != ''">
+       	 	and i.TestRoomName=#{TestRoomName}
+        </if>
+        <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) >=  #{startTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) <=  #{endTime}  ]]>
+        </if>
+        group by i.TestRoomName,i.UniqueIdentifier,t.TestNameId,r.TestName
+	</select>
+	
+	<!--点某列的数字，查询汇总列表详细数据，返回list -->
+	<select id="getTestSummaryDetailedNumber" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			t.id id
+			,i.TestRoomName 			testRoomName
+			,c.TestClassification_Name  testClassification_Name 
+			,r.TestName 				testName
+			,ISNULL(t.SampleCode,'') 	sampleCode
+			,t.SampleCount 				sampleCount
+			,t.TestDate 				testDate
+			,t.TestOperator 			testOperator
+			,t.IsQualifiedTest 			isQualifiedTest
+			,t.IsTestCollection 		isTestCollection
+			,t.IsTestBlind 				isTestBlind
+			,t.UniqueIdentifier 		uniqueIdentifier
+			,t.SerialNumber 			serialNumber
+			,r.TestTable				testTable
+	 from TestInfo t 
+		left join TestRoomInfo i on t.UniqueIdentifier=i.UniqueIdentifier
+		left join TestPageInfos r on t.TestNameId=r.id
+		left join TestClassification c on r.[TestClass_Code]=c.[TestClassification_Code]
+	where t.TestState = 2 and t.IsValidData=1 
+		<if test="TestRoomName != null and TestRoomName != ''">
+       	 	and i.TestRoomName=#{TestRoomName}
+        </if>
+        <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) >=  #{startTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) <=  #{endTime}  ]]>
+        </if>
+        <if test="source==1">
+       	 	and IsQualifiedTest=1
+        </if>
+        <if test="source==2">
+       	 	and IsTestCollection=1
+        </if>
+        <if test="source==3">
+       	 	and t.IsTestCollection = 1  and t.IsQualifiedTest = 1
+        </if>
+        <if test="source==4">
+       	 	and t.IsTestBlind = 1
+        </if>
+        <if test="source==5">
+       	 	and t.IsTestBlind = 1  and t.IsQualifiedTest = 1
+        </if>
+	</select>
+	<!--查询折线图数据，返回list -->
+	<select id="getChart" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			 i.TestRoomName testRoomName
+			 ,CONVERT(varchar(100),t.TestDate, 23) testDate
+			 ,COUNT(t.Id) as countId 
+			 ,(select COUNT(*) from TestInfo a  
+			 where  a.TestState = 2 and a.IsQualifiedTest = 1
+			 and CONVERT(varchar (100), TestDate, 23) = CONVERT(varchar (100), t.TestDate, 23) 
+	         <if test="un != null and un != ''">
+             <foreach collection="un" index="index" item="item" open="AND a.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+             </foreach>
+             </if>
+			 ) as testHE 
+		from TestInfo t left join 
+	        TestRoomInfo i on t.UniqueIdentifier=i.UniqueIdentifier left join 
+	        TestPageInfos r on t.TestNameId=r.id
+ 		where t.TestState = 2 and t.IsValidData=1  
+ 		<if test="TestRoomName != null and TestRoomName != ''">
+       	 	and i.TestRoomName=#{TestRoomName}
+        </if>
+        <if test="un != null and un != ''">
+        <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+        </foreach>
+        </if>
+        <if test="startTime != null and startTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) >=  #{startTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+        <![CDATA[ and CONVERT(varchar (100), t.TestDate, 23) <=  #{endTime}  ]]>
+        </if>
+ 		group by CONVERT(varchar(100),t.TestDate, 23),i.TestRoomName
+	</select>
+	<!--查询混凝土强度分布图数据，返回list -->
+	<select id="getConcreteStrengthChartData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			t.ID id,
+			ti.Id tId,
+			ISNULL(t.Prop_DesignStrength, 0) propDesignStrength
+		FROM 
+			Test0500101T01 t
+		LEFT JOIN TestInfo ti ON t.SerialNumber = ti.SerialNumber AND ti.DelState = 0
+		LEFT JOIN TestRoomInfo i ON ti.UniqueIdentifier= i.UniqueIdentifier
+		WHERE 
+			1=1
+			<if test="testRoomName != null and testRoomName != ''">
+	       	 	AND i.testRoomName = #{testRoomName}
+	        </if>
+			<if test="asphaltType != null and asphaltType != ''">
+	       	 	AND i.AsphaltType = #{asphaltType}
+	        </if>
+			<if test="asphaltGrade != null and asphaltGrade != ''">
+	       	 	AND i.AsphaltGrade = #{asphaltGrade}
+	        </if>
+	        <if test="startTime != null and startTime != ''">
+		        <![CDATA[ and CONVERT(varchar (100), ti.TestDate, 23) >=  #{startTime}  ]]>
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+	        	<![CDATA[ and CONVERT(varchar (100), ti.TestDate, 23) <=  #{endTime}  ]]>
+        	</if>
+		ORDER BY ti.TestDate
+	</select>
+	<!--查询沥青波动图数据，返回list -->
+	<select id="getConcreteChartData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			t.ID id,
+			ti.Id tId,
+			ISNULL(t.AvgPenetration, 0) avgPenetration,
+			ISNULL(t.AvgSoftenPoint, 0) avgSoftenPoint,
+			CONVERT(varchar(100), ti.TestDate, 23) testDate
+		FROM 
+			Test08001T0 t
+		LEFT JOIN TestInfo ti ON t.SerialNumber = ti.SerialNumber AND ti.DelState = 0
+		LEFT JOIN TestRoomInfo i ON ti.UniqueIdentifier= i.UniqueIdentifier
+		WHERE 
+			1=1
+			<if test="testRoomName != null and testRoomName != ''">
+	       	 	AND i.testRoomName = #{testRoomName}
+	        </if>
+			<if test="asphaltType != null and asphaltType != ''">
+	       	 	AND t.AsphaltType = #{asphaltType}
+	        </if>
+			<if test="asphaltGrade != null and asphaltGrade != ''">
+	       	 	AND t.AsphaltGrade = #{asphaltGrade}
+	        </if>
+	        <if test="startTime != null and startTime != ''">
+		        <![CDATA[ and CONVERT(varchar (100), ti.TestDate, 23) >=  #{startTime}  ]]>
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+	        	<![CDATA[ and CONVERT(varchar (100), ti.TestDate, 23) <=  #{endTime}  ]]>
+        	</if>
+		ORDER BY ti.TestDate
+	</select>
+	<!--查询沥青混合料指标波动图数据，返回list -->
+	<select id="getMixtureChartData" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT 
+			t.ID id,
+			ti.Id tId,
+			ISNULL(t.AvgStab, 0) avgStab,
+			ISNULL(t.AvgFlow, 0) avgFlow,
+			CONVERT(varchar(100), ti.TestDate, 23) testDate
+		FROM 
+			Test0900101T0 t
+		LEFT JOIN TestInfo ti ON t.SerialNumber = ti.SerialNumber AND ti.DelState = 0
+		LEFT JOIN TestRoomInfo i ON ti.UniqueIdentifier= i.UniqueIdentifier
+		WHERE 
+			1=1
+			<if test="testRoomName != null and testRoomName != ''">
+	       	 	AND i.testRoomName = #{testRoomName}
+	        </if>
+	        <if test="mixtureType != null and mixtureType != ''">
+	       	 	AND t.MixtureType = #{mixtureType}
+	        </if>
+	        <if test="gradationType != null and gradationType != ''">
+	       	 	AND t.GradationType = #{gradationType}
+	        </if>
+	        <if test="startTime != null and startTime != ''">
+		        <![CDATA[ and CONVERT(varchar (100), ti.TestDate, 23) >=  #{startTime}  ]]>
+	        </if>
+	        <if test="endTime != null and endTime != ''">
+	        	<![CDATA[ and CONVERT(varchar (100), ti.TestDate, 23) <=  #{endTime}  ]]>
+        	</if>
+		ORDER BY ti.TestDate
+	</select>
+	<!--查询沥青混合料指标波动图数据，返回list -->
+	<select id="queryAsphaltTypeCombobox" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			DISTINCT AsphaltType asphaltType
+		FROM
+			Test08001T0
+	</select>
+	<select id="queryAsphaltGradeCombobox" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			DISTINCT AsphaltGrade asphaltGrade
+		FROM
+			Test08001T0
+		WHERE
+			AsphaltType = #{asphaltType}
+	</select>
+	<select id="queryMixtureTypeCombobox" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			DISTINCT MixtureType mixtureType
+		FROM
+			Test0900101T0
+	</select>
+	<select id="queryGradationTypeCombobox" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			DISTINCT GradationType gradationType
+		FROM
+			Test0900101T0
+		WHERE
+			MixtureType = #{mixtureType}
+	</select>
+	<select id="queryAllChart" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			* 
+		FROM
+			SystemConfig 
+		WHERE
+			SystemCode = #{systemCode}
+		<if test="systemCode == 'chart_type'">
+			AND Value='Y'
+		</if>
+	</select>
+	<update id="updateScreenDisplay" parameterType="java.util.Map">
+		UPDATE 
+			SystemConfig 
+		SET 
+			Value = #{value}, 
+			Name = #{name} 
+		WHERE 
+		 	SystemCode = #{code}
+	 	<if test="code == 'chart_type'">
+			AND	Name = #{name} 
+		</if>
+	</update>
+	<update id="deleteScreenDisplay" parameterType="java.util.Map">
+		UPDATE SystemConfig SET Value = 'N' WHERE SystemCode = 'chart_type'
+	</update>
+</mapper>

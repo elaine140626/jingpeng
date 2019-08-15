@@ -1,0 +1,45 @@
+package com.blindSample.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.blindSample.dao.VideoSurveillanceDao;
+import com.blindSample.model.VideoSurveillance;
+import com.blindSample.service.VideoSurveillanceService;
+import com.kdt.base.exception.BusinessException;
+import com.kdt.base.exception.DataAccessException;
+
+@Service
+@Transactional
+public class VideoSurveillanceServiceImpl implements VideoSurveillanceService {
+	
+	@Autowired
+	VideoSurveillanceDao videoSurveillanceDao;
+
+	public List<VideoSurveillance> getVideoSurveillance(Map<String, Object> map) throws BusinessException {
+		// TODO Auto-generated method stub
+		try {
+			return videoSurveillanceDao.getVideoSurveillance(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+
+	public List<VideoSurveillance> getVideoSurveillanceById(Map<String, Object> map) throws BusinessException {
+		// TODO Auto-generated method stub
+		try {
+			return videoSurveillanceDao.getVideoSurveillanceById(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+
+}

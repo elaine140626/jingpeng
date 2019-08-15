@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="common">
+	<select id="getMaterialName" resultType="v_MaterialInfo" parameterType="v_MaterialInfo">
+	<!-- select a.Id,a.Material_Name from V_MaterialInfo a where not exists(select 1 from V_MaterialInfo b where b.Material_Name=a.Material_Name and b.ID<a.ID)
+	
+		select a.Id i_id,a.Material_Name str_material_Name 
+		from V_MaterialInfo a 
+		where ID in
+		(select min(ID) from V_MaterialInfo group by Material_Name)
+		and 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND a.org_id = #{i_org_Id}
+		AND a.Valid_Flag = 1 -->
+		
+		
+		select distinct v.Material_Name as str_material_Name from V_MaterialInfo v
+		where 
+		
+		v.Material_Type =#{str_material_Type}
+		AND v.Material_Mold = #{str_material_Mold}
+		AND v.org_id = #{i_org_Id}
+		AND v.Valid_Flag = 1 
+		
+	</select>
+	
+	<select id="getMaterialNames" resultType="v_MaterialInfo" parameterType="java.util.HashMap">
+		<!-- SELECT 
+		id i_id,
+		mateName_id i_mateName_id,
+		Material_Name str_material_Name
+		FROM
+		V_MaterialInfo
+		WHERE
+		Material_Type = 
+		AND Material_Mold = 
+		AND Valid_Flag = 1 -->
+		
+		select distinct Material_Name str_material_Name from V_MaterialInfo where 1=1
+		
+		 and Material_Mold = #{str_material_Mold} and Material_Type = #{str_material_Type}  and Valid_Flag = 1
+		
+		<foreach collection="org_Ids" index="index" item="item" open="and org_id in (" separator="," close=")">
+		#{item}
+		</foreach>
+
+	</select>
+	
+	<select id="getMaterialModel" resultType="v_MaterialInfo" parameterType="v_MaterialInfo">
+		 
+		 <!-- 注释于 2018-6-28 18:17 -->
+		
+	<!-- 	select a.Id,a.Material_Model str_material_model from V_MaterialInfo a where ID in(select min(ID) from V_MaterialInfo group by Material_Model)
+		and 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND a.Material_Name = #{str_material_Name}
+		AND a.Valid_Flag = 1 -->
+		
+		SELECT
+	    id i_id,
+	    Material_model str_material_model
+        FROM
+	    V_MaterialInfo
+        WHERE
+	    Material_Type = #{str_material_Type}
+        AND Material_Mold = #{str_material_Mold}
+        AND Material_Name = #{str_material_Name}
+        AND org_id = #{i_org_Id} 
+        AND Valid_Flag = 1
+	</select>
+	
+		
+	<select id="getMaterialModels" resultType="v_MaterialInfo" parameterType="java.util.HashMap">
+	
+		<!-- select a.Id i_id,a.material_model str_material_model from V_MaterialInfo a 
+		where ID in(select min(ID) from V_MaterialInfo group by material_model)
+		and 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND Material_Name = #{str_material_Name}
+		AND a.Valid_Flag = 1    
+		注释于 2018-6-28 17:09 -->
+		
+		<!-- id 加入i_id别名 -->
+		select a.Id as i_id,a.Material_Model str_material_model from V_MaterialInfo a 
+		where 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND a.Material_Name = #{str_material_Name}
+		AND a.Valid_Flag = 1
+		
+		<!-- SELECT DISTINCT 
+		isnull(Id,'') i_mateName_id,
+	    material_model str_material_model
+        FROM
+	    V_MaterialInfo
+        WHERE
+	    Material_Type = #{str_material_Type}
+        AND Material_Mold = #{str_material_Mold}
+        AND Material_Name = #{str_material_Name}
+        and valid_Flag=1 -->
+        
+        <foreach collection="org_Ids" index="index" item="item" open="and org_id in (" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="getAsph_TargetProCode" resultType="Asph_TargetProportion">
+		SELECT id i_id,
+		Proportion_Code str_proportion_Code 
+		FROM 
+		Asph_TargetProportion 
+		WHERE 
+		valid_Flag=1 AND org_id=#{i_org_Id}
+	</select>
+	
+	<select id="getAsph_TargetProCodeById" resultType="Asph_TargetProportion" parameterType="v_MaterialInfo">
+		SELECT id i_id,
+		Proportion_Code str_proportion_Code 
+		FROM 
+		Asph_TargetProportion 
+		WHERE 
+		valid_Flag=1 AND org_id=#{i_id}
+		AND Product_ID = #{str_material_Mold}
+	</select>
+	
+	<select id="getGradeCodeById" resultType="Asphalt_Grading" parameterType="v_MaterialInfo">
+		SELECT id i_id,
+		Grade_Code str_grade_Code 
+		FROM 
+		Asphalt_Grading 
+		WHERE 
+		valid_Flag=1 AND org_id=#{i_org_Id}
+		AND Product_ID = #{str_material_Mold}
+	</select>
+	
+	<select id="getCement_ConsPropDetailedById" resultType="cement_ConsPropDetailed">
+
+	SELECT ccd.ConsProp_ID i_consProp_Id,ccp.Prop_Code str_Prop_Code from Cement_ConsPropDetailed ccd ,Cement_ConstructionProportion ccp WHERE ccd.ConsProp_ID = ccp.Id
+	and ccd.Valid_Flag =1 and  ccd.Materials_ID =#{i_materials_Id}
+
+	</select>
+	
+	<select id="getCement_ConstructionProportionById" parameterType="cement_ConstructionProportion" resultType="cement_ConstructionProportion">
+		SELECT
+			ccp.Id i_id,
+			ccp.Prop_Code str_prop_Code
+		FROM
+			Cement_ConstructionProportion ccp
+		WHERE
+			ccp.Product_ID = #{i_product_Id}
+		AND ccp.Valid_Flag = 1
+		AND ccp.Org_ID =#{i_org_Id}
+	</select>
+	
+	<select id="getEquipmentInfo" resultType="equipment_Info" parameterType="java.util.HashMap">
+		SELECT
+			Id i_id,
+			Equipment_Name str_equipment_Name
+		FROM
+			Equipment_Info
+		WHERE
+		Valid_Flag = 1
+	
+		<foreach collection="org_Ids" index="index" item="item" open="AND Org_ID in (" close=")" separator=",">
+				#{item}
+		</foreach>
+		AND Equipment_Type=#{i_equipment_Type}
+	</select>
+	
+	<select id="getProportionCode" resultType="asphalt_Prod_Proportion" parameterType="asphalt_Prod_Proportion">
+		SELECT
+			Id i_id,
+			Proportion_Code str_proportion_Code
+		FROM
+			Asphalt_Prod_Proportion
+		WHERE
+		Valid_Flag = 1
+		AND Org_ID =#{i_org_Id}
+		AND Product_ID=#{i_product_Id}
+		
+	</select>
+	
+	<select id="getGradeCode" resultType="asphalt_Grading" parameterType="asphalt_Prod_Proportion">
+		SELECT
+			g.Id i_id,
+			g.Grade_Code str_grade_Code
+		FROM
+			Asphalt_Grading g left join Asphalt_Prod_Proportion p
+			on g.id=p.grad_Id
+		WHERE
+		g.Valid_Flag = 1
+		AND g.Org_ID =#{i_org_Id}
+		AND p.Id = #{i_id}
+	</select>
+	
+	<select id="getOrgTree" resultType="organization_Info" parameterType="java.util.Map">
+		select id i_id,Org_Name str_org_Name, Parent_Id i_parent_Id,org_Type str_org_Type from Organization_Info 
+		where Parent_Id = (select Power_Org_ID from User_Info where USER_NAME = #{str_user_Name}) 
+		and MixStation_Type = #{mixStation_Type}
+		and Org_Type = 2
+		union
+		select id i_id,Org_Name str_org_Name, -1 i_parent_Id,org_Type str_org_Type from Organization_Info
+		where id=(select Power_Org_ID from User_Info where USER_NAME = #{str_user_Name}) 
+		and Org_Type = 1
+	</select>
+	
+	<select id="getUserOrgId" parameterType="user_Info" resultType="java.util.Map">
+	select id i_id from Organization_Info where Parent_Id=#{i_power_Org_Id}
+	</select>
+	
+	<select id="getCUserOrgId" parameterType="core_User_Info" resultType="java.util.Map">
+	select Power_Org_ID str_power_Org_Id from Core_User_Info where Id=#{i_id}
+	</select>
+	
+	<select id="getMaterialModelIdbyNameAndCode" parameterType="v_MaterialInfo" resultType="v_MaterialInfo">
+	
+			SELECT
+				v.Id i_Id,
+				v.Material_Model str_material_Model
+			FROM
+				V_MaterialInfo v
+			WHERE
+				1 = 1
+			AND v.Material_Name = #{str_material_Name}
+			AND v.Material_Model = #{str_material_Model}
+			AND v.Org_ID = #{i_org_Id}
+			AND v.Valid_Flag = 1
+	</select>
+	
+</mapper>

@@ -1,0 +1,118 @@
+package com.blindSample.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.blindSample.dao.TestUserInfoDao;
+import com.blindSample.service.TestUserInfoService;
+import com.jingpeng.model.Core_User_Info;
+import com.jingpeng.model.User_Info;
+import com.kdt.base.exception.BusinessException;
+import com.kdt.base.exception.DataAccessException;
+import com.blindSample.model.TestSetDetailed;
+import com.blindSample.model.TestUser_Info;
+
+@Service
+@Transactional
+public class TestUserInfoServiceImpl implements TestUserInfoService{
+	@Autowired
+	private TestUserInfoDao testUserInfoDao;
+	
+	public List<Map<String, Object>> getTestRoomName(Map<String, Object> map) throws BusinessException {
+		try {
+			return testUserInfoDao.getTestRoomName(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public List<Map<String, Object>> getTestUserName(Map<String, Object> map) throws BusinessException {
+		try {
+			return testUserInfoDao.getTestUserName(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public int addTestName(TestUser_Info testUser_Info) {
+		try {
+			return testUserInfoDao.addTestName(testUser_Info);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int addTestRoot(Map<String, Object> map) {
+		try {
+			return testUserInfoDao.addTestRoot(map);
+		} catch (DataAccessException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public List<TestUser_Info> getUserLogin(TestUser_Info testUser_Info) throws BusinessException {
+		try {
+			return testUserInfoDao.getUserLogin(testUser_Info);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new BusinessException(e);
+		}
+	}
+	
+	public List<Map<String, Object>> getUserInformation(Map<String, Object> map) throws BusinessException {
+		try {
+			return testUserInfoDao.getUserInformation(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public int testUserdel(TestUser_Info testUser_Info) {
+		try {
+			return testUserInfoDao.testUserdel(testUser_Info);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public List<Map<String, Object>> getTestNameUpdate(Map<String, Object> map) throws BusinessException {
+		try {
+			return testUserInfoDao.getTestNameUpdate(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public int updateTestUser(TestUser_Info testUser_Info) {
+		try {
+			return testUserInfoDao.updateTestUser(testUser_Info);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int deleteUserSubtable(TestSetDetailed testSetDetailed) {
+		try {
+			return testUserInfoDao.deleteUserSubtable(testSetDetailed);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+}

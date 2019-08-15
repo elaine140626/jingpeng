@@ -1,0 +1,75 @@
+package com.blindSample.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.blindSample.dao.TestInfoDao;
+import com.blindSample.service.TestInfoService;
+import com.kdt.base.exception.BusinessException;
+import com.kdt.base.exception.DataAccessException;
+
+
+@Service
+@Transactional
+public class TestInfoServiceImpl implements TestInfoService{
+	@Autowired
+	private TestInfoDao testInfoDao;
+	public List<Map<String, Object>> getTestSummary(Map<String, Object> map) throws BusinessException {
+		try {
+			return testInfoDao.getTestSummary(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	public List<Map<String, Object>> getTestSummaryDetailed(Map<String, Object> map) throws BusinessException {
+		try {
+			return testInfoDao.getTestSummaryDetailed(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public List<Map<String, Object>> getTestSummaryDetailedNumber(Map<String, Object> map) throws BusinessException {
+		try {
+			return testInfoDao.getTestSummaryDetailedNumber(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public List<Map<String, Object>> getCollection(Map<String, Object> map) throws BusinessException {
+		try {
+			return testInfoDao.getCollection(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public List<Map<String, Object>> getCollectionSubtable(Map<String, Object> map) throws BusinessException {
+		try {
+			return testInfoDao.getCollectionSubtable(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	public List<Map<String, Object>> getChart(Map<String, Object> map) throws BusinessException {
+		try {
+			return testInfoDao.getChart(map);
+		} catch (DataAccessException e) {
+			// TODO Auto-generated catch block
+			throw new BusinessException(e);
+		}
+	}
+	
+	
+}

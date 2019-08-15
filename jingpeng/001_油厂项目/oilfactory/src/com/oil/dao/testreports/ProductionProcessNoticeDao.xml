@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.testreports.ProductionProcessNoticeDao">	
+	<!-- 计划调度表获取 -->
+	<select id="getPlanMeasure" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		SELECT
+		  * 
+		FROM
+		  v_planmeasure as vpm 
+		where
+		  vpm.IsLowerHair = 0
+		  <if test="id!=null and id!=''">
+		  and vpm.Id = #{id}                              -- 按照id查询
+		  </if>	
+		  <if test="materielName!=null and materielName!=''">
+		  and vpm.MaterielName like '%${materielName}%'   -- 产品名称
+		  </if>	
+		  <if test="materielModel!=null and materielModel!=''">
+		  and vpm.MaterielModel like '%${materielModel}%' -- 产品规格
+		  </if>	
+		  <if test="isExamine!=null and isExamine!=''">
+		  and vpm.IsExamine = #{isExamine}                -- 状态
+		  </if>	  	
+		  <if test="analystOrDirector != null and analystOrDirector != '' and analystOrDirector == 0">
+			and vpm.AnalystOrDirector = 0 
+		  </if>  
+		  <if test="analystOrDirector != null and analystOrDirector != '' and analystOrDirector == 1">
+		  	and (
+		  	  vpm.AnalystOrDirector = 1 
+		  	  or (vpm.AnalystOrDirector = 0  and vpm.IsInspector = 0) 
+		  	)
+		  </if>
+	</select>
+	
+	<!-- 生产管理表获取 -->
+	<select id="getProductionManagement" parameterType="java.util.Map" resultType="com.oil.model.testreports.ProductionManagementEntity">
+		SELECT
+		  pm.Id
+		  , pm.PlanMeasureId                              -- 计划调度id
+		  , pm.MaterielId                                 -- 原料id
+		  , mai.MaterielName                              -- 物料名称
+		  , mai.MaterielModel                             -- 规格型号
+		  , mai.Unit                                      -- 物料单位
+		  , pm.RatioWeight                                -- 含量(%)
+		  , pm.MaterielWeight                             -- 理论消耗重量
+		  , pm.ActualWeight                               -- 实际消耗重量
+		  , pm.Remarks                                    -- 备注
+		  , pm.IsDel
+		  , pm.Creater
+		  , pm.CreaterDate
+		  , pm.Reviser
+		  , pm.ReviserDate
+		FROM
+		  ProductionManagement as pm                      -- 生产管理表
+		  left join materielinfo as mai 
+		    on pm.MaterielId = mai.Id 
+		    and mai.IsDel = 0 
+		WHERE
+		  pm.IsDel = 0                                    
+		  and pm.PlanMeasureId = #{id}
+	</select>
+	
+	<!-- 生产管理表插入 -->
+	<insert id="insertProductionManagement" parameterType="com.oil.model.testreports.ProductionManagementEntity">
+		INSERT 
+		INTO ProductionManagement( 
+		  PlanMeasureId
+		  , MaterielId
+		  , RatioWeight
+		  , MaterielWeight
+		  , ActualWeight
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  #{PlanMeasureId}
+		  , #{MaterielId}
+		  , #{RatioWeight}
+		  , #{MaterielWeight}
+		  , #{ActualWeight}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 生产管理表更新删除 -->
+	<delete id="deleteProductionManagement" parameterType="com.oil.model.testreports.ProductionManagementEntity">
+		delete 
+		from
+		  ProductionManagement 
+		WHERE
+		  PlanMeasureId = #{PlanMeasureId} 
+		  and IsDel = 0
+	</delete>
+
+</mapper>

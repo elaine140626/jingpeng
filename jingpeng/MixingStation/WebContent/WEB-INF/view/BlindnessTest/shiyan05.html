@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>沥青三大指标试验自动采集数据</title>
+<link href="../resources/css2/record.css" rel="stylesheet"
+	type="text/css">
+<script type="text/javascript"
+	src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei"
+			style="position: relative; float: right;"></div>
+		<div id="istestcollection" class="jilu_title" style="padding-top: 60px;">沥青三大指标试验自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">沥青三大指标试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="16%">试验依据</td>
+					<td colspan="2"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td colspan="2"><label id="testDate"></label></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td width="19%"><label id="sampleName"></label></td>
+					<td width="15%">试验员</td>
+					<td><label id="testOperator"></label></td>
+					<td width="18%"><label>沥青种类</label></td>
+					<td width="16%"><label id="asphaltType"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="16%">施工单位</td>
+					<td width="16%"><label id="constructionUnit"></label></td>
+					<td width="16%">工程名称</td>
+					<td width="16%"><label id="engineeringName"></label></td>
+					<td width="20%">工程部位/用途</td>
+					<td width="16%"><label id="purpose"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="16%" rowspan="2">试件编号</td>
+						<td colspan="3">软化点</td>
+						<td colspan="4">针入度</td>
+					</tr>
+					<tr>
+						<td width="14%">1</td>
+						<td width="11%">2</td>
+						<td width="14%">平均值</td>
+						<td width="13%">1</td>
+						<td width="9%">2</td>
+						<td width="10%">3</td>
+						<td width="13%">平均值</td>
+					</tr>
+				</thead>
+				<tbody id="list"></tbody>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_7 xbj1">
+				<tr>
+					<td width="16%" align="center">结果判定</td>
+					<td width="84%"><label id="isQualifiedTest"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div>
+	</div>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../resources/DataTables/datatables.js"></script>
+	<script type="text/javascript" src="../resources/js/shiyan05.js"></script>
+	<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+</body>
+</html>

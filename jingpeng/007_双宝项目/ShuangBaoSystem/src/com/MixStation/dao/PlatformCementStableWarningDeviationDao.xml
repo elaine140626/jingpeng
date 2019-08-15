@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformCementStableWarningDeviationDao">
+	<!-- 查询水泥稳定土预警偏差 -->
+	<select id="getPlatformCementStableWarningDeviation" parameterType="java.util.Map" resultType="PlatformCementStableWarningDeviationEntity">
+		SELECT
+		  Org_Name
+		  , Aggregate_Deviation
+		  , Cement_Deviation
+		  , Water_Deviation
+		  , Admixture_Deviation
+		  
+		FROM
+		  Cement_Deviation as da 
+		  left join Organization_Info as oi 
+		    on da.Org_ID = oi.Id
+		order by
+  		  da.Create_Date desc
+	</select>
+	
+	<!-- 插入水泥稳定土阀值设定 -->
+	<insert id="insertPlatformCementStableWarningDeviation" parameterType="PlatformCementStableWarningDeviationEntity">
+		insert 
+		into Cement_Deviation( 
+		  Org_ID
+		  , Aggregate_Deviation
+		  , Cement_Deviation
+		  , Water_Deviation
+		  , Admixture_Deviation
+		) 
+		values (
+		  #{org_ID}
+		  , #{aggregate_Deviation}
+		  , #{cement_Deviation}
+		  , #{water_Deviation}
+		  , #{admixture_Deviation}
+		)
+	</insert>
+</mapper>

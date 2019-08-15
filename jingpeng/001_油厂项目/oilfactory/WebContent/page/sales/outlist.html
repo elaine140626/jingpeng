@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+	<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+	<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/scrollTable.css" />
+	<link rel="stylesheet" href="../../css/sweet-alert.css">
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+	<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+	<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link> -->
+	<link rel="stylesheet" type="text/css" href="../../css/bootstrap-select.css" />
+	<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="../../DataTables/datatables.js"></script>
+	<script type="text/javascript"	src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+	<!-- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script> -->
+	<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+	<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+	<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+	<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+	<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+	<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+	<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+	<script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../js/bootstrap-select.js"></script>
+	<script type="text/javascript" src="../../js/oilfactory/sales/outlist.js"></script>
+	<link rel="stylesheet" href="../../css/sweet-alert.css">
+	<title>瑞德公路管理系统</title>
+	<style type="text/css">
+		/* 平板 */
+		@media screen and (min-width:600px) and (max-width:985px){
+			.show {
+				position: absolute;
+				top: 40px;
+				left: 0px;
+				bottom: 0px;
+				width: 200px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			.hiden{
+				position: absolute;
+				top: 40px;
+				left: 0px;
+				bottom: 0px;
+				width: 20px;
+				overflow: auto;
+	  				border: none;
+			}
+			.mshow {
+				position: absolute;
+				top: 40px;
+				left: 205px;
+				right: 10px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			.mhide{
+				position: absolute;
+				top: 40px;
+				left: 20px;
+				right: 10px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			.dataTables_scrollBody{
+				height: 260px
+			}
+			.fs-wrap {
+			    display: inline-block;
+			    width: 200px;
+			    font-size: 12px;
+			    line-height: 1;
+			    position: absolute;
+			    top: 5px;
+			}
+		}
+		/* pc */
+		@media screen and (min-width:985px){
+			.show {
+				position: absolute;
+				top: 70px;
+				left: 0px;
+				bottom: 0px;
+				width: 260px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			.hiden{
+				position: absolute;
+				top: 70px;
+				left: 0px;
+				bottom: 0px;
+				width: 20px;
+				overflow: auto;
+	  				border: none;
+			}
+			.mshow {
+				position: absolute;
+				top: 70px;
+				left: 265px;
+				right: 10px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			.mhide{
+				position: absolute;
+				top: 70px;
+				left: 20px;
+				right: 10px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+			.dataTables_scrollBody{
+				height: 600px;
+			}
+			.fs-wrap {
+			    display: inline-block;
+			    width: 200px;
+			    font-size: 12px;
+			    line-height: 1;
+			    position: absolute;
+			    top: 15px;
+			}
+		}
+			
+	</style>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#ulList li').click(function() {
+				$('#ulList li').removeClass('click');
+				$('.sale').hide();
+				$('#saleDiv' + $(this).index()).show();
+				$(this).addClass('click');
+	
+			})
+		});
+	</script>
+</head>
+
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+		<div id="container">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;销售管理&nbsp;>&nbsp;<span
+					style="color: #1A5CC6">出库单查询</span></span>
+			</div>
+			<div id="sider" class="show">
+				<a class="shouqi" href="javascript:;" title="收起菜单"></a> <a
+					class="zhankai" href="javascript:;" title="展开菜单"></a>
+				<div id="box_top">销售订单</div>
+				<div id="box_center" style="padding-left: 10px;">
+					关键字： <input type="text" id="keyword" name="keyword" onblur="keywordSelect()"
+						class="ui_input_txt02" />
+				</div>
+				<ul id="tree" class="ztree"></ul>
+			</div>
+			<div id="main" class="mshow">
+				<div class="ui_tb">
+					<div id="box_border">
+						<div id="box_top">出库单查询</div>
+						<div id="box_center">
+							<div class="col-lg-3 col-sm-5">
+								按车辆查询：&nbsp;&nbsp;<input type="text" class="ui_input_txt02" id="plateNumber" list="plateNumbers"/>
+								<dataList id="plateNumbers" class="ui_input_txt02" style="padding: 0;"></dataList>
+							</div>
+							<div class="col-lg-4 col-sm-5">
+								出库类型：&nbsp;&nbsp;
+								<select id="outTypeName" multiple="multiple">
+								</select>
+							</div>
+							<div class="col-lg-5 col-sm-2">
+								<input type="button" value="查询" style=" margin-top: 2px;" onclick="selectInfoList()" class="ui_input_btnsearch" />
+							</div>
+						</div>	
+						<div class="col-lg-12 col-sm-12">
+							<ul id="ulList">
+								<li class="click">销售出库单</li>
+								<li>未称重出库单</li>
+								<!-- <li>入库单</li> -->
+							</ul>						
+							<div id="saleDiv0" class="sale">
+								<div style="overflow-x: auto;min-height:500px;">
+									<table id="salesList" class="table"	style="width: 3000px;" cellspacing="0" cellpadding="0" align="center" border="0">
+										<thead>
+											<tr>
+												<th style="width:60px">序号</th>
+												<th style="width: 100px;">操作</th>
+												<th style="width: 130px;">票据单号</th>
+												<th style="width: 100px;">车牌号码</th>
+												<th style="width: 280px;">产品名称-型号</th>
+												<th style="width: 100px;">客户编号</th>
+												<th style="width: 180px;">客户名称</th>
+												<th style="width: 180px;">送货地址</th>
+												<th style="width: 180px;">客户别称</th>
+												<th style="width: 100px;">出库类型</th>
+												<th style="width: 100px;">是否未入厂出库</th>
+												<th style="width: 100px;">出厂时间</th>
+												<th style="width: 100px;">称重次数</th>
+												<th style="width: 100px;">货物净重(t)</th>
+												<th style="width: 100px;">货品单价</th>
+												<th style="width: 100px;">合同编号</th>
+												<th style="width: 100px;">销售订单编号</th>
+												<th style="width: 150px;">销售员</th>
+												<th style="width: 150px;">司机-联系电话</th>
+												<th style="width: 150px;">联系人-电话</th>
+												<th style="width: 100px;">出厂检测报告</th>
+												<th style="width: 100px;">出厂封签号</th>
+												<th style="width: 100px;">产品成本</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+							<div id="saleDiv1" class="sale" style="display: none;">
+								<div style="overflow-x: auto;min-height:500px;">
+									<table id="noweighoutList" class="table" style="width: 3000px;" cellspacing="0" cellpadding="0"	align="center" border="0">
+										<thead>
+											<tr>
+												<th style="width:80px">序号</th>
+												<th style="width:100px">票据单号</th>
+												<th style="width:100px">车牌号码</th>
+												<th style="width:180px">物料名称/型号</th>
+												<th style="width:100px">客户编号</th>
+												<th style="width:100px">客户名称</th>
+												<th style="width:180px">送货地址</th>
+												<th style="width:100px">客户别称</th>
+												<th style="width:100px">出库类型</th>
+												<th style="width:100px">是否随车带走</th>
+												<th style="width:100px">销售数量</th>
+												<th style="width:100px">结算重量(t)</th>
+												<th style="width:100px">合同编号</th>
+												<th style="width:100px">销售订单号</th>
+												<th style="width:100px">收货人</th>
+												<th style="width:100px">收货人联系方式</th>
+												<th style="width:100px">运输结算情况</th>
+												<th style="width:100px">送货人</th>
+												<th style="width:100px">送货人联系方式</th>
+												<th style="width:100px">税率</th>
+												<th style="width:200px">备注</th>
+											    <th style="width:100px">出厂检测报告</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>							
+							<!-- <div id="saleDiv2" class="sale" style="display: none;min-height:500px;">
+							  <div style="overflow-x: auto;min-height:500px;">
+								<table id="processList" class="table" style="width: 1600px;" cellspacing="0" cellpadding="0" align="center" border="0">
+									<thead>
+										<tr>
+											<th style="width:80px">序号</th>
+											<th style="width:100px">票据单号</th>
+											<th style="width:100px">车牌号码</th>
+											<th style="width:180px">产品名称-型号</th>
+											<th style="width:100px">客户名称</th>
+											<th style="width:100px">入库类型</th>
+											<th style="width:100px">客户别称</th>
+											<th style="width:100px">销售合同编号</th>
+											<th style="width:100px">净重(t)</th>
+											<th style="width:100px">送货人</th>
+											<th style="width:100px">送货人联系方式</th>
+											<th style="width:200px">备注</th>
+										</tr>
+									</thead>
+								</table>
+							  </div> -->
+						    </div>
+					   </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</body>
+</html>

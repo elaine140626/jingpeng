@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.dispath.NextProductionPlanDao">
+	<!-- 获取生产计划明细 -->
+	<select id="getProductionPlanList" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+		select 
+			* 
+		from v_planmeasure v
+		where v.IsDel = 0
+		<if test="id != null and id != ''">
+			and v.Id = #{id}
+		</if>
+		<if test="materielName != null and materielName != ''">
+			and v.MaterielName like concat('%',#{materielName},'%')
+		</if>
+		<if test="materielModel != null and materielModel != ''">
+			and v.MaterielModel like concat('%',#{materielModel},'%')
+		</if>
+		<if test="isLowerHair != null and isLowerHair != ''">
+			and v.IsLowerHair = #{isLowerHair}
+		</if>
+		<if test="isExamine != null and isExamine != ''">
+			and v.IsExamine = #{isExamine}
+		</if>
+		order by v.CreaterDate desc
+	</select>
+	<!-- 新增生产计划  -->
+	<insert id="insertProductionPlan" parameterType="com.oil.model.dispath.NextProductionPlanEntity">
+		INSERT 
+		INTO planmeasure( 
+		    SalesOrderDetailedId         -- 销售订单明细id
+		  , PlanNumber                   -- 编号
+		  , PlanWeight                   -- 计划生产量
+		  , StorageLocation              -- 储位
+		  , Batch                        -- 生产批次
+		  , FinishTime                   -- 计划完成时间
+		  , AnalystOrDirector            -- 化验员或主任
+		  , IsLowerHair                  -- 是否下发
+		  , LowerHairPerson              -- 下发人
+		  , LowerHairDate                -- 下发时间
+		  , BatchingList                 -- 配料单生产批次
+		  , TechnicsNumber               -- 工艺编号
+		  , IsInspector                  -- 质检员是否审核 0:是 1:否
+		  , InspectorPerson              -- 质检员审核人
+		  , InspectorDate                -- 质检员审核时间
+		  , IsExamine                    -- 是否通过审核
+		  , ExaminePerson                -- 审核人
+		  , ExamineDate                  -- 审核时间
+		  , IsCheck                      -- 是否核对 0:是 1:否
+		  , CheckPerson                  -- 核对人
+		  , CheckDate                    -- 核对时间
+		  , IsProduction                 -- 是否确认生产
+		  , ProductionPerson             -- 确认人
+		  , ProductionDate               -- 确认时间
+		  , IsApplication                -- 是否提交质检申请
+		  , ApplicationPerson            -- 提交人
+		  , ApplicationDate              -- 提交时间
+		  , IsQualified                  -- 质检是否合格
+		  , QualifiedPerson              -- 质检员
+		  , QualifiedDate                -- 质检确认时间
+		  , IsAdjust                     -- 是否调整
+		  , IsComplete                   -- 是否生产完成
+		  , CompletePerson               -- 完成确认人
+		  , CompleteDate                 -- 完成确认时间
+		  , ActualWeight                 -- 实际原料消耗重量
+		  , IsConfirmSubmission          -- 是否确认实际消耗提交
+		  , ConfirmSubmissionPerson      -- 填写人
+		  , ConfirmSubmissionDate        -- 填写时间
+		  , Remarks                      -- 备注
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		    #{SalesOrderDetailedId}
+		  , #{PlanNumber}
+		  , #{PlanWeight}
+		  , #{StorageLocation}
+		  , #{Batch}
+		  , #{FinishTime}
+		  , #{AnalystOrDirector}
+		  , 1
+		  , #{LowerHairPerson}
+		  , #{LowerHairDate}
+		  , #{BatchingList}
+		  , #{TechnicsNumber}
+		  , 1
+		  , #{InspectorPerson}
+		  , #{InspectorDate}
+		  , 1
+		  , #{ExaminePerson}
+		  , #{ExamineDate}
+		  , 1
+		  , #{CheckPerson}
+		  , #{CheckDate}
+		  , 1
+		  , #{ProductionPerson}
+		  , #{ProductionDate}
+		  , 1
+		  , #{ApplicationPerson}
+		  , #{ApplicationDate}
+		  , 1
+		  , #{QualifiedPerson}
+		  , #{QualifiedDate}
+		  , #{IsAdjust}
+		  , 1
+		  , #{CompletePerson}
+		  , #{CompleteDate}
+		  , #{ActualWeight}
+		  , 1
+		  , #{ConfirmSubmissionPerson}
+		  , #{ConfirmSubmissionDate}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  ,  now()
+		);
+	</insert>
+	<!-- 更新生产计划  -->
+	<update id="updateProductionPlan" parameterType="com.oil.model.dispath.NextProductionPlanEntity">
+		UPDATE planmeasure 
+		SET
+		   <if test ="PlanNumber != null and PlanNumber != ''">
+		   	PlanNumber = #{PlanNumber},               -- 编号
+		   </if>
+		   <if test ="PlanWeight != null and PlanWeight != ''">
+		   	PlanWeight = #{PlanWeight},               -- 计划生产量
+		   </if>
+		   <if test ="StorageLocation != null and StorageLocation != ''">
+		   	StorageLocation = #{StorageLocation},     -- 储位
+		   </if>
+		   <if test ="Batch != null and Batch != ''">
+		   	Batch = #{Batch},                         -- 生产批次
+		   </if>
+		   <if test = "FinishTime != null and FinishTime != ''">
+		   	FinishTime = #{FinishTime},               -- 计划完成时间
+		   </if>
+		   <if test = "AnalystOrDirector != null">
+		   	AnalystOrDirector = #{AnalystOrDirector}, -- 化验员或主任
+		   </if>
+		   <if test = "IsLowerHair != null">
+		   	IsLowerHair = #{IsLowerHair},             -- 是否下发
+		   </if>
+		   <if test = "LowerHairPerson != null and LowerHairPerson != ''">
+		   	LowerHairPerson = #{LowerHairPerson},     -- 下发人
+		   	LowerHairDate = now(),                    -- 下发时间
+		   </if>
+		   <if test = "BatchingList != null and BatchingList != ''">
+		   	BatchingList = #{BatchingList},           -- 配料单生产批次
+		   </if>
+		   <if test = "TechnicsNumber != null and TechnicsNumber != ''">
+		   	TechnicsNumber = #{TechnicsNumber},       -- 工艺编号
+		   </if>
+		   <if test = "IsInspector != null">
+		   	IsInspector = #{IsInspector},             -- 质检员是否审核 0:是 1:否
+		   </if>
+		   <if test = "InspectorPerson != null and InspectorPerson != ''">
+		   	InspectorPerson = #{InspectorPerson},     -- 质检员审核人
+		   	InspectorDate = now(),                    -- 质检员审核时间
+		   </if>
+		   <if test = "IsExamine != null">
+		   	IsExamine = #{IsExamine},                 -- 是否通过审核
+		   </if>
+		   <if test = "ExaminePerson != null and ExaminePerson != ''">
+		   	ExaminePerson = #{ExaminePerson},         -- 审核人
+		   	ExamineDate = now(),                      -- 审核时间
+		   </if>
+		   <if test = "IsCheck != null">
+		   	IsCheck = #{IsCheck},                     -- 是否核对
+		   </if>
+		   <if test = "CheckPerson != null and CheckPerson != ''">
+		   	CheckPerson = #{CheckPerson},             -- 核对人
+		   	CheckDate = now(),                        -- 核对时间
+		   </if>
+		  <if test = "IsProduction != null">
+		   	IsProduction = #{IsProduction},           -- 是否确认生产
+		   </if>
+		   <if test = "ProductionPerson != null and ProductionPerson != ''">
+		   	ProductionPerson = #{ProductionPerson},   -- 确认人
+		   	ProductionDate = now(),                   -- 确认时间
+		   </if>
+		  <if test = "IsApplication != null">
+		   	IsApplication = #{IsApplication},         -- 是否提交质检申请
+		   </if>
+		   <if test = "ApplicationPerson != null and ApplicationPerson != ''">
+		   	ApplicationPerson = #{ApplicationPerson},  -- 提交人
+		   	ApplicationDate = now(),                   -- 提交时间
+		   </if>
+		  <if test = "IsQualified != null">
+		   	IsQualified = #{IsQualified},             -- 质检是否合格
+		   </if>
+		   <if test = "QualifiedPerson != null and QualifiedPerson != ''">
+		   	QualifiedPerson = #{QualifiedPerson},     -- 质检员
+		   	QualifiedDate = now(),                    -- 质检确认时间
+		   </if>
+		  <if test = "IsAdjust != null">
+		   	IsAdjust = #{IsAdjust},                   -- 是否调整
+		   </if>
+		  <if test = "IsComplete != null">
+		   	IsComplete = #{IsComplete},               -- 是否生产完成
+		   </if>
+		   <if test = "CompletePerson != null and CompletePerson != ''">
+		   	CompletePerson = #{CompletePerson},       -- 完成确认人
+		   	CompleteDate = now(),                     -- 完成确认时间
+		   </if>
+		  <if test = "ActualWeight != null and ActualWeight != ''">
+		   	ActualWeight = #{ActualWeight},           -- 实际原料消耗重量
+		   </if>
+		  <if test = "IsConfirmSubmission != null">
+		   	IsConfirmSubmission = #{IsConfirmSubmission},          -- 是否确认实际消耗提交
+		   </if>
+		    <if test = "ConfirmSubmissionPerson != null and ConfirmSubmissionPerson != ''">
+		   	ConfirmSubmissionPerson = #{ConfirmSubmissionPerson},  -- 填写人
+		   	ConfirmSubmissionDate = now(),                         -- 填写时间
+		   </if>
+		   <if test = "Remarks != null and Remarks != ''">
+		   	Remarks = #{Remarks},                     -- 备注
+		   </if>
+		   Reviser = #{Reviser},
+		   ReviserDate =  now()
+		WHERE
+		  Id = #{Id}
+	</update>
+	<!-- 删除生产计划  -->
+	<update id="delProductionPlan" parameterType="java.util.Map">
+		UPDATE planmeasure 
+		SET
+		    IsDel = 1                         -- 删除标记
+		  , Reviser = #{Reviser}
+		  , ReviserDate =  now()
+		WHERE
+		  Id = #{Id}
+	</update>
+	<!-- 判断编号是否重复 -->
+	<select id="getPlanNumber" parameterType="java.util.Map" resultType="int">
+		select 
+			count(*)
+		from v_planmeasure v
+		where v.IsDel = 0
+		and v.PlanNumber = #{PlanNumber}
+	</select>
+	<!-- 获取客户对应的销售订单 -->
+	<select id="getSalesOrderList" parameterType="java.util.Map" resultType="com.oil.model.dispath.SalesOrderListEntity">
+		SELECT 
+		  sal.Id AS id                                        -- 销售订单id
+		  , sal.OrderNumber AS orderNumbers                   -- 销售订单编号
+		  , cus.CustomerCode AS customerCode                  -- 客户编号
+		  , cus.CustomerName AS customerName                  -- 客户名称
+		  , sald.Id AS orderDetailedId                        -- 销售订单明细id
+		  , sald.OrderDetailedNumber AS orderDetailedNumber   -- 销售订单明细编号
+		  , sald.SaleNumber AS saleNumber                     -- 销售数量(吨)
+		  , mai.Id AS materielId                              -- 物料id
+		  , mai.MaterielName AS materielName                  -- 物料名称
+		  , mai.MaterielModel AS materielModel                -- 物料型号
+		  , mai.unit                                          -- 单位
+		  , mai2.Id AS exchangeMaterielId                     -- 兑换后物料id
+		  , mai2.MaterielName AS exchangeMaterielName         -- 兑换后物料名称
+		  , mai2.MaterielModel AS exchangeMaterielModel       -- 兑换后物料型号
+		  , mai2.unit AS exchangeUnit                         -- 单位
+		  , plan.Id AS planId                                 -- 计划调度id
+		FROM
+		  salesorder sal 
+		  LEFT JOIN salesorderdetailed sald 
+		    ON sal.Id = sald.SalesOrderId 
+		    AND sald.IsDel = 0 		    
+		  LEFT JOIN customerinfo cus 
+		    ON cus.Id = sal.CustomerId 
+		    AND cus.IsDel = 0 
+		  LEFT JOIN materielinfo mai 
+		    ON sald.MaterielId = mai.Id 
+		    AND mai.IsDel = 0 
+		  LEFT JOIN materielinfo mai2 
+		    ON sald.ExchangeMaterielId = mai2.Id 
+		    AND mai2.IsDel = 0
+		  LEFT JOIN planmeasure plan 
+		    ON plan.SalesOrderDetailedId = sald.Id
+			and plan.IsDel = 0
+		where sal.IsDel = 0 
+		AND sald.IsActualDelivery = 0 
+		and sal.OrderState != 3
+		order by cus.CustomerCode desc,sal.Id desc,sald.Id desc
+	</select>
+</mapper>

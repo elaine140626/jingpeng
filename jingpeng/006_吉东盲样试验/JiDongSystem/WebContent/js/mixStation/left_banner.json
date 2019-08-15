@@ -1,0 +1,132 @@
+{
+	"pitch": [
+		{
+			"name": "物料管理",
+			"class": "nav2",
+			"clickClass": "focus_b",
+			"url": "pitch/material_control.html",
+			"data": ""
+		},
+		{
+			"name": "配比管理",
+			"class": "nav3",
+			"clickClass": "focus_c",
+			"url": "",
+			"data": [{
+					"dataName": "目标配合比",
+					"dataUrl": "pitch/asph_TargetPro.html"
+				},
+				{
+					"dataName": "级配",
+					"dataUrl": "pitch/granular_composition.html"
+				},
+				{
+					"dataName": "生产配合比",
+					"dataUrl": "pitch/production_mix.html"
+				}
+			]
+		},
+		{
+			"name": "生产管理",
+			"class": "nav4",
+			"clickClass": "focus_d",
+			"url": "",
+			"data": [{
+					"dataName": "生产计划",
+					"dataUrl": "pitch/production_plan.html"
+				},
+				{
+					"dataName": "生产数据",
+					"dataUrl": "pitch/production_data.html"
+				}
+			]
+		},
+		{
+			"name": "生产统计",
+			"class": "nav1",
+			"clickClass": "focus_a",
+			"url": "pitch/production_figures.html",
+			"data": ""
+		},
+		{
+			"name": "系统管理",
+			"class": "nav4",
+			"clickClass": "focus_d",
+			"url": "",
+			"data": [{
+					"dataName": "筛孔管理",
+					"dataUrl": "system/mesh_size.html"
+				},
+				{
+					"dataName": "设备管理",
+					"dataUrl": "system/equipment.html"
+				}
+			]
+		}
+	],
+	"cement": [
+		{
+			"name": "物料管理",
+			"class": "nav2",
+			"clickClass": "focus_b",
+			"url": "pitch/material_control.html",
+			"data": ""
+		},
+		{
+			"name": "配比管理",
+			"class": "nav3",
+			"clickClass": "focus_c",
+			"url": "",
+			"data": [{
+					"dataName": "理论配比信息",
+					"dataUrl": "cement/theoretical_mix.html"
+				},
+				{
+					"dataName": "施工配比信息",
+					"dataUrl": "cement/construction_mix.html"
+				}
+			]
+		},
+		{
+			"name": "料仓对应关系",
+			"class": "nav4",
+			"clickClass": "focus_d",
+			"url": "cement/bin_correspondence.html",
+			"data": ""
+		},
+		{
+			"name": "生产管理",
+			"class": "nav3",
+			"clickClass": "focus_c",
+			"url": "",
+			"data": [{
+					"dataName": "生产计划",
+					"dataUrl": "cement/production_plan.html"
+				},
+				{
+					"dataName": "生产数据",
+					"dataUrl": "cement/production_data.html"
+				}
+			]
+		},
+		{
+			"name": "生产统计",
+			"class": "nav1",
+			"clickClass": "focus_a",
+			"url": "cement/production_figures.html",
+			"data": ""
+		},
+		{
+			"name": "系统管理",
+			"class": "nav3",
+			"clickClass": "focus_c",
+			"url": "",
+			"data": [
+				{
+					"dataName": "设备管理",
+					"dataUrl": "system/cementEquipment.html"
+				}
+			]
+		}
+	]
+}

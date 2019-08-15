@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>吉东公路盲样检测系统</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree.css"/>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+<style type="text/css">
+.pagination {
+	position: relative;
+    left: 50%;
+    transform: translate(-50%,0%);
+}
+
+</style>
+</head>
+
+<body>
+<div class="container-fluid top">
+	<div class="topleft">吉东公路盲样检测系统</div>
+        <div class="topright">
+            <span class="userid"></span><span>你好！</span>
+            <a href="../testUserInfo/userinfo.html" target="_blank" class="shezhi">用户管理</a>
+            <a href="../testUserInfo/login.html" class="out">安全退出</a>
+        </div>
+</div>
+<div class="container-fluid">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+        	<ul>
+            	<li><a href="../testUserInfo/index.html" class="nav1">首页</a></li>
+                <li><a href="../TestCollection/shiyan_3.html" class="nav4">试验收样</a></li>
+                <li><a href="../testInfo/shiyan_1.html" class="nav2">试验汇总</a></li>
+                <li><a href="../TestSelect/shiyan_2.html" class="nav3">试验查询</a></li>
+                <li><a href="../TestAutoCollection/shiyan_4.html" class="nav5">自动采集</a></li>
+                <li><a href="../BlindSampleDetection/shiyan_5.html" class="nav6">盲样检测</a></li>
+                <li><a href="../BlindSample/shiyan_6.html" class="focus_g">指标维护</a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置： 结果判定指标维护> 水泥胶砂强度</div>
+            </div>
+            <div class="rightcon_content">
+            	<ul id="myTab" class="nav nav-tabs">
+                     <li class="active"><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6.html');"><strong>水泥胶砂强度</strong></a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_2.html');">沥青三大指标</a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_3.html');"><strong>马歇尔</strong></a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_4.html');"><strong>钢筋抗拉强度、屈服强度、伸长率</strong></a></li>
+                     <li><a href="javascript:void(0)" data-toggle="tab" onclick="goto('shiyan_6_5.html');"><strong>钢筋接头抗拉强度、冷弯</strong></a></li>
+                 </ul>
+                    <div id="myTabContent" class="tab-content">
+                        <div class="tab-pane fade in active" id="home">
+                        <form id="addForm">
+                        	<p class="jiance">水泥品种
+                        	<input name="cementtype" type="text" id="cementtype" placeholder="输入水泥品种" required="required" maxlength="40" list="list">
+                        	<datalist id="list"></datalist>
+                        	
+                        	<label>强度等级</label>
+                        	<input name="cementstrengthgrade" type="text" id="cementstrengthgrade" placeholder="输入强度等级" required="required" maxlength="40" >
+                        	
+                        	<p class="jiance">
+                        	<label>抗压强度3d</label>
+                        	<input name="comptrength3" type="text" id="comptrength3" placeholder="输入抗压强度3d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                        	<label>抗压强度28d</label>
+                        	<input name="comptrength28" type="text" id="comptrength28" placeholder="输入抗压强度28d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                        	
+                        	<label>抗折强度3d</label>
+                        	<input name="rupturestrength3" type="text" id="rupturestrength3" placeholder="输入抗折强度3d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                        	<label>抗折强度28d</label>
+                        	<input name="rupturestrength28" type="text" id="rupturestrength28" placeholder="输入抗折强度28d" required="required" maxlength="16" onkeyup="keepNumOrDecimal(this)" onblur="checkPoint(this)">
+                        	
+                        	<input id="button" name="button" type="button" value="保  存" class="btncha" onclick="add();">
+                        </form>
+
+                   		 <div class="lq_biao">
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" id="cementMortarStrength">
+                            <thead>                                                    
+                              <tr class="shuanghang">
+                                <th width="6%" class="xh" sope="col">序号</th>
+                                <th width="15%" scope="col">水泥品种</th>
+                                <th width="13%" scope="col">强度等级</th>
+                                <th width="13%" colspan="2" scope="col" class="neibj0">
+                                	<div class="div1">抗压强度</div>
+                                    <div>
+                                    	<ul class="tian3">
+                                        	<li>3d</li>
+                                            <li>28d</li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th width="12%" colspan="2" scope="col" class="neibj0">
+                                	<div class="div1">抗折强度</div>
+                                    <div>
+                                    	<ul class="tian3">
+                                        	<li>3d</li>
+                                            <li>28d</li>
+                                        </ul>
+                                    </div>
+                                </th>
+                                <th width="17%" scope="col">操作</th>
+                              </tr>
+                             </thead>                            
+                            </table>
+                		</div>
+                	</div>                                                                                                                   
+                  </div>
+       		  </div>
+        </div>
+     </div>
+    <div class="clear"></div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于 我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/js/indexMaintenance.js"></script>
+<script type="text/javascript" src="../resources/js/sweet-alert.min.js"></script>
+<link rel="stylesheet" href="../resources/css/sweet-alert.css">
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.blindSample.model.TestSelectEntity;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+
+@Repository
+public class TestAutoCollectionDao extends KDDaoSupport{
+	private final static String NAMESPACE = "testAutoCollection";
+	
+	// 获取页面显示信息
+	public List<TestSelectEntity> getInfoList(Map<String, Object> map) throws DataAccessException{
+		return this.select(NAMESPACE+".getInfoList", map);
+	}
+}

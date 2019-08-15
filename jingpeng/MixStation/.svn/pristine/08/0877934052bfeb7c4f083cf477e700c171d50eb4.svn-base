@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>水泥胶砂强度试验（ISO法）试验自动采集数据</title>
+<link href="../resources/css2/record.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="jilu_main_s" style="position:relative; height:auto;">
+	<div class="dingwei" style="display:none;"><img src="../resources/images2/erweima.png"></div>
+  	<div class="jilu_title" style="padding-top:60px;"> 水泥胶砂强度试验（ISO法）试验自动采集数据</div>
+    <div class="jilu_title" style=" display:none;">水泥混凝土抗压强度(立方体)试验检测报告</div>
+    <div>
+    	<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+        	<tr>
+            	<td width="68%">试验室名称：<label>BCNS02标段试验室</label></td>
+            </tr>
+        </table>
+    </div>
+    <div style="display:none;">
+    	<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+        	<tr>
+            	<td width="68%">试验室名称：<label>BCNS02标段试验室</label></td>
+                <td width="32%">报告编号：<label>BG-2017-LQH-014</label></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_3">
+          <tr>
+            <td width="16%">试验依据</td>
+            <td width="34%"><label>JTG E20-2011(T0705,T0706,T0707,T0709-2011)</label></td>
+            <td width="16%">试验日期</td>
+            <td width="34%"><label>2017-9-2～2017-9-3</label></td>
+          </tr>
+          <tr>
+            <td>样品名称</td>
+            <td><label></label></td>
+            <td>试件个数</td>
+            <td><label></label></td>
+          </tr>
+          <tr>
+            <td>试验员</td>
+            <td><label></label></td>
+            <td>强度等级</td>
+            <td><label></label></td>
+          </tr>
+          <tr>
+            <td>水泥品种</td>
+            <td><label></label></td>
+            <td>龄期（天）</td>
+            <td><label></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div style="display:none;"><table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_4">
+  <tr>
+    <td width="16%">施工单位</td>
+    <td width="16%"><label></label></td>
+    <td width="16%">工程名称</td>
+    <td width="16%"><label></label></td>
+    <td width="20%">工程部位/用途</td>
+    <td width="16%"><label></label></td>
+  </tr>
+</table>
+</div>
+    <div style="display:none;">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_3">
+          <tr>
+            <td width="16%">施工/委托单位</td>
+            <td width="34%"><label>面层</label></td>
+            <td width="16%">委托编号</td>
+            <td width="34%"><label></label></td>
+          </tr>
+          <tr>
+            <td>工程名称</td>
+            <td><label></label></td>
+            <td>样品编号</td>
+            <td><label>YP-2017-LQH-014</label></td>
+          </tr>
+          <tr>
+            <td>工程部位/用途</td>
+            <td><label>JTG E20-2011(T0705,T0706,T0707,T0709-2011)</label></td>
+            <td>样品描述</td>
+            <td><label></label></td>
+          </tr>
+          <tr>
+            <td>试验依据</td>
+            <td><label>温度 ℃ 湿度 %</label></td>
+            <td>判定依据</td>
+            <td><label>2017-9-2～2017-9-3</label></td>
+          </tr>
+          <tr>
+            <td>主要仪器设备及编号</td>
+            <td colspan="3"><label></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div>
+       <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_4">
+  <tr>
+    <td width="16%" rowspan="3">试件编号</td>
+    <td colspan="3">抗折试验</td>
+    <td colspan="3">抗压试验</td>
+    </tr>
+  <tr>
+    <td width="17%" rowspan="2">破坏荷载（N)</td>
+    <td colspan="2">抗折强度（MPa)</td>
+    <td width="20%" rowspan="2">破坏荷载（N)</td>
+    <td colspan="2">抗折强度（MPa)</td>
+    </tr>
+  <tr>
+    <td width="11%">单值</td>
+    <td width="12%">平均值</td>
+    <td width="12%">单值</td>
+    <td width="12%">平均值</td>
+  </tr>
+  <tr>
+    <td rowspan="3">1</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td rowspan="3">2</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+
+    </div>
+    <div style="display:none;">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_6">
+          <tr>
+            <td>检测结论：<label></label></td>
+          </tr>
+        </table>
+  	</div>
+    <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_4">
+          <tr>
+            <td width="16%">判定指标</td>
+            <td width="17%">抗压强度</td>
+            <td width="23%">&nbsp;</td>
+            <td width="20%">抗折强度</td>
+            <td width="24%">&nbsp;</td>
+          </tr>
+        </table>
+
+    </div>
+    <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_7 xbj1">
+          <tr>
+            <td width="16%" align="center">结果判定</td>
+            <td width="84%">&nbsp;</td>
+          </tr>
+        </table>
+  	</div>
+    <div class="fanhui"><a href="#" onclick="javascript:window.history.back();">返回>></a></div>
+  <div>
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_footer" style="display:none;">
+          <tr>
+            <td width="35%">试验：</td>
+            <td width="35%">复核：</td>
+            <td width="30%">日期：<span></span>年<span></span>月<span></span>日</td>
+          </tr>
+        </table>
+    </div>
+    <div style="display:none;">
+    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table_footer_2">
+          <tr>
+            <td width="22%">试验：</td>
+            <td width="22%">审核：</td>
+            <td width="22%">签发：</td>
+            <td width="34%">日期：<span></span>年<span></span>月<span></span>日(专用章)</td>
+          </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

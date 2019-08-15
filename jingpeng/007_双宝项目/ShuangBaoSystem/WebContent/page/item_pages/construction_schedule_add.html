@@ -1,0 +1,299 @@
+<!--施工进度新增-->
+<script src="../../js/HighwayPlatform/TestRoom/construction_schedule.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/HighwayPlatform/TestRoom/construction_schedule_add.js" type="text/javascript" charset="utf-8"></script>
+<style type="text/css">
+  .tan_dx_txt3 .fazhi input {
+    color: #333;
+    border: 1px solid #cacaca;
+    font-weight: normal;
+    padding: 2px 5px;
+    border-radius: 3px;
+    text-align: center;
+}
+</style>
+<form method="post" class="sousuo" id="automatic_collection">
+	<label>施工单位：</label>
+	<select name="constructionOrgs" class="search_select" id="constructionOrgs" onchange="changeOrg(this.value)">
+		<option value="">请选择</option>
+	</select>
+</form>
+<div style="text-align:center;margin-bottom:10px"><h4>实际完成工程量</h4></div>
+<div class="col-lg-6 col-md-6 tablemMdLg">
+	<form method="post" class="sousuo" id="form">
+		<div class="tan_dx_title">
+			<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+			<h3>路</h3>
+		</div>
+		<div class="tan_dx_txt3">
+			<table id="table1" style="text-align:center" width="100%" border="1" cellpadding="0" cellspacing="0" class="fazhi">
+				<tr>
+					<th width="8%" scope="col">序号</th>
+					<th width="18%" colspan="2" scope="col">结构名称</th>
+					<th width="7%" scope="col">单位</th>
+					<th width="18%" scope="col">设计量</th>
+					<th width="18%" scope="col">实际完成量</th>
+					<th width="18%" scope="col">累计完成量</th>
+					<th width="13%" scope="col">施工进度</th>
+				</tr>
+				<tr>
+					<td rowspan="3">1</td>
+					<td rowspan="3">路基</td>
+					<td>填方</td>
+					<td><input type="text" id="subgrade_FillUnit" name="subgrade_FillUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="subgrade_Fill_1" name="subgrade_Fill_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="getSubgrade_Total1()" id="subgrade_Fill" name="subgrade_Fill" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td>\</td>
+					<td>\</td>
+				</tr>
+				<tr>
+					<td>挖方</td>
+					<td><input type="text" id="subgrade_ExcavationUnit" name="subgrade_ExcavationUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="subgrade_Excavation_1" name="subgrade_Excavation_1" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" onchange="getSubgrade_Total1()" id="subgrade_Excavation" name="subgrade_Excavation" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td>\</td>
+					<td>\</td>
+				</tr>
+				<tr>
+					<td>总量</td>
+					<td><input type="text" id="subgrade_TotalUnit" name="subgrade_TotalUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="subgrade_Total_1" name="subgrade_Total_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Subgrade_Total', this.value)" id="subgrade_Total" name="subgrade_Total" readonly="readonly" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumSubgrade_Total" name="sumSubgrade_Total" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="subgrade_Total_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td rowspan="2">2</td>
+					<td rowspan="2">垫层</td>
+					<td>左幅</td>
+					<td><input type="text" id="cushion_LeftAmplitudeUnit" name="cushion_LeftAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="cushion_LeftAmplitude_1" name="cushion_LeftAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Cushion_LeftAmplitude', this.value)" id="cushion_LeftAmplitude" name="cushion_LeftAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumCushion_LeftAmplitude" name="sumCushion_LeftAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="cushion_LeftAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td>右幅</td>
+					<td><input type="text" id="cushion_RightAmplitudeUnit" name="cushion_RightAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="cushion_RightAmplitude_1" name="cushion_RightAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Cushion_RightAmplitude', this.value)" id="cushion_RightAmplitude" name="cushion_RightAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumCushion_RightAmplitude" name="sumCushion_RightAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="cushion_RightAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td rowspan="2">3</td>
+					<td rowspan="2">底基层</td>
+					<td>左幅</td>
+					<td><input type="text" id="subbase_LeftAmplitudeUnit" name="subbase_LeftAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="subbase_LeftAmplitude_1" name="subbase_LeftAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Subbase_LeftAmplitude', this.value)" id="subbase_LeftAmplitude" name="subbase_LeftAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumSubbase_LeftAmplitude" name="sumSubbase_LeftAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="subbase_LeftAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td>右幅</td>
+					<td><input type="text" id="subbase_RightAmplitudeUnit" name="subbase_RightAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="subbase_RightAmplitude_1" name="subbase_RightAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Subbase_RightAmplitude', this.value)" id="subbase_RightAmplitude" name="subbase_RightAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumSubbase_RightAmplitude" name="sumSubbase_RightAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="subbase_RightAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td rowspan="2">4</td>
+					<td rowspan="2">基层</td>
+					<td>左幅</td>
+					<td><input type="text" id="substrate_LeftAmplitudeUnit" name="substrate_LeftAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="substrate_LeftAmplitude_1" name="substrate_LeftAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Substrate_LeftAmplitude', this.value)" id="substrate_LeftAmplitude" name="substrate_LeftAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumSubstrate_LeftAmplitude" name="sumSubstrate_LeftAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="substrate_LeftAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td>右幅</td>
+					<td><input type="text" id="substrate_RightAmplitudeUnit" name="substrate_RightAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="substrate_RightAmplitude_1" name="substrate_RightAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Substrate_RightAmplitude', this.value)" id="substrate_RightAmplitude" name="substrate_RightAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumSubstrate_RightAmplitude" name="sumSubstrate_RightAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="substrate_RightAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td rowspan="2">5</td>
+					<td rowspan="2">下面层</td>
+					<td>左幅</td>
+					<td><input type="text" id="lowerLayer_LeftAmplitudeUnit" name="lowerLayer_LeftAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="lowerLayer_LeftAmplitude_1" name="lowerLayer_LeftAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('LowerLayer_LeftAmplitude', this.value)" id="lowerLayer_LeftAmplitude" name="lowerLayer_LeftAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumLowerLayer_LeftAmplitude" name="sumLowerLayer_LeftAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="lowerLayer_LeftAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td>右幅</td>
+					<td><input type="text" id="lowerLayer_RightAmplitudeUnit" name="lowerLayer_RightAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="lowerLayer_RightAmplitude_1" name="lowerLayer_RightAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('LowerLayer_RightAmplitude', this.value)" id="lowerLayer_RightAmplitude" name="lowerLayer_RightAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumLowerLayer_RightAmplitude" name="sumLowerLayer_RightAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="lowerLayer_RightAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td rowspan="2">6</td>
+					<td rowspan="2">中面层</td>
+					<td>左幅</td>
+					<td><input type="text" id="mesosphere_LeftAmplitudeUnit" name="mesosphere_LeftAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="mesosphere_LeftAmplitude_1" name="mesosphere_LeftAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Mesosphere_LeftAmplitude', this.value)" id="mesosphere_LeftAmplitude" name="mesosphere_LeftAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumMesosphere_LeftAmplitude" name="sumMesosphere_LeftAmplitude"  readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="mesosphere_LeftAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td>右幅</td>
+					<td><input type="text" id="mesosphere_RightAmplitudeUnit" name="mesosphere_RightAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="mesosphere_RightAmplitude_1" name="mesosphere_RightAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('Mesosphere_RightAmplitude', this.value)" id="mesosphere_RightAmplitude" name="mesosphere_RightAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumMesosphere_RightAmplitude" name="sumMesosphere_RightAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="mesosphere_RightAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+				<tr>
+					<td rowspan="2">7</td>
+					<td rowspan="2">上面层</td>
+					<td>左幅</td>
+					<td><input type="text" id="upperLayer_LeftAmplitudeUnit" name="upperLayer_LeftAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="upperLayer_LeftAmplitude_1" name="upperLayer_LeftAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('UpperLayer_LeftAmplitude', this.value)" id="upperLayer_LeftAmplitude" name="upperLayer_LeftAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumUpperLayer_LeftAmplitude" name="sumUpperLayer_LeftAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="upperLayer_LeftAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>          
+				<tr>
+					<td>右幅</td>
+					<td><input type="text" id="upperLayer_RightAmplitudeUnit" name="upperLayer_RightAmplitudeUnit" readonly="readonly" style="border:none;width:70%" ></td>
+					<td><input type="text" id="upperLayer_RightAmplitude_1" name="upperLayer_RightAmplitude_1" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" onchange="changeSum('UpperLayer_RightAmplitude', this.value)" id="upperLayer_RightAmplitude" name="upperLayer_RightAmplitude" onkeyup="clearNoDecimal(this,8,4)" onblur="checkPoint(this)" style="width:70%"></td>
+					<td><input type="text" id="sumUpperLayer_RightAmplitude" name="sumUpperLayer_RightAmplitude" readonly="readonly" style="border:none;width:70%"></td>
+					<td><input type="text" id="upperLayer_RightAmplitude_2" readonly="readonly" style="border:none;width:100%"></td>
+				</tr>
+			</table>
+		</div>
+	</form>
+</div>
+<div class="col-lg-6 col-md-6 tablemMdLg">
+	<div class="tan_dx_title">
+		<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+		<h3>桥梁</h3>
+	</div>
+	<div class="tan_dx_txt3" >
+		<form action="" method="get" style="margin:10px" class="sousuo" id="">
+			<label>桥梁名称：</label>
+			<select name="bridgeName" class="search_select" id="bridgeName" onchange="changeBrige(this)">
+			</select>
+			<label>&nbsp;&nbsp;桩号：</label>
+			<input type="text" maxlength="20" id="mileage" name="mileage" class="search_input" disabled="disabled">
+			<label>&nbsp;&nbsp;跨径：</label>
+			<input type="text" maxlength="20" id="scan" name="scan" class="search_input" disabled="disabled">
+		</form>
+		<div id="brigdeTables">
+		</div>
+		<!-- <table style="text-align:center" width="100%" border="1" cellpadding="0" cellspacing="0" class="fazhi">
+			<tr>
+				<th width="20%" colspan="2" scope="col">桥梁结构</th>
+				<th width="80%"  scope="col">施工进度情况</th>
+			</tr>
+			<tr>
+				<td width="9%" rowspan="13">桥梁结构</td>
+				<td width="11%">基桩</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>桩系梁</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>桥台</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>承台</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>台身</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>台帽</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>耳背墙</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>八字墙</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>墩身</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>墩系梁</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>盖梁</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>支座垫石</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>挡块</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td width="9%" rowspan="5">上部结构</td>
+				<td width="11%">梁板预制</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>现浇梁</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>支座</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>横隔板</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>湿接缝</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td width="9%" rowspan="5">附属结构</td>
+				<td width="11%">桥面系</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>桥头搭板</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>护栏</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>防撞墙</td>
+				<td><input style="width:99%"></td>
+			</tr>
+			<tr>
+				<td>伸缩缝</td>
+				<td><input style="width:99%"></td>
+			</tr>
+		</table> -->
+	</div>
+</div>
+<div class="col-lg-12 col-md-12" style="text-align:center;margin:10px">
+	<input class="btncha" type="button" id="saveAdd" value="保存" onclick="saveAddMsg()" >
+	<input class="btncha" type="button" style="background-color:#ccc" value="取消" onclick="back()">
+</div>

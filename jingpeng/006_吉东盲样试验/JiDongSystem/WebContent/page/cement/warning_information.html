@@ -1,0 +1,58 @@
+<script src="../../js/HighwayPlatform/MixStation/cement/warning_information.js" type="text/javascript" charset="utf-8"></script>
+
+<div class="charttt" id="warning_echar"></div>
+<div class="lq_biao">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-gao" id="Asphalt_warning">
+		<thead>
+			 <tr>
+                  <th rowspan="2" class="xh" scope="col">序号</th>
+                       <th rowspan="2" scope="col">拌合站名称</th>
+                         <th rowspan="2" scope="col">生产总盘数</th>
+                                <th rowspan="2" scope="col">预警盘数</th>
+                                <th colspan="4" scope="col">预警明细</th>
+                                <th rowspan="2" scope="col">预警率(%)</th>
+                                <th rowspan="2" scope="col">明细</th>
+                              </tr>
+                              <tr>
+                                  <th scope="col">水泥</th>
+                                <th scope="col">骨料</th>
+                                <th scope="col">水剂</th>
+                                <th scope="col">外掺剂</th>
+                              </tr>
+		</thead>
+	</table>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/chakan.png" width="16" height="16"></span>
+				<h3>预警信息明细</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt th20">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" id="alertdetail">
+					<thead>
+						 <tr>
+                    <th rowspan="2" scope="col" style="text-align: center">序号</th>
+                    <th rowspan="2" scope="col" style="text-align: center">日期</th>
+                    <th rowspan="2" scope="col" style="text-align: center">拌合站名称</th>
+                    <th rowspan="2" scope="col" style="text-align: center">生产总盘数</th>
+                    <th rowspan="2" scope="col" style="text-align: center">预警盘数</th>
+                    <th colspan="4" scope="col" style="text-align: center">预警明细</th>
+                    <th rowspan="2" scope="col" style="text-align: center">预警率(%)</th>
+                  </tr>
+                  <tr>
+                  	<th scope="col" style="text-align: center">水泥</th>
+                    <th scope="col" style="text-align: center">骨料</th>
+                    <th scope="col" style="text-align: center">水剂</th>
+                    <th scope="col" style="text-align: center">外掺剂</th>
+
+                  </tr>
+					</thead>
+					<tbody id="altb"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

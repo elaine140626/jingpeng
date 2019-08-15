@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectPlan.dao.ProjectPlanSummaryDao">
+	<!-- 工程计划List取得 -->
+	<select id="getProjectPlanSummaryList" parameterType="java.util.Map" resultType="com.curing.projectPlan.model.ProjectPlanSummaryEntity">
+		SELECT
+		    pps.Id                            -- id
+		  , pps.ProjectId                     -- 项目id
+		  , pps.ProjectInfo                   -- 工程信息id
+		  , ve.ProjectNumber                  -- 项目编号
+		  , ve.CityName                       -- 所属市
+		  , pis.LineName                      -- 路线名称
+		  , pis.Engineering                   -- 工程项目（数据字典） 0:路面工程 1:路基改造 2:桥梁工程 3:隧道工程 4:公路工程
+		  , dbo.getContentByCode('gcxm', pis.Engineering)         as EngineeringName         -- 工程项目名称
+		  , pis.AgoName                       -- 原线路名称
+		  , pis.PlanBatch                     -- 计划批次（数据字典） 0:提前下达 1:第一批 2:第二批 3:第三批 4:第四批 5:超前实施 6:危桥计划 
+		  , dbo.getContentByCode('jhpc', pis.PlanBatch)           as PlanBatchName           -- 计划批次名称
+		  , pis.Location                      -- 工程所在地
+		  , pis.PileNumber                    -- 起讫点及桩号
+		  , pis.BuildNature                   -- 建设性质 0:改造 1:中修 2:新建 3:改建 4:桥梁加宽
+		  , dbo.getContentByCode('jsxz', pis.BuildNature)         as BuildNatureName         -- 建设性质名称
+		  , pis.TechnicalGrade                -- 技术等级 0:一级 1:二级 2:三级 3:四级 4:公路-I级 5:公路-II级 6:其他
+		  , dbo.getContentByCode('jsdj', pis.TechnicalGrade)      as TechnicalGradeName      -- 技术等级名称
+		  , pis.Width                         -- 宽度
+		  , pis.AdministrationGrade           -- 行政等级（数据字典） 0:国道 1:省道 2:县道 3:乡道 4:其他
+		  , dbo.getContentByCode('xzdj', pis.AdministrationGrade) as AdministrationGradeName -- 行政等级名称
+		  , convert(varchar(10),pis.PlanTime,23)                  as PlanTime                -- 计划年份
+		  , pis.ProjectSource                 -- 项目来源 0:报部项目 1:省燃油税大中修项目 2:省燃油税重点项目 3:险桥改建 4:水毁恢复项目 5:报部水毁
+		  , dbo.getContentByCode('xmly', pis.ProjectSource)       as ProjectSourceName       -- 项目来源名称
+		  , pis.ProjectType                   -- 项目分类（数据字典checkbox） 0:旅游路 1:绕城路 2:低标准 3:精品工程
+		  , dbo.getContentByCode('xmfl', pis.ProjectType)          as ProjectTypeName         -- 项目分类名称
+		  , pis.QualityTarget                 -- 质量目标 0:合格 1:优良
+		  , dbo.getContentByCode('gcldw', pps.EngineeringUnit)    as EngineeringUnitName     -- 工程量单位名称
+		  , pps.EngineeringAmount             -- 工程量计划数量
+		  , pps.EngineeringCount              -- 工程量（/座）
+		  , pps.InvestmentTotal               -- 投资额合计
+		  , pps.InvestmentProvince            -- 投资额省补总投资
+		  , pps.InvestmentMinistry            -- 投资额部投资
+		  , pps.DesignUnit                    -- 设计单位
+		  , pps.ConstructionUnit              -- 施工单位
+		  , pps.SupervisorUnit                -- 监理单位
+		  , convert(varchar(10),pps.StartDate ,23)                as StartDate              -- 开工日期
+		  , convert(varchar(10),pps.EndDate ,23)                  as EndDate                -- 竣工日期
+		  , pps.Remarks                       -- 备注
+		  , pps.IsDel
+		  , pps.Creater
+		  , pps.CreaterDate
+		  , pps.Reviser
+		  , pps.ReviserDate 
+		FROM
+		  ProjectPlanSummary pps             -- 工程计划
+		LEFT JOIN V_EntryTree ve             -- 树形
+		  ON pps.ProjectId = ve.pid 
+		LEFT JOIN ProjectInfoSummary pis     -- 工程信息
+		  ON pps.ProjectInfo = pis.Id
+		  AND pis.IsDel = 0
+		WHERE
+		 pps.IsDel = 0
+	     <if test="id != null and id != ''">
+	       and pps.Id = #{id}                            -- 根据id查询
+	     </if>
+	     <if test="levels == 3">
+	       and pps.ProjectId = #{treeIds}                -- 根据项目id查询
+	     </if>
+	     <if test="levels == 2">
+	       and ve.couid = #{treeIds}                     -- 根据县id查询
+	     </if>
+	     <if test="levels == 1">
+	       and ve.ciid = #{treeIds}                      -- 根据市id查询
+	     </if>
+	     <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		 <if test="startPlanTime != null and startPlanTime != ''">
+		   and pis.PlanTime >= #{startPlanTime}          -- 计划年份(开始年份)
+		 </if>
+		 <if test="endPlanTime != null and endPlanTime != ''">
+		   and #{endPlanTime} >= pis.PlanTime            -- 计划年份(结束年份)
+		 </if>
+		 <if test="PlanBatch != null and PlanBatch != ''">
+		  	and pis.PlanBatch = #{PlanBatch}			 -- 计划批次
+		 </if>
+		 <if test="BuildNature != null and BuildNature != ''">
+		  	and pis.BuildNature = #{BuildNature}		 -- 建设性质
+		 </if>
+		 <if test="Engineering != null and Engineering != ''">
+		  	and pis.Engineering = #{Engineering}         -- 工程项目
+		 </if>
+		 <if test="TechnicalGrade != null and TechnicalGrade != ''">
+		  	and pis.TechnicalGrade = #{TechnicalGrade}	 -- 技术等级
+		 </if>
+		 <if test="AdministrationGrade != null and AdministrationGrade != ''">
+		  	and pis.AdministrationGrade = #{AdministrationGrade}  -- 行政等级
+		 </if>
+		 <if test="ProjectSource != null and ProjectSource != ''">
+		  	and pis.ProjectSource = #{ProjectSource}	 -- 项目来源
+		 </if>
+		 <if test="ProjectType != null and ProjectType != ''">
+		  	and pis.ProjectType like '%' +#{ProjectType}+ '%'	     -- 项目分类
+		 </if>
+		order by pps.CreaterDate desc
+	</select>
+
+	<!-- 更新工程计划 -->
+	<update id="updateProjectPlanSummary" parameterType="com.curing.projectPlan.model.ProjectPlanSummaryEntity">
+		UPDATE ProjectPlanSummary
+		SET
+		    EngineeringAmount = #{EngineeringAmount}
+		  , EngineeringCount = #{EngineeringCount}
+		  , InvestmentTotal = #{InvestmentTotal}
+		  , InvestmentProvince = #{InvestmentProvince}
+		  , InvestmentMinistry = #{InvestmentMinistry}
+		  , DesignUnit = #{DesignUnit}
+		  , ConstructionUnit = #{ConstructionUnit}
+		  , SupervisorUnit = #{SupervisorUnit}
+		  , StartDate = #{StartDate}
+		  , EndDate = #{EndDate}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = getDate()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 删除工程计划 -->
+	<update id="deleteProjectPlanSummary" parameterType="com.curing.projectPlan.model.ProjectPlanSummaryEntity">
+		UPDATE ProjectPlanSummary
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = getdate()
+		WHERE
+		  Id = #{Id}
+	</update>
+</mapper>

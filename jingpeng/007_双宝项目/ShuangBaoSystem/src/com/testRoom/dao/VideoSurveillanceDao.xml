@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.VideoSurveillanceDao">
+	<select id="getVideoSurveillance" parameterType="java.util.Map"
+		resultType="VideoSurveillance">
+		select * from VideoSurveillance
+	</select>
+	<select id="getVideoSurveillanceById"
+		parameterType="java.util.Map" resultType="VideoSurveillance">
+		select * from
+		VideoSurveillance where vid = #{vid}
+	</select>
+
+	<!-- 获取当前用户权限下的试验室试验数量 -->
+	<select id="getTestInfoList" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select
+		  t.UniqueIdentifier
+		  , t.TestRoomName
+		  , isnull(ti.count,0) as zCount
+		  , isnull(t1.myCount,0) as mCount
+		  , isnull(t2.zdCount,0) as dCount
+		from	
+		  TestRoomInfo t                        -- 试验室信息
+		LEFT JOIN (                             -- 根据试验室获取试验总数(试验完成)
+		  select
+		    UniqueIdentifier
+		    , count(*) as count
+		  from
+		    TestInfo
+		  where
+		    TestState = 2          
+		    and IsValidData = 1      
+		  group by
+		    UniqueIdentifier
+		) ti
+		on ti.UniqueIdentifier = t.UniqueIdentifier
+		LEFT JOIN (                             -- 盲样试验总数 
+		  select
+		    UniqueIdentifier
+		    , count(*) as myCount
+		  from
+		    TestInfo
+		  where
+		    IsTestBlind = 1
+		    and TestState = 2 
+		    and IsValidData = 1 
+		  group by
+		    UniqueIdentifier
+		) t1
+		on ti.UniqueIdentifier = t1.UniqueIdentifier
+		LEFT JOIN (                            -- 自动采集总数
+		  select
+		    UniqueIdentifier
+		    , count(*) as zdCount
+		  from
+		    TestInfo
+		  where
+		    IsTestCollection = 1
+		    and TestState = 2 
+		    and IsValidData = 1 
+		  group by
+		    UniqueIdentifier
+		) t2
+		on ti.UniqueIdentifier = t2.UniqueIdentifier
+	</select>
+	
+	<!-- 自动采集数量 -->
+	<select id="getAutoCollectionCount" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  t.UniqueIdentifier
+		  , t.TestRoomName
+		  , isnull(t1.zdCount, 0) as zdCount
+		  , isnull(t2.hgCount, 0) as hgCount
+		from
+		  (
+		    select
+		      UniqueIdentifier
+		      , TestRoomName
+		    from
+		      TestRoomInfo
+		  ) as t
+		  left join (
+		    select
+		      UniqueIdentifier
+		      , count(*) as zdCount
+		    from
+		      TestInfo t
+		    where
+		      IsTestCollection = 1
+		      and TestState = 2 
+		      and IsValidData = 1
+		      and IsQualifiedTest is not null
+		    group by
+		      UniqueIdentifier
+		  ) t1
+		    on t.UniqueIdentifier = t1.UniqueIdentifier
+		  left join (
+		    select
+		      UniqueIdentifier
+		      , count(*) as hgCount
+		    from
+		      TestInfo t
+		    where
+		      IsTestCollection = 1
+		      and TestState = 2
+		      and IsQualifiedTest = 1 
+		      and IsValidData = 1 
+		    group by
+		      UniqueIdentifier
+		  ) t2
+		    on t.UniqueIdentifier = t2.UniqueIdentifier
+	</select>
+				
+	<!-- 自动采集明细 -->
+	<select id="getAutoCollectionList" parameterType="java.util.Map" resultType="AutoCollectionEntity">
+		select
+		  t.UniqueIdentifier                              -- 试验室唯一标识
+		  , t2.TestRoomName                               -- 试验室名称
+		  , t4.TestClassification_Name                    -- 试验类别
+		  , t3.TestName                                   -- 试验名称
+		  , t.SampleCode                                  -- 样品编号
+		  , t.SampleCount                                 -- 试件个数
+		  , CONVERT(varchar (100), t.TestDate, 23) as TestDate -- 试验日期
+		  , t.TestOperator                                -- 试验员
+		  , t.IsQualifiedTest                             -- 结果判定
+		from
+		  TestInfo t                                      -- 试验室基本信息表
+		  left join BlindInfo t1                          -- 盲样信息表
+		    on t.QRCode = t1.QRCode                       -- 二维码
+		  left join TestRoomInfo t2                       -- 试验室信息
+		    on t.UniqueIdentifier = t2.UniqueIdentifier 
+		  left join TestPageInfos t3                      -- 试验页面信息
+		    on t3.Id = t.TestNameId                       -- 试验名称id
+		  left join TestClassification t4                 -- 试验分类表
+		    on t4.TestClassification_Code = t3.TestClass_Code -- 试验分类
+		where
+		  IsTestCollection = 1 
+		  and t.TestState = 2 
+		  and t.IsValidData = 1 
+		  and t.UniqueIdentifier = #{UniqueIdentifier}
+		order by t.Id desc
+	</select>
+	
+	<!-- 盲样数量 -->
+	<select id="getBlindCount" parameterType="java.util.Map" resultType="java.util.Map">
+		<!-- select
+		  top(1)(select count(*) from BlindInfo) as blindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo as bi 
+		      left join TestInfo as ti 
+		        on bi.QRCode = ti.QRCode 
+		    where
+		      ti.TestState = 2 
+		      and ti.IsValidData = 1
+		  ) as completedBlindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo as bi 
+		      left join TestInfo as ti 
+		        on bi.QRCode = ti.QRCode 
+		    where
+		      ti.TestState = 2 
+		      and IsQualifiedTest = 1 
+		      and ti.IsValidData = 1
+		  ) as qualifiedBlindCount 
+		from
+		  BlindInfo -->
+		  select
+		  top(1)(select count(*) from BlindInfo as bi 
+		      left join TestInfo as ti 
+		        on bi.QRCode = ti.QRCode 
+		    where
+		       ti.IsTestCollection is null) as blindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo as bi 
+		      left join TestInfo as ti 
+		        on bi.QRCode = ti.QRCode 
+		    where
+		      ti.TestState = 2 
+		      and ti.IsValidData = 1 
+		      and ti.IsTestCollection is null 
+		  ) as completedBlindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo as bi 
+		      left join TestInfo as ti 
+		        on bi.QRCode = ti.QRCode 
+		    where
+		       IsQualifiedTest = 1 
+		      and ti.IsValidData = 1 
+		      and ti.IsTestCollection is null
+		  ) as qualifiedBlindCount 
+		from
+		  BlindInfo
+	</select>
+	
+	<!-- 盲样明细 -->
+	<select id="getBlindList" parameterType="java.util.Map" resultType="BlindInfoEntity">
+		select
+		  t2.UniqueIdentifier                             -- 试验室唯一标识
+		  , t3.TestRoomName                               -- 试验室名称
+		  , t5.TestClassification_Name                    -- 试验类别
+		  , t4.TestName                                   -- 试验名称
+		  , t2.TestState                                  -- 试验状态
+		  , t2.SampleCode                                 -- 样品编号
+		  , t.ConstructionUnit                            -- 施工单位
+		  , t.EngineeringName                             -- 工程名称
+		  , t.SampleName                                  -- 样品名称
+		  , t.Purpose                                     -- 工程部位/用途
+		  , CONVERT(varchar (100), t2.TestDate, 23) as TestDate -- 试验日期
+		  , t2.TestOperator                               -- 试验员
+		  , t2.IsQualifiedTest                            -- 是否合格
+		from
+		  BlindInfo t                                     -- 盲样信息
+		  left join TestInfo t2                           -- 试验基本信息表
+		    on t2.QRCode = t.QRCode                       -- 二维码 
+		    and t2.IsValidData = 1 
+		  left join TestRoomInfo t3                       -- 试验室信息
+		    on t2.UniqueIdentifier = t3.UniqueIdentifier 
+		  left join TestPageInfos t4                      -- 试验页面信息
+		    on t.TestNameId = t4.Id                       -- 试验名称id
+		  left join TestClassification t5                 -- 试验分类
+		    on t4.TestClass_Code = t5.TestClassification_Code 
+		    where t.IsValidData = 1 and t2.IsTestCollection IS NULL 
+	</select>
+	
+</mapper>

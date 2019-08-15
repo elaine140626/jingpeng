@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.GreenNumberDao">
+	<!-- 工程进度（绿化工程数量表）List取得 -->
+	<select id="getGreenNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.GreenNumberEntity">
+		SELECT
+		  gn.Id
+		  , gn.ProjectId                                  -- 项目id
+		  , gn.PileNumber                                 -- 起讫桩号
+		  , gn.ProjectName                                -- 工程名称
+		  , gn.Position                                   -- 位置
+		  , gn.Size                                       -- 主要尺寸（规格及说明）
+		  , gn.RouteLength                                -- 路线长度（m）
+		  , gn.PlantLength                                -- 种植长度（m）
+		  , gn.PlantingGrass                              -- 植草（m2）
+		  , gn.Remarks                                    -- 备注
+		  , gn.IsDel
+		  , gn.Creater
+		  , gn.CreaterDate
+		  , gn.Reviser
+		  , gn.ReviserDate 
+		FROM
+		  GreenNumber as gn 
+		  left join V_EntryTree as ve 
+		    on gn.ProjectId = ve.pid
+		WHERE
+		  gn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and gn.Id = #{id}                             -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and gn.ProjectId = #{treeIds}                 -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and gn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and gn.Position like concat('%',#{position},'%')    -- 根据位置查询
+		  </if>
+		  <if test="projectName!=null and projectName!=''">
+		    and gn.projectName like concat('%',#{projectName},'%') -- 根据名称查询
+		  </if>
+		   order by gn.CreaterDate desc
+	</select>
+	
+		<select id="getGreenNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   gn.PileNumber                                 -- 起讫桩号
+		  , gn.ProjectName                                -- 工程名称
+		  , gn.Position                                   -- 位置
+		  , gn.Size                                       -- 主要尺寸（规格及说明）
+		  , gn.RouteLength                                -- 路线长度（m）
+		  , gn.PlantLength                                -- 种植长度（m）
+		  , gn.PlantingGrass                              -- 植草（m2）
+		  , gn.Remarks                                    -- 备注
+		FROM
+		  GreenNumber as gn 
+		  left join V_EntryTree as ve 
+		    on gn.ProjectId = ve.pid
+		WHERE
+		  gn.IsDel = 0
+		   order by gn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（绿化工程数量表）合计 -->
+	<select id="getGreenNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.GreenNumberSum">
+		SELECT
+		  sum(gn.RouteLength) as RouteLengthSum           -- 路线长度（m）
+		  , sum(gn.PlantLength) as PlantLengthSum         -- 种植长度（m）
+		  , sum(gn.PlantingGrass) as PlantingGrassSum     -- 植草（m2）
+		FROM
+		  GreenNumber as gn 
+		  left join V_EntryTree as ve 
+		    on gn.ProjectId = ve.pid
+		WHERE
+		  gn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and gn.Id = #{id}                             -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and gn.ProjectId = #{treeIds}                 -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and gn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and gn.Position like concat('%',#{position},'%')    -- 根据位置查询
+		  </if>
+		  <if test="projectName!=null and projectName!=''">
+		    and gn.projectName like concat('%',#{projectName},'%') -- 根据名称查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（绿化工程数量表） -->
+	<insert id="insertGreenNumber" parameterType="com.curing.projectSchedule.model.GreenNumberEntity">
+		INSERT 
+		INTO GreenNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , ProjectName
+		  , Position
+		  , Size
+		  , RouteLength
+		  , PlantLength
+		  , PlantingGrass
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{ProjectName}
+		  , #{Position}
+		  , #{Size}
+		  , #{RouteLength}
+		  , #{PlantLength}
+		  , #{PlantingGrass}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（绿化工程数量表） -->
+	<update id="updateGreenNumber" parameterType="com.curing.projectSchedule.model.GreenNumberEntity">
+		UPDATE GreenNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , ProjectName = #{ProjectName}
+		  , Position = #{Position}
+		  , Size = #{Size}
+		  , RouteLength = #{RouteLength}
+		  , PlantLength = #{PlantLength}
+		  , PlantingGrass = #{PlantingGrass}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（绿化工程数量表） -->
+	<update id="deleteGreenNumber" parameterType="com.curing.projectSchedule.model.GreenNumberEntity">
+		UPDATE GreenNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

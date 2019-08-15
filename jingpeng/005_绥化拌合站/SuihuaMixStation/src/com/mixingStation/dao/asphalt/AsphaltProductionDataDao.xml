@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.asphalt.AsphaltProductionDataDao">
+	<sql id="analysis">
+		CASE v.Analysis_Result
+		WHEN '1' THEN '合格'
+		ELSE '不合格' END
+	</sql>
+	<!-- 获取所有生产数据信息 -->
+	<select id="getProductionList" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltProductionData">
+		SELECT
+			v.id id,
+			v.Org_ID orgId,
+			v.product_Id productId,
+			v.ProdPlan_No prodPlanNo,
+			v.equ_Id equId,
+			v.Grad_Id gradId,
+			v.No1_MeterValue no1MeterValue,
+			v.No2_MeterValue no2MeterValue,
+			v.No3_MeterValue no3MeterValue,
+			v.No4_MeterValue no4MeterValue,
+			v.No5_MeterValue no5MeterValue,
+			v.No6_MeterValue no6MeterValue,
+			v.No7_MeterValue no7MeterValue,
+			v.No8_MeterValue no8MeterValue,
+			v.HotP_MeterValue hotPMeterValue,
+			v.ColdP_MeterValue coldPMeterValue,
+			v.ColdP2_MeterValue coldP2MeterValue,
+			v.TotalP_MeterValue totalPMeterValue,
+			v.Asphalt_Meter asphaltMeter,
+			v.Temperature_Meter temperatureMeter,
+			v.Admixture1 admixture1Meter,
+			v.Admixture2 admixture2Meter,
+		    v.Construction_Unit constructionUnit,
+			v.Proj_Pos projPos,
+			v.Equipment_Name equipmentName,
+			v.str_productInfo productInfo,
+			v.Proportion_Code proportionCode,
+			v.Grade_Code gradeCode,
+			v.Org_name orgName,
+			CONVERT(varchar(20),v.collect_Time,120) collectTime,
+			v.Total_Weight totalWeight,
+			v.Prod_ID as prodId,
+			v.Analysis_Result analysisResult,
+			m.No1 no1,
+			m.No2 no2,
+			m.No3 no3,
+			m.No4 no4,
+			m.No5 no5,
+			m.No6 no6,
+			m.No7 no7,
+			m.No8 no8,
+			m.HotPowder hotPowder,
+			m.ColdPowder coldPowder,
+			m.ColdPowder2 coldPowder2,
+			m.TotalPowder totalPowder,
+			m.Asphalt asphalt,
+			m.Temperature temperature,
+			m.Admixture1 admixture1,
+			m.Admixture2 admixture2
+		FROM
+			V_Asphalt_ProductionData v 
+			LEFT JOIN AsphaltProp_DataAnalysis m ON m.Pro_Id = v.Id and m.Data_Type = 9
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			
+            <if test="productInfo != null and productInfo != ''">
+				AND v.str_productInfo LIKE '%${productInfo}%'
+			</if>
+            <if test="startTime != null and startTime != ''">
+				<![CDATA[ AND v.collect_Time >= #{startTime}   ]]>
+			</if>
+			<if test="endTime != null and endTime != ''">
+				<![CDATA[ AND v.collect_Time <= #{endTime}   ]]>
+			</if>
+			<if test="equipment_Name != null and equipmentName != ''">
+				AND v.equipment_Name LIKE '%${equipmentName}%'
+			</if>
+			<if test="analysisResult != null and analysisResult != ''">
+				AND v.analysis_Result  LIKE '%${analysisResult}%'
+			</if>
+			<if test="constructionUnit != null and constructionUnit != ''">
+				AND v.construction_Unit LIKE '%${construction_Unit}%'
+			</if>
+			<if test="proj_Pos != null and projPos != ''">
+				AND v.proj_Pos LIKE '%${proj_Pos}%'
+			</if>
+			<if test="orgId != null and orgId != '' and orgId != 0">
+			AND v.org_Id = #{orgId}
+			</if>
+			<if test="id != null and id != '' ">
+			AND v.id = #{id}
+			</if>
+			AND v.valid_Flag = 1 
+		    ORDER BY v.collect_Time DESC
+		</trim>
+	</select>
+	<!-- 根据生产数据获取的生产编号查询生产计划 -->
+	<select id="getProductionPlanListByPlanNo" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.AsphaltProductionPlan">
+		select 
+			Org_ID as orgId,
+			Proj_Pos as projPos ,
+			Construction_Unit as constructionUnit,
+			Prod_ID as prodId,
+			Grad_Id as gradId
+		from 
+			Production_Plan 
+		where 
+			Plan_No = #{plan_No} 
+		and 
+			Org_ID = #{orgId};
+	</select>
+	
+	<select id="getAsphaltPropDataAnalysis" parameterType="com.mixingStation.model.asphalt.AsphaltProductionPlan"
+		resultType="com.mixingStation.model.asphalt.AsphaltPropDataAnalysis">
+		SELECT
+		id i_id,
+		data_Type str_data_Type,
+		no1 d_no1,
+		no2 d_no2,
+		no3 d_no3,
+		no4 d_no4,
+		no5 d_no5,
+		no6 d_no6,
+		no7 d_no7,
+		no8 d_no8,
+		hotPowder d_hotPowder,
+		coldPowder d_coldPowder,
+		coldPowder2 d_coldPowder2,
+		totalPowder d_totalPowder,
+		asphalt d_asphalt,
+		temperature d_temperature,
+		admixture1 d_admixture1,
+		admixture2 d_admixture2
+		FROM
+		AsphaltProp_DataAnalysis
+		WHERE Pro_Id=#{id}
+		AND Valid_Flag=1 
+		<if test="data_Type != null and data_Type != '' ">
+			AND data_Type = #{data_Type}
+		</if>
+		ORDER BY data_Type
+	</select>
+	<select id="getMaterialConsumption" parameterType="com.mixingStation.model.asphalt.AsphaltProductionData"
+		resultType="com.mixingStation.model.asphalt.Asph_TargetPropDetailed">
+		 select 
+			atpd.Targ_Prop_ID as i_targ_Prop_Id,
+			atpd.Materials_ID as i_materials_Id,
+			atpd.Weight as d_weight,
+			mn.Material_Name +'-'+ mm.Material_Model as Material
+		 from Asph_TargetPropDetailed atpd 
+		 left join Asph_TargetProportion atp on atp.Id = atpd.Targ_Prop_ID
+		 left join Asphalt_Prod_Proportion app on atp.Id = app.Targ_PropID
+		 left join Production_Plan pp on app.Id = pp.Prod_ID
+		 left join Material_Info m on atpd.Materials_ID = m.Id
+		 left join MaterName_Info mn on m.MateName_ID = mn.Id
+		 left join MaterModel_Info mm on m.MateModel_ID = mm.Id
+		 where pp.Plan_No = #{prodPlanNo} 
+	</select>
+	<select id="asphaltGradDataAnalysis" parameterType="com.mixingStation.model.asphalt.AsphaltProductionPlan"
+		resultType="com.mixingStation.model.asphalt.AsphaltGradDataAnalysis">
+	select 
+			analysis_id  analysisId
+			,msda.ware1
+			,msda.ware2
+			,msda.ware3
+			,msda.ware4
+			,msda.ware5
+			,msda.ware6
+			,msda.hot_ware hotware
+			,msda.cold_ware1 coldware1
+			,msda.cold_ware2 coldware2
+			,msda.upper_limit upperlimit
+			,msda.lower_limit lowerlimit
+			,msi.mesh_size meshSize
+		from 
+			mesh_size_data_analysis msda
+	     left join mesh_size_info msi on msda.mesh_id = msi.id
+	     and msi.valid_flag = 1
+		where 
+		 msda.analysis_id = #{gradId}
+		 and msda.valid_flag = 1
+	</select>
+	
+</mapper>

@@ -1,0 +1,264 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="../resources/css/style_sn.css">
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/c_dtree.js"></script>
+<script type="text/javascript" src="../resources/jedate/jedate.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/echarts.min.js"></script>
+<script type="text/javascript">
+$b = $("#shu_btn");
+$("#toggle").on({
+	"click": function(){
+		$b.toggle();
+		return false;
+	}
+});
+$(document).on({
+	"click": function(e){
+		var src = e.target;
+
+		if(src.id && src.id ==="toggle"){
+			return false;
+		}else{
+			$("#content").hide();
+		}
+	}
+});
+
+</script>
+</head>
+
+<body>
+<div class="top">
+	<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+    <div class="topright">
+    	<a href="../User/userinfo.html" class="userid">wangdanwei</a><span>你好！</span>
+        <a href="../Common/out.html" class="out">安全退出</a>
+    </div>
+     <div class="top_btn">
+    	<span class="lq_btn"><a href="../AsphaltProduceStatistic/asphaltProduceStatistic.html" class="hvr-bounce-to-top ">沥青</a></span>
+    	<span class="sn_btn"><a href="../cement_Production/cement_ProductionStatistic.html" class="hvr-bounce-to-top focusbtn">水泥</a></span>
+    </div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav_g">
+            <ul>
+            	<li><a href="../cement_Production/cement_ProductionStatistic.html" class="focus_a">生产统计</a></li>
+                <li><a href="../Material/snycmaterial.html" class="nav2">原材料管理</a></li>
+                <li>
+               	  <a href="../CementTheory/getCement_TheoryProportion.html" class="nav3">配比管理<span>></span></a>
+               	  <div class="down">
+                    	<a href="../CementTheory/getCement_TheoryProportion.html">理论配比信息</a>
+                        <a href="../CementConstructionProp/cementConstructionProp.html">施工配比信息</a>
+                    </div>
+              </li>
+              <li><a href="../cement_Production/silo_correspondence.html" class="nav4">料仓对应关系</a></li>
+                <li>
+               	  <a href="../cement_Production/c_productionplan.html" class="nav3">生产管理<span>></span></a>
+                    <div class="down">
+                       <a href="../cement_Production/c_productionplan.html">生产计划</a>
+                       <a href="../cement_Production/c_Productiondata.html">生产数据</a>
+                    </div>
+              </li>
+            </ul>
+        </div>
+
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：水泥混合料拌合站（<span id = "locationText">综合一标</span>） > 生产统计</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	        <div class="shu_btn">
+                        <script type="text/javascript">
+                        $(function() {
+                            $("#toggle").click(function() {
+                                $(this).text($("#content").is(":hidden") ? "拌合站" : "拌合站");
+                                $("#content").slideToggle();
+                            });
+                        });
+                        </script>
+                            <span class="shu_ban" id="toggle">拌合站</span>
+                            <div class="dtree" id="content" style="display:none;">
+                            <script type="text/javascript">
+                                var baseUrl= getContextPath();
+                                var orgid = "";
+                                var orgname = "";
+        						$.ajax({
+        							type : "POST",
+        							url : baseUrl + "/Common/getOrgTree.html",
+        							async:false,
+        							data : {"mixStation_Type":"1"},
+        							dataType : "json",
+        							success : function(data) {
+        								var flag = true;
+        								//orgid = data[0].i_id;
+        								//orgname = data[0].str_org_Name;
+        								d = new dTree('d', true);
+        								for(var i = 0; i < data.length; i++) {
+        									if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+        										d.add(data[i].i_id, data[i].i_parent_Id, data[i].str_org_Name, true, false);
+        									} else {
+        										d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].Id, data[i].str_org_Name ,false, false);
+        										if(flag){
+        											orgid = data[i].i_id;
+        	        								orgname = data[i].str_org_Name;
+        											//默认指向列表中第一个
+        											$("#locationText").text(data[i].str_org_Name);
+        											flag = false;
+        										}
+        									}
+        								}
+        								document.write(d);
+        			                    d.openAll();
+        							}
+        						}); 
+                                </script>
+                        </div>
+                        </div>
+
+                    <form action="" method="get" class="sousuo zbj">
+                      <label>产品名称：</label>
+                       <input name="" type="input" id="productName" >
+                      <label>产品型号：</label>
+                     <input name="" type="input" id="productModel" >
+                      <label>时间：</label>
+                       <input type="text" size="20" class="search_input" id="str_beginDate" readonly="true" style="width:12%;">
+                        <label>--</label>
+                      <input type="text" size="20" class="search_input" id="str_endDate" readonly="true" style="width:12%;">
+                      <!--   <input type="text" value="2018-4-15" size="20" class="search_input">
+                        <label>--</label>
+                      <input type="text" value="2018-4-18" size="20" class="search_input"> -->
+                      <span class="btnxia"><a href="#" onclick="isHidden('div1')"></a></span>
+                      <input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="getCement_ProductionStatisticSelect()">
+                      <div id="div1" class="search_xia">
+                        <label>施工单位：</label>
+                         <input name="" type="input" id="constructionUnit" >
+                      <!--   <input type="text" value="输入施工单位" class="search_input rightwbj"> -->
+                        <label>工程部位/用途：</label>
+                         <input name="" type="input" id="engineeringSite" >
+                       <!--  <input type="text" value="输入工程部位/用途" class="search_input"> -->
+                      </div>
+                  </form>
+<!--                     <script>
+                        function isHidden(odiv){
+                          var vdiv = document.getElementById(odiv);
+                          vdiv.style.display = (vdiv.style.display == 'block')?'none':'block';
+                        }
+                    </script> -->
+
+            	<div class="table-a">
+                    <div class="table-a-left">
+                        <h4>混合料生产情况统计柱状图</h4>
+                        <div class="zhuzt" id="chartmain">
+                        </div>
+                    </div>
+                    <div class="table-a-right">
+                    	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="Statistics">
+                            <thead>
+                            <tr>
+                            <th scope="col" class="xh" style="text-align: center">序号</th>
+                            <th scope="col" class="cjsj" style="text-align: center">采集日期</th>
+                            <th scope="col" class="hhlzl" style="text-align: center">混合料种类</th>
+                            <th scope="col" class="sgdw" style="text-align: center">施工单位</th>
+                            <th scope="col" class="gcbw" style="text-align: center">工程部位/用途</th>
+                            <th scope="col" class="sczps" style="text-align: center">生产总盘数</th>
+                            <th scope="col" class="hgps" style="text-align: center">合格盘数</th>
+                            <th scope="col" class="bhgps" style="text-align: center">不合格盘数</th>
+                            <th scope="col" class="xqyl" style="text-align: center">水泥用量(t)</th>
+                            <th scope="col" class="sczl" style="text-align: center">生产总量(t)</th>
+                          </tr>
+                            </thead>
+                        </table>
+
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/cement_ProductionStatistic.js"></script>
+<!-- <script type="text/javascript" src="../resources/jquery/echarts.simple.min.js"></script> -->
+<script type="text/javascript" src="../resources/js/echarts.min.js"></script>
+<!--<script type="text/javascript" src="../resources/jquery/echarts.js"></script>
+<script type="text/javascript" src="../resources/jquery/ecStat.js"></script>
+<script type="text/javascript" src="../resources/jquery/ecStat.min.js"></script>-->
+
+<script type="text/javascript">
+
+    jeDate({
+		dateCell:"#str_beginDate",
+		format:"YYYY-MM-DD",
+		isinitVal:false,
+		isTime:true, //isClear:false,
+	
+		okfun:function(val){alert(val)}
+	})
+	
+	jeDate({
+		dateCell:"#str_endDate",
+		format:"YYYY-MM-DD",
+		isinitVal:false,
+		isTime:true, //isClear:false,
+	
+		okfun:function(val){alert(val)}
+	})
+
+    option = {
+        color: ['#3398DB'],
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis : [
+            {
+                type : 'category',
+                data : ['总盘数', '合格盘数', '不合格'],
+                axisTick: {
+                    alignWithLabel: true
+                }
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            /*  {
+                 name:'直接访问',
+                 type:'bar',
+                 barWidth: '60%',
+                 data:[10, 52, 200, 334, 390, 330, 220]
+             } */
+        ]
+    };
+
+</script>
+
+</body>
+</html>

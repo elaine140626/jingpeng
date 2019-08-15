@@ -1,0 +1,261 @@
+/*表格头部搜索部分*/
+.search label, .sousuo label {
+	font-weight: normal;
+	color: #444444;
+	display: inline-block;
+}
+
+.sousuo {
+	margin-top: 10px;
+	font-size: 14px;
+}
+
+.search_select {
+	color: #8c8c8c;
+	border: 1px solid #cacaca;
+	font-weight: normal;
+	padding: 2px 5px;
+	border-radius: 3px;
+	min-width: 135px;
+	margin-right: 10px;
+}
+
+.btncha {
+	width: 95px;
+	height: 30px;
+	color: #FFF;
+	text-align: center;
+	background-color: #086994;
+	border-radius: 3px;
+	border: none;
+	margin-left: 12px;
+	vertical-align: bottom;
+}
+
+/*折线图效果*/
+.charttt {
+	width: 100%;
+	height: 220px;
+	margin-top: 20px;
+}
+
+/*柱状图效果*/
+.chartcol {
+	width: 100%;
+	height: 620px;
+	margin-top: 20px;
+}
+
+/*阀值设定按钮*/
+.luru {
+	float: right;
+	color: #0e376f;
+	font-weight: 700;
+	margin: 0px 20px 20px 0;
+}
+
+.luru a {
+	color: #0e376f;
+}
+
+.luru a:hover {
+	color: #0e376f;
+}
+
+.hvr-icon-forward {
+	display: inline-block;
+	vertical-align: middle;
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+	box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	-moz-osx-font-smoothing: grayscale;
+	position: relative;
+	padding-right: 10px;
+	-webkit-transition-duration: 0.1s;
+	transition-duration: 0.1s;
+}
+
+.hvr-icon-forward:before {
+	content: url(../../image/images/zeng.png);
+	position: absolute;
+	left: -20px;
+	padding-bottom: 10px;
+	transform: translateZ(0);
+	transition-duration: 0.1s;
+	transition-property: transform;
+	transition-timing-function: ease-out;
+	padding-top: 2px;
+}
+
+/*table表格*/
+.lq_main {
+	width: 100%;
+	margin: 20px 0;
+	height: auto;
+}
+
+.lq_biao {
+	margin: 20px 0;
+}
+
+.lq_biao table {
+	text-align: center;
+	font-family: "微软雅黑";
+	border: 1px solid #dadada;
+	border-collapse: collapse;
+}
+
+.lq_biao table td {
+	padding: 8px 4px;
+}
+
+.lq_biao table td, .lq_biao table th {
+	border: 1px solid #dadada;
+	border-collapse: collapse;
+}
+
+.bgcolor tr:nth-child(2n+1) {
+	background: #f8f8f8;
+}
+
+.lq_biao table td, .lq_biao table th {
+	text-align: center;
+	border: 1px solid #dadada;
+	border-collapse: collapse;
+}
+
+.lq_biao table th {
+	height: 42px;
+	color: #fff;
+	background: #0e9ddc;
+}
+
+.lq_biao table.table-2000 th, .lq_biao table.table-gao th {
+	height: 30px;
+}
+/* 分页 */
+.pagination {
+	position: relative;
+	left: 50%;
+	transform: translate(-50%, 0%);
+}
+
+/*弹窗样式*/
+.tan_dx_title {
+	height: 40px;
+	line-height: 40px;
+	background: #2b86cd;
+	color: #fff;
+}
+
+.tan_dx_title span {
+	padding-left: 15px;
+}
+
+.tan_dx_title h3 {
+	font-size: 14px;
+	display: inline;
+	font-weight: bold;
+	font-family: "微软雅黑";
+}
+
+.tan_close {
+	padding-right: 10px;
+	font-size: 30px;
+	padding-top: 2px;
+}
+
+.tan_dx_txt {
+	padding: 20px;
+	max-height: 450px;
+	overflow-y: auto;
+}
+
+.tan_dx_txt table {
+	text-align: center;
+	/*	font-size:14px;*/
+	font-family: "微软雅黑";
+	border: 1px solid #dadada;
+	border-collapse: collapse;
+}
+
+.shiyan_lb {
+	padding-bottom: 10px;
+	/*	text-align:right;*/
+}
+
+.tan_dx_txt3 tr {
+	height: 40px;
+}
+
+th {
+	text-align: center;
+	font-family: "微软雅黑";
+}
+
+.tan_dx_txt table td, .tan_dx_txt table th {
+	border: 1px solid #dadada;
+	border-collapse: collapse;
+}
+
+.tabsholder1 table tr {
+	height: 40px;
+	text-align: center;
+}
+#data_tab ,.tabsholder1 {
+	margin:20px;
+}
+ .dise {
+	background: #d4e0ea;
+	color: #032750;
+	font-size: 12px;
+	font-weight: bold;
+}
+.bk td {
+    border-collapse: collapse;
+    border: 1px solid #c3c3c3;
+    
+}
+.tan_dx_txt3 .fazhi .btn_bc {
+	width: 190px;
+	height: 36px;
+	line-height: 30px;
+	color: #fff;
+	text-align: center;
+	background-color: #104b8d;
+	border-radius: 3px;
+	border: none;
+	margin: 20px 0 15px 0;
+}
+
+.tan_dx_txt table th {
+	height: 42px;
+	color: #032750;
+	background: #d4e0ea;
+}
+
+.th20 table th {
+	height: 24px;
+	color: #032750;
+	background: #d4e0ea;
+}
+
+.tan_dx_txt3 .fazhi input {
+	color: #8c8c8c;
+	border: 1px solid #cacaca;
+	font-weight: normal;
+	padding: 2px 5px;
+	border-radius: 3px;
+}
+
+.tan_dx_txt table td {
+	padding: 8px 4px;
+}
+
+.tan_dx_txt table td a {
+	color: #0762c8;
+	/*	font-weight:bold;*/
+	text-decoration: underline;
+}

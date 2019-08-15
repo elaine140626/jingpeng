@@ -1,0 +1,174 @@
+@charset "utf-8";
+/* CSS Document */
+/*基本样式*/
+*{
+	margin:0;
+	padding:0;
+}
+body{
+	background:#011475;
+	color:#FFF;
+	font-family:"微软雅黑";
+	font-size:12px;
+/*	overflow-x: hidden;*/
+}
+li{
+	list-style:none;
+}
+img{
+	border:0;
+}
+.clear{
+	clear:both;
+}
+
+/*主体样式*/
+.main{
+	width:1900px;
+	height:1080px;
+/*	overflow:hidden;
+	overflow-x:hidden;*/
+}
+.left{
+	float:left;
+	width:312px;
+	height:1080px;
+	background:#00074c;
+}
+.left ul{
+	padding:80px 50px 0;
+}
+.left ul h4{
+	font-size:14px;
+	font-weight:normal;
+	color:#17bffe;
+	height:30px;
+}
+.left ul h4 span{
+	width:8px;
+	height:8px;
+	border-radius:50%;
+	background:#feb900;
+	display:inline-block;
+	margin-right:5px;
+}
+.left ul li{
+	border-bottom:1px #04276c solid;
+	padding-bottom:18px;
+	margin-top:18px;
+	padding-left:10px;
+}
+.left ul li p{
+	padding-left:13px;
+	line-height:2em;
+}
+.left ul li p b{
+	font-weight:normal;
+	width:75px;
+	display:inline-block;
+}
+.right{
+	float:left;
+	width:1588px;
+	height:1080px;
+}
+.title{
+	text-align:center;
+	padding-top:40px;
+}
+.title .title_1{
+	font-size: 48px;
+	color:#00d7fe;
+	vertical-align: bottom;
+}
+.title .title_2{
+	font-size:18px;
+}
+
+.map{
+	margin-top:30px;
+}
+.map_img{
+	height:506px;
+	background:url(../images/map.jpg) no-repeat center center;
+}
+.map_tb{
+	margin-top:20px;
+}
+.map_tb_1,.map_tb_2,.map_tb_3{
+	float:left;
+}
+.map_tb_1 img{
+	padding-left:40px;
+	
+}
+.map_tb_2,.map_tb_3{
+	padding-top:200px;
+	height: 400px;
+}
+.map_tb_2{
+	margin-right:20px;
+}
+.map_tb_1{
+	width:420px;
+	height:390px;
+}
+.map_tb_2,.map_tb_3{
+	width:230px;
+	height:140px;
+}
+.map_tb_tb{
+	float:right;
+	width:600px;
+	height:auto;
+	margin-right:50px;
+	margin-top:70px;
+}
+.map_tb_tb table{
+	text-align:center;
+	background:#011e7c;
+	padding-bottom:10px;
+	border-collapse:collapse;
+	border:1px solid #193534;
+}
+.map_tb_tb table .dise{
+	background:#0639cb;
+	height:40px;
+}
+.map_tb_tb table th{
+	font-size:14px;
+}
+.map_tb_tb table td{
+	padding:6px 0;
+	border-collapse:collapse;
+	border:1px solid #193534;
+	overflow:hidden;
+}
+.copy{
+	color:#a2a2a2;
+	text-align:center;
+
+}
+
+/*动画效果*/
+
+/*@keyframes show {
+  0% {top:0; opacity:1;}
+  100% {top:-20px; opacity:0;}
+}
+.map_tb_tb table .gund{
+	position:relative;
+  	animation: show 0.5s linear infinite;
+	animation-iteration-count:1;
+}
+*/
+.gund{
+	height:18px;
+	overflow:hidden;
+}
+
+
+
+
+
+

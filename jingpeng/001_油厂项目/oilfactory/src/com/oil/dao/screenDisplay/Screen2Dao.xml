@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.screenDisplay.Screen2Dao">
+	<!-- 总数统计  -->
+	<select id="getCountList" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  * 
+		from
+		  ( 
+		    select
+		      count(*) as zccount                         -- 正常出库
+		    from
+		      exportmeasure 
+		    where
+		      IsDel = 0 
+		      and ValidFlag = 1 
+		      and DATE_FORMAT(now(), '%Y-%m-%d') = DATE_FORMAT(CreaterDate, '%Y-%m-%d') 
+		      and OutType = 0
+		  ) as tab1
+		  , ( 
+		    select
+		      count(*) as kfcount                         -- 空发出库
+		    from
+		      exportmeasure 
+		    where
+		      IsDel = 0 
+		      and ValidFlag = 1 
+		      and DATE_FORMAT(now(), '%Y-%m-%d') = DATE_FORMAT(CreaterDate, '%Y-%m-%d') 
+		      and OutType = 3
+		  ) as tab2
+		  , ( 
+		    select
+		      count(*) as dhcount                         -- 兑换出库
+		    from
+		      exportmeasure 
+		    where
+		      IsDel = 0 
+		      and ValidFlag = 1 
+		      and DATE_FORMAT(now(), '%Y-%m-%d') = DATE_FORMAT(CreaterDate, '%Y-%m-%d') 
+		      and OutType = 4
+		  ) as tab3
+		  , ( 
+		    select
+		      count(*) as zscount                         -- 总数
+		    from
+		      exportmeasure 
+		    where
+		      IsDel = 0 
+		      and ValidFlag = 1 
+		      and YEAR (now()) = YEAR (CreaterDate) 
+		      and OutType != 2
+		  ) as tab4
+	</select>
+	
+	<!-- 出库车辆信息List -->
+	<select id="getScreen2List" parameterType="java.util.Map" resultType="Screen2Entity">
+		select
+		  exm.PlateNumber as plateNumber                  -- 车牌号码
+		  , mai.MaterielName as materielName              -- 产品名称
+		  , mai.MaterielModel as materielModel            -- 产品规格
+		from
+		  exportmeasure as exm 
+		  left join materielinfo as mai 
+		    on exm.ProductID = mai.Id 
+		    and mai.IsDel = 0 
+		where
+		  exm.IsDel = 0 
+		  and exm.ValidFlag = 1 
+		  and DATE_FORMAT(now(), '%Y-%m-%d') = DATE_FORMAT(exm.CreaterDate, '%Y-%m-%d') 
+		  and exm.GrossWeight is null
+		order by
+  		  exm.CreaterDate desc
+	</select>
+	
+	<!-- echar -->
+	<select id="getEchar" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  sum(case month (CreaterDate) when 1 then 1 else 0 end) as month1
+		  , sum(case month (CreaterDate) when 2 then 1 else 0 end) as month2
+		  , sum(case month (CreaterDate) when 3 then 1 else 0 end) as month3
+		  , sum(case month (CreaterDate) when 4 then 1 else 0 end) as month4
+		  , sum(case month (CreaterDate) when 5 then 1 else 0 end) as month5
+		  , sum(case month (CreaterDate) when 6 then 1 else 0 end) as month6
+		  , sum(case month (CreaterDate) when 7 then 1 else 0 end) as month7
+		  , sum(case month (CreaterDate) when 8 then 1 else 0 end) as month8
+		  , sum(case month (CreaterDate) when 9 then 1 else 0 end) as month9
+		  , sum(case month (CreaterDate) when 10 then 1 else 0 end) as month10
+		  , sum(case month (CreaterDate) when 11 then 1 else 0 end) as month11
+		  , sum(case month (CreaterDate) when 12 then 1 else 0 end) as month12 
+		from
+		  exportmeasure 
+		where
+		  IsDel = 0 
+		  and ValidFlag = 1 
+		  and YEAR (now()) = YEAR (CreaterDate)
+	</select>
+</mapper>

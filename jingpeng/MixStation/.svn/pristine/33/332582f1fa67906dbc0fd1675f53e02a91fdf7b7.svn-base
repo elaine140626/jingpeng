@@ -1,0 +1,66 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.blindSample.model.TestSetDetailed;
+import com.blindSample.model.TestUser_Info;
+import com.jingpeng.model.AsphaltGrad_DataAnalysis;
+import com.jingpeng.model.AsphaltProp_DataAnalysis;
+import com.jingpeng.model.Asphalt_ProductionDTO;
+import com.jingpeng.model.Core_User_Info;
+import com.jingpeng.model.User_Info;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+
+@Repository
+public class TestUserInfoDao extends KDDaoSupport{
+	private final static String NAMESPACE = "testInfo";
+
+	public List<Map<String, Object>> getTestRoomName(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getTestRoomName", map);
+	}
+	
+	public List<Map<String, Object>> getTestUserName(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getTestUserName", map);
+	}
+	
+	public int addTestName(TestUser_Info testUser_Info) throws DataAccessException {
+		this.insert(NAMESPACE+".addTestName", testUser_Info);
+		return testUser_Info.getId();
+	}
+	
+	public int addTestRoot(Map<String, Object> map) throws DataAccessException {
+		return this.insert(NAMESPACE+".addTestRoot", map);
+	}
+	
+	public List<TestUser_Info> getUserLogin(TestUser_Info testUser_Info) throws DataAccessException {
+		return this.select(NAMESPACE+".getUserLogin", testUser_Info);
+	}
+	
+	public List<Map<String, Object>> getUserInformation(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getUserInformation", map);
+	}
+	
+	public int testUserdel(TestUser_Info testUser_Info) throws DataAccessException {
+		return this.update(NAMESPACE+".testUserdel", testUser_Info);
+	}
+	
+	public List<Map<String, Object>> getTestNameUpdate(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getTestNameUpdate", map);
+	}
+	
+	public int updateTestUser(TestUser_Info testUser_Info) throws DataAccessException {
+		return this.update(NAMESPACE+".updateTestUser", testUser_Info);
+	}
+	
+	public int deleteUserSubtable(TestSetDetailed testSetDetailed) throws DataAccessException {
+		return this.update(NAMESPACE+".deleteUserSubtable", testSetDetailed);
+	}
+}

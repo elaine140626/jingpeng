@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<!--合同管理页面-->
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<title>瑞德公路管理系统</title>
+		<script type="text/javascript">
+			/** 新增   **/
+
+			/** ----------------leftMenu zTree部分开始----------------  **/
+			var zTree;
+			var setting = {
+				view: {
+					dblClickExpand: false,
+					showLine: true,
+					selectedMulti: false,
+					expandSpeed: ($.browser.msie && parseInt($.browser.version) <= 6) ? "" : "fast"
+				},
+				data: {
+					key: {
+						name: "weiduName"
+					},
+					simpleData: {
+						enable: true,
+						idKey: "weiduID",
+						pIdKey: "parentID",
+						rootPId: ""
+					}
+				},
+				callback: {
+					//					beforeClick: beforeClick,
+					//					onClick: onClick
+				}
+			};
+
+			var zNodes = [{
+				"checked": false,
+				"crospID": 0,
+				"delFlag": 1,
+				"parentID": 5,
+				"weiduCode": "KANGJUXINCHENG",
+				"weiduGrade": 1,
+				"weiduID": 6,
+				"weiduName": "沈阳拌合站",
+				"weiduOrder": 1,
+				"weiduType": "FANGYUANGUANLI"
+			}, {
+				"checked": false,
+				"crospID": 0,
+				"delFlag": 1,
+				"parentID": 6,
+				"weiduCode": "RUIJINGHEPAN23HAOLOU",
+				"weiduGrade": 2,
+				"weiduID": 10,
+				"weiduName": "销售订单1",
+				"weiduOrder": 6,
+				"weiduType": "FANGYUANGUANLI"
+			}, {
+				"checked": false,
+				"crospID": 0,
+				"delFlag": 1,
+				"parentID": 5,
+				"weiduCode": "RUIJINGHEPAN24HAOLOU",
+				"weiduGrade": 2,
+				"weiduID": 11,
+				"weiduName": "鞍山市处",
+				"weiduOrder": 7,
+				"weiduType": "FANGYUANGUANLI"
+			}, {
+				"checked": false,
+				"crospID": 0,
+				"delFlag": 1,
+				"parentID": 11,
+				"weiduCode": "RUIJINGHEPAN24HAOLOU",
+				"weiduGrade": 2,
+				"weiduID": 15,
+				"weiduName": "销售订单2",
+				"weiduOrder": 7,
+				"weiduType": "FANGYUANGUANLI"
+			}];
+			$(document).ready(function() {
+				$.fn.zTree.init($("#tree"), setting, zNodes);
+				zTree = $.fn.zTree.getZTreeObj("tree");
+				// 默认展开所有节点
+				zTree.expandAll(true);
+			});
+			$(document).ready(function() {
+				$("#addBtn").fancybox({
+					'href': 'inbound_edit.html',
+					'width': 733,
+					'height': 340,
+					'type': 'iframe',
+					'hideOnOverlayClick': false,
+					'showCloseButton': false,
+					'onClosed': function() {
+						window.location.href = 'inbound.html';
+					}
+				});
+				//点击复制
+				$('#copy').fancybox({
+					onStart: function() {
+						var val = $('input[type=radio]:checked').val();
+						if(!val) {
+							alert('请选择要复制的来料加工信息！');
+							return false;
+						}
+					},
+					'href': 'inbound_edit.html',
+					'width': 733,
+					'height': 340,
+					'type': 'iframe',
+					'hideOnOverlayClick': false,
+					'showCloseButton': false,
+					'onClosed': function() {
+						window.location.href = 'inbound.html';
+					}
+				});
+				$('.return').fancybox({
+					'href': '../sales/goods_returned_note.html',
+					'width': 800,
+					'height': 335,
+					'type': 'iframe',
+					'hideOnOverlayClick': false,
+					'showCloseButton': false,
+					'onClosed': function() {
+						window.location.href = '../dispatch/inbound.html';
+					}
+				})
+				$('.change').fancybox({
+					'href': '../sales/half_car_dial.html',
+					'width': 800,
+					'height': 385,
+					'type': 'iframe',
+					'hideOnOverlayClick': false,
+					'showCloseButton': false,
+					'onClosed': function() {
+						window.location.href = '../dispatch/inbound.html';
+					}
+				})
+				$('.shouqi').click(function() {
+					$('#sider').css({
+						width: '20px',
+						border: 'none'
+					})
+					$('#box_top').hide();
+					$('#box_center').hide();
+					$('#tree').hide();
+					$('#main').css({
+						left: '20px',
+					})
+					$('.zhankai').show();
+					$('.shouqi').hide();
+				})
+				$('.zhankai').click(function() {
+					$('#sider').css({
+						width: '260px',
+						border: '1px solid #DEDFDF'
+					})
+					$('#box_top').show();
+					$('#box_center').show();
+					$('#tree').show();
+					$('#main').css({
+						left: '265px',
+					})
+					$('.zhankai').hide();
+					$('.shouqi').show();
+				})
+			});
+		</script>
+		<style type="text/css">
+			#sider {
+				position: absolute;
+				top: 70px;
+				left: 0px;
+				bottom: 0px;
+				width: 260px;
+				border: 1px solid #DEDFDF;
+			}
+			
+			.dataTables_scrollBody{
+				height: 600px
+			}
+			
+			#main {
+				position: absolute;
+				top: 70px;
+				left: 270px;
+				right: 10px;
+				bottom: 0px;
+				border: 1px solid #DEDFDF;
+				overflow: auto;
+			}
+		</style>
+	</head>
+
+	<body class="container-fluid">
+		<div class="row">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;调度管理&nbsp;>&nbsp;<span style="color:#1A5CC6">来料加工</span></span>
+			</div>
+			<div id="sider">
+				<a class="shouqi" href="javascript:;" title="收起菜单"></a>
+				<a class="zhankai" href="javascript:;" title="展开菜单"></a>
+				<div id="box_top" class="">销售订单</div>
+				<div id="box_center" style="padding-left: 10px;">
+					关键字：<input type="text" class="ui_input_txt02 " />
+				</div>
+				<ul id="tree" class="ztree">
+
+				</ul>
+			</div>
+
+			<div id="main">
+				<div class="ui_tb">
+					<div id="box_border">
+						<div id="box_top">来料加工</div>
+						<div id="box_center" style="padding-left: 20px;overflow: hidden;">
+							关键字：&nbsp;&nbsp;<input type="text" id="fyZldz" class="ui_input_txt02" /><input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" /> 
+							<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="导出" class="ui_input_btnexport" id="export" />
+							<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="复制" class="ui_input_btncopy" id="copy" />
+							<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="新增来料加工" class="ui_input_btnadd" id="addBtn" />
+						</div>
+						<div style="overflow-x: auto;">
+							<table class="table table-striped" style="width: 1980px;" cellspacing="0" cellpadding="0" align="center" border="0">
+								<tr>
+									<th class="xuhao">序号</th>
+									<th class="hetongbianhao">销售合同编号</th>
+									<th class="kehumingcheng">客户名称</th>
+									<th class="kehumingcheng">客户别称</th>
+									<th class="xinghao">产品名称-型号</th>
+									<th class="dianhua">车牌号码</th>
+									<th class="xiaoshouyuan">送货人</th>
+									<th class="dianhua">送货人联系方式</th>
+									<th class="xiaoshouyuan">车主</th>
+									<th class="dianhua">车主联系方式</th>
+									<th class="beizhu">备注</th>
+
+								</tr>
+								<tr>
+									<td class="xuhao"><input name="radio" type="radio" value="1" />1</td>
+									<td class="hetongbianhao">201808200001</td>
+									<td class="kehumingcheng">沈阳拌合站</td>
+									<td class="kehumingcheng">沈阳站</td>
+									<td class="xinghao">沥青/110</td>
+									<td class="dianhua">辽C-11111</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="beizhu">无</td>
+								</tr>
+								<tr>
+									<td class="xuhao"><input name="radio" type="radio" value="2" />2</td>
+									<td class="hetongbianhao">201808200001</td>
+									<td class="kehumingcheng">沈阳拌合站</td>
+									<td class="kehumingcheng">沈阳站</td>
+									<td class="xinghao">沥青/110</td>
+									<td class="dianhua">辽C-11111</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="beizhu">无</td>
+								</tr>
+								<tr>
+									<td class="xuhao"><input name="radio" type="radio" value="3" />3</td>
+									<td class="hetongbianhao">201808200001</td>
+									<td class="kehumingcheng">沈阳拌合站</td>
+									<td class="kehumingcheng">沈阳站</td>
+									<td class="xinghao">沥青/110</td>
+									<td class="dianhua">辽C-11111</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="beizhu">无</td>
+								</tr>
+								<tr>
+									<td class="xuhao"><input name="radio" type="radio" value="4" />4</td>
+									<td class="hetongbianhao">201808200001</td>
+									<td class="kehumingcheng">沈阳拌合站</td>
+									<td class="kehumingcheng">沈阳站</td>
+									<td class="xinghao">沥青/110</td>
+									<td class="dianhua">辽C-11111</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="xiaoshouyuan">XXX</td>
+									<td class="dianhua">14733333333</td>
+									<td class="beizhu">无</td>
+								</tr>
+
+							</table>
+						</div>
+
+						<div class="ui_tb_h30" style="padding-left: 30px;">
+							<div class="ui_flt" style="height: 30px; line-height: 30px;">
+								共有
+								<span class="ui_txt_bold04">90</span> 条记录，当前第
+								<span class="ui_txt_bold04">1/9</span> 页
+							</div>
+							<div class="ui_frt">
+								<!--    如果是第一页，则只显示下一页、尾页 -->
+
+								<input type="button" value="首页" class="ui_input_btn01" />
+								<input type="button" value="上一页" class="ui_input_btn01" />
+								<input type="button" value="下一页" class="ui_input_btn01" onclick="" />
+								<input type="button" value="尾页" class="ui_input_btn01" onclick="" />
+
+								<!--     如果是最后一页，则只显示首页、上一页 -->
+
+								转到第<input type="text" id="jumpNumTxt" class="ui_input_txt01" />页
+								<input type="button" class="ui_input_btn01" value="跳转" onclick="" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+	</body>
+
+</html>

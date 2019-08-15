@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="../../js/html5shiv.js"></script>
+	<script type="text/javascript" src="../../js/respond.min.js"></script>
+	
+	<![endif]-->
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	
+	<!--[if IE 6]>
+	<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<title>空白页</title>
+	</head>
+	<body>
+	<div class="pd-20">
+	  <form class="form form-horizontal" id="form1" style="margin-top:-20px"  method="post">
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>中心桩号及起讫桩号</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="pileNumber" name="pileNumber" maxlength="15">
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>被交叉路名称</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="crossRoadName" name="crossRoadName" maxlength="15">
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>交叉形式</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="acrossForm" name="acrossForm" maxlength="10">
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>交角（°）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="corner" name="corner" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+				  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>路面宽度 (m)</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="roadWidth" name="roadWidth" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  					<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>改建长度(m)</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="rebuildLength" name="rebuildLength" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  		  <div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>备注</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="remarks" name="remarks" maxlength="50">
+				</div>
+			</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">被交叉道路宽度</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>左</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="widthLeft" name="widthLeft" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>右</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="widthRight" name="widthRight" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">转弯半径</div>
+	  	<div class="row cl">
+		<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>R1 （m）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="cornerRadiusR1" name="cornerRadiusR1" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>R2 （m）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="cornerRadiusR2" name="cornerRadiusR2" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="cl pd-5 bg-1 bk-gray mt-20">工程数量</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>4cm细粒式沥青混凝土 （m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="concrete" name="concrete" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>4cm改性沥青砼（m2）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="modifiedAsphalt" name="modifiedAsphalt" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  					<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>6cm普通沥青砼（m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="ordinaryAsphalt" name="ordinaryAsphalt" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>粘层油（m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="stickyLayer" name="stickyLayer" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>透层油（m2）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="permeableLayer" name="permeableLayer" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>封层油（m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="seal" name="seal" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>20cm水泥稳定砂砾（m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="cementGravel20cm" name="cementGravel20cm" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>15cm天然砂砾  （m2）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="naturalGravel15cm" name="naturalGravel15cm" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>20cm天然砂砾  （m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="naturalGravel20cm" name="naturalGravel20cm" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>挖方 （m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="excavation" name="excavation" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>填方 （m2）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="fill" name="fill" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row cl">
+	  		<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-3">
+	  			<button id="saveButton" onclick="save();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+	  			<button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+	  		</div>
+	  	</div>
+	  </form>
+	</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script> 
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script> 
+	<script type="text/javascript" src="../../js/systemJs/projectSchedule/crossRoadbedNumber_add.js"></script>
+	</body>
+</html>

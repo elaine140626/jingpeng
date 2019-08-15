@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.cement.Cement_ProductionDetailedDao">
+	
+<select id="getCement_ProductionDetaileds" resultType="Cement_ProductionDetailed" parameterType="Cement_ProductionDetailed"> 
+		SELECT
+		vm.Material_Name + '-' + vm.Material_Model AS str_materialInfo,
+		cd.Id i_id,
+		cd.Materials_Warehouse Materials_Warehouse,
+		cd.Materials_ID i_materials_Id,
+		cd.Cons_Prop_Weight d_cons_Prop_Weight,
+		cd.Collection_Weight d_collection_Weight,
+		cd.Actual_Proportion d_actual_Proportion,
+		cd.Actual_Deviation d_actual_Deviation,
+		cd.Upload i_upload
+	FROM
+		Cement_ProductionDetailed cd
+	LEFT JOIN V_MaterialInfo vm ON vm.Id = cd.Materials_ID
+	WHERE
+		cd.Cemment_ID = #{i_cemment_Id}
+</select>
+</mapper>

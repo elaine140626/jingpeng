@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.statisticsForms.dao.DangerousBridgeDao">
+	<!-- 险桥List取得 -->
+	<select id="getDangerousBridgeList" parameterType="java.util.Map" resultType="com.curing.statisticsForms.model.DangerousBridgeEntity">
+		select
+		  ci.Id as CityId                                 -- 市id
+		  , ci.CityName                                   -- 市名字
+		  , ifnull(sum(pis.EngineeringAmount), 0) as EngineeringAmount -- 桥梁工程计划量（m）
+		  , ifnull(sum(pis.EngineeringCount), 0) as EngineeringCount -- 桥梁工程计划量（座）
+		  , ifnull(sum(db.ImplementM), 0) as ImplementM   -- 今年实施量（m)
+		  , ifnull(sum(db.ImplementSeat), 0) as ImplementSeat -- 今年实施量（座)
+		  , ifnull(sum(db.LeadM), 0) as LeadM             -- 超前完成（m)
+		  , ifnull(sum(db.LeadSeat), 0) as LeadSeat       -- 超前完成（座)
+		  , sum( 
+		    case 
+		      when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		      then pis.EngineeringCount 
+		      else 0 
+		      end
+		  ) 
+		  , 0 as StartNumber                              -- 桥梁工程开工数目（座）
+		  , case 
+		    when sum(pis.EngineeringCount) != 0 
+		    then sum( 
+		      case 
+		        when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		        then pis.EngineeringCount 
+		        else 0 
+		        end
+		    ) / sum(pis.EngineeringCount) * 100 
+		    else 0 
+		    end as StartRate                              -- 桥梁工程开工率（%）
+		  , ifnull(sum(pis.InvestmentProvince), 0) as InvestmentProvince -- 桥梁工程省补总投资（万元）
+		  , ifnull(sum(db.FinishInvest), 0) as FinishInvest -- 完成投资/万元
+		  , case 
+		    when sum(pis.InvestmentProvince) != 0 
+		    then ifnull(sum(db.FinishInvest), 0) / ifnull(sum(pis.InvestmentProvince), 0) * 100 
+		    else 0 
+		    end as TunnelSchedule                         -- 桥梁工程工程进度（%）
+		  , db.ProjectProgress                            -- 项目进展情况
+		from
+		  CityInfo as ci                                  -- 市信息表
+		  left join CountyInfo as co                      -- 县信息表
+		    on ci.Id = co.CityId 
+		    and co.IsDel = 0 
+		  left join EntryName as en                       -- 项目信息表
+		    on co.Id = en.CityId 
+		    and en.IsDel = 0 
+		  left join ProjectInfoSummary as pis             -- 工程信息
+		    on en.Id = pis.ProjectId 
+		    and pis.IsDel = 0 
+		    and pis.Engineering in ('2')                  -- 桥梁工程
+		  left join DangerousBridge as db                 -- 统计报表（险桥）
+		    on ci.Id = db.CityId 
+		    and db.IsDel = 0 
+		where
+		  ci.IsDel = 0                                    
+		  <if test="CityName != null and CityName != '' ">                                   
+		  and ci.CityName like concat('%', #{CityName}, '%')
+		  </if>
+		group by
+		  ci.Id
+		  , ci.CityName
+		  , db.ProjectProgress 
+		order by
+		  ci.Id
+	</select>
+	
+	<!-- 险桥合计 -->
+	<select id="getDangerousBridgeSum" parameterType="java.util.Map" resultType="com.curing.statisticsForms.model.DangerousBridgeSum">
+		select
+		  ifnull(sum(pis.EngineeringAmount), 0) as EngineeringAmountSum -- 桥梁工程计划量（m）
+		  , ifnull(sum(pis.EngineeringCount), 0) as EngineeringCountSum -- 桥梁工程计划量（座）
+		  , ifnull(sum(db.ImplementM), 0) as ImplementMSum -- 今年实施量（m)
+		  , ifnull(sum(db.ImplementSeat), 0) as ImplementSeatSum -- 今年实施量（座)
+		  , ifnull(sum(db.LeadM), 0) as LeadMSum          -- 超前完成（m)
+		  , ifnull(sum(db.LeadSeat), 0) as LeadSeatSum    -- 超前完成（座)
+		  , sum( 
+		    case 
+		      when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		      then pis.EngineeringCount 
+		      else 0 
+		      end
+		  ) as StartNumberSum                             -- 桥梁工程开工数目（座）
+		  , case 
+		    when sum(pis.EngineeringCount) != 0 
+		    then sum( 
+		      case 
+		        when DATE_FORMAT(pis.StartDate, '%Y-%m-%d') &lt;= DATE_FORMAT(now(), '%Y-%m-%d') 
+		        then pis.EngineeringCount 
+		        else 0 
+		        end
+		    ) / sum(pis.EngineeringCount) * 100 
+		    else 0 
+		    end as StartRateSum                           -- 桥梁工程开工率（%）
+		  , ifnull(sum(pis.InvestmentProvince), 0) as InvestmentProvinceSum -- 桥梁工程省补总投资（万元）
+		  , ifnull(sum(db.FinishInvest), 0) as FinishInvestSum -- 完成投资/万元
+		  , case 
+		    when sum(pis.InvestmentProvince) != 0 
+		    then ifnull(sum(db.FinishInvest), 0) / ifnull(sum(pis.InvestmentProvince), 0) * 100 
+		    else 0 
+		    end as TunnelScheduleSum                      -- 桥梁工程工程进度（%）
+		from
+		  CityInfo as ci                                  -- 市信息表
+		  left join CountyInfo as co                      -- 县信息表
+		    on ci.Id = co.CityId 
+		    and co.IsDel = 0 
+		  left join EntryName as en                       -- 项目信息表
+		    on co.Id = en.CityId 
+		    and en.IsDel = 0 
+		  left join ProjectInfoSummary as pis             -- 工程信息
+		    on en.Id = pis.ProjectId 
+		    and pis.IsDel = 0 
+		    and pis.Engineering in ('2')                  -- 桥梁工程
+		  left join DangerousBridge as db                 -- 统计报表（险桥）
+		    on ci.Id = db.CityId 
+		    and db.IsDel = 0 
+		where
+		  ci.IsDel = 0                                    
+		  <if test="CityName != null and CityName != '' ">                                   
+		  and ci.CityName like concat('%', #{CityName}, '%')
+		  </if>	  
+	</select>
+	
+	<!-- 险桥 单条取得 -->
+	<select id="getDangerousBridgeByCityId" parameterType="java.util.Map" resultType="com.curing.statisticsForms.model.DangerousBridge">
+		SELECT
+		  Id
+		  , CityId                                        -- 市id
+		  , ImplementM                                    -- 今年实施量（m）
+		  , ImplementSeat                                 -- 今年实施量（座）
+		  , LeadM                                         -- 超前完成（m）
+		  , LeadSeat                                      -- 超前完成（座）
+		  , FinishInvest                                  -- 完成投资（万元）
+		  , ProjectProgress                               -- 项目进展情况
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		  , Reviser
+		  , ReviserDate 
+		FROM
+		  DangerousBridge 
+		WHERE
+		  IsDel = 0
+		  and CityId = #{CityId}	
+	</select>
+	
+	<!-- 添加险桥 -->
+	<insert id="insertDangerousBridge" parameterType="com.curing.statisticsForms.model.DangerousBridge">
+		INSERT 
+		INTO DangerousBridge( 
+		  Id
+		  , CityId
+		  , ImplementM
+		  , ImplementSeat
+		  , LeadM
+		  , LeadSeat	
+		  , FinishInvest
+		  , ProjectProgress
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  , #{CityId}
+		  , #{ImplementM}
+		  , #{ImplementSeat}
+		  , #{LeadM}
+		  , #{LeadSeat}
+		  , #{FinishInvest}
+		  , #{ProjectProgress}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 删除险桥 -->
+	<update id="deleteDangerousBridge" parameterType="com.curing.statisticsForms.model.DangerousBridge">
+		UPDATE DangerousBridge
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>	
+</mapper>

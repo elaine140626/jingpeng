@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.cement.CementTheoryProportionDao">
+	<!-- 查询所有理论配比信息 -->
+	<select id="getAllCementTheoryProportion" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementTheoryProportion">
+		SELECT
+			c.Id                 AS id,-- 自增长ID
+			c.Org_ID             AS orgId,-- 组织机构ID
+			v.Material_Model     AS materialModel,-- 产品型号
+			v.Material_Name      AS materialName,-- 产品名称
+			c.Prop_Code          AS propCode,-- 配比编码
+			c.Product_ID         AS productId,-- 产品Id
+			c.Design_Strength    AS designStrength,-- 设计强度（单位：MPa）
+			c.Water_Cement_Ratio AS waterCementRatio,-- 水灰比
+			c.Sand_Ratio         AS sandRatio,-- 砂率
+			c.Slump_Low          AS slumpLow,-- 坍落度1（单位：mm）
+			c.Slump_High         AS slumpHigh,-- 坍落度2
+			c.Remarks            AS remarks,-- 备注
+			c.Operator           AS operator,-- 创建人
+			CONVERT(varchar(20),c.Create_Date,120)        AS createDate,-- 创建日期
+			c.Modifier           AS modifier,-- 修改人
+			c.Modify_Date        AS modifyDate,-- 修改日期
+			CAST(c.Slump_Low AS VARCHAR) + '-' + CAST(c.Slump_High AS VARCHAR) AS lowAndHight -- 坍落度
+		FROM
+			Cement_TheoryProportion c -- 水泥理论配比表
+			LEFT JOIN V_MaterialInfo v -- 材料信息系视图
+			ON v.Id = c.Product_ID
+		WHERE
+			1 = 1
+			AND c.Valid_Flag = 1
+			<if test="propCode != null and propCode != ''">
+				AND c.Prop_Code like '%${propCode}%'
+			</if>
+			<if test="materialName != null and materialName != ''">
+				AND v.Material_Name like '%${materialName}%'
+			</if>
+			<if test="materialModel != null and materialModel != ''">
+				AND v.Material_Model like '%${materialModel}%'
+			</if>
+			<if test="orgId != null and orgId != 0">
+				AND c.Org_ID = #{orgId}
+			</if>
+		ORDER BY
+			c.Id DESC
+	</select>
+	<!-- 获取产品名称 -->
+	<select id="getMaterialNameList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT DISTINCT
+			v.Material_Name AS mateName -- 物料名称
+		FROM
+			V_MaterialInfo v -- 材料信息（视图）
+		WHERE
+			v.Material_Type = #{materialType}
+			AND v.Material_Mold = #{materialMold}
+			AND v.org_id = #{orgId}
+			AND v.Valid_Flag = 1
+	</select>
+	<!-- 获取产品型号 -->
+	<select id="getMaterialModelList" parameterType="java.util.Map" resultType="com.mixingStation.model.materialInfo.MaterialInfo">
+		SELECT
+			a.Id             AS id,-- 自增长Id       
+			a.Material_Model AS mateModel -- 物料型号
+		FROM
+			V_MaterialInfo a -- 材料信息（视图）
+		WHERE
+			a.Material_Type = #{materialType}
+			AND a.Material_Mold = #{materialMold}
+			AND a.Material_Name = #{materialName}
+			AND a.Valid_Flag = 1
+			<if test="orgId != null and orgId != 0">
+				AND org_id = #{orgId}
+			</if>
+	</select>
+	<!-- 理论配比信息表插入 -->
+	<insert id="addCementTheoryProportion" parameterType="com.mixingStation.model.cement.CementTheoryProportion">
+		INSERT INTO Cement_TheoryProportion (
+			Org_ID,
+			Prop_Code,
+			Product_ID,
+			Design_Strength,
+			Water_Cement_Ratio,
+			Sand_Ratio,
+			Slump_Low,
+			Slump_High,
+			Remarks,
+			Operator,
+			Create_Date,
+			Valid_Flag
+		)
+		VALUES
+			(
+				#{orgId},
+				#{propCode},
+				#{productId},
+				#{designStrength},
+				#{waterCementRatio},
+				#{sandRatio},
+				#{slumpLow},
+				#{slumpHigh},
+				#{remarks},
+				#{operator},
+				CONVERT (VARCHAR(100), GETDATE(), 20),
+				1
+			)
+	</insert>
+	<!-- 取得刚插入理论配比信息表id -->
+	<select id="getCementTheoryProportionInfoId" parameterType="String" resultType="int">
+		SELECT
+			MAX(Id) AS id
+		FROM
+			Cement_TheoryProportion -- 水泥理论配比表
+		WHERE
+			Valid_Flag = 1
+			AND Operator = #{operator}
+	</select>
+	<!-- 添加理论配比明细表插入 -->
+	<insert id="addCementTheoPropDetailed" parameterType="com.mixingStation.model.cement.CementTheoPropDetailed">
+		INSERT INTO Cement_TheoPropDetailed (
+			TheoProp_ID,
+			Materials_ID,
+			Weight,
+			Material_Origin,
+			Manufacturer,
+			Valid_Flag
+		)
+		VALUES
+			(
+				#{theoPropId},
+				#{materialsId},
+				#{weight},
+				#{materialOrigin},
+				#{manufacturer},
+				1
+			)
+	</insert>
+	<!-- 通过id查询理论配比信息 -->
+	<select id="getCementTheoryProportionById" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementTheoryProportion">
+		SELECT
+			c.Id                 AS id,-- 自增长ID
+			c.Org_ID             AS orgId,-- 组织机构ID
+			v.Material_Model     AS materialModel,-- 产品型号
+			v.Material_Name      AS materialName,-- 产品名称
+			c.Prop_Code          AS propCode,-- 配比编码
+			c.Product_ID         AS productId,-- 产品Id
+			c.Design_Strength    AS designStrength,-- 设计强度（单位：MPa）
+			c.Water_Cement_Ratio AS waterCementRatio,-- 水灰比
+			c.Sand_Ratio         AS sandRatio,-- 砂率
+			c.Slump_Low          AS slumpLow,-- 坍落度1（单位：mm）
+			c.Slump_High         AS slumpHigh,-- 坍落度2
+			c.Remarks            AS remarks,-- 备注
+			c.Operator           AS operator,-- 创建人
+			c.Create_Date        AS createDate,-- 创建日期
+			c.Modifier           AS modifier,-- 修改人
+			c.Modify_Date        AS modifyDate,-- 修改日期
+			CAST(c.Slump_Low AS VARCHAR) + '-' + CAST(c.Slump_High AS VARCHAR) AS lowAndHight -- 坍落度
+		FROM
+			Cement_TheoryProportion c -- 水泥理论配比表
+			LEFT JOIN V_MaterialInfo v -- 材料信息系视图
+			ON v.Id = c.Product_ID
+		WHERE
+			1 = 1
+			AND c.Valid_Flag = 1
+			AND c.Id = #{id}
+	</select>
+	<!-- 通过理论配比信息id查询明细 -->
+	<select id="getCementTheoPropDetailedById" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementTheoPropDetailed">
+		SELECT
+			c.Id               AS id,-- 自增长ID
+			c.TheoProp_ID      AS theoPropId,-- 理论配比ID
+			c.Materials_ID     AS materialsId,-- 材料Id
+			c.Weight           AS weight,-- 材料用量
+			c.Material_Origin  AS materialOrigin,-- 材料产地
+			c.Manufacturer     AS manufacturer,-- 生产厂家
+			v.Material_Model   AS materialModel,-- 产品型号
+			v.Material_Name    AS materialName-- 产品名称
+		FROM
+			Cement_TheoPropDetailed c -- 水泥理论配比明细表
+			LEFT JOIN V_MaterialInfo v -- 材料信息系视图
+			ON c.Materials_ID = v.Id
+		WHERE
+			c.Valid_Flag = 1
+			AND c.TheoProp_ID = #{id}
+	</select>
+	<!-- 修改理论配比表 -->
+	<update id="updateCementTheoryProportion" parameterType="com.mixingStation.model.cement.CementTheoryProportion">
+		UPDATE Cement_TheoryProportion
+			SET 
+				 Prop_Code = #{propCode},
+				 Product_ID = #{productId},
+				 Design_Strength = #{designStrength},
+				 Water_Cement_Ratio = #{waterCementRatio},
+				 Sand_Ratio = #{sandRatio},
+				 Slump_Low = #{slumpLow},
+				 Slump_High = #{slumpHigh},
+				 Remarks = #{remarks},
+				 Modifier = #{modifier},
+				 Modify_Date = CONVERT (VARCHAR(100), GETDATE(), 20),
+				 Valid_Flag = 1
+			WHERE
+				Id = #{id}
+	</update>
+	<!-- 明细表更新删除 -->
+	<delete id="deleteCementTheoPropDetailed" parameterType="String">
+		DELETE
+		FROM
+			Cement_TheoPropDetailed
+		WHERE
+			TheoProp_ID = #{id} 
+			AND Valid_Flag = 1
+	</delete>
+	<!-- 删除修改理论配比 -->
+	<update id="deleteCementTheoryProportionById" parameterType="java.util.Map">
+		UPDATE Cement_TheoryProportion
+			SET
+				Valid_Flag = 0
+		WHERE 
+				Id = #{id}
+	</update>
+	<!-- 删除修改理论配比明细 -->
+	<update id="deleteCementTheoPropDetailedById" parameterType="java.util.Map">
+		UPDATE Cement_TheoPropDetailed
+			SET
+				Valid_Flag = 0
+		WHERE 
+				TheoProp_ID = #{id}
+	</update>
+	<!-- 通过施工配比编号获取所有的物料id -->
+	<select id="getAllMaterials_id" parameterType="java.util.Map" resultType="java.util.Map">
+		select Materials_ID from Cement_ConsPropDetailed where ConsProp_ID = #{i_id}
+	</select>
+	<!-- 材料名称 -->
+	<select id="getYclList" parameterType="com.mixingStation.model.cement.CementConsPropDetailed" resultType="java.util.Map">
+		select distinct m.Material_Name 
+  		from Cement_ConsPropDetailed d left join 
+        V_MaterialInfo m on m.Id = d.Materials_ID 
+  		where d.ConsProp_ID = #{id}
+	</select>
+	
+	<!-- 材料类型 -->
+	<select id="getYclModelList" parameterType="java.util.Map" resultType="java.util.Map">
+		select distinct m.Material_Model,m.Material_Name,d.Materials_ID,d.ConsProp_ID 
+		from Cement_ConsPropDetailed d left join 
+		V_MaterialInfo m on m.Id = d.Materials_ID 
+		where d.ConsProp_ID =#{id} and m.Material_Name=#{Material_Name}
+	</select>
+</mapper>

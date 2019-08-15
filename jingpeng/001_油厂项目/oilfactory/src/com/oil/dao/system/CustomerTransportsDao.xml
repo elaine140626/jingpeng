@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.CustomerTransportsDao">
+	<!-- 获取客户信息数据 -->
+    <select id="getTransports_Tree" resultType="java.util.Map">
+		SELECT 
+		DISTINCT
+			pro.Province,
+			cus.CustomerCode,
+			cus.Id,
+			ci.ProvinceId
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cus.Id = cust.CustomerId
+		LEFT JOIN cityinfo AS ci ON cus.CityId = ci.Id
+		LEFT JOIN provinceinfo AS pro ON pro.Id = ci.ProvinceId
+		WHERE
+			cust.IsDel = 0
+		AND cus.IsDel = 0
+				AND ci.IsDel =0
+		AND pro.IsDel = 0
+		ORDER BY ci.ProvinceId desc
+	</select>
+	<!-- 添加客户止运地 -->
+	<insert id="addTransports" parameterType="Transports">
+		INSERT 
+		INTO customertransports( 
+		  `CustomerId`
+		  ,`StartAddress`
+		  , `Transports`
+		  , `CoordinateX`
+		  , `CoordinateY`
+		  , `Distance`
+		  , `Remarks`
+		  , `Creater`
+		  , `CreaterDate`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		    #{customerId}
+		  , #{StartAddress}
+		  , #{Transports}
+		  , #{CoordinateX}
+		  , #{CoordinateY}
+		  , #{Distance}
+		  , #{remarks}
+		  , #{creater}
+		  , now()
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!-- 添加客户止运地 -->
+	<insert id="addStartTransports" parameterType="Startaddress">
+		INSERT 
+		INTO startaddress( 
+		  `StartAddress`
+		  , `Deviation`
+		  , `Remarks`
+		  , `Creater`
+		  , `CreaterDate`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		   #{startAddress}
+		  , #{deviation}
+		  , #{remarks}
+		  , #{creater}
+		  , now()
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!--修改客户止运地 -->
+	<update id="updateTransports" parameterType="Transports">
+		update customertransports set
+		CustomerId = #{customerId},
+		StartAddress = #{StartAddress},
+		Transports = #{Transports},
+		CoordinateX	= #{CoordinateX},
+		CoordinateY = #{CoordinateY},
+		Distance =#{Distance},
+		Reviser = #{reviser},
+		ReviserDate = now(),
+		Remarks =#{remarks}
+		WHERE Id= #{id}
+	</update>
+	
+	<!--修改起运地 -->
+	<update id="updateStartTransports" parameterType="Startaddress">
+		update startaddress set
+		StartAddress = #{startAddress},
+		Deviation =#{deviation},
+		Reviser = #{reviser},
+		ReviserDate = now(),
+		Remarks =#{remarks}
+		WHERE Id= #{id}
+	</update>
+	
+	<!-- 查询全部客户止运地  -->
+	<select id="getTransports"  resultType="Transports" parameterType="java.util.Map">
+		SELECT
+			cust.Id,
+			cus.CustomerName,
+			cus.CustomerCode,
+			cust.StartAddress,
+			cust.Transports,
+			cust.Distance,
+			cust.Remarks,
+			cust.IsDel,
+			cus.IsDel as cIsDel
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cust.CustomerId = cus.Id
+		WHERE
+			cust.IsDel = 0
+		<if test="transports!=null and transports!=''">
+		    and cust.Transports = #{transports}              -- 根据计划批次查询
+		</if>
+		ORDER BY cust.Id DESC
+	</select>
+	
+	<!-- 查询全部起运地  -->
+	<select id="getStartTransports"  resultType="Startaddress">
+		SELECT
+			Id,
+			StartAddress,
+			Deviation,
+			Remarks,
+			IsDel,
+			Creater,
+			CreaterDate,
+			Reviser,
+			ReviserDate
+		FROM
+			startaddress
+		WHERE
+			IsDel = 0
+		<if test="id != null and id != ''">
+			and Id = #{id}
+		</if>
+		order by CreaterDate desc
+	</select>
+	
+	<!--删除客户止运地 -->
+	<update id="delTransports" parameterType="int">
+		update customertransports set 
+		IsDel = 1
+		WHERE Id= #{id}
+	</update>
+	
+	<!--删除起运地 -->
+	<update id="delStartTransports" parameterType="int">
+		update startaddress set 
+		IsDel = 1
+		WHERE Id= #{id}
+	</update>
+	
+	<!-- 根据客户名称模糊查询 -->
+	<select id="findCustomerinfoByName" parameterType="String" resultType="Transports">
+		SELECT
+			cust.Id,
+			cus.CustomerName,
+			cus.CustomerCode,
+			cust.StartAddress,
+			cust.Transports,
+			cust.Distance,
+			cust.Remarks,
+			cust.IsDel,
+			cus.IsDel as cIsDel
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cust.CustomerId = cus.Id
+		WHERE
+			cust.IsDel = 0		
+		<if test="customerName !=null  and customerName != '' ">
+		AND cus.CustomerName like '%${customerName}%'
+		</if>
+	</select>
+	
+	<!-- 根据起运地模糊查询 -->
+	<select id="findStartCustomerinfoByName" parameterType="String" resultType="Startaddress">
+		SELECT
+			Id,
+			StartAddress,
+			Deviation,
+			Remarks,
+			IsDel
+		FROM
+			startaddress 
+		WHERE
+			IsDel = 0		
+		<if test="customerName !=null  and customerName != '' ">
+		AND StartAddress like '%${customerName}%'
+		</if>
+		order by CreaterDate desc
+	</select>
+	
+	<!-- ztree点击查询 -->
+	<select id="findByNameAndId"  parameterType="String" resultType="Transports">
+		SELECT
+			cust.Id,
+			cus.CustomerName,
+			cus.CustomerCode,
+			cust.StartAddress,
+			cust.Transports,
+			cust.Distance,
+			cust.Remarks,
+			cust.IsDel,
+			cus.IsDel as cIsDel
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cust.CustomerId = cus.Id
+		LEFT JOIN cityinfo AS ci ON cus.CityId = ci.Id
+		LEFT JOIN provinceinfo AS pro ON pro.Id = ci.ProvinceId
+		WHERE
+			cust.IsDel = 0
+		<if test="pid != 'null'">
+			<if test="pid == '客户信息'">
+				AND pro.Province = #{id}
+			</if>
+			<if test="pid != '客户信息' ">
+				and cus.Id = #{id}
+				AND pro.Province =#{pid}
+			</if>
+		</if>
+	</select>
+	
+	<!-- 修改功能查询方法 -->
+	<select id="getTransportsById" parameterType="int"  resultType="Transports">
+		SELECT
+			cust.Id,
+			cust.CustomerId,
+			cus.CustomerName,
+			cust.StartAddress,
+			cust.Transports,
+			cust.CoordinateX,
+			cust.CoordinateY,
+			cust.Distance,
+			cust.Remarks,
+			cust.IsDel,
+			cus.IsDel as cIsDel
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cust.CustomerId = cus.Id
+		WHERE
+			cust.IsDel = 0	
+		AND 
+			cust.id = #{id}
+	</select>
+	
+	<!-- 修改功能查询方法 -->
+	<select id="getStartTransportsById" parameterType="int"  resultType="Startaddress">
+		SELECT
+			st.Id,
+			st.StartAddress,
+			st.Deviation,
+			st.Remarks,
+			st.IsDel,
+			st.Creater,
+			st.CreaterDate,
+			st.Reviser,
+			st.ReviserDate
+		FROM
+			startaddress AS st
+		LEFT JOIN storagemeasure AS s ON s.StartAddressId = st.Id
+		WHERE
+			s.IsDel = 0 
+		AND st.IsDel = 0	
+		AND st.id = #{id}
+	</select>
+	
+	<!-- 查询客户止运地没录入的客户信息数据 -->
+	<select id="getCustomerInfo"  resultType="Customerinfo">
+		<!-- 
+		客户名称需要约束时使用
+		select 
+		Id AS uuid,
+		Customername 
+		from customerinfo
+		where IsDel= 0
+		and id not in (select CustomerId from customertransports where IsDel = 0) 
+		-->
+		select 
+		Id AS uuid,
+		Customername,
+		CustomerCode
+ 		from Customerinfo 
+ 		where IsDel = 0
+ 		ORDER BY
+			uuid DESC;
+	</select>
+	
+	<!-- 根据客户Id查询运输信息 -->
+	<select id="getTrchangeInfo" parameterType="int" resultType="java.util.Map">
+		SELECT 
+			Id,
+			customerId,
+			startAddress,
+			transports,
+			distance 
+		from 
+			customertransports 
+		where 
+			customerId = #{id}
+			and IsDel = 0
+	</select>
+	
+	<!-- 查询全部回访形式信息数据 -->
+	<select id="getVisitContent"  resultType="Datadictionary">
+		select * from Datadictionary where type = '5'
+	</select>
+	
+	<!-- 通过Id查询回访信息数据 -->
+	<select id="getVisitContentByCode" parameterType="String"  resultType="Datadictionary">
+		select * from Datadictionary where type = '5' AND code=#{code}
+	</select>
+	
+	<!-- 获取客户信息数据 -->
+    <select id="getClient_back_List" resultType="java.util.Map">
+		SELECT 
+		DISTINCT
+			p.Province,
+			c.CustomerName,
+			c.Id,
+			ci.ProvinceId
+		FROM
+			visitinfo v
+			LEFT JOIN customerinfo c ON v.CustomerId = c.Id
+			LEFT JOIN cityinfo ci ON c.CityId = ci.Id
+			LEFT JOIN provinceinfo p ON ci.ProvinceId = p.Id
+		WHERE
+			c.IsDel = 0
+		AND 
+			v.IsDel = 0
+		and
+			v.IsVisit = 2
+		ORDER BY
+			ci.ProvinceId
+	</select>
+	
+    <!-- 查询全部销售员信息数据   -->
+	<select id="getUserInfoByCode"  resultType="Userinfo">
+			select * from UserInfo where RoleCode = 1
+	</select>
+	
+	<!-- 通过id获取客户信息数据 -->
+	<select id="getCustomerinfoById" parameterType="int"  resultType="Customerinfo">
+		select * from Customerinfo where  Id=#{id}
+	</select>
+	
+	<!-- 删除校验信息查询 -->
+	<select id="getAllTransports" parameterType="java.util.Map" resultType="java.util.Map">
+		select * from salesorderdetailed where IsDel =0
+		<if test="transports != null and transports != ''">
+			and Transports = #{transports}
+		</if>
+	</select>
+</mapper>

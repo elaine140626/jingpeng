@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectMetering.dao.EngineeringSettlementDao">
+	<!-- 工程计量（工程价款结算帐单）List取得 -->
+<select id="getEngineeringSettlementList" parameterType="java.util.Map" resultType="com.curing.projectMetering.model.EngineeringSettlementEntity">
+	      SELECT
+		    es.Id                    -- id
+		  , es.ProjectId             -- 项目id
+		  , ve.ProjectName           -- 项目名称
+		  , dd.Content               -- 内容
+		  , dd.Code as RowNumber     -- 行次
+		  , es.CurrentAmount         -- 本期金额
+		  , es.YearAmount            -- 本年累计金额
+		  , es.StartAmount           -- 自开工累计金额
+		  , es.DailyYear             -- 年
+		  , es.DailyMonth            -- 月
+		  , es.Remarks               -- 备注
+		  , es.IsDel
+		  , es.Creater
+		  , es.CreaterDate
+		  , es.Reviser
+		  , es.ReviserDate 
+		FROM DataDictionary dd
+		LEFT JOIN EngineeringSettlement es
+		  ON dd.Code = es.RowNumber
+	<!-- 	  <if test="levels == 3"> -->
+	       and es.ProjectId = #{treeIds}                 -- 根据项目id查询
+	     <!--  </if> -->
+	     <if test="myYear != null and myYear != ''">
+	       and es.DailyYear = #{myYear}               -- 年
+	     </if>
+	     <if test="myMonth != null and myMonth != ''">
+	       and es.DailyMonth = #{myMonth}             -- 月
+	     </if>
+		  and es.IsDel = 0
+		LEFT JOIN V_EntryTree ve             -- 树形
+		  ON es.ProjectId = ve.pid 
+		where dd.Type= 'gcjl'
+		 <if test="id != null and id != ''">
+	       and es.Id = #{id}                             -- 根据id查询
+	     </if>
+	     <if test="levels == 2">
+	       and ve.couid = #{treeIds}                     -- 根据县id查询
+	     </if>
+	     <if test="levels == 1">
+	       and ve.ciid = #{treeIds}                      -- 根据市id查询
+	     </if>
+	     order by es.CreaterDate desc
+	</select>
+	<!-- 获取合计的值 -->
+	<select id="getEngineeringSettlementSum" parameterType="java.util.Map" resultType="com.curing.projectMetering.model.EngineeringSettlementSum">
+	    SELECT
+		    sum(es.CurrentAmount)            as CurrentAmountSum           -- 本期金额       
+		  , sum(es.YearAmount)               as YearAmountSum              -- 本年累计金额
+		  , sum(es.StartAmount)              as StartAmountSum             -- 自开工累计金额
+		FROM DataDictionary dd
+		LEFT JOIN EngineeringSettlement es
+		  ON dd.Code = es.RowNumber
+		<!--   <if test="levels == 3"> -->
+	      and es.ProjectId = #{treeIds}                 -- 根据项目id查询
+	     <!--  </if> -->
+		  and es.IsDel = 0
+		 <if test="myYear != null and myYear != ''">
+	      and es.DailyYear = #{myYear}               -- 年
+	     </if>
+	     <if test="myMonth != null and myMonth != ''">
+	      and es.DailyMonth = #{myMonth}             -- 月
+	     </if>
+		LEFT JOIN V_EntryTree ve             -- 树形
+		  ON es.ProjectId = ve.pid 
+		where dd.Type= 'gcjl'
+	    <if test="levels == 2">
+	      and ve.couid = #{treeIds}                     -- 根据县id查询
+	    </if>
+	    <if test="levels == 1">
+	      and ve.ciid = #{treeIds}                      -- 根据市id查询
+	    </if>
+	</select>
+	<!-- 添加工程计量（工程价款结算帐单）-->
+	<insert id="insertEngineeringSettlement" parameterType="com.curing.projectMetering.model.EngineeringSettlementEntity">
+		INSERT 
+		INTO EngineeringSettlement ( 
+			Id
+		  , ProjectId
+		  , RowNumber
+		  , CurrentAmount
+		  , YearAmount
+		  , StartAmount
+		  , DailyYear
+		  , DailyMonth
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{RowNumber}
+		  , #{CurrentAmount}
+		  , #{YearAmount}
+		  , #{StartAmount}
+		  , #{DailyYear}
+		  , #{DailyMonth}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		)
+	</insert>
+	
+	<!-- 更新工程计量（工程价款结算帐单） -->
+	 <update id="updateEngineeringSettlement" parameterType="com.curing.projectMetering.model.EngineeringSettlementEntity">
+		UPDATE EngineeringSettlement 
+		SET
+		    CurrentAmount = #{CurrentAmount}
+		  , YearAmount = #{YearAmount}
+		  , StartAmount = #{StartAmount}
+		  , DailyYear = #{DailyYear}
+		  , DailyMonth = #{DailyMonth}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id} 
+	</update> 
+	
+	<!-- 删除工程计量（工程价款结算帐单） -->
+	<update id="deleteEngineeringSettlement" parameterType="com.curing.projectMetering.model.EngineeringSettlementEntity">
+		DELETE 
+		FROM
+		  EngineeringSettlement 
+		WHERE
+		  Id = #{Id}
+	</update>	
+</mapper>

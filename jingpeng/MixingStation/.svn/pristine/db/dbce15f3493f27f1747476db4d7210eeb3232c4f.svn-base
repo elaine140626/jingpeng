@@ -1,0 +1,12 @@
+package com.mix.dao.login;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.mix.model.User_Info;
+@Repository
+public interface LoginDao{
+	
+	List<User_Info> userLogin(User_Info user);
+}

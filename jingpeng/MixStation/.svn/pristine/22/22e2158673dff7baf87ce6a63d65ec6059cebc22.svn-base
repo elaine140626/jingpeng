@@ -1,0 +1,146 @@
+//接收项目路径
+var baseUrl = "";
+var testName = "";
+$(function() {
+	
+	//转码解析跳页参数
+	var afterUrl =  decodeURI(window.location.search.substring(1));
+	if(afterUrl != "") {
+		//按 ‘&’ 分割成数组
+		var store =  afterUrl.toString().split("&");
+		//查询 ‘=’ 号位置
+		var index = store[0].indexOf('=');
+		//通过位置来截取传过来的值
+		var serialNumber = store[0].substring(index+1,store[0].length);
+		
+		//查询 ‘=’ 号位置
+		var index1 = store[1].indexOf('=');
+		//通过位置来截取传过来的值
+		testName = store[1].substring(index1+1,store[1].length);
+	}
+	//获取路径
+	baseUrl = getContextPath();
+	csh(serialNumber);
+});
+
+function csh(serialNumber){
+	$.ajax({
+		type : "POST",
+		url : baseUrl + "/testInfo/getCollection.html",
+		data : {"serialNumber":serialNumber},
+		dataType : "json",
+		success : function(data) {
+			var dt = data.data.list;
+			var dt1 = data.data.list1;
+			document.getElementById("testRules").innerHTML=dt[0].testRules;
+			
+			var dTime = new Date(dt[0].testDate);
+			dTime = dTime.toLocaleString();
+			document.getElementById("TestRoomName").innerHTML="试验室名称："+testName;
+			document.getElementById("testDate").innerHTML=dTime;
+			document.getElementById("SampleCode").innerHTML=dt[0].sampleCode;
+			document.getElementById("SampleCount").innerHTML=dt[0].sampleCount;
+			document.getElementById("TestOperator").innerHTML=dt[0].testOperator;
+			document.getElementById("SampleAmount").innerHTML=dt[0].sampleAmount;
+			document.getElementById("DesignStrength").innerHTML=dt[0].designStrength;
+			document.getElementById("avgCompStrength").innerHTML=dt[0].avgCompStrength;
+			var isQualifiedTest = "不合格";
+			if(dt[0].isQualifiedTest==true){
+				isQualifiedTest = "合格";
+			}
+			document.getElementById("isQualifiedTest").innerHTML=isQualifiedTest;
+			
+			if(document.getElementById("SampleAmount").innerHTML=="3"){
+				var group = "";
+		    	for(var i = 0; i < dt1.length; i++) {
+		    		group +='<tr>'
+			    			+'<td rowspan="3">'+(i+1)+'</td>'
+			    		    +'<td>'+dt1[i].ultimateLoad1+'</td>'
+			    		    +'<td>'+dt1[i].comprStrength1+'</td>'
+			    		    +'<td rowspan="3">'+dt1[i].uompressionStrength+'</td>'
+			    		    +'<td>不要了</td>'
+			    		    +'<td width="17%" rowspan="3"><img src="../resources/testImg/1.png" alt="" width="145" height="70"></td>'
+			    		    +'<td width="17%" rowspan="3"><img src='+dt1[i].ultLoadImage2+' alt="" width="145" height="70"></td>'
+			    		    +'<td width="16%" rowspan="3"><img src='+dt1[i].ultLoadImage3+' alt="" width="145" height="70"></td>'
+			    		  +'</tr>'
+			    		  +'<tr>'
+			    		    +'<td>'+dt1[i].ultimateLoad2+'</td>'
+			    		    +'<td>'+dt1[i].comprStrength2+'</td>'
+			    		    +'<td>不要了</td>'
+			    		    +'</tr>'
+			    		  +'<tr>'
+			    		    +'<td>'+dt1[i].ultimateLoad3+'</td>'
+			    		    +'<td>'+dt1[i].comprStrength3+'</td>'
+			    		    +'<td>不要了</td>'
+			    		  +'</tr>'
+		    	}
+		    	$("#list").html(group);
+			}else{
+				var group = "";
+				for(var i = 0; i < dt1.length; i++) {
+				group=	'<tr>'
+						    +'<td rowspan="6">'+(i+1)+'</td>'
+						    +'<td>'+dt1[i].ultimateLoad1+'</td>'
+						    +'<td>'+dt1[i].comprStrength1+'</td>'
+						    +'<td rowspan="6">'+dt1[i].uompressionStrength+'</td>'
+						    +'<td>不要了</td>'
+						    +'<td rowspan="3"><img src="images/tubiao.jpg" alt="" width="145" height="70"></td>'
+						    +'<td rowspan="3"><img src="images/tubiao.jpg" alt="" width="145" height="70"></td>'
+						    +'<td rowspan="3"><img src="images/tubiao.jpg" alt="" width="145" height="70"></td>'
+						  +'</tr>'
+						  +'<tr>'
+						    +'<td>'+dt1[i].ultimateLoad2+'</td>'
+						    +'<td>'+dt1[i].comprStrength2+'</td>'
+						    +'<td>不要了</td>'
+						    +'</tr>'
+						  +'<tr>'
+						    +'<td>'+dt1[i].ultimateLoad3+'</td>'
+						    +'<td>'+dt1[i].comprStrength3+'</td>'
+						    +'<td>不要了</td>'
+						    +'</tr>'
+						  +'<tr>'
+						    +'<td>'+dt1[i].ultimateLoad4+'</td>'
+						    +'<td>'+dt1[i].comprStrength4+'</td>'
+						    +'<td>不要了</td>'
+						    +'<td rowspan="3"><img src="images/tubiao.jpg" alt="" width="145" height="70"></td>'
+						    +'<td rowspan="3"><img src="images/tubiao.jpg" alt="" width="145" height="70"></td>'
+						    +'<td rowspan="3"><img src="images/tubiao.jpg" alt="" width="145" height="70"></td>'
+						  +'</tr>'
+						  +'<tr>'
+						    +'<td>'+dt1[i].ultimateLoad5+'</td>'
+						    +'<td>'+dt1[i].comprStrength5+'</td>'
+						    +'<td>不要了</td>'
+						    +'</tr>'
+						  +'<tr>'
+						    +'<td>'+dt1[i].ultimateLoad6+'</td>'
+						    +'<td>'+dt1[i].comprStrength6+'</td>'
+						    +'<td>不要了</td>'
+						  +'</tr>'
+			}
+			$("#list").html(group);
+		}
+	}
+});
+	 
+//var group =	'<tr>'
+//			+'<td rowspan="3">1</td>'
+//		    +'<td>2</td>'
+//		    +'<td>3</td>'
+//		    +'<td rowspan="3">4</td>'
+//		    +'<td>5</td>'
+//		    +'<td width="17%" rowspan="3"><img src="../resources/images2/tubiao.jpg" alt="" width="145" height="70"></td>'
+//		    +'<td width="17%" rowspan="3"><img src="../resources/images2/tubiao.jpg" alt="" width="145" height="70"></td>'
+//		    +'<td width="16%" rowspan="3"><img src="../resources/images2/tubiao.jpg" alt="" width="145" height="70"></td>'
+//		  +'</tr>'
+//		  +'<tr>'
+//		    +'<td>6</td>'
+//		    +'<td>7</td>'
+//		    +'<td>8</td>'
+//		    +'</tr>'
+//		  +'<tr>'
+//		    +'<td>9</td>'
+//		    +'<td>10</td>'
+//		    +'<td>11</td>'
+//		  +'</tr>'
+//$("#list").html(group);
+}

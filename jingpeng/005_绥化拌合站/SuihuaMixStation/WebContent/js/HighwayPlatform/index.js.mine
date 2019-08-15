@@ -1,0 +1,299 @@
+var user;
+$(function() {
+	// 首页初始化加载
+	$.ajax({
+		type : "POST",
+		url : "../js/set.json",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			var index_block = $('#index_block');
+			var slide = data.slides;
+			var test_block = data.projectItem[0];
+			var mix_block = data.projectItem[1];
+			var index_block_text = data.index_block_text;
+			var index_block_img = data.index_block_img;
+			$('html head title').html(data.projectName);
+
+			// 遍历轮播
+			var html = '<div class="swiper-wrapper">';
+			$.each(slide,
+					function(i, n) {
+						html += '<div class="swiper-slide"><img src="' + n
+								+ '"></div>';
+					})
+			html += '</div>';
+			$('#swiper1').append(html);
+			// 轮播图初始化
+			var swiper1 = new Swiper('#swiper1', {
+				autoplay : 3500,
+				loop : true,
+			});
+			// 遍历banner 下的按钮
+			if (test_block.project.length > 0) {
+//				debugger;
+				$.each(test_block.project, function(i, n) {
+					if (i <= test_block.project.length - 1) {
+						var str = "";
+						str += '<div class="col-md-3">';
+						str += '	<a href="item_pages/testbed.html?viewUrl='
+								+ n.itemUrl + '" onclick="return isJumpTest()">';
+						str += '		<div class="featured-box">';
+						str += '			<i class="fa fa-dot-circle-o fa-2x"></i>';
+						str += '			<div class="text">';
+						str += '			<h3>' + n.itemName + '</h3>' + n.itemName
+								+ '信息';
+						str += '			</div>';
+						str += '		</div>';
+						str += '	</a>';
+						str += '</div>';
+						$('#testOrMixBlock').append(str);
+					}
+
+				});
+//				var srr = "";
+//				srr += '<div class="col-md-3">';
+//				srr += '	<a href="item_pages/Jqindex.html" target="_blank">';
+//				srr += '		<div class="featured-box">';
+//				srr += '			<i class="fa fa-dot-circle-o fa-2x"></i>';
+//				srr += '			<div class="text">';
+//				srr += '			<h3>屏幕展示</h3>屏幕展示信息';
+//				srr += '			</div>';
+//				srr += '		</div>';
+//				srr += '	</a>';
+//				srr += '</div>';
+//				$('#testOrMixBlock').append(srr);
+				
+//				var srr = "";
+//				srr += '<div class="col-md-3">';
+//				srr += '	<a href="item_pages/spjk.html" target="_blank">';
+//				srr += '		<div class="featured-box">';
+//				srr += '			<i class="fa fa-dot-circle-o fa-2x"></i>';
+//				srr += '			<div class="text">';
+//				srr += '			<h3>视频监控</h3>监控视频';
+//				srr += '			</div>';
+//				srr += '		</div>';
+//				srr += '	</a>';
+//				srr += '</div>';
+//				$('#testOrMixBlock').append(srr);
+			}
+
+			var srr = "";
+			srr += '<div class="col-md-3">';
+			srr += '	<a href="item_pages/Jqindex2.html" target="_blank">';
+			srr += '		<div class="featured-box">';
+			srr += '			<i class="fa fa-dot-circle-o fa-2x"></i>';
+			srr += '			<div class="text">';
+			srr += '			<h3>屏幕展示</h3>屏幕展示信息';
+			srr += '			</div>';
+			srr += '		</div>';
+			srr += '	</a>';
+			srr += '</div>';
+			$('#testOrMixBlock').append(srr);
+			if (mix_block.project.length > 0) {
+				$.each(mix_block.project, function(i, n) {
+					var str = "";
+					str += '<div class="col-md-3">';
+					if(n.page_url=="asphalt/asphalt.html"){
+						//沥青跳转
+						str += '	<a href="' + n.page_url + '"onclick="return isJumpTestOrgLi()">';
+					}
+					str += '		<div class="featured-box">';
+					str += '			<i class="fa fa-dot-circle-o fa-2x"></i>';
+					str += '			<div class="text">';
+					str += '			<h3>' + n.item_name + '</h3>' + n.item_name
+							+ '信息';
+					str += '			</div>';
+					str += '		</div>';
+					str += '	</a>';
+					str += '</div>';
+					$('#testOrMixBlock').append(str);
+				})
+			}
+			// 调取block模块
+			//loadHTML(test_block.index_block, index_block);
+			loadHTML(mix_block.index_block, index_block);
+			$('.index_pic').html(
+					'<img src="' + index_block_img
+							+ '" class="img-center" alt="">');
+			$('.about_p').html(index_block_text);
+
+		}
+	});
+	// 试验汇总
+//	$.ajax({
+//		type : "POST",
+//		url : "../index/getIndexSummary.action",
+//		data : {},
+//		dataType : "json",
+//		success : function(data) {
+//			// console.log(data);
+//			$("#syzs")[0].innerHTML = data.data[0].sumCount;
+//			$("#zdcj")[0].innerHTML = data.data[0].sumAutoCount;
+//			$("#mysy")[0].innerHTML = data.data[0].sumBlindCount;
+//
+//			$("#zdsysmc")[0].innerHTML = data.data[0].testRoomName;
+//			$("#zdsyzs")[0].innerHTML = data.data[0].autoCount;
+//			$("#zdhgs")[0].innerHTML = data.data[0].autoQualifiedCount;
+//
+//			$("#mysysmc")[0].innerHTML = data.data[0].testRoomName;
+//			$("#mysyzs")[0].innerHTML = data.data[0].blindCount;
+//			$("#myhgs")[0].innerHTML = data.data[0].blindQualifiedCount;
+//		}
+//	});
+	user = getUser()
+	var str = user.userOrgDetailed;//获取拌合转权限字符串
+	//判断沥青混合料权限
+	var lq_1 = RegExp(/5/);//判断字符串是否包含orgId为5
+	var lq_2 = RegExp(/7/);//判断字符串是否包含orgId为7
+	var lq_3 = RegExp(/9/);//判断字符串是否包含orgId为9
+	//判断水泥混凝土权限
+	var sn_1 = RegExp(/11/);//判断字符串是否包含orgId为11
+	//判断水泥稳定土权限
+	var sw_1 = RegExp(/6/);//判断字符串是否包含orgId为6
+	var sw_2 = RegExp(/8/);//判断字符串是否包含orgId为8
+	var sw_3 = RegExp(/10/);//判断字符串是否包含orgId为10
+	//有一个条件满足即调用沥青拌合站生产统计方法
+	if(lq_1.test(str)== true || lq_2.test(str)== true || lq_3.test(str) == true){
+		getIndexLq();
+	}
+	//有一个条件满足即调用水泥拌合站生产统计方法
+	if(sn_1.test(str)== true){
+		getIndexSn();
+	}
+	//有一个条件满足即调用水稳拌合站生产统计方法
+	if(sw_1.test(str)== true || sw_2.test(str)== true || sw_3.test(str) == true){
+		getIndexSw();
+	}
+});
+
+// 加载子页面
+function loadHTML(url, container) {
+	$.ajax({
+		type : "get",
+		url : url,
+		dataType : 'html',
+		beforeSend : function() {
+		},
+		success : function(data) {
+			container.append(data);
+		},
+		error : function(xhr, ajaxOptions, thrownError) {
+
+		}
+	});
+};
+function outLogin() {
+	$.ajax({
+		type : "POST",
+		url : "../UserInfo/delUserSession.action",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 'error') {
+				// 失败信息
+				swal("操作失败", data.message, data.code);
+			} else {
+				// 首页
+				$(location).attr('href', '../page/centerLogin/centerLogin.html');
+			}
+		}
+	});
+}
+
+function getUser() {
+	var userInfo = '';
+	$.ajax({
+		type : "post",
+		url : "../UserInfo/getPtUserInfo.action",
+		data : {},
+		async : false,
+		dataType : "json",
+		success : function(data) {
+			userInfo = data;
+			// 获取当前登录人做显示
+		}
+	});
+	return userInfo;
+}
+function getIndexLq() {
+	$.ajax({
+		type : "POST",
+		url : "../PlatformCementData/getIndexLq.action",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			console.log(data);
+			data= data.lq;
+			$("#lqtotal").append(data.TotalCount);
+			$("#lqz").append(data.ZongChanLiang);
+			$("#lqy").append(data.LQYongLiang);
+		}
+	});
+}
+function getIndexSn() {
+	$.ajax({
+		type : "POST",
+		url : "../PlatformCementData/getIndexSn.action",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			console.log(data);
+			data= data.sn;
+			$("#sntotal").append(data.TotalCount);
+			$("#snz").append(data.ZongChanLiang);
+			$("#sny").append(data.SNYongLiang);
+		}
+	});
+}
+function getIndexSw() {
+	$.ajax({
+		type : "POST",
+		url : "../PlatformCementData/getIndexSw.action",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			console.log(data);
+			data= data.sw;
+			$("#swtotal").append(data.TotalCount);
+			$("#swz").append(data.ZongChanLiang);
+			$("#swy").append(data.SWYongLiang);
+		}
+	});
+}
+function isJumpTest() {
+	if (user.userTestDetailed == "") {
+		swal("操作失败", "你没有该权限", "info");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function isJumpTestOrgLi() {
+	arr=user.userOrgDetailed.split(',');
+		if ($.inArray("5", arr)>-1||$.inArray("7", arr)>-1||$.inArray("9", arr)>-1) {
+			return true;
+		} else {
+			swal("操作失败", "你没有该权限", "info");
+			return false;
+		}
+}
+function isJumpTestOrgNi() {
+	arr=user.userOrgDetailed.split(',');
+	if ($.inArray("11", arr)>-1) {
+		return true;
+	} else {
+		swal("操作失败", "你没有该权限", "info");
+		return false;
+	}
+}
+function isJumpTestOrgWen() {
+	arr=user.userOrgDetailed.split(',');
+	if ($.inArray("6", arr)>-1||$.inArray("8", arr)>-1||$.inArray("10", arr)>-1) {
+		return true;
+	} else {
+		swal("操作失败", "你没有该权限", "info");
+		return false;
+	}
+}

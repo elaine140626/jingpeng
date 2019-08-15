@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.login.LoginDao">
+
+<select id="userLogin" parameterType="user_Info" resultType="user_Info">
+select 
+id i_id,
+user_Name str_user_Name,
+password str_password,
+power_Org_Id i_power_Org_Id,
+is_System i_is_System,
+operator str_operator,
+create_Date str_create_Date,
+modifier str_modifier,
+modif_Date str_modif_Date,
+valid_Flag i_valid_Flag,
+name str_name
+from user_Info 
+where Valid_Flag=1 and
+user_Name=#{str_user_Name} and password=#{str_password}
+</select>
+</mapper>

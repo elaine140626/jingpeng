@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+ 	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	 <properties>
+		<property name="dialect" value="sqlserver" />
+	</properties> 
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+		<!-- <setting name="logImpl" value="LOG4J" /> -->
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+		<setting name="defaultExecutorType" value="REUSE" />
+	</settings>
+	<typeAliases>
+		<!-- 自动扫描包下面的类 默认别名为类的小写 例如 User->user MyStaff->myStaff 自动扫描mapper.xml的配置文件 -->
+ 		<package name="com.jingpeng"/>
+ 		<package name="com.kdt.app"/> 
+	</typeAliases>
+	<plugins>
+		<plugin interceptor="com.kdt.base.support.mybatis.interceptor.PaginationInterceptor"></plugin>
+		<plugin interceptor="com.kdt.base.support.mybatis.interceptor.RecordCountInterceptor"></plugin>
+	</plugins>
+
+</configuration>

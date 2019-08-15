@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SignBoardNumberDao">
+	<!-- 工程进度（标志牌工程数量表）List取得 -->
+	<select id="getSignBoardNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SignBoardNumberEntity">
+		SELECT
+		  sbn.Id
+		  , sbn.ProjectId                                 -- 项目id
+		  , sbn.NameSpecifications                        -- 材料名称及规格
+		  , sbn.Unit                                      -- 单位
+		  , sbn.SingleHangAmount                          -- 单悬标志（块）数量
+		  , sbn.SingleHangWeight                          -- 单悬标志（块）重量（Kg）
+		  , sbn.SingleColumnAmount                        -- 单柱标志（块）数量
+		  , sbn.SingleColumnWeight                        -- 单柱标志（块）重量（Kg）
+		  , sbn.DoubleColumnAmount                        -- 双柱标志（块）数量
+		  , sbn.DoubleColumnWeight                        -- 双柱标志（块）重量（Kg）
+		  , sbn.AttachmentAmount                          -- 附着标志（块）数量
+		  , sbn.AttachmentWeight                          -- 附着标志（块）重量
+		  , sbn.Remarks                                   -- 备注
+		  , sbn.IsDel
+		  , sbn.Creater
+		  , sbn.CreaterDate
+		  , sbn.Reviser
+		  , sbn.ReviserDate 
+		FROM
+		  SignBoardNumber as sbn 
+		  left join V_EntryTree as ve 
+		    on sbn.ProjectId = ve.pid
+		WHERE
+		  sbn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sbn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sbn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="nameSpecifications!=null and nameSpecifications!=''">
+		    and sbn.nameSpecifications like concat('%',#{nameSpecifications},'%') -- 根据中心桩号查询
+		  </if>
+		  order by sbn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（标志牌工程数量表）合计 -->
+	<select id="getSignBoardNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SignBoardNumberSum">
+		SELECT
+		  sum(sbn.SingleHangAmount) as SingleHangAmountSum -- 单悬标志（块）数量
+		  , sum(sbn.SingleHangWeight) as SingleHangWeightSum -- 单悬标志（块）重量（Kg）
+		  , sum(sbn.SingleColumnAmount) as SingleColumnAmountSum -- 单柱标志（块）数量
+		  , sum(sbn.SingleColumnWeight) as SingleColumnWeightSum -- 单柱标志（块）重量（Kg）
+		  , sum(sbn.DoubleColumnAmount) as DoubleColumnAmountSum -- 双柱标志（块）数量
+		  , sum(sbn.DoubleColumnWeight) as DoubleColumnWeightSum -- 双柱标志（块）重量（Kg）
+		  , sum(sbn.AttachmentAmount) as AttachmentAmountSum -- 附着标志（块）数量
+		  , sum(sbn.AttachmentWeight) as AttachmentWeightSum -- 附着标志（块）重量
+		FROM
+		  SignBoardNumber as sbn 
+		  left join V_EntryTree as ve 
+		    on sbn.ProjectId = ve.pid
+		WHERE
+		  sbn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sbn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sbn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="nameSpecifications!=null and nameSpecifications!=''">
+		    and sbn.nameSpecifications like concat('%',#{nameSpecifications},'%') -- 根据中心桩号查询
+		  </if>
+	</select>
+	
+		<select id="getSignBoardNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  	 sbn.NameSpecifications                        -- 材料名称及规格
+		  , sbn.Unit                                      -- 单位
+		  , sbn.SingleHangAmount                          -- 单悬标志（块）数量
+		  , sbn.SingleHangWeight                          -- 单悬标志（块）重量（Kg）
+		  , sbn.SingleColumnAmount                        -- 单柱标志（块）数量
+		  , sbn.SingleColumnWeight                        -- 单柱标志（块）重量（Kg）
+		  , sbn.DoubleColumnAmount                        -- 双柱标志（块）数量
+		  , sbn.DoubleColumnWeight                        -- 双柱标志（块）重量（Kg）
+		  , sbn.AttachmentAmount                          -- 附着标志（块）数量
+		  , sbn.AttachmentWeight                          -- 附着标志（块）重量
+		  , sbn.Remarks                                   -- 备注
+		FROM
+		  SignBoardNumber as sbn 
+		  left join V_EntryTree as ve 
+		    on sbn.ProjectId = ve.pid
+		WHERE
+		  sbn.IsDel = 0
+		  order by sbn.CreaterDate desc
+	</select>
+	
+	<!-- 新增工程进度（标志牌工程数量表） -->
+	<insert id="insertSignBoardNumber" parameterType="com.curing.projectSchedule.model.SignBoardNumberEntity">
+		INSERT 
+		INTO SignBoardNumber( 
+			Id
+		  , ProjectId
+		  , NameSpecifications
+		  , Unit
+		  , SingleHangAmount
+		  , SingleHangWeight
+		  , SingleColumnAmount
+		  , SingleColumnWeight
+		  , DoubleColumnAmount
+		  , DoubleColumnWeight
+		  , AttachmentAmount
+		  , AttachmentWeight
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{NameSpecifications}
+		  , #{Unit}
+		  , #{SingleHangAmount}
+		  , #{SingleHangWeight}
+		  , #{SingleColumnAmount}
+		  , #{SingleColumnWeight}
+		  , #{DoubleColumnAmount}
+		  , #{DoubleColumnWeight}
+		  , #{AttachmentAmount}
+		  , #{AttachmentWeight}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（标志牌工程数量表） -->
+	<update id="updateSignBoardNumber" parameterType="com.curing.projectSchedule.model.SignBoardNumberEntity">
+		UPDATE SignBoardNumber 
+		SET
+		  NameSpecifications = #{NameSpecifications}
+		  , Unit = #{Unit}
+		  , SingleHangAmount = #{SingleHangAmount}
+		  , SingleHangWeight = #{SingleHangWeight}
+		  , SingleColumnAmount = #{SingleColumnAmount}
+		  , SingleColumnWeight = #{SingleColumnWeight}
+		  , DoubleColumnAmount = #{DoubleColumnAmount}
+		  , DoubleColumnWeight = #{DoubleColumnWeight}
+		  , AttachmentAmount = #{AttachmentAmount}
+		  , AttachmentWeight = #{AttachmentWeight}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（标志牌工程数量表） -->
+	<update id="deleteSignBoardNumber" parameterType="com.curing.projectSchedule.model.SignBoardNumberEntity">
+		UPDATE SignBoardNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

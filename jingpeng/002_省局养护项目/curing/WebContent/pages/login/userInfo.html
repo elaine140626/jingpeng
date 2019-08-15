@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="/favicon.ico">
+<link rel="Shortcut Icon" href="/favicon.ico" />
+<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet"
+	type="text/css" />
+<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet"
+	type="text/css" />
+<title>用户注册</title>
+</head>
+<body>
+	<div>
+		<form class="form form-horizontal" id="userForm" method="post">
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>用户名：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" max="20" class="input-text" onkeyup="value=value.replace(/[^\w\.\/]/ig,'');" maxlength="20" onchange="ChangeUserName(this.value)"
+							id="userName" name="userName">
+						<input type="text" style="display: none;" id="id" name="id">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>密码：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="password" max="128"  class="input-text" onkeyup="value=value.replace(/[^\w\.\/]/ig,'');" value="" placeholder="6-8位字母和数字的组合" maxlength="128"
+							id="passWord" name="passWord">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>确认密码：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="password" max="128"  class="input-text" onchange="judgePassword(this.value)" placeholder="请确认密码" maxlength="128"
+							id="passWordAlign" name="passWordAlign">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span class="c-red">*</span>权限设置：</label>
+					<div class="formControls col-xs-4 col-sm-2">
+						<select class="input-text" id="cityId" name="cityId" onchange="getCountyInfo(this.value)">
+						</select>
+					</div>
+					<div class="formControls col-xs-4 col-sm-2">
+						<select class="input-text" id="countyId" name="countyId">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>姓名：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" max="20"  class="input-text" value="" placeholder="" maxlength="20"
+							id="name" name="name">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>年龄：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" class="input-text" oninput="value=value.replace(/[^\d]/g,'')"
+							id="age" name="age">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>性别：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<select class="input-text" id="sex" name="sex">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>出生年月：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" onfocus="WdatePicker({ })" class="input-text Wdate"
+							id="birthday" name="birthday">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>地址：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" max="128"  class="input-text" value="" placeholder=""
+							id="address" name="address">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red">*</span>电话：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" class="input-text" onchange="changeTelephone(this.value)"
+							id="telephone" name="telephone">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-md-10 col-xs-10">
+					<label class="form-label col-xs-5 col-sm-5"><span
+						class="c-red"></span>其他联系方式：</label>
+					<div class="formControls col-xs-4 col-sm-4">
+						<input type="text" class="input-text" value="" placeholder=""
+							id="otherNumbers" name="otherNumbers">
+					</div>
+				</div>
+			</div>
+			<div class="row cl">
+				<div class="col-xs-12 col-sm-12 col-xs-offset-5 col-sm-offset-5">
+					<button onclick="save();" class="btn btn-primary radius" id="saveUserInfo"
+						type="button">
+						<i class="Hui-iconfont">&#xe632;</i>保存
+					</button>
+					<button onclick="layer_close();" class="btn btn-default radius"
+						type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+				</div>
+			</div>
+		</form>
+	</div>
+<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+<script type="text/javascript" src="../../js/systemJs/login/userInfo.js"></script>
+</body>
+</html>

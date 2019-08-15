@@ -1,0 +1,133 @@
+<!-- 沥青生产统计 -->
+<script type="text/javascript" src="../../js/mixStation/pitch/production_figures.js"></script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 生产统计</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<!-- <div class="shu_btn">
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+				<div class="dtree_Tree">
+					<div class="dTreeNode rootNode">
+						<a>吉东公路盲样试验室</a>
+					</div>
+					<div id="dd0-1" class="clip" style="display:block;">
+						<div class="dTreeNode"><img src="../../image/img/joinbottom.gif" alt="">
+							<a id="sd1" class="node" href="#" onmouseover="window.status='authority';return true;" onmouseout="window.status='';return true;">
+								<input type="checkbox" desc="ZS1中心试验室" name="authority" id="authority_2" cshow="ZS1中心试验室" value="ZS1" onclick="javascript: d.checkNode(2,0,false,&quot;ZS1中心试验室&quot;,this.checked);"
+								 checked="checked">
+								<span class="dtree_node" node_id="2">ZS1中心试验室</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<form action="" method="get" class="sousuo">
+			<label>产品名称：</label>
+			<input type="text" id="materialName" class="search_input rightwbj">
+			<label>产品型号：</label>
+			<input type="text" id="materialModel" class="search_input rightwbj">
+			<label>时间：</label>
+			<input type="text" class="search_input" id="startTime" style="width:12%;" readonly="readonly">
+			<label>--</label>
+			<input type="text" class="search_input" id="endTime" style="width:12%;" readonly="readonly">
+			<!-- <span class="btnxia"><a href="#" onclick="isHidden('div1')"></a></span> -->
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+			<!-- <div id="div1" class="search_xia">
+				<label>施工单位：</label>
+				<input type="text" class="search_input rightwbj" id="projPos">
+				<label>工程部位/用途：</label>
+				<input type="text" class="search_input" id="constructionUnit">
+			</div> -->
+		</form>
+		<div class="table-a">
+			<div class="table-a-left">
+				<h4>混合料生产情况统计柱状图</h4>
+				<div class="zhuzt" id="chartmain">
+                </div>
+			</div>
+			<div class="table-a-right">
+				<div id="list_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+					<div class="row">
+						<div class="col-sm-6"></div>
+						<div class="col-sm-6"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="list"
+							 role="grid" aria-describedby="list_info">
+								<thead>
+									<tr role="row">
+										<th scope="col" width="7%">序号</th>
+										<th scope="col" width="10%">采集日期</th>
+										<th scope="col" width="15%">混合料种类</th>
+										<th scope="col" width="10%">生产总盘数</th>
+										<th scope="col" width="10%">合格盘数</th>
+										<th scope="col" width="10%">不合格盘数</th>
+										<th scope="col" width="9%">沥青用量(t)</th>
+										<th scope="col" width="9%">生产总量(t)</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	//时间
+	jeDate({
+		dateCell:"#startTime",
+		format:"YYYY-MM-DD",
+		isinitVal:false,
+		isTime:false, 
+		isClear:true
+	})
+	
+	jeDate({
+		dateCell:"#endTime",
+		format:"YYYY-MM-DD",
+		isinitVal:false,
+		isTime:false, 
+		isClear:true
+	})
+	//树状图
+	var option = {
+	    color: ['#3398DB'],
+	    width:'100%',
+	    tooltip : {
+	        trigger: 'axis',
+	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+	        }
+	    },
+	    grid: {
+	        left: '3%',
+	        right: '4%',
+	        bottom: '3%',
+	        containLabel: true
+	    },
+	    xAxis : [
+	        {
+	            type : 'category',
+	            data : ['总盘数', '合格盘数', '不合格盘数'],
+	            axisTick: {
+	                alignWithLabel: true
+	            }
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value'
+	        }
+	    ],
+	    series : []
+	};
+</script>

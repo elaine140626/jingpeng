@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.asphaltSupply.dao.FirstAsphaltSupplyDao">
+	<!-- 沥青供应List取得 -->
+	<select id="getFirstAsphaltSupplyList" parameterType="java.util.Map" resultType="com.curing.asphaltSupply.model.FirstAsphaltSupplyEntity">
+		select 
+		   pis.Id as ProjectInfoId,                         -- 工程信息id
+		   pis.ProjectId,                                   -- 项目id
+		   pis.EngineeringUnit,                             -- 工程量单位
+		   getContentByCode('gcldw', pis.EngineeringUnit) as EngineeringUnitName,   -- 工程量单位名称
+		   pis.EngineeringAmount,                           -- 工程量计划数量
+		   pis.EngineeringCount,                            -- 工程量（/座）
+		   pis.InvestmentTotal,                             -- 投资额合计
+		   pis.LineName,                                    -- 路线名称
+		   pis.Engineering,                                 -- 工程项目（数据字典） 
+		   getContentByCode('gcxm', pis.Engineering) as EngineeringName,            -- 工程项目名称
+		   pis.Location,                                    -- 工程所在地
+		   pis.PlanBatch,                                   -- 计划批次
+		   getContentByCode('jhpc', pis.PlanBatch) as PlanBatchName,                -- 计划批次名称
+		   pis.PileNumber,                                  -- 起讫点及桩号
+		   pis.BuildNature,                                 -- 建设性质
+		   pis.ProjectType,                                 -- 项目分类（数据字典checkbox） 0:旅游路 1:绕城路 2:低标准 3:精品工程
+		   getContentByCode('jsxz', pis.BuildNature) as BuildNatureName,            -- 建设性质名称
+		   ve.CityName,                                     -- 所属市
+		   ve.County,                                       -- 所属县区
+		   fas.Id,                                          -- 沥青id
+		   fas.StandardStructure,                           -- 技术标准与结构
+		   DATE_FORMAT(fas.FinishTime, '%Y-%m-%d') as FinishTime,                   -- 招投标完成时间
+		   fas.ProjectNature,                               -- 项目性质
+		   getContentByCode('xmxz', fas.ProjectNature) as ProjectNatureName,        -- 项目性质名称
+		   fas.CapitalSource,                               -- 资金来源
+		   getContentByCode('zjly', fas.CapitalSource) as CapitalSourceName,        -- 资金来源名称
+		   fas.Total,                                       -- 总量
+		   fas.ModifiedType,                                -- 改性90#
+		   getContentByCode('gx90', fas.ModifiedType) as ModifiedTypeName,          -- 改性90#名称
+		   fas.ModifiedNumber,                              -- 改性90#平数
+		   fas.ModifiedThickness,                           -- 改性90#厚度
+		   fas.ModifiedProportion,                          -- 改性90#配合比沥青用量（%）
+		   fas.ModifiedSubtotal,                            -- 改性90#小计
+		   fas.OtherType,                                   -- 其他90#
+		   getContentByCode('qt90', fas.OtherType) as OtherTypeName,                -- 改性90#名称
+		   fas.OtherNumber,                                 -- 其他90#平数
+		   fas.OtherThickness,                              -- 其他90#厚度
+		   fas.OtherProportion,                             -- 其他90#配合比沥青用量（%）
+		   fas.OtherSubtotal,                               -- 其他90#小计
+		   fas.EmulsifyType,                                -- 乳化沥青类别
+		   getContentByCode('rhlqlb', fas.EmulsifyType) as EmulsifyTypeName,        -- 乳化沥青类别名称
+		   fas.EmulsifyNumber,                              -- 乳化沥青平数
+		   fas.EmulsifyThickness,                           -- 乳化沥青厚度
+		   fas.EmulsifySubtotal,                            -- 乳化沥青小计
+		   fas.Asphalt140,                                  -- 140#沥青
+		   fas.Remarks                                      -- 备注
+		from ProjectInfoSummary pis                         -- 工程信息
+		left join  V_EntryTree ve                           -- 树形
+		on pis.ProjectId = ve.pid 
+		left join FirstAsphaltSupply fas                    -- 沥青供应
+		on fas.ProjectInfoId = pis.Id
+		and fas.IsDel = 0
+		where pis.IsDel = 0
+		 <if test="id!=null and id!=''">
+		    and fas.Id = #{id}                            -- 根据id查询
+		  </if>
+		<if test="myYear != null and myYear != ''">
+		    and DATE_FORMAT(pis.CreaterDate, '%Y') = #{myYear}
+		</if>
+		 <if test="levels == 3">
+	       and pis.ProjectId = #{treeIds}                -- 根据项目id查询
+	     </if>
+	     <if test="levels == 2">
+	       and ve.couid = #{treeIds}                     -- 根据县id查询
+	     </if>
+	     <if test="levels == 1">
+	       and ve.ciid = #{treeIds}                      -- 根据市id查询
+	     </if>
+	     <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                   -- 根据id查询
+		  </if>
+		 <if test="PlanBatch != null and PlanBatch != ''">
+		  	and pis.PlanBatch = #{PlanBatch}			 -- 计划批次
+		 </if>
+		 <if test="BuildNature != null and BuildNature != ''">
+		  	and pis.BuildNature = #{BuildNature}		 -- 建设性质
+		 </if>
+		 <if test="Engineering != null and Engineering != ''">
+		  	and pis.Engineering = #{Engineering}         -- 工程项目
+		 </if>
+		 <if test="ProjectType != null and ProjectType != ''">
+		  	and pis.ProjectType like concat('%',#{ProjectType},'%')	-- 项目分类
+		 </if>
+		 <if test="LineName != null and LineName != ''">
+		  	and pis.LineName like concat('%',#{LineName},'%')	 -- 路线名称
+		 </if>
+		 <if test="Location != null and Location != ''">
+		  	and pis.Location like concat('%',#{Location},'%')	 -- 工程所在地
+		 </if>
+		 <if test="PileNumber != null and PileNumber != ''">
+		  	and pis.PileNumber like concat('%',#{PileNumber},'%')-- 起讫点及桩号
+		 </if>
+		 <if test="CapitalSource != null and CapitalSource != ''">
+		  	and fas.CapitalSource = #{CapitalSource}	 -- 资金来源
+		 </if>
+		 <if test="ProjectNature != null and ProjectNature != ''">
+		  	and fas.ProjectNature = #{ProjectNature}	 -- 项目性质
+		 </if>
+		 <if test="StandardStructure != null and StandardStructure != ''">
+		  	and fas.StandardStructure like concat('%',#{StandardStructure},'%') -- 技术标准与结构
+		 </if>
+	     order by fas.CreaterDate desc
+	</select>
+
+    <!-- 更新沥青供应 -->
+	<insert id="insertFirstAsphaltSupply" parameterType="com.curing.asphaltSupply.model.FirstAsphaltSupplyEntity">
+		INSERT 
+		INTO FirstAsphaltSupply ( 
+		    Id
+		  , ProjectInfoId
+		  , StandardStructure
+		  , FinishTime
+		  , ProjectNature
+		  , CapitalSource
+		  , Total
+		  , ModifiedType
+		  , ModifiedNumber
+		  , ModifiedThickness
+		  , ModifiedProportion
+		  , ModifiedSubtotal
+		  , OtherType
+		  , OtherNumber
+		  , OtherThickness
+		  , OtherProportion
+		  , OtherSubtotal
+		  , EmulsifyType
+		  , EmulsifyNumber
+		  , EmulsifyThickness
+		  , EmulsifySubtotal
+		  , Asphalt140
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES (
+		    REPLACE(UUID(),'-','')  
+		  , #{ProjectInfoId}
+		  , #{StandardStructure}
+		  , #{FinishTime}
+		  , #{ProjectNature}
+		  , #{CapitalSource}
+		  , #{Total}
+		  , #{ModifiedType}
+		  , #{ModifiedNumber}
+		  , #{ModifiedThickness}
+		  , #{ModifiedProportion}
+		  , #{ModifiedSubtotal}
+		  , #{OtherType}
+		  , #{OtherNumber}
+		  , #{OtherThickness}
+		  , #{OtherProportion}
+		  , #{OtherSubtotal}
+		  , #{EmulsifyType}
+		  , #{EmulsifyNumber}
+		  , #{EmulsifyThickness}
+		  , #{EmulsifySubtotal}
+		  , #{Asphalt140}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		);
+	</insert>
+
+	<!-- 更新沥青供应 -->
+	<update id="updateFirstAsphaltSupply" parameterType="com.curing.asphaltSupply.model.FirstAsphaltSupplyEntity">
+		UPDATE FirstAsphaltSupply 
+		SET
+		    StandardStructure = #{StandardStructure}
+		  , FinishTime = #{FinishTime}
+		  , ProjectNature = #{ProjectNature}
+		  , CapitalSource = #{CapitalSource}
+		  , Total = #{Total}
+		  , ModifiedType = #{ModifiedType}
+		  , ModifiedNumber = #{ModifiedNumber}
+		  , ModifiedThickness = #{ModifiedThickness}
+		  , ModifiedProportion = #{ModifiedProportion}
+		  , ModifiedSubtotal = #{ModifiedSubtotal}
+		  , OtherType = #{OtherType}
+		  , OtherNumber = #{OtherNumber}
+		  , OtherThickness = #{OtherThickness}
+		  , OtherProportion = #{OtherProportion}
+		  , OtherSubtotal = #{OtherSubtotal}
+		  , EmulsifyType = #{EmulsifyType}
+		  , EmulsifyNumber = #{EmulsifyNumber}
+		  , EmulsifyThickness = #{EmulsifyThickness}
+		  , EmulsifySubtotal = #{EmulsifySubtotal}
+		  , Asphalt140 = #{Asphalt140}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+
+</mapper>

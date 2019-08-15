@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="testInfo">
+
+	<!--查询当前用户权限的实验室，返回list -->
+	<select id="getTestRoom" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  ptsd.UniqueIdentifier as UniqueIdentifier
+		  , tri.TestRoomName as TestRoomName 
+		from
+		  PTestSetDetailed as ptsd 
+		  left join TestRoomInfo as tri 
+		    on ptsd.UniqueIdentifier = tri.UniqueIdentifier 
+		where
+		  PlatformUserInfoId = #{id}
+	</select>
+	<!--查询index数据，返回list -->
+	<select id="getIndexSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  top(1)( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2
+		      and UniqueIdentifier in 
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as sumCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2 
+		      and IsTestCollection = 1
+		      and UniqueIdentifier in 
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as sumAutoCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      TestState = 2 
+		      and IsTestBlind = 1
+		      and UniqueIdentifier in
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as sumBlindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      IsTestCollection = 1
+		      and UniqueIdentifier in 
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as autoCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      TestInfo 
+		    where
+		      IsTestCollection = 1 
+		      and IsQualifiedTest = 1
+		      and UniqueIdentifier in 
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as autoQualifiedCount
+		  , (select
+		      count(*) 
+		    from
+		      BlindInfo t 
+		      left join TestInfo t2 
+		        on t2.QRCode = t.QRCode 
+		    where
+		      t2.UniqueIdentifier in 
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as blindCount
+		  , ( 
+		    select
+		      count(*) 
+		    from
+		      BlindInfo t 
+		      left join TestInfo t2 
+		        on t2.QRCode = t.QRCode 
+		    where
+		      t2.IsQualifiedTest = 1
+		      and t2.UniqueIdentifier in 
+		      <foreach collection="testRoomNamelist" index="index" item="item" open="(" separator="," close=")">
+           		 #{item.UniqueIdentifier}
+        	  </foreach>
+		  ) as blindQualifiedCount 
+		from
+		  TestInfo	
+	</select>
+	<!--查询汇总列表数据，返回list -->
+	<select id="getTestSummary" parameterType="java.util.Map" resultType="java.util.Map">
+		select r.TestRoomName,count(t.Id) as testCount
+	       ,(select COUNT(*) from TestInfo a where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsQualifiedTest = 1) as testHG
+	       ,(select COUNT(*) from TestInfo a where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestCollection = 1) as testZD
+	       ,(select COUNT(*) from TestInfo a where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestCollection = 1  and a.IsQualifiedTest = 1) as testZDHE
+	       ,(select COUNT(*) from TestInfo a where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1) as testMY
+	       ,(select COUNT(*) from TestInfo a where a.UniqueIdentifier = t.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1  and a.IsQualifiedTest = 1) as testMYHE
+		   ,t.UniqueIdentifier uniqueIdentifier
+  		from TestInfo t left join
+       		TestRoomInfo r on r.UniqueIdentifier = t.UniqueIdentifier 
+ 		where t.TestState = 2 and t.IsValidData=1  <!-- and t.UniqueIdentifier = #{uniqueIdentifier} -->
+ 		<if test="startTime != null and startTime != ''">
+        <![CDATA[ and t.TestDate >=  #{startTime}  ]]>
+        </if>
+        <if test="endTime != null and endTime != ''">
+        <![CDATA[ and t.TestDate <=  #{endTime}  ]]>
+        </if>
+        <if test="un != null and un != ''">
+        <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+        </foreach>
+        </if>
+			group by r.TestRoomName,t.UniqueIdentifier
+	</select>
+	
+	<!--查询汇总列表详细数据，返回list -->
+	<select id="getTestSummaryDetailed" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			i.TestRoomName testRoomName
+			,i.UniqueIdentifier uniqueIdentifier
+			,t.TestNameId testNameId
+			,r.TestName testName
+			,COUNT(t.Id) as countId 
+			,(select COUNT(*) from TestInfo a  where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier  and a.TestState = 2 and a.IsQualifiedTest = 1) as testHE 
+			,(select COUNT(*) from TestInfo a where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.IsTestCollection = 1 and a.TestState = 2) as testZD
+			,(select COUNT(*) from TestInfo a  where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.IsTestCollection = 1 and a.TestState = 2 and a.IsQualifiedTest = 1) as testZDHE 
+			,(select COUNT(*) from TestInfo a where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1) as testMY
+			,(select COUNT(*) from TestInfo a where a.TestNameId = t.TestNameId and a.UniqueIdentifier = i.UniqueIdentifier and a.TestState = 2 and a.IsTestBlind = 1 and a.IsQualifiedTest = 1) as testMYHE
+		from TestInfo t left join 
+	        TestRoomInfo i on t.UniqueIdentifier=i.UniqueIdentifier left join 
+	        TestPageInfos r on t.TestNameId=r.id
+ 		where t.TestState = 2 and t.IsValidData=1 
+		<if test="TestRoomName != null and TestRoomName != ''">
+       	 	and i.TestRoomName=#{TestRoomName}
+        </if>
+        group by i.TestRoomName,i.UniqueIdentifier,t.TestNameId,r.TestName
+	</select>
+	
+	<!--点某列的数字，查询汇总列表详细数据，返回list -->
+	<select id="getTestSummaryDetailedNumber" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			t.id id
+			,i.TestRoomName 			testRoomName
+			,c.TestClassification_Name  testClassification_Name 
+			,r.TestName 				testName
+			,ISNULL(t.SampleCode,'') 	sampleCode
+			,t.SampleCount 				sampleCount
+			,t.TestDate 				testDate
+			,t.TestOperator 			testOperator
+			,t.IsQualifiedTest 			isQualifiedTest
+			,t.IsTestCollection 		isTestCollection
+			,t.IsTestBlind 				isTestBlind
+			,t.UniqueIdentifier 		uniqueIdentifier
+			,t.SerialNumber 			serialNumber
+			,r.TestTable				testTable
+	 from TestInfo t 
+		left join TestRoomInfo i on t.UniqueIdentifier=i.UniqueIdentifier
+		left join TestPageInfos r on t.TestNameId=r.id
+		left join TestClassification c on r.[TestClass_Code]=c.[TestClassification_Code]
+	where t.TestState = 2 and t.IsValidData=1 
+		<if test="TestRoomName != null and TestRoomName != ''">
+       	 	and i.TestRoomName=#{TestRoomName}
+        </if>
+        <if test="source==1">
+       	 	and IsQualifiedTest=1
+        </if>
+        <if test="source==2">
+       	 	and IsTestCollection=1
+        </if>
+        <if test="source==3">
+       	 	and t.IsTestCollection = 1  and t.IsQualifiedTest = 1
+        </if>
+        <if test="source==4">
+       	 	and t.IsTestBlind = 1
+        </if>
+        <if test="source==5">
+       	 	and t.IsTestBlind = 1  and t.IsQualifiedTest = 1
+        </if>
+	</select>
+	
+	<!--查询砂浆抗压强自动采集数据，返回list -->
+	<select id="getCollection" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			t.SampleCode 		sampleCode
+			,t.IsQualifiedTest isQualifiedTest
+			,t.TestRules 		testRules
+			,CONVERT(varchar(100), t.TestDate, 23)		testDate
+			,t.SampleCount 		sampleCount
+			,t.TestOperator 	testOperator
+			,t0.SampleAmount 	sampleAmount
+			,t0.DesignStrength 	designStrength
+			,t.UniqueIdentifier uniqueIdentifier
+			,t0.AvgCompStrength avgCompStrength
+		from TestInfo t
+			left join Test0500102T0 t0 on t.SerialNumber = t0.SerialNumber
+		where  t.SerialNumber =  #{serialNumber}
+	</select>
+	
+	<!--查询砂浆抗压强自动采集数据(子表)，返回list -->
+	<select id="getCollectionSubtable" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			t1.UltimateLoad1        ultimateLoad1
+			,t1.ComprStrength1 		comprStrength1
+			,t1.UltimateLoad2 		ultimateLoad2
+			,t1.ComprStrength2 		comprStrength2
+			,t1.UltimateLoad3 		ultimateLoad3
+			,t1.ComprStrength3 		comprStrength3
+			,t1.UltimateLoad4 		ultimateLoad4
+			,t1.ComprStrength4 		comprStrength4
+			,t1.UltimateLoad5 		ultimateLoad5
+			,t1.ComprStrength5 		comprStrength5
+			,t1.UltimateLoad6 		ultimateLoad6
+			,t1.ComprStrength6 		comprStrength6
+			,t1.CompressionStrength uompressionStrength
+			,t1.Prop_DesignStrength prop_DesignStrength
+			,t1.UltLoadImage1       ultLoadImage1
+			,t1.UltLoadImage2       ultLoadImage2
+			,t1.UltLoadImage3       ultLoadImage3
+			,t1.UltLoadImage4       ultLoadImage4
+			,t1.UltLoadImage5       ultLoadImage5
+			,t1.UltLoadImage6       ultLoadImage6
+		from Test0500102T0 t
+			left join Test0500102T01 t1 on t.SerialNumber = t1.SerialNumber
+		where t.SerialNumber =  #{serialNumber} 
+	</select>
+	
+	<!--查询折线图数据，返回list -->
+	<select id="getChart" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			 i.TestRoomName testRoomName
+			 ,CONVERT(varchar(100),t.TestDate, 23) testDate
+			 ,COUNT(t.Id) as countId 
+			 ,(select COUNT(*) from TestInfo a  where   a.TestState = 2 and a.IsQualifiedTest = 1) as testHE 
+		from TestInfo t left join 
+	        TestRoomInfo i on t.UniqueIdentifier=i.UniqueIdentifier left join 
+	        TestPageInfos r on t.TestNameId=r.id
+ 		where t.TestState = 2 and t.IsValidData=1  
+ 		<if test="TestRoomName != null and TestRoomName != ''">
+       	 	and i.TestRoomName=#{TestRoomName}
+        </if>
+        <if test="un != null and un != ''">
+        <foreach collection="un" index="index" item="item" open="AND t.UniqueIdentifier IN (" separator="," close=")">
+                #{item}
+        </foreach>
+        </if>
+ 		group by CONVERT(varchar(100),t.TestDate, 23),i.TestRoomName
+	</select>
+</mapper>

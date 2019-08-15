@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--试验 整体模板-->
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+		<link rel="stylesheet" href="../../css/common/bootstrap.min.css">
+		<link rel="stylesheet" href="../../css/common/sweet-alert.css">
+		<link rel="stylesheet" href="../../css/zTreeStyle/zTreeStyle.css">
+		<link rel="stylesheet" type="text/css" href="../../DataTables/DataTables-1.10.16/css/jquery.dataTables.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mixStation/common.css" />
+		<link rel="stylesheet" href="../../css/mixStation/index.css">
+		<link rel="stylesheet" type="text/css" href="../../js/bootstrap/bootstrap.min.css" />
+    	<link rel="stylesheet" type="text/css" href="../../js/bootstrapTable/bootstrap-table.min.css" />
+		<script src="../../js/common/jquery3.3.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/bootstrapTable/bootstrap-table.min.js"></script>
+		<script src="../../js/bootstrapTable/locale/bootstrap-table-zh-CN.min.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script> 
+		<script src="../../js/zTree/jquery.ztree.all-3.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../DataTables/DataTables-1.10.16/js/jquery.dataTables.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/mixStation/common.js"></script>
+		<script src="../../js/jedate/jedate1.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common/echarts.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			//session超时
+			$(function(){
+				$.ajaxSetup({ 
+				    statusCode: {
+				        401: function() { 
+				            window.location.href="../mixLogin/mixStationLogin.html"
+				        }, 
+				        403: function() { 
+				        	window.location.href="../mixLogin/mixStationLogin.html"
+				        }
+				    }
+				})
+			});
+		</script>
+	</head>
+
+	<body>
+		<!--header-->
+		<div class="container-fluid top">
+			<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+			<div class="topright">
+				<a href="user/userinfo.html" class="userid"></a>
+				<a href="../../User/out.action" class="out">安全退出</a>
+			</div>
+			<div class="top_btn">
+				<span class="lq_btn"><a href="javasript:;" class="hvr-bounce-to-top focusbtn" onclick="loadLeftBanner('pitch',this)">沥青</a></span>
+				<span class="sn_btn"><a href="javasript:;" class="hvr-bounce-to-top" onclick="loadLeftBanner('cement',this)">水泥</a></span>
+			</div>
+		</div>
+		<!--container 开始-->
+		<div class="container-fluid contain">
+			<div class="row leftbj">
+				<div class="leftnav_g" id="banners">
+					<ul>
+					</ul>
+				</div>
+				<div class="rightcon">
+
+				</div>
+			</div>
+		</div>
+		<!--container 结束-->
+		<!--footer-->
+		<div class="bottom">
+			<a href="#">关于 我们</a>|
+			<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+		</div>
+	</body>
+</html>
+<script type="text/javascript">
+var contain = $('.rightcon');
+//根路径
+var baseUrl = getContextPath();
+var powerOrgID ;
+//沥青orgid
+var orgId = '';
+//沥青拌合站名称
+var orgName='';
+//水泥混凝土orgid
+var cementOrgId='';
+//水泥混凝土拌合站名称
+var cementOrgName = '';
+//用户名称
+var userName = '';
+var userId ;
+	$(function() {
+		// session中存储的登录信息
+		var userInfo;
+		$('.out').click(function(){
+			window.location.href = 'page/mixLogin/mixStationLogin.html';
+		})	
+		
+		// 获取当前用户信息
+		$.ajax({
+			type: "post",
+			url: baseUrl + "/login/getSessionUserInfo.action",
+			data:{
+			},
+			dataType: "json",
+			async:false,
+			success: function (data) {
+				data = data.bean;
+				userInfo = data.userInfo;
+				Org = data.Org;
+				 for(var i=0;Org.length>i;i++){
+					if(Org[i].mixStation_Type == 0){
+						orgId = Org[i].id 
+						orgName =Org[i].orgName;
+					}else if(Org[i].mixStation_Type == 1){
+						cementOrgId = Org[i].id
+						cementOrgName =Org[i].orgName;
+					}
+					userName = userInfo.userName
+				} 
+				$('.userid').html(userInfo.userName);
+			}
+		});
+	})
+</script>

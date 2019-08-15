@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.systemInfo.dao.SystemDao">
+
+	<!-- 新增系统设置  -->
+	<insert id="saveSystem" parameterType="com.truckscale.systemInfo.model.SystemEntity">
+		INSERT 
+			INTO truckscale.systemsetup( 
+			    TruckScaleType		
+			  , SerialPort			
+			  , BaudRate 			
+			  , WeighingMethod 		
+			  , SaveSettings 		
+			  , MaterialSelection	
+			  , IsDel
+			  , Creater
+			  , CreaterDate
+			) 
+			VALUES ( 
+				#{TruckScaleType}		
+			  , #{SerialPort}			
+			  , #{BaudRate} 			
+			  , #{WeighingMethod} 		
+			  , #{SaveSettings} 		
+			  , #{MaterialSelection}	
+			  , 0
+			  , #{Creater}
+			  , NOW() 
+			) 
+	</insert>
+	<!-- 更新用户信息  -->
+	<update id="updateSystem" parameterType="com.truckscale.systemInfo.model.SystemEntity">
+			UPDATE  truckscale.systemsetup 
+			SET
+				TruckScaleType = #{TruckScaleType}		
+			  , SerialPort = #{SerialPort}			
+			  , BaudRate = #{BaudRate} 			
+			  , WeighingMethod = #{WeighingMethod} 		
+			  , SaveSettings = #{SaveSettings} 		
+			  , MaterialSelection = #{MaterialSelection}	
+			  , IsDel = 0
+			  , Reviser = #{Creater}
+			  , ReviserDate = NOW() 
+	</update>
+	<!-- 获取系统设置count数  -->
+	<select id="getSystemCount" resultType="int">
+		select 
+			COUNT(*) as count
+		from 
+			truckscale.systemsetup
+	</select>
+	<!-- 系统设置赋值  -->
+	<select id="getSystem" resultType="com.truckscale.systemInfo.model.SystemEntity">
+		select 
+			*
+		from 
+			truckscale.systemsetup
+	</select>
+</mapper>

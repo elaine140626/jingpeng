@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.RoadbedProtectionNumberDao">
+	<!-- 工程进度（路基防护工程数量表）List取得 -->
+	<select id="getRoadbedProtectionNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.RoadbedProtectionNumberEntity">
+		SELECT
+		  rdn.Id
+		  , rdn.ProjectId                                 -- 项目id
+		  , rdn.StartStopNumber                           -- 起止桩号
+		  , rdn.Position                                  -- 位置
+		  , rdn.BuildNature                               -- 建设性质
+		  , getContentByCode('jsxz', rdn.BuildNature) as BuildNatureName -- 建设性质名
+		  , rdn.WallLength                                -- 墙长（m）
+		  , rdn.RaiseHeight                               -- 抬高高度（m）
+		  , rdn.AverageHigh                               -- 平均高（H）
+		  , rdn.StoneWallBody                             -- 片石墙身（m3）
+		  , rdn.StoneBasics                               -- 片石基础（m3）
+		  , rdn.Plastering                                -- 抹面（m3）
+		  , rdn.GravelCushion                             -- 砂砾垫层（m3）
+		  , rdn.OpenExcavation                            -- 开挖方（m3）
+		  , rdn.Length                                    -- 长度（m）
+		  , rdn.BlockStone                                -- 块石（m3）
+		  , rdn.EightRebar                                -- 8mm钢筋（Kg）
+		  , rdn.Wire                                      -- 铁丝（m)
+		  , rdn.Remarks                                   -- 备注
+		  , rdn.IsDel
+		  , rdn.Creater
+		  , rdn.CreaterDate
+		  , rdn.Reviser
+		  , rdn.ReviserDate 
+		FROM
+		  RoadbedProtectionNumber as rdn 
+		  left join V_EntryTree as ve 
+		    on rdn.ProjectId = ve.pid 
+		WHERE
+		  rdn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and rdn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and rdn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="startStopNumber!=null and startStopNumber!=''">
+		    and rdn.StartStopNumber like concat('%',#{startStopNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and rdn.Position like concat('%',#{position},'%') -- 根据位置查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and rdn.BuildNature like concat('%',#{buildNature},'%') -- 根据建设性质查询
+		  </if>
+		   order by rdn.CreaterDate desc
+	</select>
+	<!-- 导出 -->
+	<select id="getRoadbedProtectionNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+	
+				SELECT
+		  	rdn.StartStopNumber  as startStopNumber                          -- 起止桩号
+		  , rdn.Position   as   position                             -- 位置
+		  , getContentByCode('jsxz', rdn.BuildNature) as buildNatureName -- 建设性质名
+		  , rdn.WallLength   as   wallLength                           -- 墙长（m）
+		  , rdn.RaiseHeight   as  raiseHeight                          -- 抬高高度（m）
+		  , rdn.AverageHigh  as averageHigh                             -- 平均高（H）
+		  , rdn.StoneWallBody   as stoneWallBody                          -- 片石墙身（m3）
+		  , rdn.StoneBasics   as stoneBasics                            -- 片石基础（m3）
+		  , rdn.Plastering   as plastering                             -- 抹面（m3）
+		  , rdn.GravelCushion   as gravelCushion                          -- 砂砾垫层（m3）
+		  , rdn.OpenExcavation  as openExcavation                          -- 开挖方（m3）
+		  , rdn.Length   as length                                 -- 长度（m）
+		  , rdn.BlockStone   as blockStone                             -- 块石（m3）
+		  , rdn.EightRebar    as eightRebar                            -- 8mm钢筋（Kg）
+		  , rdn.Wire     as wire                                 -- 铁丝（m)
+		  , rdn.Remarks    as remarks                               -- 备注
+		FROM
+		  RoadbedProtectionNumber as rdn 
+		  left join V_EntryTree as ve 
+		    on rdn.ProjectId = ve.pid 
+		WHERE
+		  rdn.IsDel = 0
+			
+	</select>
+	
+	<!-- 工程进度（路基防护工程数量表）合计 -->
+	<select id="getRoadbedProtectionNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.RoadbedProtectionNumberSum">
+		SELECT
+		  sum(rdn.WallLength) as WallLengthSum            -- 墙长（m）
+		  , sum(rdn.RaiseHeight) as RaiseHeightSum        -- 抬高高度（m）
+		  , sum(rdn.AverageHigh) as AverageHighSum        -- 平均高（H）
+		  , sum(rdn.StoneWallBody) as StoneWallBodySum    -- 片石墙身（m3）
+		  , sum(rdn.StoneBasics) as StoneBasicsSum        -- 片石基础（m3）
+		  , sum(rdn.Plastering) as PlasteringSum          -- 抹面（m3）
+		  , sum(rdn.GravelCushion) as GravelCushionSum    -- 砂砾垫层（m3）
+		  , sum(rdn.OpenExcavation) as OpenExcavationSum  -- 开挖方（m3）
+		  , sum(rdn.Length) as LengthSum                  -- 长度（m）
+		  , sum(rdn.BlockStone) as BlockStoneSum          -- 块石（m3）
+		  , sum(rdn.EightRebar) as EightRebarSum          -- 8mm钢筋（Kg）
+		  , sum(rdn.Wire) as WireSum                      -- 铁丝（m)
+		FROM
+		  RoadbedProtectionNumber as rdn 
+		  left join V_EntryTree as ve 
+		    on rdn.ProjectId = ve.pid 
+		WHERE
+		  rdn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and rdn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and rdn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="startStopNumber!=null and startStopNumber!=''">
+		    and rdn.StartStopNumber like concat('%',#{startStopNumber},'%') -- 根据起止桩号查询	    
+		  </if>
+		  <if test="position!=null and position!=''">
+		    and rdn.Position like concat('%',#{position},'%') -- 根据位置查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and rdn.BuildNature like concat('%',#{buildNature},'%') -- 根据建设性质查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（路基防护工程数量表） -->
+	<insert id="insertRoadbedProtectionNumber" parameterType="com.curing.projectSchedule.model.RoadbedProtectionNumberEntity">
+		INSERT 
+		INTO RoadbedProtectionNumber (
+		  Id 
+		  , ProjectId
+		  , StartStopNumber
+		  , Position
+		  , BuildNature
+		  , WallLength
+		  , RaiseHeight
+		  , AverageHigh
+		  , StoneWallBody
+		  , StoneBasics
+		  , Plastering
+		  , GravelCushion
+		  , OpenExcavation
+		  , Length
+		  , BlockStone
+		  , EightRebar
+		  , Wire
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{StartStopNumber}
+		  , #{Position}
+		  , #{BuildNature}
+		  , #{WallLength}
+		  , #{RaiseHeight}
+		  , #{AverageHigh}
+		  , #{StoneWallBody}
+		  , #{StoneBasics}
+		  , #{Plastering}
+		  , #{GravelCushion}
+		  , #{OpenExcavation}
+		  , #{Length}
+		  , #{BlockStone}
+		  , #{EightRebar}
+		  , #{Wire}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（路基防护工程数量表） -->
+	<update id="updateRoadbedProtectionNumber" parameterType="com.curing.projectSchedule.model.RoadbedProtectionNumberEntity">
+		UPDATE RoadbedProtectionNumber 
+		SET
+		  StartStopNumber = #{StartStopNumber}
+		  , Position = #{Position}
+		  , BuildNature = #{BuildNature}
+		  , WallLength = #{WallLength}
+		  , RaiseHeight = #{RaiseHeight}
+		  , AverageHigh = #{AverageHigh}
+		  , StoneWallBody = #{StoneWallBody}
+		  , StoneBasics = #{StoneBasics}
+		  , Plastering = #{Plastering}
+		  , GravelCushion = #{GravelCushion}
+		  , OpenExcavation = #{OpenExcavation}
+		  , Length = #{Length}
+		  , BlockStone = #{BlockStone}
+		  , EightRebar = #{EightRebar}
+		  , Wire = #{Wire}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（路基防护工程数量表） -->
+	<update id="deleteRoadbedProtectionNumber" parameterType="com.curing.projectSchedule.model.RoadbedProtectionNumberEntity">
+		UPDATE RoadbedProtectionNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

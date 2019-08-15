@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<link rel="stylesheet" type="text/css"	href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" type="text/css"	href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+<!-- <link rel="stylesheet" type="text/css"  href="../../DataTables/datatables.css" /></link> -->
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<!-- <script type="text/javascript" src="../../DataTables/datatables.js"></script> -->
+<script type="text/javascript"	src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+<script type="text/javascript"  src="../../js/authority/commonAll.js"></script>
+<script type="text/javascript"	src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript"	src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript"	src="../../js/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript"  src="../../js/sweet-alert.min.js"></script>
+<script type="text/javascript"  src="../../js/laydate/laydate.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/jquery-upload-file/ajaxfileupload.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/repertory/taskChecking.js"></script>
+<title>瑞德公路管理系统</title>
+<style type="text/css">
+	/* 平板 */
+	@media screen and (min-width:600px) and (max-width:985px){
+		.mshow {
+			position: absolute;
+			top: 40px;
+			left: 5px;
+			right: 10px;
+			bottom: 0px;
+			border: 1px solid #DEDFDF;
+			overflow: auto;
+		}
+		.dataTables_scrollBody{
+			height: 260px
+		}
+	}
+	/* pc */
+	@media screen and (min-width:985px){
+		.mshow {
+			position: absolute;
+			top: 70px;
+			left: 5px;
+			right: 10px;
+			bottom: 0px;
+			border: 1px solid #DEDFDF;
+			overflow: auto;
+		}
+		.dataTables_scrollBody{
+			height: 600px
+		}
+	}
+</style>
+</head>
+<body class="container-fluid">
+	<div class="row">
+		<div id="top_nav">
+			<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;库存管理&nbsp;>&nbsp;<span
+				style="color: #1A5CC6">生产任务核对</span></span>
+		</div>
+	</div>
+	<div id="main"class="mshow">
+		<div class="ui_tb">
+			<div id="box_border">
+				<div id="box_top">生产任务核对</div>
+				<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+					<div id="box_center" style="padding-left: 20px; overflow: hidden;">
+						产品名称：&nbsp;&nbsp;<input type="text" id="materielName" name="materielName" class="ui_input_txt02" />
+						产品规格：&nbsp;&nbsp;<input type="text" id="materielModel" name="materielModel" class="ui_input_txt02" />
+						是否核对：&nbsp;&nbsp;<select id="isCheck" name="isCheck" class="ui_input_txt02" style="padding:0;">
+													<option value="">请选择</option>
+													<option value="0">是</option>
+													<option value="1">否</option>
+						   					</select>
+				
+						<input type="button" onclick="search()" value="查询"
+							style="margin-left: 20px; margin-top: 2px;"
+							class="ui_input_btnsearch" /> 
+					<!-- <input type="button" style="float: right;margin-right: 20px;" value="导出" class="ui_input_btnexport" id="export"  onclick="exportInfo()"/> -->
+					</div>
+				</form>
+				<div style="overflow-x: auto;">
+					<table id="list" class="table table-striped" style="width: 1640px;" cellspacing="0" cellpadding="0" align="center" border="0">
+						<thead>
+							<tr>
+								<th class="xuhao">序号</th>
+								<th class="caozuo1" style="width: 110px">操作</th>
+								<th class="xinghao">编号</th>
+								<th class="hetongbianhao">产品名称</th>
+								<th class="dianhua">产品规格</th>
+								<th class="hetongbianhao">生产批次</th>
+								<th class="zhuangtai">计划完成时间</th>
+								<th class="kehumingcheng">计划生产量</th>
+								<th class="kehumingcheng">单位</th>
+								<th class="hetongbianhao">是否核对</th>
+								<th class="xiaoshouyuan">核对人</th>
+								<th class="xiaoshouyuan">核对时间</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div> 
+		</div>
+	</div>
+</body>
+</html>

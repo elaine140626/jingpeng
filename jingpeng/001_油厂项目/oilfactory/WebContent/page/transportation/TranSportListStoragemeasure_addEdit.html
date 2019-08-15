@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script type="text/javascript" src="../../js/upload/upload.js"></script>
+		<script type="text/javascript" src="../../js/jquery-upload-file/js/jquery.uploadfile.js"></script> 
+		<script type="text/javascript" src="../../js/jquery-upload-file/ajaxfileupload.js"></script>
+		<script src="../../js/tableEdit.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/transportation/TranSportListStoragemeasure_addEdit.js"></script>
+		<script type="text/javascript" src="../../js/layer/layer.js"></script>
+		<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+		
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+		input[type="file"] {
+   				display: block;
+    			width: 185px;
+				}
+		td, th {
+    		padding: 0;
+   			height: 45px;
+		}
+		table {
+    			height: 90px;
+    		}
+		
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: left;
+			}
+			
+			.ui_text_lt {
+				width: 35%;
+			}
+			
+			.ui_input_txt01 {
+				width: 60%;
+			}
+			.ui_input_txt0 {
+				width: 30%;
+				height: 26px;
+				margin: 1px -9px 1px -5px;
+				outline: 0;
+				padding: 5px;
+				border: 1px solid;
+				border-color: #C0C0C0 #D9D9D9 #D9D9D9;
+				border-radius: 2px;
+				background: #FFF;
+				box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.2);
+				-webkit-transition: box-shadow, border-color .5s ease-in-out;
+			}
+			
+			.ui_input_txt0:first-child {
+				margin: 1px 1px 1px 5px;
+			}
+			.ui_select01 {
+				width: 60%;
+			}
+			
+			
+			.text {
+				height: 80px;
+				resize: none
+			}
+			
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				 * 取消
+				 */
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				}
+			});
+
+		</script>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<!-- <input type="hidden" id="billNumber" name="billNumber" value="" /> -->
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					新增运输单
+				</div>
+				<div class="ui_content">
+				<br>
+					车牌号码:<select id="plateNumber" name="plateNumber"  class="ui_input_txt02 " style="padding: 0;" onchange="changePlateNumber(this.value);">
+							<option value="-1">--请选择--</option>
+							</select>
+					送货人：<input type="text" id="carOwner"  readonly="readonly" onkeyup="this.value=this.value.replace(/\s+/g,'')" name="carOwner" value="" class="ui_input_txt02" maxlength="10"/>
+					送货电话:<input type="text"  readonly="readonly"  oninput = "value=value.replace(/[^\d]/g,'')" id="carOwnerTelephone" name="carOwnerTelephone" value="" class="ui_input_txt02" maxlength="14"/>
+					单据编号:<input type="text" id="billNumber" style="background:#CCCCCC;" readonly="readonly" name="billNumber" value="" class="ui_input_txt02"  maxlength="30" />
+				<br>
+				<br>
+				<div style="overflow:auto;height:230px;">
+					<table id="transportationList" style="min-width:100%;width:3000px"  border="1" cellpadding="2" cellspacing="0">
+					<thead>
+ 						 <tr>
+ 						 	<th style="text-align:center;background-color:#044599;color:#fff;">序号</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">入库单流水号</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;width: 238px;">入库时间</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">运输方</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">物料名称/型号</th>
+						   <!--  <th style="text-align:center;background-color:#044599;color:#fff;">物料型号</th> -->
+						    <th style="text-align:center;background-color:#044599;color:#fff;width: 238px;">供应商/客户名称</th>
+						    <th width="150" style="text-align:center;background-color:#044599;color:#fff;width: 200px;">结算时间</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">入厂重量(吨)</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">涨亏吨</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">结算重量(吨)</th>
+						   <!--  <th width="150" style="text-align:center;background-color:#044599;color:#fff;">起运地</th> -->
+						    <th width="150" style="text-align:center;background-color:#044599;color:#fff;">止运地</th>
+						    <th width="150" style="text-align:center;background-color:#044599;color:#fff;">运距</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">运输单价</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">运费总额</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">押车天数</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">押车单价</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">押车金额</th>
+						<!--     <th width="150" style="text-align:center;background-color:#044599;color:#fff;">结算类别</th> -->
+							<th style="text-align:center;background-color:#044599;color:#fff;">运输结算总金额</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">备注</th>
+						    <th style="text-align:center;background-color:#044599;color:#fff;">上传文件</th>
+						    <th width="150" style="text-align:center;background-color:#044599;color:#fff;">类别</th>
+ 						</tr>
+ 					</thead>
+                    <tbody>
+                    </tbody>
+					</table>
+				</div>
+								<input id="submitbutton" type="button" value="保存" class="ui_input_btnsave" onclick="add()"/>  &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

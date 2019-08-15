@@ -1,0 +1,19 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.blindSample.model.TestSelectEntity;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+@Repository
+public class BlindSampleDetectionDao extends KDDaoSupport{
+	private final static String NAMESPACE = "blindSampleDetection";
+	
+	// 获取页面列表信息
+	public List<TestSelectEntity> getInfo(Map<String, Object> map) throws DataAccessException{
+		return this.select(NAMESPACE+".getInfoList", map);
+	}
+}

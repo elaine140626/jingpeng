@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformAsphaltProductAnalysisDao">
+	<!-- 产能分析 沥青原材料取得 -->
+	<select id="getAsphaltMaterialInfo" parameterType="java.util.Map" resultType="ProductAnalysisEntity">
+		select distinct
+		   asp.Material_Name
+		  , asp.Material_Model 
+		from
+		  Asphalt_ProductionData as asp 
+		where
+		  asp.Valid_Flag = 1 
+		  and asp.Org_ID = #{orgId}
+		  and asp.Collect_Time &gt;= #{startTime} 
+		  and asp.Collect_Time &lt;= #{endTime} 
+		order by
+		  asp.Material_Name
+	</select>
+	
+	<!-- 产能分析 echar -->
+	<select id="getAsphaltProductAnalysisList" parameterType="java.util.Map" resultType="ProductAnalysisEntity">
+			  select	
+			asp.Material_Name
+		  , asp.Material_Model
+		  <if test="date == 1">
+		    , CONVERT(varchar (100), asp.Collect_Time, 23) as Collect_Time -- 采集时间按日
+		  </if>
+		  <if test="date == 2">
+		    , CONVERT(varchar (7), asp.Collect_Time, 23) as Collect_Time -- 采集时间按月
+		  </if>
+		  <if test="date == 3">
+		    , CONVERT(varchar (4), asp.Collect_Time, 23) as Collect_Time -- 采集时间按年
+		  </if>
+		  , Convert(decimal(18,2),sum(asp.Total_Weight)/1000) as Total_Weight --拌和总量
+		from
+		  Asphalt_ProductionData as asp 
+		where
+		  asp.Valid_Flag = 1 
+		  and asp.Org_ID = #{orgId}
+		  and asp.Collect_Time &gt;= #{startTime} 
+		  and asp.Collect_Time &lt;= #{endTime}
+		group by 
+		  <if test="date == 1">
+		    CONVERT(varchar (100), asp.Collect_Time, 23)
+		  </if>
+		  <if test="date == 2">
+		    CONVERT(varchar (7), asp.Collect_Time, 23)
+		  </if>
+		  <if test="date == 3">
+		    CONVERT(varchar (4), asp.Collect_Time, 23)
+		  </if>	 
+		  ,asp.Collect_Time
+		  , asp.Material_Name
+		  , asp.Material_Model 
+		order by
+		  asp.Collect_Time 
+	</select>
+	
+	<!-- 根据组织机构id查name -->
+	<select id="getOrgNameById" parameterType="java.util.Map" resultType="String">
+		SELECT
+		  Org_Name
+		FROM
+		  Organization_Info 
+		where
+		  id = #{orgId}
+	</select>
+	
+	<!-- 油石比波动 -->
+	<!-- 产品名称型号List取得 -->
+	<select id="getMaterialList" parameterType="java.util.Map" resultType="java.util.Map">
+		select distinct
+		   asp.Product_ID                                  -- 产品Id
+		  , vm.Material_Name
+		  , vm.Material_Model
+		from
+		  Asphalt_ProductionData as asp 
+		  left join V_MaterialInfo as vm 
+		    on asp.Product_ID = vm.Id 
+		    and vm.Valid_Flag = 1 
+		    <if test="orgId != null">
+		  	  and vm.Org_ID in
+		  	  <foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+				  #{item}
+			  </foreach>
+		    </if>	
+		where
+		  asp.Valid_Flag = 1 
+		  and asp.Product_ID is not null
+		  <if test="orgId != null">
+		  	and asp.Org_ID in
+		  	<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		  </if>	
+		  and asp.Collect_Time &gt;= #{startTime} 
+		  and asp.Collect_Time &lt;= #{endTime} 		  
+	</select>
+	
+	<!-- echar图取得 -->
+	<select id="getAggregateEchar" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  CONVERT(varchar (100), asp.Collect_Time, 23) as Collect_Time -- 采集时间
+		  , avg(ada.Asphalt) as avgAsphalt                -- 平均值
+		 ,asp.Org_ID
+		 ,asp.Org_Name
+		  <!-- , vm.Material_Name
+		  , vm.Material_Model -->
+		from
+		  V_Asphalt_ProductionData as asp 
+		  left join AsphaltProp_DataAnalysis as ada 
+		    on asp.Id = ada.Pro_Id 
+		    and ada.Valid_Flag = 1 
+		    and ada.Data_Type = 1 
+		  <!-- left join V_MaterialInfo as vm 
+		    on asp.Product_ID = vm.Id  -->
+		where
+		  asp.Valid_Flag = 1 
+		 <!--  and asp.Product_ID is not null  -->
+		  <if test="orgId != null">
+		  	and asp.Org_ID in
+		  	<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		  </if>
+		  <!-- <if test="Product_ID != null and Product_ID !=''">
+		  	and asp.Product_ID = #{Product_ID}              
+		  </if> -->
+		  and  CONVERT(varchar (100), asp.Collect_Time, 23) &gt;= #{startTime} 
+		  and  CONVERT(varchar (100), asp.Collect_Time, 23) &lt;= #{endTime}
+		group by
+		  CONVERT(varchar (100), asp.Collect_Time, 23) ,asp.Org_ID ,asp.Org_Name
+		  <!-- vm.Material_Name, vm.Material_Model -->
+	</select>
+</mapper>

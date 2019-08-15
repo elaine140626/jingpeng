@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.RoadSurfaceNumberDao">
+	<!-- 工程进度（路面工程数量）List取得 -->
+	<select id="getRoadSurfaceNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.RoadSurfaceNumberEntity">
+		SELECT
+		  rfn.Id
+		  , rfn.ProjectId                                 -- 项目id
+		  , rfn.PileNumber                                -- 起讫桩号
+		  , rfn.BuildNature                               -- 建设性质
+		  , rfn.BuildLength                               -- 建筑长度（m）
+		  , rfn.Width                                     -- 宽度（m）
+		  , rfn.FineGrain                                 -- 4cm改性细粒式沥青砼（AC-13）面积（m2）
+		  , rfn.MediumGrain                               -- 6cm中粒式沥青砼（AC-20)面积（m2）
+		  , rfn.CoarseGrain                               -- 10cm粗粒式沥青砼（AC-25)面积（m2）
+		  , rfn.StickyLayer                               -- 粘层油面积（m2）
+		  , rfn.PermeableLayer                            -- 透层油面积（m2）
+		  , rfn.Seal                                      -- 封层油面积（m2）
+		  , rfn.GravelUpper                               -- 20cm水泥稳定砂砾上基层面积（m2）
+		  , rfn.GravelLower                               -- 20cm水泥稳定砂砾下基层面积（m2）
+		  , rfn.GravelCushion                             -- 20cm天然砂砾垫层面积（m2）
+		  , rfn.ReinforceGravelUpper                      -- 补强层20cm水泥稳定砂砾上基层面积（m2）
+		  , rfn.ReinforceGravelLower                      -- 补强层20cm水泥稳定砂砾下基层面积（m2）
+		  , rfn.Permeable                                 -- 60cm透水性材料换填面积（m2）
+		  , rfn.RoadMilling                               -- 路面铣刨h平均=4cm面积（m2）
+		  , rfn.UsedMilling                               -- 旧路铣刨（1cm）面积（m2）
+		  , rfn.Shoulder                                  -- 培路肩面积（m2）
+		  , rfn.Remarks                                   -- 备注
+		  , rfn.IsDel
+		  , rfn.Creater
+		  , rfn.CreaterDate
+		  , rfn.Reviser
+		  , rfn.ReviserDate
+		FROM
+		  RoadSurfaceNumber as rfn 
+		  left join V_EntryTree as ve 
+		    on rfn.ProjectId = ve.pid
+		WHERE
+		  rfn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and rfn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and rfn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and rfn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and rfn.buildNature like concat('%',#{buildNature},'%')    -- 根据位置查询
+		  </if>
+		  <if test="buildLength!=null and buildLength!=''">
+		    and rfn.buildLength like concat('%',#{buildLength},'%') -- 根据建设性质查询
+		  </if>
+		   order by rfn.CreaterDate desc
+	</select>
+	
+	<select id="getRoadSurfaceNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  rfn.PileNumber                                -- 起讫桩号
+		  , rfn.BuildNature                               -- 建设性质
+		  , rfn.BuildLength                               -- 建筑长度（m）
+		  , rfn.Width                                     -- 宽度（m）
+		  , rfn.FineGrain                                 -- 4cm改性细粒式沥青砼（AC-13）面积（m2）
+		  , rfn.MediumGrain                               -- 6cm中粒式沥青砼（AC-20)面积（m2）
+		  , rfn.CoarseGrain                               -- 10cm粗粒式沥青砼（AC-25)面积（m2）
+		  , rfn.StickyLayer                               -- 粘层油面积（m2）
+		  , rfn.PermeableLayer                            -- 透层油面积（m2）
+		  , rfn.Seal                                      -- 封层油面积（m2）
+		  , rfn.GravelUpper                               -- 20cm水泥稳定砂砾上基层面积（m2）
+		  , rfn.GravelLower                               -- 20cm水泥稳定砂砾下基层面积（m2）
+		  , rfn.GravelCushion                             -- 20cm天然砂砾垫层面积（m2）
+		  , rfn.ReinforceGravelUpper                      -- 补强层20cm水泥稳定砂砾上基层面积（m2）
+		  , rfn.ReinforceGravelLower                      -- 补强层20cm水泥稳定砂砾下基层面积（m2）
+		  , rfn.Permeable                                 -- 60cm透水性材料换填面积（m2）
+		  , rfn.RoadMilling                               -- 路面铣刨h平均=4cm面积（m2）
+		  , rfn.UsedMilling                               -- 旧路铣刨（1cm）面积（m2）
+		  , rfn.Shoulder                                  -- 培路肩面积（m2）
+		  , rfn.Remarks                                   -- 备注
+		FROM
+		  RoadSurfaceNumber as rfn 
+		  left join V_EntryTree as ve 
+		    on rfn.ProjectId = ve.pid
+		WHERE
+		  rfn.IsDel = 0
+		   order by rfn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（路面工程数量）合计 -->
+	<select id="getRoadSurfaceNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.RoadSurfaceNumberSum">
+		SELECT
+		  sum(rfn.BuildLength) as BuildLengthSum          -- 建筑长度（m）
+		  , sum(rfn.Width) as WidthSum                    -- 宽度（m）
+		  , sum(rfn.FineGrain) as FineGrainSum            -- 4cm改性细粒式沥青砼（AC-13）面积（m2）
+		  , sum(rfn.MediumGrain) as MediumGrainSum        -- 6cm中粒式沥青砼（AC-20)面积（m2）
+		  , sum(rfn.CoarseGrain) as CoarseGrainSum        -- 10cm粗粒式沥青砼（AC-25)面积（m2）
+		  , sum(rfn.StickyLayer) as StickyLayerSum        -- 粘层油面积（m2）
+		  , sum(rfn.PermeableLayer) as PermeableLayerSum  -- 透层油面积（m2）
+		  , sum(rfn.Seal) as SealSum                      -- 封层油面积（m2）
+		  , sum(rfn.GravelUpper) as GravelUpperSum        -- 20cm水泥稳定砂砾上基层面积（m2）
+		  , sum(rfn.GravelLower) as GravelLowerSum        -- 20cm水泥稳定砂砾下基层面积（m2）
+		  , sum(rfn.GravelCushion) as GravelCushionSum    -- 20cm天然砂砾垫层面积（m2）
+		  , sum(rfn.ReinforceGravelUpper) as ReinforceGravelUpperSum -- 补强层20cm水泥稳定砂砾上基层面积（m2）
+		  , sum(rfn.ReinforceGravelLower) as ReinforceGravelLowerSum -- 补强层20cm水泥稳定砂砾下基层面积（m2）
+		  , sum(rfn.Permeable) as PermeableSum            -- 60cm透水性材料换填面积（m2）
+		  , sum(rfn.RoadMilling) as RoadMillingSum        -- 路面铣刨h平均=4cm面积（m2）
+		  , sum(rfn.UsedMilling) as UsedMillingSum        -- 旧路铣刨（1cm）面积（m2）
+		  , sum(rfn.Shoulder) as ShoulderSum              -- 培路肩面积（m2）
+		FROM
+		  RoadSurfaceNumber as rfn 
+		  left join V_EntryTree as ve 
+		    on rfn.ProjectId = ve.pid
+		WHERE
+		  rfn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and rfn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and rfn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and rfn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and rfn.buildNature like concat('%',#{buildNature},'%')    -- 根据位置查询
+		  </if>
+		  <if test="buildLength!=null and buildLength!=''">
+		    and rfn.buildLength like concat('%',#{buildLength},'%') -- 根据建设性质查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（路面工程数量） -->
+	<insert id="insertRoadSurfaceNumber" parameterType="com.curing.projectSchedule.model.RoadSurfaceNumberEntity">
+		INSERT 
+		INTO RoadSurfaceNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , BuildNature
+		  , BuildLength
+		  , Width
+		  , FineGrain
+		  , MediumGrain
+		  , CoarseGrain
+		  , StickyLayer
+		  , PermeableLayer
+		  , Seal
+		  , GravelUpper
+		  , GravelLower
+		  , GravelCushion
+		  , ReinforceGravelUpper
+		  , ReinforceGravelLower
+		  , Permeable
+		  , RoadMilling
+		  , UsedMilling
+		  , Shoulder
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{BuildNature}
+		  , #{BuildLength}
+		  , #{Width}
+		  , #{FineGrain}
+		  , #{MediumGrain}
+		  , #{CoarseGrain}
+		  , #{StickyLayer}
+		  , #{PermeableLayer}
+		  , #{Seal}
+		  , #{GravelUpper}
+		  , #{GravelLower}
+		  , #{GravelCushion}
+		  , #{ReinforceGravelUpper}
+		  , #{ReinforceGravelLower}
+		  , #{Permeable}
+		  , #{RoadMilling}
+		  , #{UsedMilling}
+		  , #{Shoulder}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（路面工程数量） -->
+	<update id="updateRoadSurfaceNumber" parameterType="com.curing.projectSchedule.model.RoadSurfaceNumberEntity">
+		UPDATE RoadSurfaceNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , BuildNature = #{BuildNature}
+		  , BuildLength = #{BuildLength}
+		  , Width = #{Width}
+		  , FineGrain = #{FineGrain}
+		  , MediumGrain = #{MediumGrain}
+		  , CoarseGrain = #{CoarseGrain}
+		  , StickyLayer = #{StickyLayer}
+		  , PermeableLayer = #{PermeableLayer}
+		  , Seal = #{Seal}
+		  , GravelUpper = #{GravelUpper}
+		  , GravelLower = #{GravelLower}
+		  , GravelCushion = #{GravelCushion}
+		  , ReinforceGravelUpper = #{ReinforceGravelUpper}
+		  , ReinforceGravelLower = #{ReinforceGravelLower}
+		  , Permeable = #{Permeable}
+		  , RoadMilling = #{RoadMilling}
+		  , UsedMilling = #{UsedMilling}
+		  , Shoulder = #{Shoulder}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（路面工程数量） -->
+	<update id="deleteRoadSurfaceNumber" parameterType="com.curing.projectSchedule.model.RoadSurfaceNumberEntity">
+		UPDATE RoadSurfaceNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

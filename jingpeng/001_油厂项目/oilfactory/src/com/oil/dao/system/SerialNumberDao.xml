@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.SerialNumberDao">
+	
+	<!-- 添加编号管理前缀 -->
+	<insert id="adSerialNumber" parameterType="Prefix">
+		insert into prefix(
+			Distinguish
+			,AllPrefix
+			,Year
+			,Month
+			,Day
+			,Hour
+			,Branch
+			,Second
+			,FlowNumber
+			,IsDel
+			,Creater
+			,CreaterDate
+		)
+		values(
+			#{Distinguish}
+			,#{AllPrefix}
+			,#{Year}
+			,#{Month}
+			,#{Day}
+			,#{Hour}
+			,#{Branch}
+			,#{Second}
+			,#{FlowNumber}
+			,0
+			,#{creater}
+			,now()
+		)
+	</insert>
+	
+	<!-- 修改编号管理前缀 -->
+	<update id="updateSerialNumber" parameterType="Prefix">
+		update prefix set
+			Distinguish = #{Distinguish}
+			,AllPrefix = #{AllPrefix}
+			,Year = #{Year}
+			,Month = #{Month}
+			,Day = #{Day}
+			,Hour = #{Hour}
+			,Branch = #{Branch}
+			,Second = #{Second}
+			,FlowNumber = #{FlowNumber}
+			,IsDel = 0
+			,Reviser = #{reviser}
+			,ReviserDate = now()
+		where 
+			Id = #{id}
+	</update>
+	
+	<!-- 查询所有前缀编号 -->
+	<select id="getAllPrefix" resultType="Prefix">
+		select 
+			Id                        
+			,Distinguish           
+			,AllPrefix              
+			,Year      
+			,Month
+			,Day
+			,Hour
+			,Branch
+			,Second
+			,FlowNumber     
+			,IsDel                    
+			,Creater                  
+			,CreaterDate              
+			,Reviser                  
+			,ReviserDate              
+		from prefix
+			where IsDel = 0
+			ORDER BY Id desc
+	</select>
+	<!-- 查询所有前缀编号 -->
+	<select id="getContractInfoPrefix" parameterType="String" resultType="Prefix">
+		select 
+			Id                        
+			,Distinguish           
+			,AllPrefix              
+			,Year      
+			,Month
+			,Day
+			,Hour
+			,Branch
+			,Second
+			,FlowNumber     
+			,IsDel                    
+			,Creater                  
+			,CreaterDate              
+			,Reviser                  
+			,ReviserDate              
+		from prefix
+			where 
+			Distinguish=#{types}
+			AND IsDel = 0
+			ORDER BY Id desc
+	</select>
+</mapper>

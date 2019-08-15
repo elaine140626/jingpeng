@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.cement.CementProductionFiguresDao">
+<!-- list -->
+	<select id="getCementProductionStatisticsList" parameterType="java.util.Map" resultType="com.mixingStation.model.cement.CementProductionFigures">
+	 	SELECT
+			Org_ID as orgId,
+			CONVERT (VARCHAR (10),vd.str_collect_Date,120) as collectDate,
+			str_strength_Grade as strengthGrade,
+			d_production_Volume as productionVolume,
+			SUM(d_weight_Cement1)+SUM(d_weight_Cement2) +SUM(d_weight_Cement3) +SUM(d_weight_Cement4) as cementWeight,
+			SUM(d_total_Weight) as totalWeight,
+			COUNT(*) as totalNumber,
+			(select 
+				COUNT(*) 
+			    from V_Cement_ProductionData 
+			    where i_analysis_Results = '1' 
+			    and Org_ID = vd.Org_ID 
+			    and str_product=vd.str_product
+				and CONVERT (VARCHAR (10),str_collect_Date,120)=CONVERT (VARCHAR (10),vd.str_collect_Date,120) 
+				and str_prodPlan_No=vd.str_prodPlan_No
+			) as qualifiedNumber ,
+			(select COUNT(*) 
+			     from V_Cement_ProductionData 
+			     where i_analysis_Results != '1' 
+			     and Org_ID = vd.Org_ID 
+			     and str_product=vd.str_product
+				 and CONVERT (VARCHAR (10),str_collect_Date,120)=CONVERT (VARCHAR (10),vd.str_collect_Date,120) 
+				 and str_prodPlan_No=vd.str_prodPlan_No
+			 ) as unqualifiedNumber
+		FROM V_Cement_ProductionData vd
+		WHERE
+			vd.Org_ID = #{orgId}
+			<if test="productName != null and productName != ''">
+					AND vd.str_product like '%${productName}%'
+			</if>
+			<if test="productModel != null and productModel != ''">
+					AND vd.str_product like '%${productModel}%'
+			</if>
+				
+			 <if test="startTime != null and startTime != ''">
+					AND vd.str_collect_Date &gt;=  #{startTime}
+			 </if>
+	 		<if test="endTime != null and endTime != ''">
+	 				AND vd.str_collect_Date &lt;= #{endTime}
+	 		</if>
+			group by Org_ID,CONVERT (VARCHAR (10),vd.str_collect_Date,120),str_strength_Grade,d_production_Volume,str_product,str_prodPlan_No
+			order by CONVERT (VARCHAR (10),vd.str_collect_Date,120) desc
+	</select>
+
+</mapper>

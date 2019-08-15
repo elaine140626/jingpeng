@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>嫩双公路工程质量监控管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/style.css">
+</head>
+
+<body>
+<div class="top">
+	<div class="topleft">嫩双公路工程质量监控管理平台</div>
+    <div class="topright">
+    	<a href="#" class="userid">wangdanwei</a><span>你好！</span>
+        <a href="../Common/out.html" class="out">安全退出</a>
+    </div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav">
+        	<ul>
+            	<li class="nav-focus"><a href="sbgl.html"><span class="sbgl"></span><b>设备管理</b></a></li>
+                <li><a href="#"><span class="zzjgpz"></span><b>组织机构配置</b></a></li>
+                
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：沥青混凝土拌合站（综合一标） > 设备管理</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+                <div class="search">
+                    <form action="" method="get" class="">
+                      <label>拌合机类型：</label>
+                      <select size="1" id="fEquipmenttype">
+                        <option value="all">全部</option>
+                        <option value=0>沥青拌和机</option>
+                        <option value=1>水泥混凝土拌和机</option>
+                      </select>
+                      <label>设备编号：</label>
+                      <input type="text"  id="fEquipmentNo" class="search_input rightwbj">
+                      <label>拌合站名称：</label>
+                      <select size="1" id="fEquipment_Name">
+
+                      </select>
+                      <input name="" type="button" id="findEquipment" value="查&nbsp;&nbsp;询" class="btncha">
+                  </form>
+                   
+                </div>
+            	<div class="table-b">
+                	<div class="luru" ><a href="#" class="hvr-icon-forward globalLoginBtn">新增录入</a></div>
+            	  	<div class="table-a-right table-b-right">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover" id="Equipmentlist">
+                            <THEAD>
+                                <tr>
+                                    <th scope="col" class="sbgl_xh" style="text-align: center">序号</th>
+                                    <th scope="col" class="sbgl_mc" style="text-align: center">拌合站名称</th>
+                                    <th scope="col" class="sbhl_bxh" style="text-align: center">上传模块标识</th>
+                                    <th scope="col" class="sbhl_bxh" style="text-align: center">拌合机标识</th>
+                                    <th scope="col" class="sbgl_cjr" style="text-align: center">拌合机类型</th>
+                                    <th scope="col" style="text-align: center">设备编号</th>
+                                    <th scope="col" style="text-align: center">拌合机名称</th>
+                                    <th scope="col" class="sbhl_bxh" style="text-align: center">拌合机型号</th>
+                                    <th scope="col" style="text-align: center">厂家</th>
+                                    <th scope="col" style="text-align: center">备注</th>
+                                    <th scope="col" class="sbgl_cjr" style="text-align: center">创建人</th>
+                                    <th scope="col" style="text-align: center">创建日期</th>
+                                    <th scope="col" style="text-align: center">操作</th>
+                                </tr>
+                            </THEAD>
+                    </table>
+
+</div>
+<div class="bottom">
+	<a href="#">关于我们 </a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+<div class="modal fade" id="loginModal" data-dismiss="modal" class="btn_bc">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content" id="content">
+			<div class="tan_dx_title"  >
+            	<span><img src="images/bi.png" width="16" height="16"></span>
+		 	 	<h3>设备</h3>
+
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+          	</div>
+            <div class="tan_dx_txt">
+
+            	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru" >
+                  <tr>
+                    <td width="37%" align="right">拌合站名称：</td>
+                    <td width="63%">
+                    <select  size="1" id="Org_Name">
+                      </select></td>
+                  </tr>
+                  <tr>
+                    <td align="right">上传模块标识：</td>
+                      <td><input name="Upload_Module_ID" type="text" id="Upload_Module_ID" placeholder="上传模块标识"></td>
+                  </tr>
+                  <tr>
+                    <td align="right">拌合机标识：</td>
+                      <td><input name="Equipment_Code" type="text" id="Equipment_Code" placeholder="输入拌合机标识"></td>
+
+                  </tr>
+                  <tr>
+                    <td align="right">拌合机类型：</td>
+                    <td><select name="select2" size="1" id="Equipment_Type">
+                        <option value=0>沥青拌和机</option>
+                        <option value=1>水泥混凝土拌和机</option>
+                      </select></td>
+                  </tr>
+                  <tr>
+                    <td align="right">设备编号：</td>
+                    <td><input name="Equipment_No" type="text" id="Equipment_No"  placeholder="输入设备编号"></td>
+                  </tr>
+                  <tr>
+                    <td align="right">拌合机名称：</td>
+                    <td><input name="Equipment_Name" type="text" id="Equipment_Name" placeholder="输入拌合机名称"></td>
+                  </tr>
+                  <tr>
+                    <td align="right">拌合机型号：</td>
+                    <td><input name="Equipment_Model" type="text" id="Equipment_Model" placeholder="输入拌合机型号"></td>
+                  </tr>
+                  <tr>
+                    <td align="right">厂家：</td>
+                    <td><input name="Vendor" type="text" id="Vendor" placeholder="输入厂家"></td>
+                  </tr>
+                  <tr>
+                    <td align="right">备注：</td>
+                    <td><textarea name="Remarks" cols="30" rows="3" id="Remarks"></textarea></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" align="center"><input type="button" id="login_close" value="保&nbsp;&nbsp;存" class="btn_bc"  data-dismiss="modal"></td>
+                  </tr>
+                </table>
+
+          	</div>
+		</div>
+	</div>
+</div>
+
+<script src="../resources/js/bootstrap.min.js"></script>
+<script src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/js/script.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="../resources/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+<script type="text/javascript" src="../resources/js/equipment_Management.js"></script>
+<script type="text/javascript" src="../resources/js/layer.js"></script>
+</body>
+</html>

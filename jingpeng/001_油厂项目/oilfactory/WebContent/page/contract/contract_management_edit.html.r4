@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script> 
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/upload/upload.js"></script>
+		<script type="text/javascript" src="../../js/jquery-upload-file/js/jquery.uploadfile.js"></script>
+		<script type="text/javascript" src="../../js/jquery-upload-file/ajaxfileupload.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/contract/contract_management_edit.js"></script>	
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<script src="../../js/js/My97DatePicker/WdatePicker.js"></script>
+		<script type="text/javascript" src="../../js/layer/layer.js"></script>
+		<script type="text/javascript" src="../../js/laydate/laydate.js"></script>
+		<title>瑞德公路管理系统</title>
+<!-- 		<script>
+			//执行一个laydate实例
+			laydate.render({
+			  elem: '#ContractDate' //指定元素
+		      ,format: 'yyyy-MM-dd'
+			});
+	    </script> -->
+		<style type="text/css">
+		/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				#sider {
+					position: absolute;
+					top: 40px;
+					height: 120px;
+					/*width: 400px;*/
+					left: 5px;
+					right: 5px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				
+				#main {
+					position: absolute;
+					top: 165px;
+					left: 5px;
+					right: 5px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				#sider {
+					position: absolute;
+					top: 70px;
+					height: 160px;
+					/*width: 400px;*/
+					left: 25px;
+					right: 25px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+					padding:5px;
+				}
+				
+				#main {
+					position: absolute;
+					top: 235px;
+					left: 25px;
+					right: 25px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+			}
+			
+			
+			.box_border {
+				/* position: absolute; */
+				bottom: 10px;
+				/* overflow-y: auto; */
+				height: 255px;
+				/* left: 0;
+				right: 0;
+				top: 0px; */
+			}
+			#box_border {
+			    border: none;	
+			    height: 255px;
+				overflow: auto;	    
+			}
+			tr {
+				height: 40px;
+				line-height: 40px;
+			}
+			
+			.ui_text_rt {
+				text-align: right;
+				padding-left: 0px;
+			}
+			
+			.rtTop {
+				vertical-align: top;
+			}
+			
+			.row {
+				margin: 0 15px;
+			}
+			
+			.newLine {
+				padding: 5px;
+				height:36px;
+			}
+			
+			.ui_input_txt02,
+			.ui_select01,
+			.ui_area01 {
+				margin-left: -10px;
+				padding-left: 5px;
+			}
+			
+			.ui_input_txt {
+				margin-left: 0;
+				margin-top: 4px;
+			}
+			.table tr td select{
+				width:80%;
+				border-radius:2px;
+			}
+			.table tr td input{
+				width:92%;
+			}
+			.table tr td select.half_select {
+				width:40%;
+			}
+			.table tr td input.harf_input {
+				width:40%;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="top_nav">
+					<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;合同管理&nbsp;>&nbsp;销售合同管理&nbsp;>&nbsp;<span style="color:#1A5CC6">新增销售合同</span></span>
+				</div>
+				<div id="sider">
+					<div id="ContractNumberFlag"  class="col-lg-3 col-sm-6 newLine ">
+						<div class="ui_text_rt col-lg-4 col-sm-4">合同编号：</div>
+						<input type="text" value="" style="background:#CCCCCC" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" id="ContractNumber" name="ContractNumber" maxlength="32"/>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">合同名称：</div>
+						<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="ContractName" naem="ContractName" maxlength="50" onkeyup="this.value=this.value.replace(/^ +| +$/g,'')"/>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">合同状态：</div>
+						<select id="ContractState" name="ContractState" class="ui_select01 col-lg-8 col-sm-8">
+						</select>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">合同日期：</div>
+						<input type="text" class="ui_input_txt02 col-lg-8 col-sm-8" readonly="readonly"
+						 id="ContractDate" name="ContractDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+						<span style="color:red;">*</span>
+					</div>
+
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">客户名称：</div>
+						<input id="CustomerName" name="CustomerName" list="CustomerNameList" class="ui_input_txt02 col-lg-8 col-sm-8" onchange="ChangeCustomerName(this.value)"/>
+						<datalist id="CustomerNameList" class="ui_select01 col-lg-8 col-sm-8" onchange="ChangeCustomerName(this.value)">
+						</datalist>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">客户编号：</div>
+						<input type="text" style="background:#CCCCCC" readonly="readonly" class="ui_input_txt02 col-lg-8 col-sm-8" id="CustomerId" name="CustomerId"/>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售数量（t）：</div>
+						<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="SaleNumber" name="SaleNumber" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' />
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售员：</div>
+						<select id="UserInfoId" name="UserInfoId" class="ui_select01 col-lg-8 col-sm-8">
+						</select>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">销售公司名称：</div>
+						<select id="SalesCompanyId" name="salesCompanyId" class="ui_select01 col-lg-8 col-sm-8">
+						</select>
+						<span style="color:red;">*</span>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">是否来料加工：</div>
+						<input name="IsIncoming" type="radio" value="0" /> 是
+						<input name="IsIncoming" style="margin-left: 20%;" value="1" checked="checked" type="radio" />否
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">备注：</div>
+						<input type="text" value="" class="ui_input_txt02 col-lg-8 col-sm-8" id="remarks" name="remarks" maxlength="200"/>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-5 col-sm-5">出库记录是否需要审批：</div>
+						<input name="IsApproval" type="radio" value="0" /> 是
+						<input name="IsApproval" style="margin-left: 10%;" value="1" checked="checked" type="radio" />否
+					</div>
+						<!-- <form id="signupListImportForm" class="import-file-form" enctype="multipart/form-data">      
+							<input type="file" name="excelFile" id="excelFile" multiple="multiple" onchange="fileUpload()"/>  
+							<input class="btn-dr" type="button" value="导入" onclick="selectFile()"/>  
+						</form> -->
+					<div class="col-lg-3 col-sm-6 newLine">
+						<div class="ui_text_rt col-lg-4 col-sm-4">是否关联其它公司：</div>
+						<input name="IsRelation" type="radio" value="0" /> 是
+						<input name="IsRelation" style="margin-left: 20%;" value="1" checked="checked" type="radio" />否
+					</div>
+					<div id="relation" class="col-lg-3 col-sm-6 newLine" hidden="true">
+						<div class="ui_text_rt col-lg-4 col-sm-4">其它公司名称：</div>
+						<select id="RelationCompanyId" name="RelationCompanyId" class="ui_select01 col-lg-8 col-sm-8">
+						</select>
+					</div>
+					<div class="col-lg-3 col-sm-6 newLine" style='height: 26px;'>
+						<div class="ui_text_rt col-lg-4 col-sm-4">附件上传：</div>
+						<table class="col-lg-8 col-sm-8">
+							<!-- <tr style="line-height: 1;">
+									<td>
+										<a id="fileupload" ><input  style="height:24px" type="button" value="上传文件"></input></a>
+									</td>
+									<td>
+										<a id="file" style="margin-left: 13px;display:block"></a>
+										<a type="button" value="下载" id="downloadBtn" style="display:none;text-decoration:none" onclick="downloadFile()">
+											<img src="../../img/common/download.png" width="20" height="20" alt="下载" title="下载">
+										</a>
+										<a type="button" value="删除" id="deleteBtn" style="display:none;text-decoration:none" onclick="deleteFile()">
+											<img src="../../img/common/del.png" width="20" height="20" alt="删除" title="删除">
+										</a>
+										<input type="hidden" id="files"/>
+									</td>
+								</tr> -->
+							<!-- <input type="file" multiple="multiple" value="" id="file" class="col-lg-8" id="ContractRoute" name="ContractRoute"/> -->
+							<tr>
+								 <td id="upfile" style="text-align:center;">
+					 				<span id="upShow" style=";text-align:center;display:block;">
+					 					<input type="file" id="myBlogImage" name="myfiles"/>
+					 				</span>
+					 				<span id="upSelectShow" style="display:none;text-align:center;">
+					 					<a id="fileShow" style="margin-left: -200px;\"></a>
+					 					<a type="button" value="下载" id="downloadBtn" onclick="downloadFile(this)">
+					 						<img src="../../img/common/download.png" width="20" height="20" alt="下载" title="下载">
+					 					</a>
+					 					<a type="button" value="删除" id="deleteBtn"  onclick="deleteFile(this)">
+					 						<img src="../../img/common/del.png" width="20" height="20" alt="删除" title="删除">
+					 					</a>
+					 						<input type="hidden" id="files" value="" name="transportRoute"/>
+					 				</span>
+					 			</td>
+							</tr>
+						</table>
+					</div>
+					
+				</div>
+				<div id="main">
+					<div class="ui_tb" id="details1" style="display: block; min-width:1200px;height: 260px;">
+						<div id="box_border">
+							<div class="box_border">
+								<table id="tableList1" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+									<tr>
+										<th class="col-lg-1">序号</th>
+										<th class="col-lg-1">操作</th>
+										<th class="col-lg-2">产品名称</th>
+										<th class="col-lg-2">规格型号</th>
+										<th class="col-lg-1">单价(元)</th>
+										<th class="col-lg-1">数量(t)</th>
+										<th class="col-lg-1">税率(%)</th>
+										<th class="col-lg-1">金额(元)</th>
+										<th class="col-lg-1">是否调价</th>
+										<th class="col-lg-2">备注</th>
+									</tr>								
+								</table>
+								<div style="width: 100%;text-align: center;">
+									<input type="button" value="再添加一条" class="ui_input_btnadd " onclick="addTable1()"/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="ui_tb" id="details2" style="display: none; min-width:1200px;height: 235px;">
+						<div id="box_border">
+							<div class="box_border">
+								<table id="tableList2" style="margin-bottom: 10px;" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+									<tr>
+										<th class="col-lg-1">序号</th>
+										<th class="col-lg-1">操作</th>
+										<th class="col-lg-1">产品名称</th>
+										<th class="col-lg-1">规格型号</th>
+										<th class="col-lg-2">结算方式</th>
+										<th class="col-lg-2">货物结算情况</th>
+										<th class="col-lg-2">运输结算情况</th>
+									</tr>									
+								</table>
+								<div style="width: 100%;text-align: center;margin-bottom: 10px;">
+									<input type="button" value="再添加一条" class="ui_input_btnadd " onclick="addTable2()" />
+								</div>
+								
+							</div>
+						</div>
+					</div>
+					<div>
+						<input type="button" value="保存" class="ui_input_btnsave " onclick="save()"/>
+						<input type="button" value="关闭" onclick="location.href='contract_management.html'" class="ui_input_btnclose" />
+					</div>
+				</div>
+			</div>
+		</form>
+
+	</body>
+	<script type="text/javascript">
+		// 是否来料加工，判断明细显示
+		$('input[type=radio][name=IsIncoming]').change(function() {
+			if(this.value == '0') {
+				$('#details2').show();
+			} else if(this.value == '1') {
+				$('#details2').hide();
+			}
+		});
+	</script>
+
+</html>

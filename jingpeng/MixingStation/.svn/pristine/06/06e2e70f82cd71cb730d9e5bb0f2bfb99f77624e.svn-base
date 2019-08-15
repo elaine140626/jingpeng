@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.cement.Cement_TheoPropDetailedDao">
+	<!-- 水泥配比明细 -->
+	<select id="getCement_TheoPropDetailedByTheoProp_ID" parameterType="Cement_TheoryProportion" resultType="Cement_TheoPropDetailed">
+	
+		SELECT c.id i_id,c.TheoProp_ID i_theoProp_Id,c.Materials_ID i_materials_Id,c.Weight d_weight,c.Material_Origin str_material_Origin,c.Manufacturer str_Manufacturer,
+		v.Material_Model  str_material_Model ,v.Material_Name str_material_Name,v.id i_materials_Id
+		from Cement_TheoPropDetailed c
+		left join V_MaterialInfo v on c.Materials_ID=v.id
+		where c.Valid_Flag=1 and c.TheoProp_ID =#{i_id}
+	
+	</select>
+</mapper>

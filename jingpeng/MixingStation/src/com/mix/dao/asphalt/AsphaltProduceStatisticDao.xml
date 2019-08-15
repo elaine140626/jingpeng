@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.asphalt.AsphaltProduceStatisticDao">
+
+	<select id="getAsphaltProduceStatistic" parameterType="java.util.Map" resultType="java.util.Map">
+		
+	 select 
+     isnull(t.str_productInfo,'')  str_productInfo,
+     isnull(t.unqualified,'') unqualified,
+     isnull(t.construction_Unit,'')  construction_Unit,
+     isnull(t.proj_Pos,'')  proj_Pos,
+     t.collect_Time,'' collect_Time,
+     isnull(t.sumasphalt_Meter,0)  sumasphalt_Meter,
+     isnull(t.total_Weight,0) total_Weight,
+     isnull(t.standard,0) standard,
+     isnull(t.total ,0) total
+   from (select CONVERT ( VARCHAR (10), a.collect_Time, 120 ) as collect_Time,
+       m.Material_Name+'-'+m.Material_Model as str_productInfo,
+       p.Construction_Unit as construction_Unit,
+       p.Proj_Pos as proj_Pos,
+       count(a.id) as total,
+       SUM(a.Asphalt_Meter) as sumasphalt_Meter, 
+       SUM (a.Total_Weight) as total_Weight,
+       ( SELECT COUNT (d.id) 
+        FROM Asphalt_ProductionData d 
+        WHERE d.Org_ID = a.Org_ID AND d.Equ_ID = a.equ_Id 
+        AND CONVERT ( VARCHAR (10), d.collect_Time, 120 ) = CONVERT ( VARCHAR (10), a.collect_Time, 120 ) 
+        AND d.Product_ID = a.product_Id 
+        AND d.ProdPlan_No = a.ProdPlan_No AND d.Analysis_Result = '1' and 
+        <foreach collection="org_Ids" index="index" item="item" open="  a.org_Id IN (" separator="," close=")">
+        	#{item}
+        </foreach> ) AS standard ,
+         ( SELECT COUNT (d.id) 
+        FROM Asphalt_ProductionData d 
+        WHERE d.Org_ID = a.Org_ID AND d.Equ_ID = a.equ_Id 
+        AND CONVERT ( VARCHAR (10), d.collect_Time, 120 ) = CONVERT ( VARCHAR (10), a.collect_Time, 120 ) 
+        AND d.Product_ID = a.product_Id 
+        AND d.ProdPlan_No = a.ProdPlan_No AND d.Analysis_Result != '1' 
+            <foreach collection="org_Ids" index="index" item="item" open=" and a.org_Id IN (" separator="," close=")">
+        	#{item}
+        </foreach>
+         ) AS unqualified 
+  from Asphalt_ProductionData a left join
+       V_MaterialInfo m on m.Id = a.Product_ID left join
+       Production_Plan p on p.Plan_No = a.ProdPlan_No
+      		WHERE
+			
+		<foreach collection="org_Ids" index="index" item="item" open="a.org_Id IN (" separator="," close=")">
+        	#{item}
+        </foreach>
+     group by a.Org_ID,CONVERT ( VARCHAR (10), a.collect_Time, 120 ),m.Material_Name,m.Material_Model,p.Construction_Unit,p.Invalid_Person
+		 ,a.Product_ID,a.ProdPlan_No,a.equ_Id,p.Proj_Pos) t 
+		 
+		where 1=1
+		<if test="str_material_Name != null and str_material_Name != ''">
+		AND t.str_productInfo like '%${str_material_Name}%'
+        </if>
+        <if test="str_material_Model != null and str_material_Model != ''">
+        AND t.str_productInfo like '%${str_material_Model}%'
+        </if>
+       <if test="str_startTime != null and str_startTime != ''">
+       <!--  AND t.collect_Time &gt;= #{str_startTime} -->
+         <![CDATA[ and t.collect_Time >=  #{str_startTime}  ]]>
+        </if>
+        <if test="str_endTime != null and str_endTime != ''">
+       <!--  AND t.collect_Time &lt;= #{str_endTime} -->
+          <![CDATA[ and t.collect_Time <=  #{str_endTime}  ]]>
+        </if>
+        <if test="str_proj_Pos != null and str_proj_Pos != ''">
+        AND t.proj_Pos like '%${str_proj_Pos}%'
+        </if>
+        <if test="str_construction_Unit != null and str_construction_Unit != ''">
+        AND t.construction_Unit like '%${str_construction_Unit}%'
+        </if>
+        ORDER BY t.collect_Time DESC
+	</select>
+	
+	<select id="getBar" parameterType="java.util.Map" resultType="java.util.Map">
+	select SUM(t.standard) standard, SUM(t.unqualified) unqualified,SUM(t.total) total
+    from
+    (SELECT
+	(
+		SELECT
+			COUNT (a.id)
+		FROM
+			Asphalt_ProductionData a
+		WHERE
+			a.Org_ID = va.Org_ID
+		AND a.Equ_ID = va.equ_Id
+		AND CONVERT (
+			VARCHAR (10),
+			a.collect_Time,
+			120
+		) = CONVERT (
+			VARCHAR (10),
+			va.collect_Time,
+			120
+		)
+		AND a.Product_ID = va.product_Id
+		AND a.ProdPlan_No = va.ProdPlan_No
+		AND a.Analysis_Result = '1'
+	) AS standard,
+	(
+		SELECT
+			COUNT (a.id)
+		FROM
+			Asphalt_ProductionData a
+		WHERE
+			a.Org_ID = va.Org_ID
+		AND a.Equ_ID = va.equ_Id
+		AND CONVERT (
+			VARCHAR (10),
+			a.collect_Time,
+			120
+		) = CONVERT (
+			VARCHAR (10),
+			va.collect_Time,
+			120
+		)
+		AND a.Product_ID = va.product_Id
+		AND a.ProdPlan_No = va.ProdPlan_No
+		AND a.Analysis_Result != '1'
+	) AS unqualified,
+	COUNT (va.id) AS total,
+	str_productInfo
+FROM V_Asphalt_ProductionData va
+		WHERE
+			1 = 1
+		<foreach collection="org_Ids" index="index" item="item" open=" AND va.org_Id IN (" separator="," close=")">
+        	#{item}
+        </foreach>
+        AND va.valid_Flag=1
+        GROUP BY
+			va.equipment_Name,
+			va.construction_Unit,
+			va.proj_Pos,
+			va.Org_ID,
+			va.ProdPlan_No,
+			va.product_Id,
+			va.str_productInfo,
+			va.equ_Id,
+			CONVERT (
+				VARCHAR (10),
+				va.collect_Time,
+				120)) t
+		where 1=1
+		<if test="str_material_Name != null and str_material_Name != ''">
+		AND t.str_productInfo like '%${str_material_Name}%'
+        </if>
+        <if test="str_material_Model != null and str_material_Model != ''">
+        AND t.str_productInfo like '%${str_material_Model}%'
+        </if>
+        <if test="str_startTime != null and str_startTime != ''">
+        AND t.collect_Time &gt; #{str_startTime}
+        </if>
+        <if test="str_endTime != null and str_endTime != ''">
+        AND t.collect_Time &lt; #{str_endTime}
+        </if>
+        <if test="str_proj_Pos != null and str_proj_Pos != ''">
+        AND t.proj_Pos like '%${str_proj_Pos}%'
+        </if>
+        <if test="str_construction_Unit != null and str_construction_Unit != ''">
+        AND t.construction_Unit like '%${str_construction_Unit}%'
+        </if>
+	</select>
+
+</mapper>

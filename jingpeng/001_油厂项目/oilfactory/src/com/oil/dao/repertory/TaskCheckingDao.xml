@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.repertory.TaskCheckingDao">
+<!-- 获取生产计划明细 -->
+<select id="getProductionPlanList" parameterType="java.util.Map" resultType="com.oil.model.dispath.NextProductionPlanEntity">
+	select 
+		* 
+	from v_planmeasure v
+	where v.IsDel = 0 and v.TechnicsNumber != ''
+	and v.IsExamine = 0
+	<if test="id != null and id != ''">
+		and v.Id = #{id}
+	</if>
+	<if test="materielName != null and materielName != ''">
+		and v.MaterielName like concat('%',#{materielName},'%')
+	</if>
+	<if test="materielModel != null and materielModel != ''">
+		and v.MaterielModel like concat('%',#{materielModel},'%')
+	</if>
+	<if test="isCheck != null and isCheck != ''">
+		and v.IsCheck = #{isCheck}
+	</if>
+</select>
+<!-- 查询原材料的内容 -->
+<select id="getList" parameterType="java.util.Map" resultType="com.oil.model.repertory.TaskCheckingEntity">
+	SELECT
+	    t.Id
+	  , t.MaterielName                                -- 物料名称(产品名称)
+	  , t.MaterielModel                               -- 规格型号(产品型号)
+	  , t.PlanNumber                                  -- 编号
+	  , t.PlanWeight                                  -- 计划生产量
+	  , t.Batch                                       -- 生产批次
+	  , pm.MaterielId                                 -- 物料id
+	  , m.MaterielName   as RawMaterialName           -- 原材料名称
+	  , m.MaterielModel  as RawMaterialModel          -- 原材料型号
+	  , m.PrimeNumber                                 -- 库存量
+	  , m.Unit                                        -- 单位
+	  , pm.RatioWeight                                -- 含量
+	  , pm.MaterielWeight                             -- 重量
+	  , case 
+	    when m.PrimeNumber >= pm.MaterielWeight 
+	    then '是' 
+	    else '否' 
+	    end as IsSatisfy                              -- 是否满足生产
+	FROM
+	  productionmanagement pm 
+	  left join MaterielInfo m                        -- 物料信息表
+	    on m.Id = pm.MaterielId                       -- 物料id
+	    and m.IsDel = 0 
+	  left join ( 
+	    select
+	      plan.Id
+	      , m.MaterielName                            -- 物料名称(产品名称)
+	      , m.MaterielModel                           -- 规格型号(产品型号)
+	      , plan.PlanNumber                           -- 编号
+	      , plan.PlanWeight                           -- 计划生产量
+	      , plan.Batch                                -- 生产批次
+	    from
+	      planmeasure plan 
+	      left join salesorderdetailed s              -- 销售订单明细表
+	        on s.Id = plan.SalesOrderDetailedId       -- 订单明细id
+	        and s.IsDel = 0 
+	        and s.IsActualDelivery = 0                -- 是否实际发货(去除'空发'的状态)
+	      left join salesorder ss                     -- 销售订单表
+	        on ss.Id = s.SalesOrderId 
+	        and ss.IsDel = 0 
+	      left join MaterielInfo m                    -- 物料信息表
+	        on m.Id = s.MaterielId                    -- 物料id
+	        and m.IsDel = 0 
+	    where
+	      plan.IsDel = 0
+	  ) t 
+	    on t.Id = pm.PlanMeasureId 
+	where
+	  pm.IsDel = 0
+	  and pm.PlanMeasureId = #{Id}
+	ORDER BY
+	  pm.CreaterDate desc
+</select>
+</mapper>

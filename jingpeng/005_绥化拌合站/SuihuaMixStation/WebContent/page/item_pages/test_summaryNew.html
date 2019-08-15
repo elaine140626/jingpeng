@@ -1,0 +1,80 @@
+<!--试验汇总页面-->
+<script src="../../js/HighwayPlatform/TestRoom/testSummaryNew.js"
+	type="text/javascript" charset="utf-8"></script>
+	<script src="../../js/HighwayPlatform/MixStation/common.js"
+	type="text/javascript" charset="utf-8"></script>
+<form action="" method="get" class="sousuo" id="test_summary">
+	<label>试验日期：</label>
+	<input type="text" size="20" class="search_input" id="startTime">
+	<label>--</label>
+	<input type="text" size="20" class="search_input" id="endTime">
+	<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha summary_btn" onclick="getList()">
+</form>
+<ul id="myTab" class="nav nav-tabs">
+	<li class="active">
+		<a href="#pitch"  onclick="ecarclick()" data-toggle="tab"><strong>试验分布</strong></a>
+	</li>
+	<li>
+		<a href="#cement" onclick="shiyanclick()" data-toggle="tab"><strong>自动采集</strong></a>
+	</li>
+	<li>
+		<a href="#matthus" onclick="mangyangclick()" data-toggle="tab"><strong>盲样试验</strong></a>
+	</li>
+</ul>
+<div id="echarBox">
+<input name="radio" type="radio" checked="checked" value="0"/> 按日查询
+<input name="radio" type="radio" value="1"/>按月查询
+<input name="radio" type="radio" value="2"/>按年查询
+<div style="height: 500px" id="echar">
+</div>
+</div>
+<div class="lq_main" id="shiyan" style="display: none;">
+	<div class="lq_biao">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="list">
+			<thead>
+				<tr>
+					<th width="6%" class="xh" scope="col">序号</th>
+					<th width="12%" scope="col">试验室名称</th>
+					<th width="7%" scope="col">自动采集试验总数量</th>
+					<th width="9%" scope="col">自动采集试验名称</th>
+					<th width="9%" scope="col">合格数量</th>
+					<th width="9%" scope="col">不合格数量</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+<div class="lq_main" id="mangyang" style="display: none;">
+	<div class="lq_biao">
+		<table width="100%" border="0" cellpadding="0" cellspacing="0" class="bgcolor" id="listMangYang">
+			<thead>
+				<tr>
+					<th width="6%" class="xh" scope="col">序号</th>
+					<th width="12%" scope="col">试验室名称</th>
+					<th width="7%" scope="col">总数量</th>
+					<th width="9%" scope="col">试验名称</th>
+					<th width="9%" scope="col">合格数量</th>
+					<th width="9%" scope="col">不合格数量</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+     jeDate({
+         dateCell:"#startTime",
+         format:"YYYY-MM-DD",
+         isinitVal:false,
+         isTime:true, 
+	   	 isClear:false,
+     })
+    jeDate({
+        dateCell:"#endTime",
+        format:"YYYY-MM-DD",
+        isinitVal:false,
+        isTime:true,
+        isClear:false,
+    })
+</script>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test">
+
+	<select id="get" resultType="java.util.Map" statementType="CALLABLE">
+		exec proc_Alert '2018-03-09 00:00:00','2018-05-07 00:00:00','3,17,22',0,1
+	</select> 
+	<!-- <select id="get" statementType="CALLABLE"  resultType="java.util.Map">
+    {call proc_Alert('2018-03-09 00:00:00','2018-05-07 00:00:00','3,17,22',0,1)}  
+    </select> -->
+    <!--  CALL proc_Alert('2018-03-09 00:00:00','2018-05-07 00:00:00','3,17,22',0,1)
+    <parameterMap type="java.util.Map" id="getNextSeqMap">
+        <parameter property="Code" mode="IN" jdbcType="VARCHAR"/>
+        <parameter property="Lenth" mode="IN" jdbcType="SMALLINT"/>
+        <parameter property="IsDate" mode="IN" jdbcType="CHAR"/>
+        <parameter property="NewSeq" mode="OUT" jdbcType="CHAR"/>
+    </parameterMap> -->
+    <!-- <resultMap type="java.util.Map" id="resultNextSeqMap">
+        <result column="NewSeq" property="NewSeq" javaType="String" jdbcType="CHAR"/>
+    </resultMap> -->
+<!-- <resultMap type="hashmap" id="ResultMap_test">
+
+            <result property="Org_name"   column="Org_name"   javaType="java.lang.String"    jdbcType="VARCHAR" />
+
+            <result property="Id"   column="Id"    javaType="java.lang.String"   jdbcType="VARCHAR"  />
+
+
+</resultMap>
+
+<parameterMap type="hashmap" id="ParaMap_test">
+
+            <parameter property="para1"   mode="IN"      javaType="java.lang.String"     jdbcType="VARCHAR"/>
+
+            <parameter property="para2"   mode="IN"     javaType="java.lang.String"     jdbcType="VARCHAR"/>
+
+            <parameter property="para3"   mode="IN"     javaType="java.lang.String"     jdbcType="VARCHAR"/>
+            <parameter property="para3"   mode="IN"     javaType="java.lang.String"     jdbcType="INTEGER"/>
+            
+            <parameter property="para3"   mode="IN"     javaType="java.lang.String"     jdbcType="INTEGER"/>
+            
+            
+
+</parameterMap> -->
+
+
+</mapper>

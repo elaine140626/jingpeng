@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="organization_Info">
+	<select id="getorganization_Info" resultType="organization_Info"
+		parameterType="organization_Info">
+
+		SELECT o.Id i_id, o.Org_Name str_org_Name from Organization_Info o WHERE
+		o.Org_Type =2
+	</select>
+
+
+
+	<select id="getAsphaltmixingstation" resultType="organization_Info" parameterType="java.util.List">
+		select (select Org_Name from Organization_Info where
+		Id = o.Parent_Id) as
+		ParentName, o.Id,o.Org_Name
+		from Organization_Info o
+		where o.Org_Type = 2 and o.MixStation_Type = '0'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+        	#{item}
+        </foreach>
+
+	</select>
+
+	<select id="getCementmixingstation" resultType="organization_Info" parameterType="java.util.List">
+		select (select Org_Name from Organization_Info where
+		Id = o.Parent_Id) as ParentName, o.Id,o.Org_Name
+		from Organization_Info o
+		where o.Org_Type = 2 and o.MixStation_Type = '1'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+        	#{item}
+        </foreach>
+	</select>
+
+	<select id="getWaterstabilitymixingstation" resultType="organization_Info" parameterType="java.util.List">
+		select (select Org_Name from Organization_Info where
+		Id = o.Parent_Id) as ParentName, o.Id,o.Org_Name
+		from Organization_Info o
+		where o.Org_Type = 2 and o.MixStation_Type = '2'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+        	#{item}
+        </foreach>
+	</select>
+
+
+
+
+</mapper>

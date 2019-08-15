@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mixingStation.dao.system.EquipmentDao">
+	<!-- 查询所有拌和设备信息 -->
+	<select id="getAllEquipmentInfo" parameterType="java.util.Map" resultType="com.mixingStation.model.asphalt.EquipmentInfo">
+		SELECT
+			Id                                     AS id,-- 自增长ID
+			Equipment_No                           AS equipmentNo,-- 设备编号
+			Equipment_Name                         AS equipmentName,-- 拌和机名称
+			Equipment_Model                        AS equipmentModel,-- 拌和机型号
+			Equi_State                             AS equiState,-- 设备状态
+			CONVERT(varchar(20),State_Time,120)    AS stateTime,-- 设备状态时间
+			Equipment_Code                         AS equipmentCode,-- 拌和机标识
+			Equipment_Type                         AS equipmentType, -- 拌和机类型
+			Remarks                                AS remarks
+		FROM
+			Equipment_Info -- 拌和设备表
+		WHERE
+			Valid_Flag = 1
+			<if test="id != null and id != 0">
+				and Id = #{id}
+			</if>
+			<if test="equipmentName != null and equipmentName != ''">
+				and Equipment_Name LIKE '%${equipmentName}%'
+			</if>
+			<if test="orgId != null and orgId != 0">
+				and Org_ID = #{orgId}
+			</if>
+			<if test="equipmentType != null and equipmentType != ''">
+				and Equipment_Type = #{equipmentType}
+			</if>
+		ORDER BY Id DESC
+	</select>
+	<!-- 添加拌和设备信息 -->
+	<insert id="addEquipmentInfo" parameterType="com.mixingStation.model.asphalt.EquipmentInfo">
+		INSERT INTO Equipment_Info (
+			Equipment_No,
+			Equipment_Name,
+			Equipment_Model,
+			Equi_State,
+			State_Time,
+			Equipment_Code,
+			Equipment_Type,
+			Valid_Flag,
+			Create_Date,
+			Org_ID,
+			Remarks,
+			Operator
+		)
+		VALUES
+			(
+				#{equipmentNo},
+				#{equipmentName},
+				#{equipmentModel},
+				#{equiState},#{stateTime},
+				#{equipmentCode},
+				#{equipmentType},
+				1,
+				CONVERT (VARCHAR(100), GETDATE(), 20),
+				#{orgId},
+				#{remarks},
+				#{operator}
+			)
+	</insert>
+	<!-- 修改拌和设备信息 -->
+	<update id="updateEquipmentInfo" parameterType="com.mixingStation.model.asphalt.EquipmentInfo">
+		UPDATE Equipment_Info
+			SET 
+				Equipment_No = #{equipmentNo},
+				Equipment_Name = #{equipmentName},
+				Equipment_Model = #{equipmentModel},
+				Equi_State = #{equiState},
+				State_Time = #{stateTime},
+				Equipment_Code = #{equipmentCode},
+				Equipment_Type = #{equipmentType},
+				Modify_Date = CONVERT (VARCHAR(100), GETDATE(), 20),
+				Remarks = #{remarks},
+				Modifier = #{modifier}
+		WHERE
+			Id = #{id}
+	</update>
+	<!-- 删除拌和设备信息 -->
+	<update id="deleteEquipmentInfo" parameterType="java.util.Map">
+		UPDATE Equipment_Info
+			SET 
+				Valid_Flag = 0
+		WHERE
+			Id = #{id}
+	</update>
+</mapper>

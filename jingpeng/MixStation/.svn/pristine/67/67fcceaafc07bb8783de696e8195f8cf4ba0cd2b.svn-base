@@ -1,0 +1,307 @@
+$(document).ready(function() {
+	var textHeight = $('.icon_text').height();
+	$('.icon_text').css('line-height', textHeight + 'px');
+	var textHeight0 = $('.icon_text0').height();
+	$('.icon_text0').css('line-height', textHeight0 + 'px');
+	var textHeight2 = $('.icon-pie0 .noIconz-pie ').height();
+	$('.icon-pie0 .noIconz-pie ').css('line-height', textHeight2 + 'px');
+	var textHeight3 = $('.cameraText').height();
+	$('.cameraText').css('line-height', textHeight3 + 'px');
+	var timer = setInterval(function() {
+		//饼图1
+		var myChart1 = echarts.init(document.getElementById('pie1'), 'chalk');
+		// 指定图表的配置项和数据
+		option = {
+			title: {
+				text: '试验室1自动采集数据统计',
+				x: 'center',
+				y: '15px'
+			},
+			tooltip: {
+				trigger: 'item',
+				formatter: "{a} <br/>{b} : {c} ({d}%)"
+			},
+			legend: {
+				orient: 'vertical',
+				x: '120px',
+				y: '60px',
+				data: ['自动采集合格数量']
+			},
+			series: [{
+				name: '试验室1自动采集数据统计',
+				type: 'pie',
+				radius: '70%',
+				center: ['50%', '60%'],
+				data: [{
+						value: 335,
+						name: '自动采集合格数量'
+					},
+					{
+						value: 1548,
+						name: '自动采集总数'
+					}
+				],
+
+			}],
+			color: ['#1471d8', '#cc930e']
+		};
+		myChart1.setOption(option);
+	}, 1000)
+	//试验汇总展示图表
+	var myChart = echarts.init(document.getElementById('main'), 'chalk');
+	// 指定图表的配置项和数据
+	option = {
+		legend: {},
+		tooltip: {},
+		dataset: {
+			dimensions: ['product', '实验总数', '自动采集试验数量', '盲样试验数量'],
+			source: [{
+					product: '试验室1',
+					'实验总数': 500,
+					'自动采集试验数量': 200,
+					'盲样试验数量': 340
+				},
+				{
+					product: '试验室2',
+					'实验总数': 150,
+					'自动采集试验数量': 73,
+					'盲样试验数量': 55
+				},
+				{
+					product: '试验室3',
+					'实验总数': 366,
+					'自动采集试验数量': 234,
+					'盲样试验数量': 144
+				},
+			]
+		},
+		xAxis: {
+			type: 'category',
+		},
+		yAxis: {},
+		series: [{
+				type: 'bar',
+			},
+			{
+				type: 'bar'
+			},
+			{
+				type: 'bar'
+			}
+		]
+	};
+	myChart.setOption(option);
+
+	//自动采集查询饼图
+
+	//饼图2
+	var myChart2 = echarts.init(document.getElementById('pie2'), 'chalk');
+	// 指定图表的配置项和数据
+	option = {
+		title: {
+			text: '试验室2自动采集数据统计',
+			x: 'center',
+			y: '15px'
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			x: '120px',
+			y: '60px',
+			data: ['自动采集合格数量']
+		},
+		series: [{
+			name: '试验室1自动采集数据统计',
+			type: 'pie',
+			radius: '70%',
+			center: ['50%', '60%'],
+			data: [{
+					value: 335,
+					name: '自动采集合格数量'
+				},
+				{
+					value: 1548,
+					name: '自动采集总数'
+				}
+			],
+
+		}],
+		color: ['#1471d8', '#cc930e']
+	};
+	myChart2.setOption(option);
+	//饼图3
+	var myChart3 = echarts.init(document.getElementById('pie3'), 'chalk');
+	// 指定图表的配置项和数据
+	option = {
+		title: {
+			text: '试验室3自动采集数据统计',
+			x: 'center',
+			y: '15px'
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			x: '120px',
+			y: '60px',
+			data: ['自动采集合格数量']
+		},
+		series: [{
+			name: '试验室1自动采集数据统计',
+			type: 'pie',
+			radius: '70%',
+			center: ['50%', '60%'],
+			data: [{
+					value: 335,
+					name: '自动采集合格数量'
+				},
+				{
+					value: 1548,
+					name: '自动采集总数'
+				}
+			],
+
+		}],
+		color: ['#1471d8', '#cc930e']
+	};
+	myChart3.setOption(option);
+	//饼图4
+	var myChart4 = echarts.init(document.getElementById('pie4'), 'chalk');
+	// 指定图表的配置项和数据
+	option = {
+		title: {
+			text: '试验室1盲样数据统计',
+			x: 'center',
+			y: '15px'
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			x: 'right',
+			y: '60px',
+			data: ['盲样合格数']
+		},
+		series: [{
+			name: '试验室1盲样数据统计',
+			type: 'pie',
+			radius: '70%',
+			center: ['50%', '60%'],
+			data: [{
+					value: 335,
+					name: '盲样合格数'
+				},
+				{
+					value: 1548,
+					name: '盲样总数'
+				}
+			],
+
+		}],
+		color: ['#e5be07', '#1ba80e']
+	};
+	myChart4.setOption(option);
+	//饼图5
+	var myChart5 = echarts.init(document.getElementById('pie5'), 'chalk');
+	// 指定图表的配置项和数据
+	option = {
+		title: {
+			text: '试验室2盲样数据统计',
+			x: 'center',
+			y: '15px'
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			x: 'right',
+			y: '60px',
+			data: ['盲样合格数']
+		},
+		series: [{
+			name: '试验室1盲样数据统计',
+			type: 'pie',
+			radius: '70%',
+			center: ['50%', '60%'],
+			data: [{
+					value: 335,
+					name: '盲样合格数'
+				},
+				{
+					value: 1548,
+					name: '盲样总数'
+				}
+			],
+
+		}],
+		color: ['#e5be07', '#1ba80e']
+	};
+	myChart5.setOption(option);
+
+	//饼图6
+	var myChart6 = echarts.init(document.getElementById('pie6'), 'chalk');
+	// 指定图表的配置项和数据
+	option = {
+		title: {
+			text: '试验室3盲样数据统计',
+			x: 'center',
+			y: '15px'
+		},
+		tooltip: {
+			trigger: 'item',
+			formatter: "{a} <br/>{b} : {c} ({d}%)"
+		},
+		legend: {
+			orient: 'vertical',
+			x: 'right',
+			y: '60px',
+			data: ['盲样合格数']
+		},
+		series: [{
+			name: '试验室3盲样数据统计',
+			type: 'pie',
+			radius: '70%',
+			center: ['50%', '60%'],
+			data: [{
+					value: 335,
+					name: '盲样合格数'
+				},
+				{
+					value: 1548,
+					name: '盲样总数'
+				}
+			],
+
+		}],
+		color: ['#e5be07', '#1ba80e']
+	};
+	myChart6.setOption(option);
+	var swiper1 = new Swiper('#swiper1', {
+		//		direction: 'vertical',
+		speed: 2500,
+		autoplay: 3500,
+		effect: 'flip',
+		flipEffect: {
+			slideShadows: true,
+			limitRotation: true,
+		}
+
+	});
+	var swiper2 = new Swiper('#swiper2', {
+		direction: 'vertical',
+		speed: 2500,
+		autoplay: 3500,
+		effect: 'coverflow',
+		//		loop: true,
+
+	});
+})

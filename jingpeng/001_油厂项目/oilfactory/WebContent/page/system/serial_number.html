@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+<link rel="stylesheet" type="text/css"
+	href="../../css/bootstrap-theme.css" />
+<link rel="stylesheet" href="../../css/sweet-alert.css">
+<link rel="stylesheet" type="text/css"
+	href="../../DataTables/datatables.css" />
+<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="../../js/jquery/jquery3.3.1.min.js"></script>
+<script type="text/javascript"
+	src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+<script type="text/javascript"
+	src="../../js/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="../../DataTables/datatables.js"></script>
+<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="../../js/oilfactory/system/serial_number.js"></script>
+<title>瑞德公路管理系统</title>
+<script type="text/javascript">
+	$(document).ready(function() {
+
+	});
+</script>
+<style type="text/css">
+	/* 平板 */
+	@media screen and (min-width:600px) and (max-width:985px){
+		.mshow {
+			position: absolute;
+			top: 40px;
+			left: 5px;
+			right: 10px;
+			bottom: 0px;
+			border: 1px solid #DEDFDF;
+			overflow: auto;
+		}
+		.dataTables_scrollBody{
+			height: 260px
+		}
+		.col-lg-3,.col-sm-3{
+			padding-left:0px;
+		}
+	}
+	/* pc */
+	@media screen and (min-width:985px){
+		.mshow {
+			position: absolute;
+			top: 70px;
+			left: 5px;
+			right: 10px;
+			bottom: 0px;
+			border: 1px solid #DEDFDF;
+			overflow: auto;
+		}
+		.dataTables_scrollBody{
+			height: 600px
+		}
+	}
+	.ui_input_txt02 {
+		width: 130px;
+	}
+#box_border {
+	border-bottom: none;
+}
+
+.ui_input_txt02 {
+	width: 130px;
+}
+.change-line{
+	padding:10px 2px;
+	/* padding-left:50px; */
+}
+
+.change-line .button {
+	background:#044599;
+	width:60px;
+	height:24px;
+	outline:none;
+	border:none;
+	color:#fff;
+	border-radius:3px;
+	margin-left:20px;
+}
+</style>
+</head>
+
+<body>
+	<form id="submitForm" name="submitForm" action="" method="post"
+		enctype="multipart/form-data">
+		<div id="container">
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;系统管理&nbsp;>&nbsp;<span
+					style="color: #1A5CC6">编号管理</span></span>
+			</div>
+			<div id="main"class="mshow">
+				<div class="ui_tb">
+					<div id="box_border">
+						<div id="box_top">编号管理</div>
+						<div style="height:30px"></div>
+						<div class="change-line" hidden="true"><input type="text"  class="input" id="zj" name="id"></div>
+						<table id="tableList1" style="margin-left: 10px;">
+							<tr>
+							    <td><div class="change-line" hidden="true"><input type='text' class="input" id="id0" name="id"></div></td>
+							    <td><div class="change-line" hidden="true"><input type='text' class="input" value = 'HT' id="distinguish0" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="cement">销售合同编号前缀：<input type="text"  class="input" id="allPrefix0" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year0" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month0" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day0" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour0" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch0" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second0"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber0' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+								<td> <a title="列如输入前缀，点击年月日，流水号: &#10HT201810190001"><img src="../../img/tips.png" height="20" width="20"></a></td>
+						    </tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id1" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'DD' id="distinguish1" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="pitch">销售订单编号前缀：<input type="text"  class="input" id="allPrefix1" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year1" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month1" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day1" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour1" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch1" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second1"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber1' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id2" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'CK' id="distinguish2" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="chukudan">出库单编号前缀：<input type="text"  class="input" id="allPrefix2" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year2" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month2" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day2" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour2" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch2" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second2"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber2' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id3" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'RK' id="distinguish3" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">入库单编号前缀：<input type="text"  class="input" id="allPrefix3" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year3" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month3" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day3" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour3" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch3" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second3"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber3' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id4" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'WCZ' id="distinguish4" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">未称重出库单前缀：<input type="text"  class="input" id="allPrefix4" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year4" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month4" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day4" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour4" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch4" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second4"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber4' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id5" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'YS' id="distinguish5" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">运输单前缀：<input type="text"  class="input" id="allPrefix5" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year5" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month5" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day5" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour5" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch5" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second5"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber5' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id6" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'DDMX' id="distinguish6" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">订单明细前缀：<input type="text"  class="input" id="allPrefix6" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year6" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month6" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day6" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour6" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch6" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second6"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber6' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id7" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'CGHT' id="distinguish7" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">采购合同前缀：<input type="text"  class="input" id="allPrefix7" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year7" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month7" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day7" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour7" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch7" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second7"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber7' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id8" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'CGMX' id="distinguish8" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">采购合同明细前缀：<input type="text"  class="input" id="allPrefix8" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year8" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month8" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day8" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour8" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch8" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second8"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber8' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+							<tr>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" id="id9" name="id"></div></td>
+								<td><div class="change-line" hidden="true"><input type='text' class="input" value = 'CGSQ' id="distinguish9" name="distinguish"></div></td>
+								<td align="right"><div class="change-line" id="rukudan">采购申请单前缀：<input type="text"  class="input" id="allPrefix9" name="allPrefix"><span style="color:red">*</span></div></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">年：</div><input name="year" id="year9" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">月：</div><input name="month" id="month9" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">日：</div><input name="day" id="day9" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">时：</div><input name="hour" id="hour9" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">分：</div><input name="branch" id="branch9" type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 60%">秒：</div><input name="second" id="second9"type="checkbox" value="0" /></td>
+								<td><div class="col-lg-3 col-sm-3" style="width: 100%" id="cement">流水号：<input class="input" name="flowNumber" id='flowNumber9' type='text' maxlength='200' onkeyup='keepNumOrDecimal(this)' onblur='checkPoint(this)'><span style="color:red">*</span></div></td>
+							</tr>
+						</table>
+						<div class="change-line" style="margin-left: 350px;"align="center"><input id="submitbutton" type="button" value="保存" class="button" onclick="add()"/></div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</form>
+	<script>
+		
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>视频监控</title>
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<script type="text/javascript" src="../resources/js/json2.js"></script>
+<script type="text/javascript" src="../resources/js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript"
+	src="../resources/blindSampleJs/common.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="../resources/Jqcss/common.css" />
+<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+<link rel="stylesheet" href="../resources/css2/systyle.css">
+<link rel="StyleSheet" href="../resources/css2/dtree.css" />
+<script src="../resources/Jqjs/spjk.js" type="text/javascript"
+	charset="utf-8"></script>
+<script src="../resources/1.4/ckplayer/ckplayer.js"></script>
+<script type="text/javascript" src="../resources/1.4/ezuikit.js"></script>
+<script language="javascript" for="EZUIKit"
+	event="PluginEventHandler(lEventType, strErrorCode, lInterErrorCode)">
+	//打开预览时触发该事件
+	PluginEventHandler(lEventType, strErrorCode, lInterErrorCode);
+</script>
+<style>
+/* 视频监控输入框样式 */
+.isLogin {
+	width: 50%;
+	height: 160px;
+	margin-left: 25%;
+	margin-top: calc(24% - 80px);
+	overflow: hidden;
+	background: rgba(255, 255, 255, .6);
+	border-radius: 6px;
+}
+
+#JpPassWord {
+	width: calc(60% - 5px);
+	margin-top: 50px;
+	margin-left: 10%;
+	height: 60px;
+	font-size: 20px;
+	padding-left: 20px;
+	float: left;
+	border-radius: 6px;
+	border: none;
+}
+
+#logbtn {
+	width: 20%;
+	margin-top: 50px;
+	height: 60px;
+	margin-left: 5px;
+	float: left;
+	border-radius: 6px;
+	background: #072167;
+	padding: 0;
+	border: none;
+	font-size: 20px;
+	color: #fff;
+}
+
+p {
+	color: #fff;
+}
+
+
+</style>
+</head>
+
+<body>
+	<div id="isLogin" class="isLogin">
+		<input id="JpPassWord" type="password" placeholder="请输入密码"><input
+			id="logbtn" onclick="login()" type="button" value="确定">
+	</div>
+	<div class="videoContain">
+		<div class="addBtn " onclick="JpisShow(this)">
+			<div class="JpList"></div>
+			<div class="getJpNameAll" style="display: none;">
+				<select class="getJpName">
+					<option value="-1">请选择</option>
+				</select>
+				<p class="chooseBtn" onclick="addJp(this)">选择该设备</p>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

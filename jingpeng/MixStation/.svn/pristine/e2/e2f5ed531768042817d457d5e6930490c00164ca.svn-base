@@ -1,0 +1,35 @@
+
+ <!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="../resources/css/style.css">
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/platformLogin.js"></script>
+</head>
+<body id="login_bg">
+<div class="login_a">
+	<h1>珲乌高速吉林至机场段改扩建工程管理平台</h1>
+    <div class="login_n">
+     <form id="loginForm">
+   	  	<div class="login_n_1 sbj78">
+        	<span class="login_user"></span><input name="str_user_Name" id="str_user_Name" type="text" placeholder="请输入用户名">
+        </div>
+      	<div class="login_n_1">
+        	<span class="login_pass"></span><input name="str_password" id="str_password" type="password"  placeholder="请输入密码">
+      	</div>
+      	<div class="login_n_2">
+        	<input name="" type="checkbox" value="">记住密码
+        </div>
+        <input name="" type="button" value="登    录"  class="nei_sign2" onclick="login()">
+        </form>
+    </div>
+    
+</div>
+</body>
+</html>
+ 

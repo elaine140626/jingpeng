@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link href="../../css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/zTree/jquery.ztree.core-3.2.js"></script>
+		<script type="text/javascript" src="../../js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/artDialog/artDialog.js?skin=default"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<!-- <script type="text/javascript" src="../../js/datatables.js"></script> -->
+		<script type="text/javascript" src="../../js/oilfactory/system/team_information.js"></script> 
+		<script type="text/javascript" src="../../js/LodopFuncs.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<!-- <link rel="stylesheet" type="text/css" href="../../DataTables/datatables.css" /></link> -->
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" /></link>
+		<link rel="stylesheet" type="text/css"  href="https://cdn.datatables.net/fixedcolumns/3.2.6/css/fixedColumns.dataTables.min.css" /></link>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+		<title>瑞德公路管理系统</title>
+
+		<script type="text/javascript">
+		jQuery.browser = {};
+		jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+			$(document).ready(function() {
+				$("#addBtn").click(function() {
+					location.href = 'team_information_edit.html'
+				});
+				//点击复制
+				$('#copy').click(function(){
+					var val = $('input[type=radio]:checked').val();
+					if(val) {
+						window.location.href = 'team_information_edit.html';
+					} else {
+						alert('请选择要复制的车队信息！')
+					}
+					
+				});
+				$("#export").click(function(){
+					window.location.href="javascript:SaveAsFile();";
+				})
+			});
+		</script>
+		<style type="text/css">
+			/* 平板 */
+			@media screen and (min-width:600px) and (max-width:985px){
+				.mshow {
+					position: absolute;
+					top: 40px;
+					left: 5px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 260px
+				}
+			}
+			/* pc */
+			@media screen and (min-width:985px){
+				.mshow {
+					position: absolute;
+					top: 70px;
+					left: 5px;
+					right: 10px;
+					bottom: 0px;
+					border: 1px solid #DEDFDF;
+					overflow: auto;
+				}
+				.dataTables_scrollBody{
+					height: 600px
+				}
+			}
+			.ui_input_txt02 {
+				width: 130px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post" enctype="multipart/form-data">
+			<div id="container">
+				<div id="top_nav">
+					<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;系统管理&nbsp;>&nbsp;<span style="color:#1A5CC6">车队信息</span></span>
+				</div>
+				<div id="main" class="mshow">
+					<div class="ui_tb">
+						<div id="box_border">
+							<div id="box_top">车队信息</div>
+							<div id="box_center" style="padding-left: 20px;overflow: hidden;">
+								车队名称：&nbsp;&nbsp;<input type="text" id="fyZldz" name="fangyuanEntity.fyZldz" class="ui_input_txt02" /><input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" onclick="search();" />
+								<!-- <input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="导出" class="ui_input_btnexport" id="export" /> -->
+								<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="新增车队" class="ui_input_btnadd" id="addBtn" />
+							</div>
+							<!-- <div style="overflow-x: auto;"> -->
+							<div style="overflow-x: auto;">
+								<table id="fleetList" class="table table-striped" style="width: 1500px;"  cellspacing="0" cellpadding="0" align="center" border="0">
+								<thead>
+									<tr>
+										<th width="100px" class="xuhao">序号</th>
+										<th width="150px" class="caozuo">操作</th>
+										<th width="250px" class="hetongbianhao">车队编号</th>
+										<th width="250px" class="hetongbianhao">车队名称</th>
+										<th width="200px" class="xiaoshouyuan">车队联系人</th>
+										<th width="250px" class="dianhua">联系电话</th>
+										<th class="beizhu">备注</th>
+
+									</tr>
+								</thead>	
+								</table>
+							</div>
+
+						</div>
+					</div>
+				</div>
+		</form>
+		
+								<div id="box_border1" style="display: none;">
+							<div id="box_top">车队信息</div>
+							<div id="box_center" style="padding-left: 20px;overflow: hidden;">
+								车队名称：&nbsp;&nbsp;<input type="text" id="fyZldz" name="fangyuanEntity.fyZldz" class="ui_input_txt02" /><input type="button" value="查询" style="margin-left: 20px;margin-top: 2px;" class="ui_input_btnsearch" onclick="search();" />
+								<!-- <input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="导出" class="ui_input_btnexport" id="export" /> -->
+								<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="复制" class="ui_input_btncopy" id="copy" />
+								<input type="button" style="float: right;margin-top: 13px;margin-right: 20px;" value="新增车队" class="ui_input_btnadd" id="addBtn" />
+							</div>
+							<div style="overflow-x: auto;">
+								<table id="fleetList1" class="table table-striped" cellspacing="0" cellpadding="0" align="center" border="0">
+								<thead>
+									<tr>
+										<th class="xuhao">序号</th>
+										<th class="hetongbianhao">车队编号</th>
+										<th class="hetongbianhao">车队名称</th>
+										<th class="xiaoshouyuan">车队联系人</th>
+										<th class="dianhua">联系电话</th>
+										<th class="beizhu">备注</th>
+
+									</tr>
+								</thead>	
+								</table>
+							</div>
+
+						</div>
+<script> 
+	var LODOP; //声明为全局变量   
+	function PreviewMytable(){
+		var LODOP=getLodop();  
+		LODOP.PRINT_INIT("PreviewMytable")
+		var strStyle="<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;}</style>"
+		LODOP.NewPageA();
+    	LODOP.ADD_PRINT_TABLE(100,"5%","90%",328,strStyle+document.getElementById("box_border1").innerHTML);
+    	LODOP.SET_PRINT_STYLEA(0,"FontColor","#FF0000");
+		LODOP.PREVIEW();	
+	};	
+	function SaveAsFile(){ 
+		LODOP=getLodop();   
+		LODOP.PRINT_INIT("SaveAsFile"); 
+		LODOP.ADD_PRINT_TABLE(100,20,500,80,document.getElementById("box_border1").innerHTML); 
+		LODOP.SET_SAVE_MODE("Orientation",2); //Excel文件的页面设置：横向打印   1-纵向,2-横向;
+		LODOP.SET_SAVE_MODE("PaperSize",9);  //Excel文件的页面设置：纸张大小   9-对应A4
+		LODOP.SET_SAVE_MODE("Zoom",100);       //Excel文件的页面设置：缩放比例
+		LODOP.SET_SAVE_MODE("CenterHorizontally",true);//Excel文件的页面设置：页面水平居中
+		LODOP.SET_SAVE_MODE("CenterVertically",true); //Excel文件的页面设置：页面垂直居中
+		LODOP.SAVE_TO_FILE("新文件名.xls"); 0
+	};
+</script>
+	</body>
+
+</html>

@@ -1,0 +1,91 @@
+<!--试验收样页面-->
+<script src="../../js/HighwayPlatform/TestRoom/testCollection.js"
+	type="text/javascript" charset="utf-8"></script>
+<form action="" method="get" class="sousuo" id="test_received">
+	<label>试验名称：</label> <select id="testPageInfosList"
+		class="search_select" required="required">
+	</select> <label>试验员：</label> <input id="testOperator" list="cusName"
+		class="search_select" />
+	<datalist id="cusName"></datalist>
+	<input id="select" type="button" value="查&nbsp;&nbsp;询"
+		class="btncha received_btn">
+</form>
+<div style="display: none;" id='luru' class="luru" data-toggle="modal" onclick="$('#loginModal').modal('show');">
+	<a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn">收样</a>
+</div>
+<div class="lq_main">
+	<div class="lq_biao">
+		<table id="list" width="100%" border="0" cellpadding="0"
+			cellspacing="0" class="bgcolor">
+			<thead>
+				<tr>
+					<th width="12%" scope="col">序号</th>
+					<th width="15%" scope="col">试验室名称</th>
+					<th width="22%" scope="col">试验名称</th>
+					<th width="15%" scope="col">样品名称</th>
+					<th width="12%" scope="col">试验员</th>
+					<th width="12%" scope="col">收样时间</th>
+					<th width="12%" scope="col">试验时间</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images2/bi.png" width="16"
+					height="16"></span>
+				<h3>收样信息</h3>
+				<button type="button" id="login_close" class="close"
+					data-dismiss="modal">
+					<span aria-hidden="true" class="tan_close">×</span>
+				</button>
+			</div>
+			<div class="tan_dx_txt">
+				<input id="saomaxinxi" onchange='QRCodeChange(this.value);'
+					style="width: 0px; height: 0px; border:none;background-color: transparent;position: absolute;top:-100px;"
+					type="text" value="" />
+				<table width="100%" border="0" cellpadding="0" cellspacing="0"
+					class="ycl_luru" >
+					<tr >
+						<td width="20%" align="right">试验名称</td>
+						<td width="27%" align="left"><input id="testName" type="text"
+							readonly="readonly" /></td>
+						<td width="18%" align="right">试验室名称</td>
+						<td width="35%" align="left"><input id="testRoomName" type="text"
+							readonly="readonly"> <input id="testRoomNameId" type="text"
+							style="display: none;"></td>
+					</tr>
+					<tr>
+						<td align="right">样品名称</td>
+						<td align="left"><input id="sampleName" type="text"
+							readonly="readonly" /></td>
+						<td align="right">试验员</td>
+						<td align="left"><input id="OperatorName" list="Operator"
+							class="search_select" /> <datalist id="Operator">
+							</datalist></td>
+					</tr>
+					<tr id="before">
+						<td colspan="2" align="right"><img
+							src="../../image/images2/saoma.png" width="64" height="64"></td>
+						<td colspan="2" align="left"><button id="saoma" type="button"
+								class="saoma">扫码</button></td>
+					</tr>
+					<tr id="after" style="display: none;" align="center">
+						<td colspan="4">
+							<div id="qrcode" style="width: 100px; height: 100px;"></div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="4" align="center"><input id="save" type="button"
+							style="width: 150px; height: 36px; line-height: 30px; color: #fff; text-align: center; background-color: #104b8d; border-radius: 3px; border: none; outline: none;"
+							value="保&nbsp;&nbsp;存" /></td>
+					</tr>
+				</table>
+
+			</div>
+		</div>
+	</div>
+</div>

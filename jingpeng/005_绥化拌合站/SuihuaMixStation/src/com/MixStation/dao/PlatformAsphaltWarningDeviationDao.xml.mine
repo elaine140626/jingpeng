@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformAsphaltWarningDeviationDao">
+
+	<!-- 查询沥青预警偏差 -->
+	<select id="getPlatformAsphaltWarningDeviation" parameterType="java.util.Map" resultType="PlatformAsphaltWarningDeviationEntity">
+		SELECT
+		  da.Org_ID as Org_ID,
+		  oi.Org_Name as Org_Name, 
+		  da.Dev_Aggregate as Dev_Aggregate, 
+		  da.Dev_Powder as Dev_Powder, 
+		  da.Dev_Admixture as Dev_Admixture, 
+		  da.Dev_Asphalt as Dev_Asphalt, 
+		  da.Dev_AggregateDown as Dev_AggregateDown, 
+		  da.Dev_PowderDown as Dev_PowderDown, 
+		  da.Dev_AdmixtureDown as Dev_AdmixtureDown, 
+		  da.Dev_AsphaltDown as Dev_AsphaltDown, 
+		  da.MixTemperatureUp as MixTemperatureUp, 
+		  da.MixTemperatureDown  as MixTemperatureDown,
+		  cast( mn.Material_Name AS VARCHAR) + '/' + cast(mm.Material_Model AS VARCHAR) AS material
+		FROM
+		  Deviation_Asphalt as da 
+		  LEFT JOIN Organization_Info as oi ON da.Org_ID = oi.Id
+		  LEFT JOIN Material_Info mi ON da.Product_ID = mi.id
+		  LEFT JOIN MaterName_Info mn ON mi.MateName_ID= mn.id
+		  LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID= mm.id
+		order by
+  		  da.Create_Date desc
+	</select>
+	
+	<!-- 插入沥青阀值设定 -->
+	<insert id="insertPlatformAsphaltWarningDeviation" parameterType="PlatformAsphaltWarningDeviationEntity">
+		insert 
+		into Deviation_Asphalt( 
+		  Org_ID
+		  , Dev_Aggregate
+		  , Dev_Powder
+		  , Dev_Admixture
+		  , Dev_Asphalt
+		  , Dev_AggregateDown
+		  , Dev_PowderDown
+		  , Dev_AdmixtureDown
+		  , Dev_AsphaltDown
+		  , Operator
+		  , MixTemperatureUp
+		  , MixTemperatureDown
+		  , Product_ID
+		) 
+		values (
+		  #{Org_ID}
+		  , #{Dev_Aggregate}
+		  , #{Dev_Powder}
+		  , #{Dev_Admixture}
+		  , #{Dev_Asphalt}
+		  , #{Dev_AggregateDown}
+		  , #{Dev_PowderDown}
+		  , #{Dev_AdmixtureDown}
+		  , #{Dev_AsphaltDown}
+		  , #{Operator}
+		  , #{MixTemperatureUp}
+		  , #{MixTemperatureDown}
+		  , #{Product_ID}
+		)
+	</insert>
+</mapper>

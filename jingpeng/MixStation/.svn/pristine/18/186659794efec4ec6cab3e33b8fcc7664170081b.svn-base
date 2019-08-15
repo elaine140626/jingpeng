@@ -1,0 +1,99 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.blindSample.model.PlatformUserInfo;
+import com.blindSample.model.SampleIntelligenceEntity;
+import com.blindSample.model.TestCollectionEntity;
+import com.blindSample.model.TestInfo;
+import com.blindSample.model.TestPageInfos;
+import com.blindSample.model.TestRoomInfo;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+
+@Repository
+public class TestCollectionDao extends KDDaoSupport{
+	private final static String NAMESPACE = "testCollection";
+	
+	// 根据用户权限获取试验室名称
+	public List<TestRoomInfo> getTestRoomList(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getTestRoomList", map);
+	};
+	
+	// 获取相应试验室的试验员
+	public List<TestInfo> getTestOperatorList(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getTestOperatorList", map);
+	};
+	
+	// 获取用户权限
+	public List<PlatformUserInfo> getUserInfo(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getUserInfo", map);
+	}
+	// 获取试验名称
+	public List<TestPageInfos> getTestNameList(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getTestNameList", map);
+	};
+	
+	// 获取试验收样明细数据list
+	public List<TestCollectionEntity> getTestInfoList(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getTestInfoList", map);
+	};
+	
+	// 扫码后保存试验基本信息
+	public int addTestInfo(Map<String, Object> map) throws DataAccessException {
+		return this.insert(NAMESPACE+".addTestInfo", map);
+	};
+	
+	// 根据二维码判断试验是否已经收样
+	public List<Integer> getExistFlag(Map<String, Object> map) throws DataAccessException {
+		return this.select(NAMESPACE+".getExistFlag", map);
+	};
+	
+	// 扫码获取取样信息
+	public List<SampleIntelligenceEntity> getSampleIntelligence(Map<String, Object> map) throws DataAccessException{
+		return this.select(NAMESPACE+".getSampleIntelligence", map);
+	}
+	
+	// 添加水泥胶砂强度信息
+	public int addTest04006T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest04006T0", map);
+	}
+	
+	// 添加水泥混凝土抗压强度（立方体）信息
+	public int addTest0500101T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest0500101T0", map);
+	}
+	
+	// 添加砂浆抗压强度试验信息
+	public int addTest0500102T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest0500102T0", map);
+	}
+	
+	// 添加无机结合料稳定材料无侧限抗压强度试验信息
+	public int addTest07003Test0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest07003Test0", map);
+	}
+	
+	// 添加沥青三大指标试验信息
+	public int addTest08001T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest08001T0", map);
+	}
+	
+	// 添加沥青混合料马歇尔稳定度试验信息
+	public int addTest0900101T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest0900101T0", map);
+	}
+	
+	// 添加钢筋抗拉强度、屈服强度、伸长率、冷弯试验信息
+	public int addTest1000101T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest1000101T0", map);
+	}
+	
+	// 添加钢筋接头抗拉强度、冷弯试验信息
+	public int addTest1000201T0(Map<String, Object> map) throws DataAccessException{
+		return this.insert(NAMESPACE+".addTest1000201T0", map);
+	}
+}

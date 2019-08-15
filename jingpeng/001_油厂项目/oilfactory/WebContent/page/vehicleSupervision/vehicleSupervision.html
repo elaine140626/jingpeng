@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="initial-scale=1.0, user-scalable=no, width=device-width" />
+<style>
+html, body, #container {
+	width: 100%;
+	height: 100%;
+}
+</style>
+<title>车辆监管</title>
+<link rel="stylesheet"
+	href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+<script
+	src="https://webapi.amap.com/maps?v=1.4.10&amp;key=8e96479ad5e1ed233a708d79db6d34c6&amp;plugin=AMap.PolyEditor,AMap.TruckDriving,AMap.GraspRoad"></script>
+<script type="text/javascript"
+	src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script
+	src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+<script type="text/javascript" src="../../js/jquery3.3.1.min.js"></script>
+</head>
+    <style>
+        #container .amap-marker-label{border:0 none; background-color: 	#A9A9A9; white-space: nowrap; box-shadow: 0 0 5px 0 rgba(0,0,0,.3); border-radius: 5px;}
+		#container .amap-marker-label:after{position: absolute; border:5px solid transparent; border-top-color: #A9A9A9; top:19px; left: 43%; content: ''; width: 0; height: 0;}
+		
+input[type="checkbox"]{
+    -webkit-appearance: none;
+    vertical-align:middle;
+    margin-top:0;
+    background:#fff;
+    border:#999 solid 1px;
+    border-radius: 3px;
+    min-height: 12px;
+    min-width: 12px;
+}
+input[type="checkbox"]:checked {
+    background: #3190e8;
+}
+input[type=checkbox]:checked::after{
+    content: '';
+    top: 3px;
+    left: 3px;
+    position: absolute;
+    background: transparent;
+    border: #fff solid 2px;
+    border-top: none;
+    border-right: none;
+    height: 6px;
+    width: 10px;
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg); 
+    transform: rotate(-45deg);
+}
+    </style>
+<body>
+	<div id="container"></div>
+<!-- 	<div class="info">
+    <h4>预报天气 盘锦市</h4><hr>
+    <p id='forecast'></p>
+	</div> -->
+	<div class="info">
+    <h4>车辆查询</h4>
+    <select id="fleetinfos" onchange="getCars(this)">
+    </select>
+    <hr>
+    <div id="carDiv"><!-- style="display: none;" -->
+    	<span id="carinfo"></span>
+    </div>
+	</div> 
+	<!-- <div id="tip" style="right: 1396px;" class="info"> -->
+	<div id="tip" style="left: 50px;width: 340px;" class="info">
+	<table id="carInfo">
+		<thead>
+			<tr>
+				<th width="100px">全部车辆</th>
+				<th width="100px">运输车辆</th>
+				<th width="100px">返程/未运输车辆</th>
+			</tr>
+			<tr>
+				<th><img alt="" src="../../img/map/allCar2.png" style="width: 32px;height: 32px"></th>
+				<th><img alt="" src="../../img/map/yunShu.png" style="width: 32px;height: 32px"></th>
+				<th><img alt="" src="../../img/map/wangFan.png" style="width: 32px;height: 32px"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td style='text-align:center;'>共计<span id="carAllCount"></span>辆</td>
+				<td style='text-align:center;'>共计<span id="caryunCount"></span>辆</td>
+				<td style='text-align:center;'>共计<span id="carfanCount"></span>辆</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>
+<!-- 	  <div class="input-card" style="width:15rem">
+    <div id="map-styles">
+      <div class="input-item">
+        <input type='radio' name='mapStyle' value='normal'>
+        <span>标准</span>
+        <span class="input-text"></span>
+      </div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='dark'><span>幻影黑</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='light'><span>月光银</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='whitesmoke'><span>远山黛</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='fresh'><span>草色青</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='grey'><span>雅士灰</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='graffiti'><span>涂鸦</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='macaron'><span>马卡龙</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='blue'><span>靛青蓝</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='darkblue'><span>极夜蓝</span><span class="input-text"></span></div>
+      <div class="input-item"><input type='radio' name='mapStyle' value='wine'><span>酱籽</span><span class="input-text"></span></div>
+    </div>
+  </div> -->
+	<script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../js/mapCommon.js"></script>
+	<script type="text/javascript" src="../../js/oilfactory/vehicleSupervision/vehicleSupervision.js"></script>
+</body>
+</html>

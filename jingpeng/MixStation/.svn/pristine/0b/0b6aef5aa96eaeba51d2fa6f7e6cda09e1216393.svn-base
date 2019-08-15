@@ -1,0 +1,570 @@
+//接收项目路径
+var baseUrl = "";
+var data2 = "";
+var str_Str2 ="";
+//权限
+var uniqueidentifiers = "";
+$(function() {
+	$.ajax({
+        type: "post",
+        url: "../testUserInfo/getTestUserName.html",
+        data:{},
+        async:false,
+        dataType: "json",
+        success: function (data) {
+        	//获取当前登录人做显示
+        	$(".userid").html(data.userName);
+        }
+    });
+	//试验日期初始化赋值
+	$("#startTime").val(getNowFormatDate(1));
+	$("#endTime").val(getNowFormatDate(0));
+	//获取网址
+	baseUrl = getContextPath();
+	//调用列表方法
+	getList();
+	
+	// 试验室隐藏
+	$('#toggle').on('click', function(event) {
+		event.stopPropagation();
+		$(this).siblings('#content').toggle();
+		var tag = $(this).siblings('#content');
+		var flag = true;
+		$(document).bind("click", function(e) {
+			var target = $(e.target);
+			if (target.closest(tag).length == 0 && flag == true) {
+				$(tag).hide();
+				flag = false;
+			}
+		});
+	});
+	
+	
+});
+//试验日期初始化赋值
+function getNowFormatDate(flg) {
+	if(flg == 0){
+		//获取当前日期
+		var date = new Date(); 
+	}
+	else{
+		//获取30天前的日期
+		var myDate = new Date();
+		var date = new Date(myDate - 1000 * 60 * 60 * 24 * 30);
+	}
+      
+    var seperator1 = "-";
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = year + seperator1 + month + seperator1 + strDate;
+    return currentdate;
+}
+
+//获取权限
+function getRoots(){
+	// 获取用户权限的试验室名称
+	$.ajax({
+		type : "POST",
+		url : "../TestCollection/getTestRoomList",
+		async : false,
+		dataType : "json",
+		success : function(data) {
+			// 获取试验室名称List
+			for (var i = 0; i < data.length; i++) {
+				if (i < data.length - 1) {
+					uniqueidentifiers += data[i].uniqueidentifier + ',';
+				} else {
+					uniqueidentifiers += data[i].uniqueidentifier;
+				}
+			}
+		}
+	});
+}
+
+//初始化加载列表
+function getList() {
+	var startTime = $("#startTime").val();
+	var endTime = $("#endTime").val();
+	if(!compareDay(startTime,endTime)){
+		swal("操作失败","开始时间不能大于结束时间！", "info");
+		return;
+	}
+	
+	// 试验室名称
+	var authority = document.getElementsByName("authority");
+	var children = document.getElementsByName("children");
+	var uniqueIdentifier = "";
+	
+	// 判断试验室是否选中
+	var flag = false;
+	for (var j = 0; j < authority.length; j++) {
+		// 获取选中项
+		if (authority[j].checked) {
+			flag = true;
+			if(j < authority.length - 1){			
+				uniqueIdentifier += authority[j].value + ",";
+			}else{
+				uniqueIdentifier += authority[j].value;
+			}
+		}
+	}
+	
+	// 如果父类有勾选
+	if(uniqueIdentifier != ""){
+		uniqueIdentifier += ",";
+	}
+	
+	for (var j = 0; j < children.length; j++) {
+		// 获取选中项
+		if (children[j].checked) {
+			flag = true;
+			if(j < children.length - 1){			
+				uniqueIdentifier += children[j].value + ",";
+			}else{
+				uniqueIdentifier += children[j].value;
+			}
+		}
+	}
+	
+	var table = $('#list').dataTable();
+	table.fnDestroy();
+	$('#list').DataTable({
+		"paging" : true,
+		"lengthChange" : false,
+		"pageLength" : 14,
+		"searching" : false,
+		"ordering" : false,
+		"info" : true,
+		"sInfo" : true,
+		"autoWidth" : false,
+		"language" : {
+			"lengthMenu" : "每页 _MENU_ 条记录",
+			"zeroRecords" : "没有找到记录",
+			"info" : "第 _PAGE_ 页,共 _PAGES_ 页 (显示_END_ 条，共 _TOTAL_ 项)",
+			"infoEmpty" : "无记录",
+			"sSearch" : "在结果中查找：",
+			"infoFiltered" : "(从 _MAX_ 条记录过滤)",
+			"oPaginate" : {
+				"sFirst" : "第一页",
+				"sPrevious" : "上一页",
+				"sNext" : "下一页",
+				"sLast" : "最后一页"
+			},
+		},
+		"ajax" : baseUrl + "/testInfo/getTestSummary.html?startTime="+startTime+"&endTime="+endTime+"&uniqueidentifiers="+uniqueIdentifier,
+		"deferRender" : true,
+		"columns" : [ 
+			{"data" : "no"}, 
+			{"data" : "TestRoomName"},//试验室名
+			{"data" : "testCount"},//试验总数
+			{"data" : "testHG"}, //区间内试验总数
+			{"data" : "ZD"}, //自动采集
+			{"data" : "ZDHE"}, //区间自动采集
+			{"data" : "MY"} ,//盲样
+			{"data" : "MYHE"},//区间盲样
+			{"data" : "operation"} 
+			],
+		"createdRow" : function(row, data, dataIndex) {
+			
+		},
+		"columnDefs" : [ {
+			"targets" : [ 0 ],
+			"visible" : true,
+			"searchable" : false
+		} ]
+		
+	});
+	$('.lq_biao .row:first-child').css('display','none');
+	$('.dataTables_info').css('text-align','center');
+	$.fn.dataTable.ext.errMode = 'throw';//当出现问题时不弹出
+	//调用折线图轮播效果方法
+	Broadcast(uniqueIdentifier);
+}
+
+//查看列表详情
+function showDetails(TestRoomName){
+	$.ajax({
+		type : "POST",
+		url : baseUrl + "/testInfo/getTestSummaryDetailed.html",
+		data : {"TestRoomName":TestRoomName},
+		dataType : "json",
+		success : function(data) {
+			var list = data.data;
+	    	html = "";
+	    	for(var i = 0; i < list.length; i++) {
+	    		html += "<tr>"
+	    			+"<td>"+list[i].no+"</td>"
+	    			+"<td>"+list[i].testName+"</td>"
+	    			+"<td>"+list[i].testZD+"</td>"
+	    			+"<td>"+list[i].testMY+"</td>"
+	    			+"<td>"+list[i].testZDHE+"</td>"
+	    			+"<td>"+list[i].testMYHE+"</td>"
+	    			+"<tr>";
+	    	}
+	    	//把拼接好的tr td 放入容器
+	    	$("#listDetailed").html(html);
+		}
+	});
+	//弹窗显示
+	$("#loginModal").modal("show")
+}
+
+//详情各个数
+function showDetailsNumber(source,TestRoomName){
+	//跳转页面
+	window.open("../testInfo/shiyan_2_1.html?TestRoomName="+TestRoomName+"&source="+source)
+}
+
+//折线图控件
+option = {
+	    title: {
+	        text: '试验统计曲线图'
+	    },
+	    tooltip: {
+	        trigger: 'axis'
+	    },
+	    legend: {
+	        data:['总数','合格数']
+	    },
+	    grid: {
+	        left: '3%',
+	        right: '4%',
+	        bottom: '3%',
+	        containLabel: true
+	    },
+	    toolbox: {
+	        feature: {
+	            saveAsImage: {}
+	        }
+	    },
+	    xAxis: {
+	    	 type: 'category',
+	            axisLabel :{
+	            	  interval:0,  
+	            },
+	        boundaryGap: false,
+	    	data:[]
+	    },
+	    yAxis: {
+	        type: 'value'
+	    },
+	    series: [
+	        {
+	            name:'总数',
+	            type:'line',
+	            stack: '总量',
+	            data:[]
+	        },
+	        {
+	            name:'合格数',
+	            type:'line',
+	            stack: '总量',
+	            data:[]
+	        }
+	    ]
+};
+//转换时间格式
+function getDate(datestr){
+	//按-分割
+	var temp = datestr.split("-");
+	//年月日格式
+	var date = new Date(temp[0],temp[1],temp[2]);
+	//返回
+	return date;
+}
+
+//指定日期第二天
+function getNextDay(d){
+    d = new Date(d);
+    d = +d + 1000*60*60*24;
+    d = new Date(d);
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;
+    var strDate = d.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    return year+"-"+month+"-"+strDate;
+}
+
+//指定日期 的day
+function getDay(d){
+    d = new Date(d);
+    var strDate = d.getDate();
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    return strDate;
+}
+//比较日期大小
+function compareDay(startTime,endTime){
+	var d1 = new Date(startTime.replace(/\-/g, "\/"));  
+	var d2 = new Date(endTime.replace(/\-/g, "\/"));  
+	if (startTime!=""&&endTime!=""&&d1 >d2){
+		return false;
+	}else{
+		return true;
+	}
+}
+//折线图轮播效果
+function Broadcast(uniqueIdentifier){
+	//获取开始结束日期
+	var start = $("#startTime").val();
+	var end =   $("#endTime").val();
+	//对比数据，空的补0
+	var str_Str = [];
+	//循环下标
+	var number = 0;
+	//清空折线图 从新赋值
+	option.xAxis.data.splice(0,option.xAxis.data.length);
+	while(compareDay(start,end)){
+		 str_Str[number] = start;
+		 str_Date = getDay(start);//日，拿出来放在横坐标
+		 start = getNextDay(start);
+		 option.xAxis.data[number] = str_Date;//天数放在坐标
+		 number++;//计数，数组下标		
+	}
+	$.ajax({
+		type : "POST",
+		url : baseUrl + "/testInfo/getChart.html",
+		data : {"startTime":$("#startTime").val()+" "+"00:"+"00:"+"00","endTime":$("#endTime").val()+" "+"23:"+"59:"+"59","uniqueidentifiers":uniqueIdentifier},
+		dataType : "json",
+		success : function(data) {
+			data2 = data;
+			str_Str2 = str_Str;
+			timing();
+			setInterval("timing()",5000)
+		}
+	});
+}
+
+//定时播放
+var inx = 0;
+function timing(){
+	//折线图数据总数
+	var seriesDateCount = "";
+	//折线图数据合格数
+	var seriesDateQualified = "";
+	
+	var bool = false;
+	var index = 0;
+	if(data2.data.length==0){
+		for (var j = 0; j < str_Str2.length; j++) {
+			fh="";
+			if(j+1<str_Str2.length){
+				fh=",";
+			}
+			//没有用0站位
+			seriesDateCount+=0+fh;//总数
+			seriesDateQualified+=0+fh;//合格数
+		}
+		seriesDateCount+=0+fh;//总数
+		seriesDateQualified+=0+fh;//合格数
+	}else{
+		//日期转换字符串  用于判断
+		var str = Transformation(data2);
+		//循环有几条数据
+		for (var j = 0; j < str_Str2.length; j++) {
+			//循环有值的日期
+			for (var k = 0; k < data2.data[inx].dataList.length; k++) {				
+				option.title.text = data2.data[inx].dataList[0].testRoomName;
+				if(str_Str2[j]==data2.data[inx].dataList[k].testDate){
+					bool = true;
+					index = k;
+				}
+			}
+			fh="";
+			if(j+1<str_Str2.length){
+				fh=",";
+			}
+			if(bool==true){
+				//如果数据中的时间存在于区间日期中，取值放入字符串中
+				seriesDateCount+=data2.data[inx].dataList[index].countId+fh;//总数
+				seriesDateQualified+=data2.data[inx].dataList[index].testHE+fh;//合格数			
+				bool = false;
+			}else{
+				//没有用0站位
+				seriesDateCount+=0+fh;//总数
+				seriesDateQualified+=0+fh;//合格数
+			}
+		}
+	}
+
+	//折线图插件用的格式，后期可以简化（现在直接复制之前的）
+	var str = "[";
+	str += 
+		'{'+'"name'+'":'+'"'+'总数'+'",'
+		+'"type'+'":'+'"'+'line'+'",'
+		+'"'+"data"+'"'+":["
+	str+=seriesDateCount+']}';
+	str += 
+		',{'+'"name'+'":'+'"'+'合格数'+'",'
+		+'"type'+'":'+'"'+'line'+'",'
+		+'"'+"data"+'"'+":["
+	str+=seriesDateQualified+']}]';
+	//转换格式
+	var Series = eval('(' + str + ')')
+	//放入折线图插件内
+	option.series = Series; 
+	//获取id 绑定折线图位置
+	var myChart = echarts.init(document.getElementById('echar'))
+	//显示折线图 
+	//显示折线图 
+	myChart.setOption(option);
+
+	inx++;
+	if(inx>=data2.data.length){
+		inx = 0;
+	}	
+}
+
+//数组转换字符串
+function Transformation(data){
+	var str = "";
+	for (var i = 0; i <data.data[0].dataList.length; i++) {
+		//后台取回来的时间格式为毫秒，转换成日期
+		var date = new Date(data.data[0].dataList[i].testDate);
+		//转换1990-1-1格式
+		var FormatDate = date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate();
+		//转换，补位，1990-1-1转换成1990-01-01
+		var dt = getDatePosition(FormatDate);
+		//拼接
+		str +=dt+",";
+	}
+	//返回字符串
+	return str;
+}
+
+
+//dtree选中事件
+d.checkNode = function(id, i_parent_Id, flag, name, checked) {
+	var html = "";
+	// 获取所有tree项
+	var objList = d.aNodes;
+	// 判断是选中的父类或子类
+	if(i_parent_Id != null && i_parent_Id != 0){		
+		// 子节点勾选
+		if(checked){	
+			// 循环所有节点
+			for(var i = 0; i < objList.length; i++){			
+				// 对应子节点添加
+				if(objList[i].id == id){
+					if($("#station").html() != ""){
+						// 添加子节点
+						html = "<span class='s'>"+"、"+objList[i].cshow+"</span>";
+						$("#station").append(html);
+					}else{
+						// 添加子节点
+						html = "<span class='s'>"+objList[i].cshow+"</span>";
+						$("#station").append(html);
+					}
+				}		
+			}
+			// 括号显示
+			$("#isOrName").show();
+			$("#isOrName1").show();
+		}else{
+			// 子节点取消
+			// 循环所有节点
+			for(var i = 0; i < objList.length; i++){
+				if(objList[i].id == id){
+					// 移除子节点
+					$(".s").each(function() {
+						if ($(this).text() == "、"+objList[i].cshow || $(this).text() == objList[i].cshow) {
+							$(this).remove();
+						}
+					});
+				}
+			}
+		}
+	}else{
+		// 父节点勾选
+		if(checked){
+			// 循环所有节点
+			for(var i = 0; i < objList.length; i++){
+				if(objList[i].pid == id){
+					// 子节点勾选
+					$("#children_"+objList[i].id).prop("checked",true);
+					// 移除子节点勾选
+					$(".s").each(function() {
+						if ($(this).text() ==  "、" + objList[i].cshow || $(this).text() == objList[i].cshow ) {
+							$(this).remove();
+						}
+					});
+				}
+			}
+			
+			// 循环所有节点
+			for(var i = 0; i < objList.length; i++){
+				// 对应所有的子集勾选状态
+				if(objList[i].pid == id){
+					if($("#station").html() != ""){
+						// 添加子节点
+						html = "<span class='s'>"+"、"+objList[i].cshow+"</span>";
+						$("#station").append(html);
+					}else{
+						// 添加子节点
+						html = "<span class='s'>"+objList[i].cshow+"</span>";
+						$("#station").append(html);
+					}
+				}else if(objList[i].id == id){
+					// 对应父节点添加
+					if($("#station").html() != ""){
+						html = "<span class='s'>"+"、"+objList[i].cshow+"</span>";
+						$("#station").append(html);
+					}else{
+						html = "<span class='s'>"+objList[i].cshow+"</span>";
+						$("#station").append(html);
+				    }
+				}	
+			}
+			$("#isOrName").show();
+			$("#isOrName1").show();
+		}else{
+			// 取消父节点
+			// 循环所有节点
+			for(var i = 0; i < objList.length; i++){
+				// 对应所有的子集不勾选状态
+				if(objList[i].pid == id){
+					// 子节点不勾选
+					$("#children_"+objList[i].id).prop("checked",false);
+					// 移除子节点
+					$(".s").each(function() {
+						if ($(this).text() == "、" + objList[i].cshow || $(this).text() == objList[i].cshow ) {
+							$(this).remove();
+						}
+					});
+				}else if(objList[i].id == id){
+					// 移除父节点
+					$(".s").each(function() {
+						if ($(this).text() == "、" + objList[i].cshow || $(this).text() == objList[i].cshow) {
+							$(this).remove();
+						}
+					});
+				}
+			}
+			// 判断第一个显示是否是"、"
+			if($("#station").html().substr(16,1) == "、"){
+				html = $("#station").html().substr(0,16)+$("#station").html().substr(17,$("#station").html().length);
+				$("#station").html(html);
+			}
+		}
+	}
+	
+	// 全部取消时
+	if($("#station").html() == null || $("#station").html() == ""){
+		$("#isOrName").hide();
+		$("#isOrName1").hide();
+	}
+}
+

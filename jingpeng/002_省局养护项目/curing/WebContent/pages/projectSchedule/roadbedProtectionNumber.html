@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="Bookmark" href="/favicon.ico">
+		<link rel="Shortcut Icon" href="/favicon.ico" />
+		<!--[if lt IE 9]>
+<script type="text/javascript" src="../../js/html5shiv.js"></script>
+<script type="text/javascript" src="../../js/respond.min.js"></script>
+
+<![endif]-->
+		<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+		<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+		<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="../../js/zTree/v3/css/metroStyle/metroStyle.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/search.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/datatable/datatables.css" /></link>
+		<!--[if IE 6]>
+<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+		<title>路基防护工程</title>
+	</head>
+	<body>
+		<nav class="breadcrumb">
+			<i class="Hui-iconfont">&#xe67f;</i> 首页 
+			<span class="c-gray en">&gt;</span> 工程设计资料
+			<span class="c-gray en">&gt;</span> 路基防护工程
+			<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="Hui-iconfont">&#xe68f;</i>
+			</a>
+		</nav>
+		<div class="page-container">
+			<div class="col-xs-4 col-sm-2 mt-20">
+				<ul id="EntryTree" class="ztree" style="width: 240px;overflow: auto; min-height: 600px;"></ul>
+			</div>
+			<div class="col-xs-8 col-sm-10 ">
+				<form id="form1" method="post">	
+				<div class="text-c search-line">
+					<div class="col-xs-6 col-sm-4 mt-20">
+						起止桩号：<input type="text" name="startStopNumber" id="startStopNumber" placeholder="" style="width:250px;margin-right: 30px;" class="input-text">
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						位置：<input type="text" name="position" id="position" placeholder="" style="width:250px;margin-right: 30px;" class="input-text">
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						建设性质：<input type="text" name="buildNature" id="buildNature" placeholder="" style="width:250px;margin-right: 30px;" class="input-text">
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						<button  style="font-size:30px;height: 50px;" name="" id="" class="btn btn-success search-btn" type="button" onclick="search()"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						<button  style="font-size:30px;height: 50px;" name="" id="" class="btn btn-success search-btn" type="button" onclick="exportInfo()"><i class="Hui-iconfont">&#xe665;</i> 导出</button>
+					</div>
+<!-- 					<div class="col-xs-6 col-sm-4 mt-20">
+						<button name="" id="" class="btn btn-success search-btn" type="button" onclick="PreviewMytable()"><i class="Hui-iconfont">&#xe665;</i> 打印</button>
+					</div>
+					<div class="col-xs-6 col-sm-4 mt-20">
+						<button name="" id="" class="btn btn-success search-btn" type="button" onclick="delcol()"><i class="Hui-iconfont">&#xe665;</i> 移除墙长</button>
+					</div>		 -->									
+				</div>
+				</form>
+				<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a class="btn btn-primary radius" onclick="add();"
+						 href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加路基防护工程</a></span></div>
+				<div class="mt-20" style="width: 100%; overflow-x: scroll;">
+				<div id="box_border1">
+					<table id="table1" style="width: 1300px;"class="scoll-table table table-border table-bordered table-bg table-hover table-sort table-responsive" >
+						<thead>
+							<!-- <tr class="text-c">
+								<th id="rowid" rowspan="2"><p style="width: 80px;">编号</p></th>
+								<th id="caozuo" rowspan="2"><p style="width: 60px;">操作</p></th>
+								<th rowspan="2"><p style="width: 300px;">起止桩号</p></th>
+								<th rowspan="2"><p style="width: 80px;">位置</p></th>
+								<th rowspan="2"><p style="width: 180px;">建设性质</p></th>							
+								<th id="qiangchangTap" colspan="8"><p style="width: 640px;">挡土墙工程数量</p></th>
+								<th colspan="4"><p style="width: 320px;">石笼工程数量表</p></th>
+								<th rowspan="2"><p style="width: 180px;">备注</p></th>								
+							</tr>
+							<tr class="text-c">
+								<th id="qiangchang"><p style="width: 80px;">墙长</p><p style="width: 80px;">（m）</p></th>
+								<th><p style="width: 80px;">抬高高度</p><p style="width: 80px;">（m）</p></th>
+								<th><p style="width: 80px;">平均高</p><p style="width: 80px;">（h）</p></th>
+								<th><p style="width: 80px;">片石墙身</p><p style="width: 80px;">（m3）</p></th>
+								<th><p style="width: 80px;">片石基础</p><p style="width: 80px;">（m3）</p></th>
+								<th><p style="width: 80px;">抹面</p><p style="width: 80px;">（m3）</p></th>
+								<th><p style="width: 80px;">砂砾垫层</p><p style="width: 80px;">（m3）</p></th>
+								<th><p style="width: 80px;">开挖方</p><p style="width: 80px;">（m3）</p></th>
+								<th><p style="width: 80px;">长度</p><p style="width: 80px;">（m）</p></th>
+								<th><p style="width: 80px;">块石</p><p style="width: 80px;">（m3）</p></th>
+								<th><p style="width: 80px;">8mm钢筋</p><p style="width: 80px;">（Kg）</p></th>
+								<th><p style="width: 80px;">铁丝</p><p style="width: 80px;">（m）</p></th>
+							</tr> -->
+							<tr class="text-c">
+								<th id="rowid" rowspan="2"><p style="width: 30px;">编号</p></th>
+								<th id="caozuo" rowspan="2"><p style="width: 120px;">操作</p></th>
+								<th rowspan="2"><p style="width: 40px;">起止桩号</p></th>
+								<th rowspan="2"><p style="width: 40px;">位置</p></th>
+								<th rowspan="2"><p style="width: 40px;">建设性质</p></th>							
+								<th id="qiangchangTap" colspan="8"><p style="width: 200px;">挡土墙工程数量</p></th>
+								<th colspan="4"><p style="width: 200px;">石笼工程数量表</p></th>
+								<th rowspan="2"><p style="width: 40px;">备注</p></th>								
+							</tr>
+							<tr class="text-c">
+								<th id="qiangchang"><p style="width: 30px;">墙长</p><p style="width: 40px;">（m）</p></th>
+								<th><p style="width: 40px;">抬高高度</p><p style="width: 40px;">（m）</p></th>
+								<th><p style="width: 40px;">平均高</p><p style="width: 40px;">（h）</p></th>
+								<th><p style="width: 40px;">片石墙身</p><p style="width: 40px;">（m3）</p></th>
+								<th><p style="width: 40px;">片石基础</p><p style="width: 40px;">（m3）</p></th>
+								<th><p style="width: 40px;">抹面</p><p style="width: 40px;">（m3）</p></th>
+								<th><p style="width: 40px;">砂砾垫层</p><p style="width: 40px;">（m3）</p></th>
+								<th><p style="width: 40px;">开挖方</p><p style="width: 40px;">（m3）</p></th>
+								<th><p style="width: 40px;">长度</p><p style="width: 40px;">（m）</p></th>
+								<th><p style="width: 40px;">块石</p><p style="width: 40px;">（m3）</p></th>
+								<th><p style="width: 40px;">8mm钢筋</p><p style="width: 40px;">（Kg）</p></th>
+								<th><p style="width: 40px;">铁丝</p><p style="width: 40px;">（m）</p></th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+						<tfoot>
+							<tr class="text-c">
+								<th colspan="5"><p style="width: 80px;">合计</p></th>
+								<th id="qiangchangSum" ><span id="wallLengthSum"></span></th>
+								<th><span id="raiseHeightSum"></span></th>
+								<th><span id="averageHighSum"></span></th>
+								<th><span id="stoneWallBodySum"></span></th>
+								<th><span id="stoneBasicsSum"></span></th>
+								<th><span id="plasteringSum"></span></th>
+								<th><span id="gravelCushionSum"></span></th>
+								<th><span id="openExcavationSum"></span></th>
+								<th><span id="lengthSum"></span></th>
+								<th><span id="blockStoneSum"></span></th>
+								<th><span id="eightRebarSum"></span></th>
+								<th><span id="wireSum"></span></th>
+								<th></th>
+							</tr>
+						</tfoot>
+					</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+		<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+		<script type="text/javascript" src="../../js/zTree/v3/js/jquery.ztree.all-3.5.js"></script>
+		<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script>		
+		<script type="text/javascript" src="../../js/datatable/datatables.js"></script>
+		
+		<script type="text/javascript" src="../../js/systemJs/common/LodopFuncs.js"></script>
+		<script type="text/javascript" src="../../js/laypage/1.2/laypage.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/entryTree.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/common/ajaxfileupload.js"></script>
+		<script type="text/javascript" src="../../js/systemJs/projectSchedule/roadbedProtectionNumber.js"></script>
+		<script type="text/javascript">
+			var LODOP; //声明为全局变量   
+			function PreviewMytable(){
+				var LODOP=getLodop();  
+				LODOP.PRINT_INIT("PreviewMytable")
+				var strStyle="<style> table,td,th {border-width: 1px;border-style: solid;border-collapse: collapse;}</style>"
+				LODOP.NewPageA();
+		    	LODOP.ADD_PRINT_TABLE(100,"5%","90%",328,strStyle+document.getElementById("box_border1").innerHTML);
+		    	LODOP.SET_PRINT_STYLEA(0,"FontColor","#FF0000");
+				LODOP.PREVIEW();	
+			};	
+			function SaveAsFile(){ 
+				LODOP=getLodop();   
+				LODOP.PRINT_INIT("SaveAsFile"); 
+				LODOP.ADD_PRINT_TABLE(100,20,500,80,document.getElementById("box_border1").innerHTML); 
+				LODOP.SET_SAVE_MODE("Orientation",2); //Excel文件的页面设置：横向打印   1-纵向,2-横向;
+				LODOP.SET_SAVE_MODE("PaperSize",9);  //Excel文件的页面设置：纸张大小   9-对应A4
+				LODOP.SET_SAVE_MODE("Zoom",90);       //Excel文件的页面设置：缩放比例
+				LODOP.SET_SAVE_MODE("CenterHorizontally",true);//Excel文件的页面设置：页面水平居中
+				LODOP.SET_SAVE_MODE("CenterVertically",true); //Excel文件的页面设置：页面垂直居中
+				LODOP.SAVE_TO_FILE("新文件名.xls"); 0
+			};
+		</script>
+	</body>
+</html>

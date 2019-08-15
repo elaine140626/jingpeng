@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="asphProportion">
+
+	<select id="getAsph_TargetProportion" parameterType="java.util.Map"
+		resultType="asph_TargetProportion">
+
+		SELECT id i_id, Org_ID i_org_Id,Proportion_Code
+		str_proportion_Code,Product_ID i_product_Id,Remarks
+		str_remarks,Operator str_operator,Create_Date str_create_Date,Modifier
+		str_modifier,Modify_Date str_modify_Date,Valid_Flag
+		i_valid_Flag,Upload i_upload FROM Asph_TargetProportion WHERE
+		Product_ID =#{i_product_Id} and Org_ID=#{i_org_Id} and Valid_Flag= 1
+
+	</select>
+
+	<select id="getAsphalt_Prod_Proportion" parameterType="java.util.Map"
+		resultType="asphalt_Prod_Proportion">
+		SELECT a.id i_id,a.Grad_Id i_grad_Id,o.Org_Name str_org_Name,a.Targ_PropID as i_targ_PropId,a.Proportion_Code
+		str_proportion_Code,v.Material_Name str_material_Name,
+		v.Material_Model str_material_Model,a.Remarks str_remarks,
+		a.Modify_Date str_modify_Date,a.Create_Date str_create_Date,
+		ag.Grade_Code str_grade_Code,
+		pp.proportion_Code str_Mproportion_Code,
+		v.Material_Name+'-'+v.Material_Model
+		materNameAndModel, a.operator str_operator
+		FROM Asphalt_Prod_Proportion
+		a
+		LEFT JOIN Organization_Info o ON a.Org_ID = o.Id
+		LEFT JOIN V_MaterialInfo v ON v.Id = a.Product_ID
+		LEFT JOIN Asphalt_Grading ag ON ag.Id = a.Grad_Id 
+		LEFT JOIN Asph_TargetProportion pp ON pp.Id = a.Targ_PropID
+		WHERE 1=1
+		<if test="str_material_Name != null and str_material_Name != ''">
+			AND v.material_Name like '%${str_material_Name}%'
+		</if>
+		<if test="str_material_Model != null and str_material_Model != ''">
+			AND v.material_Model like '%${str_material_Model}%'
+		</if>
+		<if test="str_proportion_Code != null and str_proportion_Code != ''">
+			AND a.Proportion_Code like '%${str_proportion_Code}%'
+		</if>
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND a.Org_ID IN (" separator="," close=")">
+			#{item}
+		</foreach>
+		AND a.Valid_Flag=1
+		ORDER BY a.id DESC
+	</select>
+	
+	<select id="select_Asph_TargetPropDetailed" parameterType="java.util.Map" resultType="asph_TargetProportion">
+	     select pp.Targ_PropID,p.Prod_ID,p.Grad_Id 
+		from Production_Plan p left join 
+		       Asphalt_Prod_Proportion pp on pp.Id = p.Prod_ID
+		 where   
+				 p.Prod_ID = #{i_id}
+				 and
+		 		 p.Valid_Flag = 1 and p.IsCancel = 0 
+				<!--pp.Targ_PropID = #{i_id}
+					Prod_ID = #{i_id}
+                	p.Grad_Id = #{i_id} -->
+	</select>
+	
+	<select id="getAsphalt_Prod_ProportionById" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		<!-- asphalt_Prod_Proportion -->
+		SELECT  a.Proportion_Code str_proportion_Code, v.Material_Name str_material_Name, 
+		v.Material_Model str_material_Model, a.Create_Date str_create_Date, a.Modify_Date str_modify_Date, 
+		a.No1_SetValue d_no1_SetValue, a.No2_SetValue d_no2_SetValue, a.No3_SetValue d_no3_SetValue, 
+		a.No4_SetValue d_no4_SetValue, a.No5_SetValue d_no5_SetValue, a.No6_SetValue d_no6_SetValue, 
+		a.HotPowder_SetValue d_hotPowder_SetValue, a.Asphalt_SetValue d_asphalt_SetValue, a.Remarks str_remarks, 
+		a.ColdPowder_SetValue d_coldPowder_SetValue, a.Admixture1_SetValue d_admixture1_SetValue, 
+		a.Admixture2_SetValue d_admixture2_SetValue, a.Product_ID i_product_Id, a.Grad_Id, a.id i_id, 
+		g.Grade_Code Grade_Code
+		FROM Asphalt_Prod_Proportion a left join
+		     V_MaterialInfo v on a.Product_ID = v.Id left join
+		     Asph_TargetProportion t on t.Id = a.Targ_PropID left join
+		     Asphalt_Grading g on g.Id = a.Grad_Id
+		
+		WHERE  a.Org_ID =#{i_org_Id} and a.id =#{i_id} ;
+		
+		<!-- SELECT
+		a.Id i_id,
+		a.Proportion_Code str_proportion_Code,
+		v.Material_Name str_material_Name,
+		v.Material_Model str_material_Model,
+		a.Create_Date str_create_Date,
+		a.Modify_Date str_modify_Date,
+		a.Targ_PropID i_targ_PropId,
+		a.Grad_Id i_grad_Id,
+		a.Product_ID i_product_Id,
+		a.No1_SetValue d_no1_SetValue,
+		a.No2_SetValue d_no2_SetValue,
+		a.No3_SetValue d_no3_SetValue,
+		a.No4_SetValue d_no4_SetValue,
+		a.No5_SetValue d_no5_SetValue,
+		a.No6_SetValue d_no6_SetValue,
+		a.No7_SetValue d_no7_SetValue,
+		a.No8_SetValue d_no8_SetValue,
+		a.Admixture1_SetValue d_admixture1_SetValue,
+		a.Admixture2_SetValue d_admixture2_SetValue,
+		a.HotPowder_SetValue d_hotPowder_SetValue,
+		a.ColdPowder_SetValue d_coldPowder_SetValue,
+		a.Asphalt_SetValue d_asphalt_SetValue,
+		t.proportion_Code str_mb_proportion_Code,
+		g.grade_Code str_grade_Code,
+		a.remarks str_remarks
+		FROM
+		Asphalt_Prod_Proportion a,
+		V_MaterialInfo v,
+		Asphalt_Grading g,
+		Asph_TargetProportion t
+		WHERE
+		v.Id = a.Product_ID
+		AND g.id=a.Grad_Id
+		AND t.id=targ_PropId
+
+		<foreach collection="org_Ids" index="index" item="item"
+			open="and a.Org_ID in(" separator="," close=")">
+			#{item}
+		</foreach>
+
+		AND a.Valid_Flag = 1
+		and a.id =#{i_id} -->
+	</select>
+
+
+	<select id="getAsph_TargetProportionCode" parameterType="asph_TargetProportion"
+		resultType="asph_TargetProportion">
+
+		SELECT id i_id from Asph_TargetProportion WHERE Valid_Flag =1 and Org_ID
+		=#{i_org_Id} AND Proportion_Code =#{str_proportion_Code}
+	</select>
+
+
+
+
+	<select id="getAsphalt_Prod_ProportionCode" parameterType="asphalt_Prod_Proportion"
+		resultType="asphalt_Prod_Proportion">
+
+		SELECT id i_id FROM Asphalt_Prod_Proportion a WHERE a.Proportion_Code
+		=#{str_proportion_Code} AND a.Org_ID =#{i_org_Id} and a.Valid_Flag =1
+	</select>
+	
+	
+		<select id="getAsphalt_Prod_ProportionPropId" parameterType="asphalt_Prod_Proportion"
+		resultType="asphalt_Prod_Proportion">
+
+		SELECT id i_id FROM Asphalt_Prod_Proportion a WHERE a.Targ_PropID
+		=#{i_product_Id}  and a.Valid_Flag =1
+	</select>
+	
+	
+	
+
+	<select id="getAsphalt_Prod_Proportion_Code" parameterType="asphalt_Prod_Proportion"
+		resultType="asphalt_Prod_Proportion">
+
+		SELECT id i_id,Proportion_Code str_proportion_Code FROM
+		Asphalt_Prod_Proportion a WHERE a.Valid_Flag =1 AND Proportion_Code
+		=#{str_proportion_Code} and a.Org_ID = #{i_org_Id}
+	</select>
+
+	<insert id="addAsphalt_Prod_Proportion" parameterType="asphalt_Prod_Proportion">
+
+		insert into Asphalt_Prod_Proportion
+		(Remarks,
+		Org_ID,
+		Proportion_Code,
+		Targ_PropID,
+		Grad_Id,
+		Product_ID,
+		No1_SetValue,No2_SetValue,No3_SetValue,No4_SetValue,No5_SetValue,No6_SetValue,No7_SetValue,No8_SetValue,Admixture1_SetValue,
+		Admixture2_SetValue,HotPowder_SetValue,ColdPowder_SetValue,Asphalt_SetValue,Operator,Create_Date)
+		VALUES
+		(#{str_remarks},
+		#{i_org_Id},
+		#{str_proportion_Code},
+		#{i_targ_PropId},
+		#{str_grade_Code},
+		#{i_product_Id},
+		#{d_no1_SetValue},#{d_no2_SetValue},#{d_no3_SetValue},#{d_no4_SetValue},#{d_no5_SetValue},#{d_no6_SetValue},#{d_no7_SetValue},
+		#{d_no8_SetValue},#{d_admixture1_SetValue},#{d_admixture2_SetValue},#{d_hotPowder_SetValue},#{d_coldPowder_SetValue},#{d_asphalt_SetValue},#{str_operator},CONVERT(varchar(100),GETDATE(),
+		20))
+	</insert>
+
+	<insert id="addAsph_TargetProportion" parameterType="asph_TargetProportion"
+		useGeneratedKeys="true" keyProperty="i_id">
+
+		INSERT into Asph_TargetProportion
+		(Org_ID,Proportion_Code,Product_ID,Remarks,Operator,Create_Date)
+		VALUES(#{i_org_Id},#{str_proportion_Code},#{i_product_Id},#{str_remarks},#{str_operator},#{str_create_Date})
+
+	</insert>
+
+	<update id="updateAsphalt_Prod_Proportion" parameterType="asphalt_Prod_Proportion">
+
+		UPDATE Asphalt_Prod_Proportion SET
+		Targ_PropID=#{i_targ_PropId},Grad_Id=#{str_grade_Code},Product_ID=#{i_product_Id},
+		No1_SetValue=#{d_no1_SetValue},No2_SetValue=#{d_no2_SetValue},No3_SetValue=#{d_no3_SetValue},No4_SetValue=#{d_no4_SetValue},No5_SetValue=#{d_no5_SetValue},No6_SetValue=#{d_no6_SetValue},No7_SetValue=#{d_no7_SetValue},No8_SetValue=#{d_no8_SetValue},
+		Admixture1_SetValue=#{d_admixture1_SetValue},Admixture2_SetValue=#{d_admixture2_SetValue},HotPowder_SetValue=#{d_hotPowder_SetValue},ColdPowder_SetValue=#{d_coldPowder_SetValue},Asphalt_SetValue=#{d_asphalt_SetValue},Modifier=#{str_modifier},
+		Modify_Date=#{str_modify_Date},Remarks=#{str_remarks}
+		where id= #{i_id}
+	</update>
+
+
+	<update id="deletAsphalt_Prod_Proportion" parameterType="asphalt_Prod_Proportion">
+		UPDATE Asphalt_Prod_Proportion SET Valid_Flag=0 where id= #{i_id}
+	</update>
+
+	<select id="getProduction_Plan" parameterType="asphalt_Prod_Proportion"
+		resultType="java.util.Map">
+		select id from Production_Plan where Prod_ID = #{i_id} and
+		Valid_Flag = 1
+	</select>
+
+
+	<select id="getAsphalt_Prod_ProportionByGradId" parameterType="java.util.Map"
+		resultType="asphalt_Prod_Proportion">
+		SELECT id  i_id
+		FROM Asphalt_Prod_Proportion
+		a
+		WHERE 1=1
+		<if test="i_grad_Id != null and i_grad_Id != ''">
+			AND a.Grad_Id = #{i_grad_Id}
+		</if>
+		
+		AND a.Valid_Flag=1
+		ORDER BY a.id DESC
+	</select>
+	
+	
+</mapper>

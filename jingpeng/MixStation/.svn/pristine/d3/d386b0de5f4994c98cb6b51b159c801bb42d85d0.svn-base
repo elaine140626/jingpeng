@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+       http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd  
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
+    <context:component-scan base-package="com.jingpeng"/>
+    <context:component-scan base-package="com.userInfo"/>
+	<context:component-scan base-package="com.blindSample"/>
+	<context:component-scan base-package="com.kdt.base" />
+	<context:component-scan base-package="com.kdt.app" />
+	<!-- 引入属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	
+	<!-- ===============第一个数据源的配置 blindSample=============== -->
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- 初始化连接大小 -->
+        <property name="initialSize" value="0" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="20" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="20" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="0" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000" />
+	</bean>
+	
+	<bean id="source_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatisConfig.xml" />
+		<property name="mapperLocations">
+			<list>
+			 	<value>classpath*:com/blindSample/**/dao/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+		<property name="validateExistingTransaction" value="true" />
+	</bean>
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" order="2"/>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="com.blindSample.dao" />
+		<property name="sqlSessionFactoryBeanName" value="source_sqlSessionFactory" />
+	</bean>
+	
+	<!-- Enables the use of the @AspectJ style of Spring AOP -->	
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+ 	<!-- ===============第二个数据源的配置jingpeng=============== -->
+	<bean id="dataSource_2" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url_2}" />
+		<property name="username" value="${jdbc.username_2}" />
+		<property name="password" value="${jdbc.password_2}" />
+		<!-- 初始化连接大小 -->
+        <property name="initialSize" value="0" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="20" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="20" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="0" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000" />
+	</bean>
+	
+	<bean id="source_sqlSessionFactory_2" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource_2" />
+		<property name="configLocation" value="classpath:mybatisConfig.xml" />
+		<property name="mapperLocations">
+			<list>
+			 	<value>classpath*:com/jingpeng/**/dao/*.xml</value>
+			 	<value>classpath*:com/kdt/**/dao/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="transactionManager_2"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_2" />
+		<property name="validateExistingTransaction" value="true" />
+	</bean>
+	
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager_2" order="2"/>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="com.jingpeng.dao" />
+		<property name="sqlSessionFactoryBeanName" value="source_sqlSessionFactory_2" />
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+          <constructor-arg index="0" ref="source_sqlSessionFactory_2" />
+    </bean>
+    
+    <!-- ===============第三个数据源的配置（用户表）=============== -->
+    <!-- 配置数据源 -->
+	<bean id="dataSource_3" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url_3}" />
+		<property name="username" value="${jdbc.username_3}" />
+		<property name="password" value="${jdbc.password_3}" />
+		<!-- 初始化连接大小 -->
+        <property name="initialSize" value="0" />
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="20" />
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="20" />
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="0" />
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000" />
+	</bean>
+	
+	<bean id="source_sqlSessionFactory_3" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource_3" />
+		<property name="configLocation" value="classpath:mybatisConfig.xml" />
+		<property name="mapperLocations">
+			<list>
+			 	<value>classpath*:com/userInfo/**/dao/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="transactionManager_3"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource_3" />
+		<property name="validateExistingTransaction" value="true" />
+	</bean>
+	<!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager_3" order="2"/>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	    <property name="basePackage" value="com.userInfo.dao" />
+		<property name="sqlSessionFactoryBeanName" value="source_sqlSessionFactory_3" />
+	</bean>
+	
+	<!-- Enables the use of the @AspectJ style of Spring AOP -->	
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	
+	
+	<!-- 调度器 -->
+	<bean name="schedulerFactoryBean"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- 通过applicationContextSchedulerContextKey属性配置spring上下文 -->
+		<property name="applicationContextSchedulerContextKey">
+			<value>applicationContext</value>
+		</property>
+	</bean>
+
+	<!--加载可执行的任务 -->
+	<bean id="kdQuartzManager" class="com.kdt.base.support.quartz.KDQuartzManager" />
+	<bean class="com.kdt.base.support.springsupport.BeanFactoryUtils" />
+	
+	<import resource="classpath:springehcache.xml" />
+</beans>

@@ -1,0 +1,123 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/warning_deviation.js" type="text/javascript" charset="utf-8"></script>
+<div class="luru" data-toggle="modal" onclick="getSelect()">
+	<a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn">阀值设定</a>
+</div>
+<div class="lq_biao">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0" id="Deviation_Asphalt">
+		<thead>
+			<tr>
+				<th scope="col" class="xh">序号</th>
+				<th scope="col">拌合站名称</th>
+				<th scope="col">骨料仓初级预警(±%)</th>
+				<th scope="col">骨料仓中级预警(±%)</th>
+				<th scope="col">骨料仓高级预警(±%)</th>
+				<th scope="col">粉料仓初级预警(±%)</th>
+				<th scope="col">粉料仓中级预警(±%)</th>
+				<th scope="col">粉料仓高级预警(±%)</th>
+				<th scope="col">外掺剂仓初级预警(±%)</th>
+				<th scope="col">外掺剂仓中级预警(±%)</th>
+				<th scope="col">外掺剂仓高级预警(±%)</th>
+				<th scope="col">油石比初级预警(±%)</th>
+				<th scope="col">油石比中级预警(±%)</th>
+				<th scope="col">油石比高级预警(±%)</th>
+			<!-- 	<th scope="col">混合料名称/型号</th>
+				<th scope="col">混合料温度(℃)</th> -->
+				<th scope="col">创建时间</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div class="modal fade" id="loginModal" >
+	<div class="modal-dialog modal-md" >
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>阀值设定</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt3">
+			<form id="addForm">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="fazhi" id="tab">
+					<tr>
+						<td width="30%" align="right">拌合站名称：</td>
+						<td width="70%" align="left">
+							<select name="Org_ID" id="Org_ID" style="width: 348px" onchange="selectMaterials()">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right"></td>
+						<td align="left">
+							<span style="margin-left: 16px;">初级预警</span>
+							<span style="margin-left: 65px;">中级预警</span>
+							<span style="margin-left: 58px;">高级预警</span>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">油石比超差(±%)：</td>
+						<td align="left">
+						<input style="width:100px;" name="Dev_AggregateDown" type="text" id="Dev_AggregateDown" placeholder="请输入下限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_AggregateCenter" type="text" id="Dev_AggregateCenter" placeholder="请输入中限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_Aggregate" type="text" id="Dev_Aggregate" placeholder="请输入上限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">粉料超差(±%)：</td>
+						<td align="left">
+						<input style="width:100px;" name="Dev_PowderDown" type="text" id="Dev_PowderDown" placeholder="请输入下限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_PowderCenter" type="text" id="Dev_PowderCenter" placeholder="请输入中限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_Powder" type="text" id="Dev_Powder" placeholder="请输入上限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						</td>
+					</tr>
+					<tr>
+						<td align="right">骨料超差(±%)：</td>
+						<td align="left">
+						<input style="width:100px;" name="Dev_AsphaltDown" type="text" id="Dev_AsphaltDown" placeholder="请输入下限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_AsphaltCenter" type="text" id="Dev_AsphaltCenter" placeholder="请输入中限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_Asphalt" type="text" id="Dev_Asphalt" placeholder="请输入上限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						</td>
+					</tr>
+<<<<<<< .mine
+					<!-- <tr>
+||||||| .r4
+				    <tr>
+=======
+					<tr>
+						<td align="right">外掺挤超差(±%)：</td>
+						<td align="left">
+						<input style="width:100px;" name="Dev_AdmixtureDown" type="text" id="Dev_AdmixtureDown" placeholder="请输入下限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_AdmixtureCenter" type="text" id="Dev_AdmixtureCenter" placeholder="请输入中限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<input style="width:100px;margin-left: 16px;" name="Dev_Admixture" type="text" id="Dev_Admixture" placeholder="请输入上限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						</td>
+					</tr>
+				    <tr>
+>>>>>>> .r200
+						<td align="right">混合料名称/型号：</td>
+						<td align="left">
+						<select name="Product_ID" id="Product_ID" style="width: 348px">
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td align="right">混合料温度(℃)：</td>
+						<td align="left">
+						<input name="MixTemperatureDown" type="text" id="MixTemperatureDown" placeholder="请输入下限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						<span>~</span>
+						<input name="MixTemperatureUp" type="text" id="MixTemperatureUp" placeholder="请输入上限值" maxlength="6" onkeyup="clearNoDecimal(this,4,1)" onblur="checkPoint(this)">
+						</td>
+					</tr> -->
+					
+					<!-- <tr>
+						<td align="right">混合料温度下限(℃)：</td>
+						<td align="left">
+						</td>
+					</tr> -->
+					<tr>
+						<td colspan="2" align="center"><input type="button" id="sdff" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addss()"></td>
+					</tr>
+				</table>
+			</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http#{}//mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.userInfo.dao.UserInfoDao">
+	<!-- 获取登录账户 -->
+	<select id="getUserLogin" parameterType="java.util.Map" resultType="com.userInfo.model.PtUserInfo">
+		SELECT
+		  * 
+		FROM
+		  PtUserInfo u 
+		where
+		  u.UserCode = #{userCode} 
+		  <if test="password != null and password != ''">
+		      and u.PassWord = #{passWord} 
+		  </if>
+		  and u.DelFlag = 0
+	</select>
+	<!-- 获取用户信息 -->
+	<select id="getUserInfo" parameterType="java.util.Map" resultType="com.userInfo.model.PtUserInfo">
+		SELECT
+		  * 
+		FROM
+		  PtUserInfo u 
+		where
+		  u.Id = #{id} 
+		  and u.DelFlag = 0
+	</select>
+	<!-- 获取用户试验室权限信息 -->
+	<select id="getUserTestInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			distinct r.TestRoomName 
+			, t.UniqueIdentifier 
+		from PTestSetDetailed t
+			left join TestRoomInfo r on r.UniqueIdentifier=t.UniqueIdentifier 
+		where 1=1
+		<if test="user_id != null and user_id != ''">
+			and t.PlatformUserInfoId = #{user_id}
+		</if>
+	</select>
+	<!-- 获取用户拌合站权限信息 -->
+	<select id="getUserOrgInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			distinct r.Org_Name,
+			t.OrgId
+		from POrgSetDetailed t
+			left join Organization_Info r on r.id=t.OrgId 
+		where 1=1
+		<if test="user_id != null and user_id != ''">
+			and t.PlatformUserInfoId = #{user_id}
+		</if>
+	</select>
+	<!-- 注册用户 -->
+	<insert id="insertUserInfo" parameterType="com.userInfo.model.PtUserInfo">
+		INSERT 
+		INTO PtUserInfo ( 
+		    UserCode
+		  , PassWord
+		  , Name
+		  , IsMixingStation
+		  , IsTestRoom
+		  , IsCollector
+		  , DelFlag
+		  , Operator
+		  , CreateDate
+		)
+		VALUES (
+		    #{UserCode}
+		  , #{PassWord}
+		  , #{Name}
+		  , #{IsMixingStation}
+		  , #{IsTestRoom}
+		  , #{IsCollector}
+		  , 0
+		  , #{UserCode}
+		  , CONVERT(varchar(100),GETDATE(), 20)
+		)
+	</insert>
+	<!-- 更新用户信息 -->
+	<update id="updateUserInfo" parameterType="com.userInfo.model.PtUserInfo">
+		UPDATE dbo.PtUserInfo 
+		SET
+		    UserCode = #{UserCode}
+		  , PassWord = #{PassWord}
+		  , Name = #{Name}
+		  , IsMixingStation = #{IsMixingStation}
+		  , IsTestRoom = #{IsTestRoom}
+		  , IsCollector = #{IsCollector}
+		  , Modifier = #{UserCode}
+		  , ModifyDate = CONVERT(varchar(100),GETDATE(), 20)
+		  where Id = #{id}
+	</update>
+    <!-- 删除用户 -->
+	<update id="deleteUserInfo" parameterType="java.util.Map">
+		UPDATE dbo.PtUserInfo 
+		SET
+		   DelFlag = 1
+		where Id = #{id}
+	</update>
+	<!-- 添加用户试验室权限 -->
+	<insert id="insertTestSetDetailed" parameterType="java.util.Map">
+		INSERT 
+		INTO PTestSetDetailed (
+			PlatformUserInfoId
+			, UniqueIdentifier) 
+		VALUES (
+			#{platformUserInfoId}
+			, #{uniqueIdentifier})
+	</insert>
+	<!-- 删除用户的试验室权限 -->
+	<delete id="delTestSetDetailed" parameterType="java.util.Map">
+	    delete from PTestSetDetailed where PlatformUserInfoId = #{id}
+	</delete>
+	<!-- 添加用户拌合站权限 -->
+	<insert id="insertOrgSetDetailed" parameterType="java.util.Map">
+		INSERT 
+		INTO POrgSetDetailed (
+			PlatformUserInfoId
+			, OrgId) 
+		VALUES (
+			#{platformUserInfoId}
+			, #{orgId})
+	</insert>
+	<!-- 删除用户的拌合站权限 -->
+	<delete id="delOrgSetDetailed" parameterType="java.util.Map">
+	    delete from POrgSetDetailed where PlatformUserInfoId = #{id}
+	</delete>
+	<!-- 试验室树形信息 -->
+	<select id="getTestRoomList" parameterType="java.util.Map" resultType="java.util.Map">
+    	select * from TestRoomInfo t     
+		<if test="testIds != null and testIds != ''">
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+        	<foreach collection="testIds" index="index" item="item" open="AND t.id IN (" separator="," close=")">
+                #{item}
+        	</foreach>
+        	</trim>
+        </if> 
+	</select>
+	<!-- 拌合站树形信息 -->
+	<select id="getOrgInfoList" resultType="java.util.Map">
+    	select id i_id,org_Name str_org_Name,Parent_Id i_parent_Id,	org_type str_org_Type from Organization_Info  order by org_Type
+	</select>
+</mapper>	

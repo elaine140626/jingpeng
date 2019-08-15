@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>视频监控</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+		<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+		<script type="text/javascript" src="../resources/blindSampleJs/common.js"></script>
+		<link rel="stylesheet" type="text/css" href="../resources/Jqcss/common.css" />
+		<link rel="stylesheet" href="../resources/css2/bootstrap.css">
+		<link rel="stylesheet" href="../resources/css2/systyle.css">
+		<link rel="StyleSheet" href="../resources/css2/dtree.css" />
+		<script src="../resources/Jqjs/spjk.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		</script>
+		<script src="../resources/1.4/ckplayer/ckplayer.js"></script>
+		<script type="text/javascript" src="../resources/1.4/ezuikit.js"></script>
+	</head>
+
+	<body>
+	<div id="isLogin">
+	<input id="JpPassWord" type="password"  placeholder="请输入密码"><input onclick="login()" type="button" value="确定">
+	</div>
+	<div id="getAll">
+	<div id="JpList">
+		
+	</div>
+	<div id="add()">
+	<p onclick="JpisShow()">添加设备</p>
+	<div id="getJpNameAll">
+	<select id="getJpName">
+		<option value="-1">请选择</option>
+	</select>
+	<p onclick="addJp()">选择该设备</p>
+	</div>
+	</div>
+	
+	</div>
+	</body>
+
+</html>

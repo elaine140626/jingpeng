@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>瑞德公路管理系统</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<link href="css/main_css.css" rel="stylesheet" type="text/css" />
+		<link href="css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<script type="text/javascript" src="js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="DataTables/datatables.js"></script>
+		<link rel="stylesheet" type="text/css" href="DataTables/datatables.css" /></link>
+		<script type="text/javascript" src="js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="js/commonIndex.js"></script>
+		<script type="text/javascript" src="js/qualityTable.js"></script>
+		<script type="text/javascript" src="js/oilfactory/index.js"></script>
+		<script type="text/javascript" src="js/sweet-alert.min.js"></script>
+		<link rel="stylesheet" href="css/sweet-alert.css">
+		<script type="text/javascript">
+			$.ajaxSetup({ 
+			    statusCode: {
+			        401: function() { 
+			        	console.log("2222");
+			        	parent.location.href="page/user/login.html";
+			        }, 
+			        403: function() { 
+			        	parent.location.href="page/user/login.html";
+			        }
+			    }
+			})
+			/**退出系统**/
+			function logout() {
+				if(confirm("您确定要退出本系统吗？")) {
+					outLogin();
+				//	window.location.href = "page/user/login.html";
+				}
+			}
+
+			function jumpArea(href) {
+				var tex = '';
+				$('#rightMain').attr('src', "");
+				$('#nav_module').find('img').attr('src', 'img/common/module_' + (href + 1) + '.png');
+				$('#TabPage2 li').each(function(i, ele) {
+					if(i != href) {
+						$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '.png');
+						$(ele).find('span').css({
+							color: '#fff'
+						});
+						$(ele).css({
+							background: '#044599'
+						});
+					} else {
+						$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '_hover.png');
+						$(ele).css({
+							background: '#fff'
+						});
+						$(ele).find('span').css({
+							color: '#044599'
+						});
+						tex = $(ele).find('span').html()
+					}
+
+				});
+				$('.item').hide();
+				$('#rightMain').hide();
+				if(href == 0) {
+					$('.item1').show();
+				} else if(href == 1) {
+					$('.item2').show();
+				} else if(href == 2) {
+					$('.item3').show();
+				} else if(href == 3) {
+					$('.item4').show();
+				} else if(href == 4) {
+					$('.item5').show();
+				} else if(href == 5) {
+					$('.item6').show();
+				} else if(href == 6) {
+					$('.item7').show();
+				} else if(href == 7) {
+					$('.item8').show();
+				} else if(href == 8) {
+					$('.item9').show();
+				}else if(href == 9) {
+					$('.item10').show();
+				}else if(href == 10) {
+					$('.item11').show();
+				}
+				$('#top_nav').show();
+				$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">' + tex + '</span>');
+
+			}
+		</script>
+
+	</head>
+
+	<body>
+		<div id="top">
+			<div id="top_logo">
+				<img id="logoPic" alt="logo" src="img/common/logo.jpg" style="vertical-align:middle;">
+			</div>
+			<div id="top_links">
+				<div id="top_close">
+					<a href="javascript:void(0);" onclick="logout();" target="_parent">
+						<!-- <img alt="退出系统" title="退出系统" src="img/common/close.jpg" > -->
+						<img alt="退出系统" style="width:100%;height: 100%;margin-top: 0px;" title="退出系统" src="img/common/guanbi2.png" >
+					</a>
+				</div>
+				<!-- <img id="notice" onclick="dealNotice()" style="height: 28px;margin-right:25px;" alt="当前用户" src="img/common/notice.png"> -->
+				<div id="top_op">
+					<ul>
+						<li onclick="jmupInfo()">
+							<img alt="当前用户" src="img/common/user.jpg">：
+							<span id="rolecode"></span>&nbsp;&nbsp;<span id=username></span>
+						</li>
+					</ul>
+				</div>
+				<div id="message" style="display:none" onclick="$('#messageList').css('display') == 'none' ? $('#messageList').css('display','block') : $('#messageList,#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">
+					<img alt="系统消息" title="系统消息" style="width:100%;height: 100%;" src="img/common/message.png" >
+					<div id="messageNum"></div>
+				</div>
+				<ul id="messageList" style="display:none">
+					<li id="outgoingListNum" data-div="outboundOrder" data-id="2" data-href="page/dispath/outbound.html" onclick="jumpDetalis(this)">调度出库单：&nbsp;<a  onclick="window.event? window.event.cancelBubble = true : e.stopPropagation();$('#messageOutList').css('display') == 'none' ? $('#messageOutList').css('display','block') : $('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')" style="display:inline;text-decoration:underline;color:red;"><span></span></a>&nbsp;条待处理</li>
+					<li id="outEmptyListNum" data-div="outboundEmptyOrder" data-id="2" data-href="page/dispath/outEmptyBound.html" onclick="jumpDetalis(this)">调度空发单：&nbsp;<a  onclick="window.event? window.event.cancelBubble = true : e.stopPropagation();$('#messageEmptyList').css('display') == 'none' ? $('#messageEmptyList').css('display','block') : $('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')" style="display:inline;text-decoration:underline;color:red;"><span></span></a>&nbsp;条待处理</li>
+					<li id="outExchangeListNum" data-div="outboundExchangeOrder" data-id="2" data-href="page/dispath/outExchangeBound.html" onclick="jumpDetalis(this)">调度兑换单：&nbsp;<a  onclick="window.event? window.event.cancelBubble = true : e.stopPropagation();$('#messageExchangeList').css('display') == 'none' ? $('#messageExchangeList').css('display','block') : $('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')" style="display:inline;text-decoration:underline;color:red;"><span></span></a>&nbsp;条待处理</li>
+					<li id="nextProductionCountNum" data-div="nextProductionPlan" data-id="2" data-href="page/dispath/nextProductionPlan.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">下发生产计划：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="exportmeasureCountNum" data-div="outDetection" data-id="4" data-href="page/quality/out_detection.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">出库单检测：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isInspectorNum" data-div="productionProcessNotice" data-id="4" data-href="page/quality/productionProcessNotice.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">生产工艺通知单：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isQualifiedNum" data-div="productionProcessDetection" data-id="4" data-href="page/quality/productionProcessDetection.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">生产过程检测：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isCheckNum" data-div="taskChecking" data-id="5" data-href="page/repertory/taskChecking.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">生产任务核对：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isProductionNum" data-div="confirmProductionTask" data-id="6" data-href="page/productionManagement/confirmProductionTask.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">生产任务确认：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isApplicationNum" data-div="qualityChecking" data-id="6" data-href="page/productionManagement/qualityChecking.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">提交质检申请：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isCompleteNum" data-div="completeConfirm" data-id="6" data-href="page/productionManagement/completeConfirm.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">生产完成确认：&nbsp;<span></span>&nbsp;条待处理</li>
+					<li id="isConfirmSubmissionNum" data-div="actualMaterialConsumption" data-id="6" data-href="page/productionManagement/actualMaterialConsumption.html" onclick="jumpDetalis(this);$('#messageOutList,#messageEmptyList,#messageExchangeList').css('display','none')">实际原料消耗：&nbsp;<span></span>&nbsp;条待处理</li>
+				</ul>
+				<ul id="messageOutList" style="display:none">
+				</ul>
+				<ul id="messageEmptyList" style="display:none">
+				</ul>
+				<ul id="messageExchangeList" style="display:none">
+				</ul>
+			</div>
+		</div>
+		<!-- side menu start -->
+		<div id="side">
+			<div id="left_menu">
+				<ul id="TabPage2">
+					<li class="selected" id="heTong" title="合同管理">
+						<img alt="合同管理" title="合同管理" src="img/common/1_hover.png">
+						<span class="tab1">合同管理</span>
+					</li>
+					<li title="销售管理" id="xiaoShou" >
+						<img alt="销售管理" title="销售管理" src="img/common/2.png">
+						<span class="tab1">销售管理</span>
+					</li>
+					<li title="调度管理" id="diaoDu">
+						<div class="tips"></div>
+						<img alt="调度管理" title="调度管理" src="img/common/3.png">
+						<span class="tab1">调度管理</span>
+					</li>
+					<li title="运输管理" id="yunShu" >
+						<img alt="运输管理" title="运输管理" src="img/common/4.png">
+						<span class="tab1">运输管理</span>
+					</li>
+					<li title="质检管理" id="zhiJian">
+						<div class="tips"></div>
+						<img alt="质检管理" title="产品信息" src="img/common/5.png">
+						<span class="tab1">质检管理</span>
+					</li>
+					<li title="库存管理" id="kuChun">
+						<div class="tips"></div>
+						<img alt="库存管理" title="库存管理" src="img/common/6.png">
+						<span class="tab1">库存管理</span>
+					</li>
+					<li title="生产管理" id="shengchan">
+						<div class="tips"></div>
+						<img alt="生产管理" title="生产管理" src="img/common/7.png">
+						<span class="tab1">生产管理</span>
+					</li>				
+					<li title="财务管理" id="jiaGe" >
+						<img alt="财务管理" title="财务管理" src="img/common/8.png">
+						<span class="tab1">财务管理</span>
+					</li>
+
+					<li title="采购申请" id="caiGouShenQing" style="display:none">
+						<img alt="采购申请" title="采购申请" src="img/common/9.png">
+						<span class="tab1">采购申请</span>
+					</li>
+					
+					<li title="车辆监管" id="cheliaojianguan">
+						<img alt="车辆监管" title="车辆监管" src="img/common/10.png">
+						<span class="tab1">车辆监管</span>
+					</li>
+					<li title="系统管理" id="xiTong">
+						<img alt="系统管理" title="系统管理" src="img/common/11.png">
+						<span class="tab1">系统管理</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				var flag = 1;
+				//点击菜单栏切换到相应子模块
+				$('#TabPage2 li').click(function() {
+					$('#rightMain').attr('src', "");
+					var index = $(this).index();
+					$('#nav_module').find('img').attr('src', 'img/common/module_' + (index + 1) + '.png');
+					$('#TabPage2 li').each(function(i, ele) {
+						if(i != index) {
+							$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '.png');
+							$(ele).find('span').css({
+								color: '#fff'
+							});
+							$(ele).css({
+								background: '#044599'
+							});
+						} else {
+							$(ele).find('img').attr('src', 'img/common/' + (index + 1) + '_hover.png');
+							$(ele).css({
+								background: '#fff'
+							});
+							$(ele).find('span').css({
+								color: '#044599'
+							});
+						}
+
+					});
+					$('.item').hide();
+					$('#rightMain').hide();
+					if(index == 0) {
+						$('.item1').show();
+					} else if(index == 1) {
+						$('.item2').show();
+					} else if(index == 2) {
+						$('.item3').show();
+					} else if(index == 3) {
+						$('.item4').show();
+					} else if(index == 4) {
+						$('.item5').show();
+					} else if(index == 5) {
+						$('.item6').show();
+					} else if(index == 6) {
+						$('.item7').show();
+					} else if(index == 7) {
+						$('.item8').show();
+					}else if(index == 8) {
+						$('.item9').show();
+					}else if(index == 9) {
+						$('.item10').show();
+					}else if(index == 10) {
+						$('.item11').show();
+					}
+					$('#top_nav').show();
+					$('#now_area').hide();
+					$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">' + $(this).find('span').html() + '</span>');
+
+				});
+				$('.item .tabs a').click(function() {
+					var jumpHref = $(this).attr('data-href');
+					var itemId = $(this).parent('.tabs').parents('.item').attr('data-itemId');
+					$('#rightMain').attr('src', jumpHref);
+					$('#now_area').show();
+					$('#now_area').attr('onclick', 'jumpArea(' + itemId + ')');
+					$('.item').hide();
+					$('#top_nav').hide();
+					$('#rightMain').show();
+				})
+				// 初始化质检列表
+				//initQulityTable();
+				//queryInfo();
+				// 先隐藏提示图标和未合格检验单列表 
+				//$("#notice").hide();
+				//$("#qualityTable").hide();
+				//$("#qualityTable_info").hide();
+				//$("#qualityTable_paginate").hide();
+				// 每5分钟查询一次是否有未合格检验单，如果有，则显示提示图标
+				//window.setInterval("queryInfo()",300000);
+			});
+
+			/* function detectionDetails(obj,prams, id) {
+				var itemId = $(obj).parents('.tableArea').parent('.item').attr('data-itemId');
+				if(prams == 'out') {
+					$('#rightMain').attr('src', 'page/quality/out_detection_edit.html?detectionId=' + id);
+				} else if(prams == 'in') {
+					$('#rightMain').attr('src', 'page/quality/in_detection_edit.html?detectionId=' + id);
+				}
+				$('#now_area').show();
+				$('#now_area').attr('onclick', 'jumpArea(' + itemId + ')');
+				$('.item').hide();
+				$('#rightMain').show();
+				$('#top_nav').hide();
+				
+
+			} */
+		</script>
+		<!-- side menu start -->
+
+		<div id="main">
+			<div id="now_area" style="display: none;">返回</div>
+			<div id="top_nav">
+				<span id="here_area" style="float: left;">当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">合同管理</span></span>
+
+			</div>
+			<div class="item1 item" data-itemId="0" style="display: block;">
+				<div class="tabs " id="contractManagement">
+					<a href="javascript:;" data-href="page/contract/contract_management.html">销售合同管理</a>
+				</div>
+				<div class="tabs " style="display:none">
+					<a href="javascript:;" data-href="page/Purchase/purchase.html">采购合同管理</a>
+				</div>
+			</div>
+			<div class="item2 item" data-itemId="1">
+				<div class="tabs" id="customerInformation">
+					<a id="kehu" href="javascript:;"  onclick="isXiaoShou(this)">客户信息</a>
+				</div>
+				<div class="tabs" id="visitingRecord">
+					<a id="baifang" href="javascript:;"  onclick="isXiaoShou(this)">拜访记录</a>
+				</div>
+				<div class="tabs" id="returnVisitRecord">
+					<a id="huifang" href="javascript:;"  onclick="isXiaoShou(this)">回访记录</a>
+				</div>
+				<div class="tabs" id="isXiaoShou">
+					<a id="xsdingdan" href="javascript:;" onclick="isXiaoShou(this)">销售订单管理</a>
+				</div>
+			</div>
+			<div class="item3 item" data-itemId="2">
+				<div class="tabs" id="outboundOrder" >
+					<div id="outgoingList" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/dispath/outbound.html">调度出库单</a>
+				</div>
+				<div class="tabs" id="outboundEmptyOrder">
+				<div id="outEmptyList" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/dispath/outEmptyBound.html">调度空发单</a>
+				</div>
+				<div class="tabs" id="outboundExchangeOrder">
+				<div id="outExchangeList" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/dispath/outExchangeBound.html">调度兑换单</a>
+				</div>
+				<div class="tabs" id="outboundALL">
+					<a class="diaodu" href="javascript:;" data-href="page/dispath/outSummary.html">调度汇总单</a>
+				</div>
+				<div class="tabs" id="outboundOther">
+					<a class="diaodu" href="javascript:;" data-href="page/dispath/exportmeasureother.html">其他出库单</a>
+				</div>
+				<div class="tabs" id="isDDu">
+					<a class="diaodu" href="javascript:;" onclick="isDDu(this)">出库单查询</a>
+				</div>
+				<div class="tabs" id="nextProductionPlan">
+					<div id="nextProductionCount" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/dispath/nextProductionPlan.html">下发生产计划</a>
+				</div>
+			</div>
+			<div class="item4 item" data-itemId="3">
+				<!-- <div class="tabs">
+					<a class="yunshu" href="javascript:;" data-href="page/transportation/transportation.html">运输单</a>
+				</div> -->
+				<div class="tabs" id="transportation">
+					<a class="yunshu" href="javascript:;" data-href="page/transportation/transportation.html">出库运输单</a>
+				</div>
+				<!-- <div class="tabs">
+					<a class="yunshu" href="javascript:;" data-href="page/transportation/TranSportListStoragemeasure.html">入库运输单</a>
+				</div> -->
+			</div>
+			<div class="item5 item" data-itemId="4">
+				<!--<div class="tabs">
+					<a class="jiance" href="javascript:;" data-href="order_detection.html">销售订单检测</a>
+				</div>-->
+				<div class="tabs" id="outDetection">
+					<div id="exportmeasureCount" class="tiper"></div>
+					<a class="jiance" href="javascript:;" data-href="page/quality/out_detection.html">出库单检测</a>
+				</div>
+				<!-- <div class="tabs">
+					<a class="jiance" href="javascript:;" data-href="page/quality/in_detection.html">入库单检测</a>
+				</div> -->
+				<div class="tabs" id="productionProcessNotice">
+					<div id="isInspector" class="tiper"></div>
+					<a class="jiance" href="javascript:;" data-href="page/quality/productionProcessNotice.html">生产工艺通知单</a>
+				</div>
+				<div class="tabs" id="productionProcessDetection">
+					<div  id="isQualified"class="tiper"></div>
+					<a class="jiance" href="javascript:;" data-href="page/quality/productionProcessDetection.html">生产过程检测</a>
+				</div>
+				<!-- <div style="height: 180px;"></div>
+				<div class="tableArea">
+					<table id="qualityTable" class="table table-striped" border="0" cellspacing="" cellpadding="">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>物料名称</th>
+							<th>出库/入库</th>
+							<th>时间</th>
+							<th>状态</th>
+						</tr>
+					</thead>
+						<tr onclick="detectionDetails(this,1,'id')">
+							<td>1</td>
+							<td>沥青</td>
+							<td>出库</td>
+							<td>2018-7-18</td>
+							<td>待检</td>
+						</tr>
+						<tr onclick="detectionDetails(this,2,'id')">
+							<td>2</td>
+							<td>沥青</td>
+							<td>入库</td>
+							<td>2018-7-18</td>
+							<td>待检</td>
+						</tr>
+						<tr onclick="detectionDetails(this,1,'id')">
+							<td>3</td>
+							<td>沥青</td>
+							<td>出库</td>
+							<td>2018-7-18</td>
+							<td>待检</td>
+						</tr>
+						<tr onclick="detectionDetails(this,1,'id')">
+							<td>4</td>
+							<td>沥青</td>
+							<td>出库</td>
+							<td>2018-7-18</td>
+							<td>待检</td>
+						</tr>
+						<tr onclick="detectionDetails(this,2,'id')">
+							<td>5</td>
+							<td>沥青</td>
+							<td>入库</td>
+							<td>2018-7-18</td>
+							<td>待检</td>
+						</tr>
+					</table>
+				</div> -->
+			</div>
+			<div class="item6 item" data-itemId="5">
+				<div class="tabs" id="notWeighing">
+					<a class="diaodu" href="javascript:;" data-href="page/repertory/not_weighing.html">未称重出库单</a>
+				</div>
+<!-- 				<div class="tabs">
+					<a class="diaodu" href="javascript:;" data-href="page/repertory/outBound.html">出库单</a>
+				</div>
+				<div class="tabs">
+					<a class="diaodu" href="javascript:;" data-href="page/repertory/instore.html">入库单</a>
+				</div> -->
+				<div class="tabs" id="taskChecking">
+					<div id="isCheck" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/repertory/taskChecking.html">生产任务核对</a>
+				</div>
+			</div>
+			<div class="item7 item" data-itemId="6">
+				<div class="tabs" id="confirmProductionTask">
+					<div id="isProduction" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/productionManagement/confirmProductionTask.html">生产任务确认</a>
+				</div>
+				<div class="tabs" id="qualityChecking">
+					<div id="isApplication" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/productionManagement/qualityChecking.html">提交质检申请</a>
+				</div>
+				<div class="tabs" id="completeConfirm">
+					<div id="isComplete" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/productionManagement/completeConfirm.html">生产完成确认</a>
+				</div>
+				<div class="tabs" id="actualMaterialConsumption">
+					<div id="isConfirmSubmission" class="tiper"></div>
+					<a class="diaodu" href="javascript:;" data-href="page/productionManagement/actualMaterialConsumption.html">实际原料消耗</a>
+				</div>
+			</div>
+			
+			<div class="item8 item" data-itemId="7">
+				<div class="tabs">
+					<a class="jiance" href="javascript:;" data-href="page/price/price.html">财务管理</a>
+				</div>
+				<div class="tabs">
+					<a class="jiance" href="javascript:;" data-href="page/price/priceOffer.html">财务报价记录</a>
+				</div>
+			</div>
+			<div class="item9 item" data-itemId="8">
+				<div class="tabs">
+					<a class="caigouShenQing" href="javascript:;" data-href="page/procurementApplication/procurementApplication.html">采购申请单</a>
+				</div>
+			</div>
+			<div class="item10 item" data-itemId="9">
+				<div class="tabs" id="vehicleSupervision">
+					<a class="cheliaojianguan" href="javascript:;" data-href="page/vehicleSupervision/vehicleSupervision.html">车辆监管</a>
+				</div>
+			</div>
+			<div class="item11 item" data-itemId="10">
+				<div class="tabs">
+					<a class="gongyingshang" href="javascript:;" data-href="page/system/provider.html">供应商</a>
+				</div>
+				<div class="tabs">
+					<a class="wuliao" href="javascript:;" data-href="page/system/materiels_information.html">物料信息</a>
+				</div>
+				<div class="tabs">
+					<a class="cangku" href="javascript:;" data-href="page/system/warehouse_information.html">仓库信息</a>
+				</div>
+				<div class="tabs">
+					<a class="chedui" href="javascript:;" data-href="page/system/team_information.html">车队信息</a>
+				</div>
+				<div class="tabs">
+					<a class="bianhao" href="javascript:;" data-href="page/system/serial_number.html">编号管理</a>
+				</div>
+				<div class="tabs">
+					<a class="xiaoshougongsi" href="javascript:;" data-href="page/system/sales_Company.html">销售公司</a>
+				</div>
+				<div class="tabs">
+					<a class="qishi" href="javascript:;" data-href="page/system/start_transports.html">起运地</a>
+				</div>
+				<div class="tabs">
+					<a class="tingzhi" href="javascript:;" data-href="page/system/customer_transports.html">客户止运地</a>
+				</div>
+				<div class="tabs">
+					<a class="renyuan" href="javascript:;" data-href="page/system/cachetPersonnel.html">人员电子公章</a>
+				</div>
+				<div class="tabs">
+					<a class="danwei" href="javascript:;" data-href="page/system/cachetCompany.html">单位电子公章</a>
+				</div>
+				<div class="tabs">
+					<a class="jiancezhibiao" href="javascript:;" data-href="page/system/detectionIndex.html">检测指标</a>
+				</div>
+				<div class="tabs">
+					<a class="jianjinyuan" href="javascript:;" data-href="page/system/weigher_maintenance.html">检斤员维护</a>
+				</div>
+			</div>
+			<iframe name="right" id="rightMain" style="display: none;" src="" frameborder="no" scrolling="auto" width="100%" height="100%" allowtransparency="true" />
+		</div>
+	</body>
+
+</html>

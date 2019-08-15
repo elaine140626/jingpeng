@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>京澎科技产品报价系统</title>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+		<link href="css/main_css.css" rel="stylesheet" type="text/css" />
+		<link href="css/zTreeStyle.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" type="text/css" href="css/index.css" />
+		<script type="text/javascript" src="js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="js/authority/commonAll.js"></script>
+		<script type="text/javascript" src="js/oilfactory/index.js"></script>
+		<script type="text/javascript">
+			/**退出系统**/
+			function logout() {
+				if(confirm("您确定要退出本系统吗？")) {
+					window.location.href = "page/login.html";
+				}
+			}
+			/**隐藏或者显示侧边栏**/
+			function switchSysBar(flags) {
+				var side = $('#side');
+				if(flags == true) { // flag==true
+					side.css({
+						width: '180px'
+					});
+					$('#top_nav').css({
+						width: '85%',
+						left: '224px'
+					});
+					$('#main').css({
+						left: '180px'
+					});
+					$('.tab1').show();
+					$("#show_hide_btn").find('img').attr('src', 'img/common/nav_hide.png');
+				} else {
+					side.css({
+						width: '75px'
+					});
+					$('#top_nav').css({
+						width: '90%',
+						left: '119px'
+					});
+					$('#main').css({
+						left: '75px'
+					});
+					$('.tab1').hide();
+					$("#show_hide_btn").find('img').attr('src', 'img/common/nav_show.png');
+				}
+			}
+
+			function jumpArea(params) {
+				$('#TabPage2 li').each(function(i, ele) {
+					if(i != params) {
+						$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '.png');
+						$(ele).find('span').css({
+							color: '#fff'
+						});
+						$(ele).css({
+							background: '#044599'
+						});
+						$(ele).removeClass('selection');
+					} else {
+						$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '_hover.png');
+						$(ele).css({
+							background: '#fff'
+						});
+						$(ele).find('span').css({
+							color: '#044599'
+						});
+						$(ele).addClass('selection');
+					}
+
+				});
+				$('.item').hide();
+				$('#rightMain').hide();
+				if(params == 0) {
+					$('.item1').show();
+				} else if(params == 1) {
+					$('.item2').show();
+				} else if(params == 2) {
+					$('.item3').show();
+				} else if(params == 3) {
+					$('.item4').show();
+				} else if(params == 4) {
+					$('.item5').show();
+				}
+				$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">' + $('#TabPage2 .selection').find('span').html() + '</span>');
+				$('#now_area').hide();
+			}
+			function jmupInfo(){
+				$('.item').hide();
+				$('#rightMain').show();
+				$('#rightMain').attr('src', 'page/user_center.html');
+				$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">个人中心</span>');
+			}
+		</script>
+
+	</head>
+
+	<body>
+		<div id="top">
+			<div id="top_logo">
+				<img alt="logo" src="img/common/logo.jpg" width="274" height="49" style="vertical-align:middle;">
+			</div>
+			<div id="top_links">
+				<div id="top_op">
+					<ul>
+						<li onclick="jmupInfo()">
+							<img alt="当前用户" src="img/common/user.jpg">：
+							<span>admin</span>
+						</li>
+					</ul>
+				</div>
+				<div id="top_close">
+					<a href="javascript:void(0);" onclick="logout();" target="_parent">
+						<img alt="退出系统" title="退出系统" src="img/common/close.jpg" style="position: relative; top: 10px; left: 25px;">
+					</a>
+				</div>
+			</div>
+		</div>
+		<!-- side menu start -->
+		<div id="side">
+			<div id="left_menu">
+				<ul id="TabPage2" style="height:200px; margin-top:50px;">
+					<li id="left_tab1" class="selected" onClick="" title="合同管理">
+						<img alt="合同管理" title="合同管理" src="img/common/1_hover.png" width="40" height="40">
+						<span class="tab1">合同管理</span>
+					</li>
+					<li id="left_tab2" onClick=";" title="销售管理">
+						<img alt="销售管理" title="销售管理" src="img/common/2.png" width="40" height="40">
+						<span class="tab1">销售管理</span>
+					</li>
+					<li id="left_tab3" onClick="" title="质检管理">
+						<img alt="质检管理" title="产品信息" src="img/common/3.png" width="40" height="40">
+						<span class="tab1">质检管理</span>
+					</li>
+					<li id="left_tab4" onClick="" title="系统管理">
+						<img alt="系统管理" title="产品信息" src="img/common/4.png" width="40" height="40">
+						<span class="tab1">系统管理</span>
+					</li>
+					<li id="left_tab4" onClick="" title="调度">
+						<img alt="调度" title="产品信息" src="img/common/5.png" width="40" height="40">
+						<span class="tab1">调度</span>
+					</li>
+				</ul>
+				<div id="nav_show" style="position:absolute; bottom:0px; padding:17px;">
+					<a href="javascript:;" id="show_hide_btn">
+						<img alt="显示/隐藏" title="显示/隐藏" src="img/common/nav_hide.png" width="35" height="35">
+					</a>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				var flag = 1;
+				$('#TabPage2 li').click(function() {
+					var index = $(this).index();
+					$('#nav_module').find('img').attr('src', 'img/common/module_' + (index + 1) + '.png');
+					$('#TabPage2 li').each(function(i, ele) {
+						if(i != index) {
+							$(ele).find('img').attr('src', 'img/common/' + (i + 1) + '.png');
+							$(ele).find('span').css({
+								color: '#fff'
+							});
+							$(ele).css({
+								background: '#044599'
+							});
+						} else {
+							$(ele).find('img').attr('src', 'img/common/' + (index + 1) + '_hover.png');
+							$(ele).css({
+								background: '#fff'
+							});
+							$(ele).find('span').css({
+								color: '#044599'
+							});
+						}
+
+					});
+					$('.item').hide();
+					$('#rightMain').hide();
+					if(index == 0) {
+						$('.item1').show();
+					} else if(index == 1) {
+						$('.item2').show();
+					} else if(index == 2) {
+						$('.item3').show();
+					} else if(index == 3) {
+						$('.item4').show();
+					} else if(index == 4) {
+						$('.item5').show();
+					}
+					$('#here_area').html('当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">' + $(this).find('span').html() + '</span>');
+
+				});
+				$("#show_hide_btn").click(function() {
+					if(flag == 1) {
+						switchSysBar(false);
+						flag = 0;
+					} else {
+						switchSysBar(true);
+						flag = 1;
+					}
+				});
+				$('.item .tabs a').click(function() {
+					var jumpHref = $(this).attr('data-href');
+					var itemId = $(this).parent('.tabs').parent('.item').attr('data-itemId');
+					$('#now_area').show();
+					$('#now_area').attr('onclick', 'jumpArea(' + itemId + ')');
+					$('.item').hide();
+					$('#rightMain').show();
+					$('#rightMain').attr('src', jumpHref);
+				})
+
+			});
+		</script>
+		<!-- side menu start -->
+		<div id="top_nav">
+			<span id="here_area">当前位置：系统&nbsp;>&nbsp;<span style="color:#1A5CC6">合同管理</span></span>
+			<div id="now_area" style="display: none;">返回</div>
+		</div>
+		<div id="main">
+			<div class="item1 item" data-itemId="0" style="display: block;">
+				<div class="tabs tabs1" >
+					<a  href="javascript:;" data-href="page/contract_management.html">合同管理</a>
+				</div>
+			</div>
+			<div class="item2 item" data-itemId="1">
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/sales_orders.html">销售订单管理</a>
+				</div>
+				<div class="tabs" >
+					<a href="javascript:;" data-href="page/client.html">客户信息</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/client_visit.html">拜访记录</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/client_back_visit.html">回访记录</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/people_manage.html">销售人员管理</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/outlist.html">出库单查询</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/not_weighing.html">未称重出库单</a>
+				</div>
+			</div>
+			<div class="item3 item" data-itemId="2">
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/order_detection.html">销售订单检测</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/out_detection.html">出库单检测</a>
+				</div>
+			</div>
+			<div class="item4 item" data-itemId="3">
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/provider.html">供应商</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/materials_information.html">物料信息</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/warehouse_information.html">仓库信息</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/team_information.html">车队信息</a>
+				</div>
+			</div>
+			<div class="item5 item" data-itemId="4">
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/outbound.html">调度出库单</a>
+				</div>
+				<div class="tabs">
+					<a href="javascript:;" data-href="page/inbound.html">调度入库单</a>
+				</div>
+			</div>
+			<iframe name="right" id="rightMain" src="" frameborder="no" scrolling="auto" width="100%" height="100%" allowtransparency="true" />
+		</div>
+	</body>
+
+</html>

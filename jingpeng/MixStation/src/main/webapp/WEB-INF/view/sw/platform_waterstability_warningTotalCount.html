@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport"
+	content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/css/style.css">
+<link rel="StyleSheet" href="../resources/css/dtree.css" />
+	<link rel="stylesheet" href="../resources/css/style_sn.css">
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/dtree.js"></script>
+</head>
+
+<body>
+	<div class="top">
+		<div class="row">
+			<div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+		</div>
+	</div>
+	<div class="container-fluid content">
+		<div class="row ">
+			<!-- <div class="leftnav_g">
+			<ul>
+            	<li><a href="../Platform/index.html" class="nav1">首页</a></li>
+                <li><a href="../Andr/platform_asphalt_statistics.html" class="nav2">沥青</a></li>
+                <li><a href="../cemAndr/platform_cement_statistics.html" class="nav3">水泥</a></li>
+                <li><a href="../waterstabilityAndr/platform_waterstability_statistics.html" class="focus_d">水稳</a></li>
+            </ul>
+			</div> -->
+			<div class="rightcon" style="padding-left:20px;">
+				<div class="rightcon_wz">
+					<div class="location">您的位置：水泥稳定土> 生产数据</div>
+					<!--<div class="time">2018年4月10日 16:28:53</div>-->
+				</div>
+				<div class="rightcon_content">
+
+					<div class="lq_main">
+
+						<div class="lq_biao gdt">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover table-2000 jz" id="cement_ProductionDatas">
+								<thead>
+								<tr class="table-2000-bt">
+									<th rowspan="2" class="scsj_xh">序号</th>
+									<th rowspan="2" class="cjsj_sb">拌和设备名称</th>
+									<th rowspan="2" class="cjsj_sb">施工配合比编号</th>
+									<th rowspan="2" class="cjsj_140">采集时间</th>
+									<th rowspan="2">拌和时间</th>
+									<th colspan="4">水泥仓采集值(kg)</th>
+									<th colspan="6">骨料仓采集值(kg)</th>
+									<th rowspan="2">水仓采集值(kg)</th>
+									<th rowspan="2">外掺剂1采集值(kg)</th>
+									<th rowspan="2">外掺剂2采集值(kg)</th>
+									<th rowspan="2">拌和总量(kg)</th>
+									<th rowspan="2" class="gcbw_100">施工地点</th>
+									<th rowspan="2">浇灌部位</th>
+									<th rowspan="2">分析结果</th>
+								</tr>
+								<tr class="table-2000-bt">
+									<th>1#仓</th>
+									<th>2#仓</th>
+									<th>3#仓</th>
+									<th>4#仓</th>
+									<th>1#仓</th>
+									<th>2#仓</th>
+									<th>3#仓</th>
+									<th>4#仓</th>
+									<th>5#仓</th>
+									<th>6#仓</th>
+								</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+						<div class="bottom">
+							<a href="#">关于 我们</a>|<a href="#">联系方式</a>Copyright (c) 2018
+							neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+						</div>
+
+
+						<div class="modal fade" id="timeModal">
+							<div class="modal-dialog modal-md">
+								<div class="modal-content">
+									<div class="tan_dx_title">
+										<span><img src="../resources/images/bi.png" width="16" height="16"></span>
+										<h3>生产数据明细</h3>
+										<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+									</div>
+									<div class="tan_dx_txt">
+										<table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="mbphb_luru sbj mbphb_bg jz bk" id="cemdtel">
+											<thead>
+											<tr class="mbphb_luru_dise h50">
+												<td width="12%"><strong>序号</strong></td>
+												<td width="28%"><strong>原材料名称</strong></td>
+												<td width="20%"><strong>施工配比值</strong></td>
+												<td width="20%"><strong>采集重量(kg)</strong></td>
+												<td width="20%"><strong>实际占比(%)</strong></td>
+											</tr>
+											</thead>
+										</table>
+										<table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+											<tr>
+												<td align="center"><input type="submit" name="button" id="login_close1" data-dismiss="modal" value="关&nbsp;&nbsp;闭" class="btn_bc"></td>
+											</tr>
+										</table>
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<script type="text/javascript"
+							src="../resources/js/bootstrap.min.js"></script>
+						<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+						<script type="text/javascript"
+							src="../resources/js/jquery3.3.1.min.js"></script>
+						<!--弹窗js-->
+						<script type="text/javascript"
+							src="../resources/DataTables/datatables.js"></script>
+						<script type="text/javascript"
+							src="../resources/datepicker/bootstrap-datepicker.js"></script>
+						<script type="text/javascript"
+							src="../resources/datepicker/locales/bootstrap-datepicker.zh-CN.js"></script>
+						<script type="text/javascript" src="../resources/js/modal.js"></script>
+						<script type="text/javascript" src="../resources/js/script.js"></script>
+						<script type="text/javascript" src="../resources/js/platform_waterstability_warningTotalCount.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

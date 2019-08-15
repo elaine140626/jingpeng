@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.transportation.TransportationExportmeasureDao">
+
+		<!-- 查询出库车牌 -->
+	<select id="getExportMeasurePlate" resultType="java.util.Map">
+	
+		select  PlateNumber from exportMeasure where IsDel = 0 order by Id desc
+		
+	</select>
+	
+		<!-- 按车牌查询全部出库车牌 -->
+	<select id="getExportmeasureByPlateNumber" resultType="java.util.Map">
+			
+		SELECT
+			    s.Id                    as id                   -- 出库单id
+			  , s.Serial_ID             as SerialId             -- 流水号 
+			  , s.PlateNumber           as plateNumber          -- 车牌号码  
+			  , s.DeliveryMan              as carOwner             -- 车主
+			  , s.DeliveryManPhone     as carOwnerTelephone    -- 车主电话
+			  , m.MaterielName         as materielName          -- 物料名称
+			  , m.MaterielModel        as materielModel         -- 规格型号
+			  , s.Remarks               as remarks              -- 备注
+			  , s.ValidFlag             as validFlag            -- 有效标识 0无效 1有效
+			  , s.FactoryTime           as factoryTime          -- 出厂时间
+			  , IFNULL(s.Suttle,0.00)   as suttle				-- 净重
+			  , s.Amount   as amount				-- 结算重
+			  ,	u.Id					as uid					-- 客户ID
+			  ,	s.OutType				as outType				-- 是否调拨
+			  , IFNULL(now.AllotWeight,0.00)			as allotWeight
+			  , s.outTypeMark    	 	as outTypeMark
+			  , t1.TransportBalance as transportBalance
+			  , now.TransportBalance as nowTransportBalance
+			  , t1.StartAddress as startAddress
+			  , t1.Transports as transports
+			  , t1.Distance as distance
+			FROM
+			  exportMeasure s                -- 调度出库表
+			left join salesorder t           -- 销售订单表
+			  on s.SalesOrderId = t.Id       -- 销售订单id
+			left join salesorderdetailed t1  -- 销售订单明细表
+			  on s.OrderDetailedId = t1.Id
+		    left join CustomerInfo u             -- 客户信息表
+			  on u.Id = t.CustomerId         -- 客户id
+			left join contractinfo c         -- 合同信息表
+			  on t.ContractId = c.Id         -- 合同id
+			left join materielinfo m         -- 物料信息表
+			  on s.ProductID = m.Id          -- 物料id
+			left join outemptyrelation ot         -- 空发信息表
+			  on ot.OutWarehouseId = s.Id      -- 空发id
+			left join noweighoutwarehouse now 
+				on now.DispatchOutWarehouseId = s.Id
+			where  s.IsDel = 0 and s.TransportListId is null  and  (t1.TransportBalance in(0,2,3) or  now.TransportBalance in(0,2,3)) and s.suttle !=0
+			<if test="plateNumber!=null and plateNumber!=''">
+						and s.PlateNumber =  #{plateNumber}
+			</if>
+			order by s.Id desc
+	</select>
+	
+	
+		<!-- 查询出库单是否含有未称重-->
+	<select id="exIsHaveNoweighoutwarehouse" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			now.Id 
+		FROM
+			noweighoutwarehouse now 
+		left join exportMeasure ex           
+		  	on now.DispatchOutWarehouseId = ex.Id    
+		WHERE
+			ex.Serial_ID = #{SerialId}   
+			and  now.IsDel = 0
+	</select>
+	
+		<!-- 查询结算类型 -->
+	<select id="getSaleType" resultType="Datadictionary">
+		
+		select * from datadictionary where Type = 'yushudan'
+	
+	</select>
+	
+		<!-- 查询客户运距信息 -->
+	<select id="getCustomertransportsById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			cust.Id,
+			cus.CustomerName,
+			cust.StartAddress,
+			cust.Transports,
+			cust.Distance,
+			cust.Remarks,
+			cust.IsDel,
+			cus.IsDel as cIsDel
+		FROM
+			customertransports AS cust
+		LEFT JOIN customerinfo AS cus ON cust.CustomerId = cus.Id
+		WHERE
+			cust.IsDel = 0	
+			<if test="id!=null and id!=''">
+				AND cust.CustomerId = #{id}
+			</if>
+			<if test="StartAddress!=null and StartAddress!=''">
+				AND cust.StartAddress = #{startAddress}
+			</if>
+			<if test="kid!=null and kid!=''">
+				AND	cust.id =  #{kid}
+			</if>
+	</select>
+	
+	
+	<!-- 添加运输单 -->
+	<insert id="addTranSportList" useGeneratedKeys="true" keyProperty="Id" parameterType="java.util.Map">
+		INSERT 
+		INTO transportlist(
+		DispatchOutWarehouseId 
+		  ,	BillNumber
+		  , SerialID
+		  , Company
+		  , TransportParty
+		  , MaterielId
+		  , Model
+		  , CarOwner
+		  , CarOwnerTelephone
+		  , EndAddress
+		  , SettlementKilometre
+		  , Weigh
+		  , CollectWeigh
+		  , FreightPrice
+		  , FreightMoney
+		  , escortPrice
+		  , EscortDays
+		  , EscortMoney
+		  , PlateNumber
+		  , SaleType
+		  , Reviser
+		  , IsDel
+		  , Remarks
+		  , TransportRoute
+		  , type
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 #{dispatchOutWarehouseId}
+		  , #{billNumber}
+		  , #{serialID}
+		  , #{company}
+		  , #{transportParty}
+		  , #{materielId}
+		  , #{model}
+		  , #{carOwner}
+		  , #{carOwnerTelephone}
+		  , #{endAddress}
+		  , #{settlementKilometre}
+		  , #{weigh}
+		  , #{collectWeigh}
+		  , #{freightPrice}
+		  , #{freightMoney}
+		  , #{escortPrice}
+		  , #{escortDays}
+		  , #{escortMoney}
+		  , #{plateNumber}
+		  , #{saleType}
+		  , #{reviser}
+		  , 0
+		  ,	#{remarks}
+		  , #{transportRoute}
+		  , #{type}
+		  , #{creater}
+		  , NOW()
+		) 
+	</insert>
+</mapper>

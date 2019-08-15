@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.asphalt.Production_PlanDao">
+    <sql id="isCancel">
+     (case p.Equ_Id when 0 then '已生效' else '已作废' end)
+    </sql>
+	<select id="getProductionPlan" parameterType="java.util.Map" resultType="production_PlanDTO">
+		SELECT
+		p.id i_id,
+		p.org_Id i_org_Id,
+		pp.proportion_Code str_Mproportion_Code,
+		pp.id i_peih_id,
+		ag.id i_grad_Id,
+		app.id i_prod_Id,
+		isnull(p.plan_No,'') str_plan_No,
+		isnull(CONVERT(varchar(20),p.startTime,120),'') str_startTime,
+		p.product_Id i_product_Id,
+		p.prod_Id i_prod_Id,
+		isnull(p.proj_Pos,'') str_proj_Pos,
+		isnull(p.construction_Unit,'') str_construction_Unit,
+		p.scheduled_Production d_scheduled_Production,
+		p.isCancel i_isCancel,
+		p.Equ_Id i_equ_Id,
+		isnull(CONVERT(varchar(20),p.cancel_Time,120),'') str_cancel_Time,
+		isnull(p.invalid_Person,'') str_invalid_Person,
+		isnull(p.cancel_Reason,'') str_cancel_Reason,
+		isnull(CONVERT(varchar(20),p.create_Date,120),'') str_create_Date,
+		isnull(mn.Material_Name,'') str_material_Name,
+		isnull(mm.Material_Model,'') str_material_Model,
+		isnull(app.Proportion_Code,'') str_proportion_Code,
+		isnull(oi.org_name,'') str_org_Name,
+		isnull(ei.Equipment_Name,'') str_equipment_Name,
+		isnull(mn.Material_Name+Material_Model,'') nameAndModel,
+		isnull(ag.Grade_Code,'') str_grade_Code,
+		<include refid="isCancel"></include> str_isCancel
+		FROM
+		Production_Plan p
+		LEFT JOIN Material_Info mi ON p.product_Id=mi.id
+		LEFT JOIN MaterName_Info mn ON mi.MateName_ID=mn.id
+		LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID=mm.id
+		LEFT JOIN Asphalt_Prod_Proportion app ON p.prod_Id=app.id
+		LEFT JOIN Asph_TargetProportion pp ON pp.Id = app.Targ_PropID
+		LEFT JOIN Organization_Info oi ON p.org_id=oi.id
+		left join Equipment_Info ei on ei.id=Equ_ID
+		left join Asphalt_Grading ag on p.Grad_Id=ag.id
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="str_material_Model != null and str_material_Model != ''">
+			    AND mm.material_Model LIKE '%${str_material_Model}%'
+			</if>
+			<if test="str_material_Name != null and str_material_Name != ''">
+			    AND mn.material_Name LIKE '%${str_material_Name}%'
+			</if>
+			<if test="str_plan_No != null and str_plan_No != ''">
+			    AND p.plan_No LIKE '%${str_plan_No}%'
+			</if>
+			<foreach collection="org_Ids" index="index" item="item" open=" AND p.org_Id IN (" separator="," close=")">
+                #{item}
+            </foreach>
+			AND p.valid_Flag=1 ORDER BY p.id DESC 
+		</trim>
+	</select>
+	
+	<select id="getProductionPlanById" parameterType="production_Plan" resultType="production_PlanDTO">
+		SELECT
+		p.id i_id,
+		p.org_Id i_org_Id,
+		p.plan_No str_plan_No,
+		CONVERT(varchar(20),p.startTime,120) str_startTime,
+		p.product_Id i_product_Id,
+		p.prod_Id i_prod_Id,
+		p.proj_Pos str_proj_Pos,
+		p.construction_Unit str_construction_Unit,
+		p.scheduled_Production d_scheduled_Production,
+		p.isCancel i_isCancel,
+		p.Equ_Id i_equ_Id,
+		p.cancel_Time str_cancel_Time,
+		p.invalid_Person str_invalid_Person,
+		p.cancel_Reason str_cancel_Reason,
+		p.create_Date str_create_Date,
+		mn.Material_Name str_material_Name,
+		mm.Material_Model str_material_Model,
+		app.Proportion_Code str_proportion_Code,
+		p.Grad_Id i_grad_Id,
+		ag.Grade_Code str_grade_Code,
+		ei.Equipment_Name str_equipment_Name
+		FROM
+		Production_Plan p
+		LEFT JOIN Material_Info mi ON p.product_Id=mi.id
+		LEFT JOIN MaterName_Info mn ON mi.MateName_ID=mn.id
+		LEFT JOIN MaterModel_Info mm ON mi.MateModel_ID=mm.id
+		LEFT JOIN Asphalt_Prod_Proportion app ON p.prod_Id=app.id
+		left join Equipment_Info ei on ei.id = p.Equ_ID
+		left join Asphalt_Grading ag on ag.id=p.Grad_Id
+		WHERE p.id = #{i_id}
+	</select>
+	
+	<insert id="addProductionPlan" parameterType="production_Plan">
+		INSERT INTO Production_Plan (Org_ID,Plan_No,StartTime,Product_ID,Prod_ID,Proj_Pos,Construction_Unit,Scheduled_Production,
+		IsCancel,Operator,Create_Date,Valid_Flag,Equ_ID,Grad_Id) 
+		VALUES (#{i_org_Id},#{str_plan_No},#{str_startTime},#{i_product_Id},#{i_prod_Id},#{str_proj_Pos},#{str_construction_Unit},
+		#{d_scheduled_Production},0,#{str_operator},CONVERT(varchar(100), GETDATE(),20),1,#{i_equ_Id},#{i_grad_Id})
+	</insert>
+	
+	<update id="updateProductionPlan" parameterType="production_Plan">
+		UPDATE Production_Plan SET Plan_No=#{str_plan_No},StartTime=#{str_startTime},Product_ID=#{i_product_Id},Prod_ID=#{i_prod_Id},
+		Construction_Unit=#{str_construction_Unit},Scheduled_Production=#{d_scheduled_Production},IsCancel=#{i_isCancel},
+		Cancel_Time=#{str_cancel_Time},Invalid_Person=#{str_invalid_Person},Cancel_Reason=#{str_cancel_Reason},Modifier=#{str_modifier},
+		Modify_Date=CONVERT(varchar(100), GETDATE(),20),Equ_ID=#{i_equ_Id},Grad_Id=#{i_grad_Id},Proj_Pos=#{str_proj_Pos}
+		WHERE id=#{i_id}
+	</update>
+	
+	<update id="delProductionPlan" parameterType="production_Plan">
+		UPDATE Production_Plan SET Valid_Flag=0 WHERE id=#{i_id}
+	</update>
+	
+	<select id="getPlanNo" parameterType="production_Plan" resultType="production_Plan">
+		SELECT id i_id FROM Production_Plan WHERE valid_Flag=1 AND org_id=#{i_org_Id} AND Plan_No=#{str_plan_No}
+	</select>
+	
+	
+	
+	<select id="getProdID" parameterType="java.util.Map" resultType="production_Plan">
+		SELECT id i_id FROM Production_Plan WHERE valid_Flag=1 AND Prod_ID=#{Prod_ID} 
+	</select>
+	
+</mapper>

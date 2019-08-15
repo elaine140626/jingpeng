@@ -1,0 +1,99 @@
+<!-- 试验查询页面 -->
+<link rel="stylesheet" href="../../js/layui/css/layui.css">	
+<script src="../../js/HighwayPlatform/TestRoom/screenDisplay.js" type="text/javascript" charset="utf-8"></script>
+<div class="layui-form">
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 100px;">页面布局：</label>
+    <div class="layui-input-block">
+      <input type="radio" name="displayType" lay-filter="displayType" value="4" title="2x2" checked="">
+      <input type="radio" name="displayType" lay-filter="displayType" value="6" title="3x2">
+    </div>
+  </div>
+</div>
+<div>
+	<label class="layui-form-label" style="width: 100px;">内容选择：</label>
+	<button class="layui-btn" lay-submit="" style="float: right;" onclick="submit()">保存</button>
+</div>
+<hr/>
+<div class="layui-form" style="overflow-y:scroll;height:600px">
+	<table style="width: 1695px;">
+		<tr style="height: 310px;">
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart1" name="chart" lay-filter="showChart" lay-skin="primary" value="chart1" title="试验汇总展示">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart1.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart2" name="chart" lay-filter="showChart" lay-skin="primary" value="chart2" title="自动采集">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart2.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart3" name="chart" lay-filter="showChart" lay-skin="primary" value="chart3" title="盲样检测">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart3.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart4" name="chart" lay-filter="showChart" lay-skin="primary" value="chart4" title="混凝土强度分布">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart4.png">
+			</td>
+		</tr>
+		<tr style="height: 310px;">
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart5" name="chart" lay-filter="showChart" lay-skin="primary" value="chart5" title="沥青指标波动">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart5.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart6" name="chart" lay-filter="showChart" lay-skin="primary" value="chart6" title="沥青混合料指标波动">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart6.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart7" name="chart" lay-filter="showChart" lay-skin="primary" value="chart7" title="试验设备工作状态">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart7.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart8" name="chart" lay-filter="showChart" lay-skin="primary" value="chart8" title="拌和机实时状态">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart1.png">
+			</td>
+		</tr>
+		<tr style="height: 310px;">
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart9" name="chart" lay-filter="showChart" lay-skin="primary" value="chart9" title="拌和站汇总展示">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart9.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart10" name="chart" lay-filter="showChart" lay-skin="primary" value="chart10" title="油石比波动">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart1.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart11" name="chart" lay-filter="showChart" lay-skin="primary" value="chart11" title="生产预警统计">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart11.png">
+			</td>
+			<td>
+				<div class="layui-form-item" pane="">
+					<input type="checkbox" id="chart12" name="chart" lay-filter="showChart" lay-skin="primary" value="chart12" title="预警分析">
+				</div>
+				<img style="height: 220px;width:380px" src="../../image/chart/chart12.png">
+			</td>
+		</tr>
+	</table>
+</div>

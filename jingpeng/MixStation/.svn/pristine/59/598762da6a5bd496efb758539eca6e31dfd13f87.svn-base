@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+	content="Interior-Design-Responsive-Website-Templates-Edge">
+<meta name="author" content="">
+<title>吉东公路盲样检测系统</title>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<link rel="favicon" href="../resources/assets/images/favicon.png">
+<link rel="stylesheet" href="../resources/assets/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="../resources/assets/css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="../resources/assets/css/bootstrap-theme.css" media="screen">
+<link rel="stylesheet" href="../resources/assets/css/style.css">
+<link rel='stylesheet' id='camera-css'
+	href='../resources/assets/css/camera.css' type='text/css' media='all'>
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="assets/js/html5shiv.js"></script>
+	<script src="assets/js/respond.min.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+	<!-- Fixed navbar -->
+	<div id="header-top">
+		<!--  HEADER TOP -->
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="text">
+						<p>Toll Free : (002) 124 2548</p>
+					</div>
+				</div>
+				<!-- end -->
+				<div class="col-md-6">
+					<div class="social text-center pull-right">
+						<a href="#"><i class="fa fa-twitter"></i></a> <a href="#"><i
+							class="fa fa-facebook"></i></a> <a href="#"><i
+							class="fa fa-dribbble"></i></a> <a href="#"><i
+							class="fa fa-flickr"></i></a> <a href="#"><i class="fa fa-github"></i></a>
+					</div>
+
+				</div>
+				<!-- end -->
+			</div>
+			<!-- end .row -->
+		</div>
+	</div>
+	<div style="height: 30px; background: #F9F9F9; line-height: 30px;">
+		<div class="container yonghu">
+			<a href="../testUserInfo/user.html" target="_blank"><span></span>用户注册</a><a
+				href="../testUserInfo/userinfo.html" target="_blank"><span></span>用户管理</a><a
+				href="../testUserInfo/login.html"><span></span>安全退出</a>
+		</div>
+	</div>
+	<div class="navbar navbar-inverse"
+		style="height: 85px; padding-top: 20px;">
+		<div class="container">
+			<div class="col-lg-5">
+				<div class="navbar-header logo_hei">吉东公路盲样检测系统</div>
+			</div>
+			<div class="col-lg-7" style="padding: 0;">
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav pull-right mainNav">
+						<li class="active"><a href="index.html">首页</a></li>
+						<li><a href="../TestCollection/shiyan_3.html">试验收样</a></li>
+						<li><a href="../testInfo/shiyan_1.html">试验汇总</a></li>
+						<li><a href="../TestSelect/shiyan_2.html">试验查询</a></li>
+						<li><a href="../TestAutoCollection/shiyan_4.html">自动采集</a></li>
+						<li><a href="../BlindSampleDetection/shiyan_5.html">盲样试验</a></li>
+						<li><a href="../Monitor/Jqindex.html" target="_blank">屏幕展示</a></li>
+					</ul>
+				</div>
+			</div>
+			<!--/.nav-collapse -->
+		</div>
+	</div>
+	<!-- /.navbar -->
+
+	<!-- Header -->
+	<header id="head">
+		<div class="container">
+			<div class="fluid_container">
+				<div class="camera_wrap camera_emboss pattern_1" id="camera_wrap_4">
+					<div data-thumb="../resources/assets/images/slides/thumbs/img1.jpg"
+						data-src="../resources/assets/images/slides/img1.jpg"></div>
+					<div data-thumb="../resources/assets/images/slides/thumbs/img2.jpg"
+						data-src="../resources/assets/images/slides/img2.jpg"></div>
+					<div data-thumb="../resources/assets/images/slides/thumbs/img3.jpg"
+						data-src="../resources/assets/images/slides/img3.jpg"></div>
+				</div>
+				<!-- #camera_wrap_3 -->
+			</div>
+			<!-- .fluid_container -->
+		</div>
+	</header>
+
+	<section class="container">
+
+		<div class="row">
+			<div class="section-heading">
+				<!--<h2>试验信息</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>-->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<a href="../TestCollection/shiyan_3.html">
+					<div class="featured-box">
+						<i class="fa fa-calendar fa-2x"></i>
+						<div class="text">
+							<h3>试验收样</h3>
+							收样信息
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="../testInfo/shiyan_1.html">
+					<div class="featured-box">
+						<i class="fa fa-dot-circle-o fa-2x"></i>
+						<div class="text">
+							<h3>试验汇总</h3>
+							试验汇总信息
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="../TestSelect/shiyan_2.html">
+					<div class="featured-box">
+						<i class="fa fa-align-right fa-2x"></i>
+						<div class="text">
+							<h3>试验查询</h3>
+							试验查询信息
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<a href="../TestAutoCollection/shiyan_4.html">
+					<div class="featured-box">
+						<i class="fa fa-code-fork fa-2x"></i>
+						<div class="text">
+							<h3>自动采集</h3>
+							自动采集信息
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="../BlindSampleDetection/shiyan_5.html">
+					<div class="featured-box">
+						<i class="fa fa-thumb-tack fa-2x"></i>
+						<div class="text">
+							<h3>盲样试验</h3>
+							盲样信息
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-md-4">
+				<a href="../BlindSampleDetection/spjk.html">
+					<div class="featured-box">
+						<i class="fa fa-globe fa-2x"></i>
+						<div class="text">
+							<h3>视频监控</h3>
+							实时监控
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	</section>
+	<section class="news-box top-margin" style="background: #F5F5F5">
+		<div class="container">
+			<div class="row">
+				<div class="section-heading" style="padding-top: 20px;">
+					<h2>试验信息</h2>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="newsBox">
+						<div class="thumbnail">
+							<figure>
+								<img src="../resources/images2/mangyang_2.jpg">
+							</figure>
+							<div class="caption maxheight2">
+								<div class="box_inner">
+									<div class="box">
+										<p class="title">
+											<strong>试验汇总</strong>
+										</p>
+										<p>
+											试验总数：<span id="syzs"></span>
+										</p>
+										<p>
+											自动采集试验数量：<span id="zdcj"></span>
+										</p>
+										<p>
+											盲样试验数量：<span id="mysy"></span>
+										</p>
+									</div>
+									<div class="xiangqing">
+										<a href="../testInfo/shiyan_1.html" class="btn-inline">详情</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="newsBox">
+						<div class="thumbnail">
+							<figure>
+								<img src="../resources/images2/mangyang_1.jpg">
+							</figure>
+							<div class="caption maxheight2">
+								<div class="box_inner">
+									<div class="box">
+										<p class="title">
+											<strong>自动采集</strong>
+										</p>
+										<p>
+											试验室名称：<span id="zdsysmc"></span>
+										</p>
+										<p>
+											试验总数：<span id="zdsyzs"></span>
+										</p>
+										<p>
+											合格数：<span id="zdhgs"></span>
+										</p>
+									</div>
+									<div class="xiangqing">
+										<a href="../TestAutoCollection/shiyan_4.html"
+											class="btn-inline">详情</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12">
+					<div class="newsBox">
+						<div class="thumbnail">
+							<figure>
+								<img src="../resources/images2/mangyang.jpg">
+							</figure>
+							<div class="caption maxheight2">
+								<div class="box_inner">
+									<div class="box">
+										<p class="title">
+											<strong>盲样试验</strong>
+										</p>
+										<p>
+											试验室名称：<span id="mysysmc"></span>
+										</p>
+										<p>
+											试验总数：<span id="mysyzs"></span>
+										</p>
+										<p>
+											合格数：<span id="myhgs"></span>
+										</p>
+									</div>
+									<div class="xiangqing">
+										<a href="../BlindSampleDetection/shiyan_5.html"
+											class="btn-inline">详情</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="aboutUs">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<img src="../resources/assets/images/about.jpg" class="img-center"
+						alt="">
+				</div>
+				<div class="col-md-6 about_p">
+					<div>
+						<h2>黑龙江省高速公路管理局</h2>
+						<p>黑龙江省建设集团，是国有资本投资、运营、管理大型现代企业集团，是以建筑业全产业链为主，集科研、投资、规划、设计、建设于一体的综合性企业集团，注册资本34.6亿元。总部坐落在新中国工业摇篮、美丽的冰城哈尔滨，旗下企业建工集团、龙建股份，“一五”计划初期，加入工业化建设体系，为国家和黑龙江省基本建设做出了积极贡献，具有60余年的发展历史。</p>
+						<p>历经市场经济大潮的砥砺洗礼，蓬勃发展，成长壮大，形成了以房屋建筑、道路桥梁、建筑安装、水利水电四大传统板块为根基，以科技创新、投融资、地产开发三大新兴板块为引擎，以跨行业跨领域多元产业为新动能的“4＋3＋N”产业新格局和市场竞争集群，成为黑龙江省经济建设体系的重要组成部分、中国建筑行业体系的重要一员。已列中国500强企业、中国承包商前30强企业、黑龙江前10强企业。
+						</p>
+					</div>
+					<br>
+				</div>
+			</div>
+
+		</div>
+	</section>
+	
+	<footer id="footer">
+		<div class="footer2">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 panel">
+						<div class="panel-body">
+							<p class="text-center">
+								Copyright &copy; 2016.Company name All rights reserved.More
+								Templates <a href="http://www.cssmoban.com/" target="_blank"
+									title="京澎科技">京澎科技</a>
+							</p>
+						</div>
+					</div>
+
+				</div>
+				<!-- /row of panels -->
+			</div>
+		</div>
+	</footer>
+
+	<!-- JavaScript libs are placed at the end of the document so the pages load faster -->
+	<script src="../resources/assets/js/modernizr-latest.js"></script>
+	<script type='text/javascript'
+		src='../resources/assets/js/jquery.min.js'></script>
+	<script type='text/javascript'
+		src='../resources/assets/js/fancybox/jquery.fancybox.pack.js'></script>
+
+	<script type='text/javascript'
+		src='../resources/assets/js/jquery.mobile.customized.min.js'></script>
+	<script type='text/javascript'
+		src='../resources/assets/js/jquery.easing.1.3.js'></script>
+	<script type='text/javascript'
+		src='../resources/assets/js/camera.min.js'></script>
+	<script src="../resources/assets/js/bootstrap.min.js"></script>
+	<script src="../resources/assets/js/custom.js"></script>
+	<script type="text/javascript"
+		src="../resources/blindSampleJs/index.js"></script>
+	<script>
+		jQuery(function() {
+			jQuery('#camera_wrap_4').camera({
+				height : '600',
+				loader : 'bar',
+				pagination : false,
+				thumbnails : false,
+				hover : false,
+				opacityOnGrid : false,
+				imagePath : 'assets/images/'
+			});
+		});
+	</script>
+
+</body>
+</html>

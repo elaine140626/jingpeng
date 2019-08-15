@@ -1,0 +1,100 @@
+<!-- 水泥生产统计 -->
+<script type="text/javascript" src="../../js/mixStation/cement/production_figures.js"></script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 生产统计</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<form action="" id="searchForm" method="get" class="sousuo">
+			<label>产品名称：</label>
+			<input type="text" id="productName" name="productName" class="search_input rightwbj">
+			<label>产品型号：</label>
+			<input type="text" id="productModel" name="productModel" class="search_input rightwbj">
+			<label>时间：</label>
+			<input type="text" class="search_input" name="startTime" id="startTime" style="width:12%;">
+			<label>--</label>
+			<input type="text" class="search_input" name="endTime" id="endTime" style="width:12%;">
+			<!-- <span class="btnxia"><a href="#" onclick="isHidden('div1')"></a></span> -->
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+			<!-- <div id="div1" class="search_xia">
+				<label>施工单位：</label>
+				<input type="text" class="search_input rightwbj" id="projPos">
+				<label>工程部位/用途：</label>
+				<input type="text" class="search_input" id="constructionUnit">
+			</div> -->
+		</form>
+		<div class="table-a">
+			<div class="table-a-left">
+				<h4>混合料生产情况统计柱状图</h4>
+				<div class="zhuzt" id="chartmain">
+                </div>
+			</div>
+			<div class="table-a-right">
+				<div id="list_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+					<div class="row">
+						<div class="col-sm-6"></div>
+						<div class="col-sm-6"></div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="list" role="grid" aria-describedby="list_info">
+								<thead>
+									<tr role="row">
+										<th scope="col" width="8%">序号</th>
+										<th scope="col" width="16%">采集日期</th>
+										<th scope="col" width="19%">等级强度</th>
+										<th scope="col" width="9%">生产总盘数</th>
+										<th scope="col" width="9%">合格盘数</th>
+										<th scope="col" width="9%">不合格盘数</th>
+										<th scope="col" width="10%">水泥用量(t)</th>
+										<th scope="col" width="10%">生产总量(t)</th>
+										<th scope="col" width="10%">生产方量(m³)</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	
+	
+	//树状图
+	var option = {
+	    color: ['#3398DB'],
+	    width:'100%',
+	    tooltip : {
+	        trigger: 'axis',
+	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+	        }
+	    },
+	    grid: {
+	        left: '3%',
+	        right: '4%',
+	        bottom: '3%',
+	        containLabel: true
+	    },
+	    xAxis : [
+	        {
+	            type : 'category',
+	            data : ['总盘数', '合格盘数', '不合格盘数'],
+	            axisTick: {
+	                alignWithLabel: true
+	            }
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value'
+	        }
+	    ],
+	    series : []
+	};
+</script>

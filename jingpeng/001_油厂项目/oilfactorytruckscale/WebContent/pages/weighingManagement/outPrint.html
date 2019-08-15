@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>打印页面</title>
+		<style type="text/css">
+			.noprint1 {
+			       	position: absolute;
+				    right: 12%;
+				    width: 100px;
+				    height: 50px;
+				    background: #28a4c9;
+				    border-radius: 3px;
+				    color: #fff;
+			  }
+			.noprint2 {
+		       	position: absolute;
+			    right: 6%;
+			    width: 100px;
+			    height: 50px;
+			    background: #28a4c9;
+			    border-radius: 3px;
+			    color: #fff;
+		  	}
+		</style>
+	</head>
+	<body>
+		<button type="button" class="noprint1" onclick="print()">打印</button>
+		<button type="button" class="noprint2" onclick="closes()">关闭</button>
+		<!-- 瑞德公司 -->
+		<iframe id="iframe"  style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<iframe id="iframeCopy" hidden="true" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<!-- 其它公司 -->
+		<iframe id="iframe2" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint2.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<iframe id="iframeCopy2" hidden="true" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint2.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<!-- 调拨A公司 -->
+		<iframe id="iframe3" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint3.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<iframe id="iframeCopy3" hidden="true" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint3.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<!-- 调拨B公司 -->
+		<iframe id="iframe4" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint4.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<iframe id="iframeCopy4" hidden="true" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint4.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<!-- 兑换前 -->
+		<iframe id="iframe5" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint5.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<iframe id="iframeCopy5" hidden="true" style="margin: 20px auto 0" src="../../pages/weighingManagement/weighingQuery_outPrint5.html" width="1500px" height= "300px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<!-- 兑换后检测报告 -->
+		<iframe id="iframe6" style="margin: 20px auto 0" src="../../pages/weighingManagement/testReportPrint.html" width="1500px" height= "1500px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+		<!-- 兑换前检测报告 -->
+		<iframe id="iframe7" style="margin: 20px auto 0" src="../../pages/weighingManagement/testReportPrint2.html" width="1500px" height= "1500px" scrolling="No"  noresize="noresize" frameborder="0"></iframe>
+	</body>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/weighingManagement/outPrint.js"></script>
+</html>

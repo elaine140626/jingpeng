@@ -1,0 +1,133 @@
+<!-- 拌合设备管理页面 -->
+<script type="text/javascript" src="../../js/mixStation/system/equipment.js"></script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 系统管理&gt; 设备管理</div>
+</div>
+<div class="rightcon_content">
+	<div class="shunav">
+		<form action="" method="get" class="sousuo">
+			<label>拌和机名称：</label>
+			<input type="text" id="equipment_Name" class="search_input rightwbj">
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" onclick="search();">
+		</form>
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="getAddView();">新增录入</a></div>
+			<div class="table-a-right table-b-right">
+				<div id="materialList_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="equipmentList"
+					 role="grid" aria-describedby="materialList_info">
+						<thead>
+							<tr role="row">
+								<th scope="col">序号</th>
+								<th scope="col">设备编号</th>
+								<th scope="col">拌和机名称</th>
+								<th scope="col">拌和机型号</th>
+								<th scope="col">设备状态</th>
+								<th scope="col">设备状态时间</th>
+								<th scope="col">拌和机标识</th>
+								<th scope="col">拌和机类型</th>
+								<th scope="col">备注</th>
+								<th scope="col">操作</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+				<h3>新增拌合机设备</h3>
+				<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+			</div>
+			<div class="tan_dx_txt">
+				<form id="addForm">
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="ycl_luru" id = "tab">
+						<tbody>
+							<tr>
+								<td width="37%" align="right">设备编号：<br></td>
+								<td width="63%">
+									<input name="equipmentNo" type="text" id="equipmentNo" placeholder="输入设备编号" required="required" onkeyup="value=value.replace(/[\W]/g,'')"
+									 maxlength="20"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr>
+								<td align="right">拌和机名称：</td>
+								<td><input name="equipmentName" type="text" id="equipmentName" placeholder="输入拌和机名称" required="required"
+									 maxlength="60"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr>
+								<td align="right">拌和机型号：</td>
+								<td><input name="equipmentModel" type="text" id="equipmentModel" placeholder="输入拌和机型号" required="required"
+									 maxlength="60"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr>
+								<td align="right">设备状态：<br></td>
+								<td>
+									<select id="equiState" size="1" name="equiState">
+										<option value="" selected="selected"></option>
+										<option value="0">不在线</option>
+										<option value="1">在线但没有开启监控程序</option>
+										<option value="2">在线并开启监控程序</option>
+										<option value="3">开启监控程序下 突然计算机关闭或者拔出数据线</option>
+									</select><span style="color: red">&nbsp;&nbsp;*</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">设备状态时间：<br></td>
+								<td><input name="stateTime" type="text" id="stateTime" placeholder="选择日期"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr>
+								<td align="right">拌和机标识：</td>
+								<td><input name="equipmentCode" type="text" id="equipmentCode" placeholder="输入拌和机标识" required="required"
+									 maxlength="60"><span style="color: red">&nbsp;&nbsp;*</span></td>
+							</tr>
+							<tr>
+								<td align="right">拌和机类型：<br></td>
+								<td>
+									<select id="equipmentType" size="1" name="equipmentType">
+										<option value="" selected="selected"></option>
+										<option value="0">沥青拌和机</option>
+									</select><span style="color: red">&nbsp;&nbsp;*</span>
+								</td>
+							</tr>
+							<tr>
+								<td align="right">备注：</td>
+								<td><input name="remarks" type="text" id="remarks" placeholder="输入备注" required="required"
+									 maxlength="200">
+								</td>
+							</tr>
+							<tr style="height:1px">
+								<td><input type="hidden" id="orgId" name="orgId"></td>
+							</tr>
+							<tr style="height:1px">
+								<td><input type="hidden" id="id" name="id"></td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center"><input type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc"
+									 onclick="addEquipment();"></td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+//时间
+jeDate({
+	dateCell:"#stateTime",
+	format:"YYYY-MM-DD hh:mm:ss",
+	isinitVal:false,
+	isTime:true, //isClear:false,
+	minDate:"2014-09-19 00:00:00",
+	okfun:function(val){alert(val)}
+})
+</script>

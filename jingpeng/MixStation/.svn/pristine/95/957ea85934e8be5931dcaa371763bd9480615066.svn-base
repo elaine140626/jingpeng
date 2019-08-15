@@ -1,0 +1,53 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.blindSample.model.AutoCollectionEntity;
+import com.blindSample.model.BlindInfoEntity;
+import com.blindSample.model.VideoSurveillance;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+
+@Repository
+public class VideoSurveillanceDao extends KDDaoSupport{
+
+	private final static String NAMESPACE = "VideoSurveillance";
+	
+	public List<VideoSurveillance> getVideoSurveillance(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getVideoSurveillance", map);
+	}
+	
+	public List<VideoSurveillance> getVideoSurveillanceById(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getVideoSurveillanceById", map);
+	}
+	
+	// 获取用户权限下试验室的试验总数
+	public List<Map<String, Object>> getTestInfoList(Map<String, Object> map)throws DataAccessException  {
+		return this.select(NAMESPACE+".getTestInfoList", map);
+	}
+	
+	// 自动采集数量
+	public List<Map<String, Object>> getAutoCollectionCount(Map<String, Object> map)throws DataAccessException  {
+		return this.select(NAMESPACE+".getAutoCollectionCount", map);
+	}
+	
+	// 自动采集明细
+	public List<AutoCollectionEntity> getAutoCollectionList(Map<String, Object> map)throws DataAccessException  {
+		return this.select(NAMESPACE+".getAutoCollectionList", map);
+	}
+	
+	// 盲样数量
+	public List<Map<String, Object>> getBlindCount(Map<String, Object> map)throws DataAccessException  {
+		return this.select(NAMESPACE+".getBlindCount", map);
+	}
+	
+	// 盲样明细
+	public List<BlindInfoEntity> getBlindList(Map<String, Object> map)throws DataAccessException  {
+		return this.select(NAMESPACE+".getBlindList", map);
+	}
+}

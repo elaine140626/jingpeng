@@ -1,0 +1,42 @@
+<script src="../../js/HighwayPlatform/MixStation/asphalt/product_analysis.js" type="text/javascript" charset="utf-8"></script>
+
+<ul id="myTab" class="nav nav-tabs">
+	<li class="active">
+		<a href="#productivity" data-toggle="tab"><strong>产能分析</strong></a>
+	</li>
+	<li>
+		<a href="#asphalt-aggregate" data-toggle="tab"><strong>油石比波动</strong></a>
+	</li>
+</ul>
+<div id="TabContain" class="tab-content">
+	<!-- 产能分析 -->
+	<div class="tab-pane fade in active" id="productivity">
+		<div style="margin-top: 10px;margin-left: 100px;">查询条件：
+			<input type="radio" name="date" value="day" checked="checked"/>天
+			<input type="radio" name="date" value="month"/>月
+			<input type="radio" name="date" value="year"/>年
+		</div>
+		<div class="chartcol" id="productivity_echar"></div>
+	</div>
+	<!-- 油石比波动 -->
+	<div class="tab-pane fade" id="asphalt-aggregate">
+<<<<<<< .mine
+		<select id="AsphaltMaterialList" onchange="onchangeEchar()">
+			<option value="">查询全部</option>
+		</select>
+		
+||||||| .r357
+		<!-- <select id="AsphaltMaterialList" onchange="onchangeEchar()">
+			<option value="">查询全部</option>
+		</select> -->
+		
+=======
+>>>>>>> .r512
+		<div class="charttt" id="shiYou_echar"></div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#myTab li').click(function() {
+		var tabName = $(this).find('a').attr('href');
+	})
+</script>

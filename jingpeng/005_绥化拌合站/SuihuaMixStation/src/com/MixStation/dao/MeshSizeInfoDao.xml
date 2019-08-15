@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.MeshSizeInfoDao">
+
+	<!-- 查询所有筛孔信息 -->
+	<select id="getAllMeshSizeInfo" resultType="com.MixStation.model.MeshSizeInfoEntity" parameterType="java.util.Map">
+		select 
+			ms.id          as id,-- 自增长id
+			ms.org_id      as orgId,-- 组织机构id
+			ms.mesh_size   as meshSize,-- 筛孔大小
+			ms.operator    as operator,-- 创建者
+			CONVERT(varchar (100), ms.create_date, 20) as createDate,-- 创建时间
+			ms.valid_flag  as validFlag,-- 标识
+			oi.Org_Name    as orgName-- 拌和站名称
+		from mesh_size_info ms -- 筛孔信息表
+			left join Organization_Info oi-- 组织机构表
+			on oi.Id = ms.org_id
+			and oi.Valid_Flag = 1
+		where
+			ms.valid_flag = 1
+			<if test="id != null and id != ''">
+				and ms.id = #{id}
+			</if>
+			order by oi.Org_Name,ms.mesh_size desc
+	</select>
+
+	<!-- 添加筛孔信息 -->
+	<insert id="addMeshSizeInfo" parameterType="com.MixStation.model.MeshSizeInfoEntity">
+		insert into mesh_size_info(
+			org_id,
+			mesh_size,
+			operator,
+			create_date,
+			valid_flag
+		)
+		values(
+			#{orgId},
+			#{meshSize},
+			#{operator},
+			CONVERT (VARCHAR(100), GETDATE(), 20),
+			1
+		)
+	</insert>
+	
+	<!-- 修改筛孔信息 -->
+	<update id="updateMeshSizeInfo" parameterType="com.MixStation.model.MeshSizeInfoEntity">
+		update mesh_size_info
+			set
+				org_id = #{orgId},
+				mesh_size = #{meshSize},
+				modifier = #{operator},
+				modify_date = CONVERT (VARCHAR(100), GETDATE(), 20)
+			where
+				id = #{id}
+	</update>
+	
+	<!-- 删除筛孔信息 -->
+	<update id="deleteMeshSizeInfo" parameterType="java.util.Map">
+		update mesh_size_info
+			set
+				valid_flag = 0
+			where
+				id = #{id}
+	</update>
+	
+	<!-- 删除校验 -->
+	<select id="getGradingInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		select 
+			msi.mesh_size 
+		from Asphalt_GradDetailed ag 
+			left join mesh_size_info msi
+			on ag.Mesh_Id = msi.id
+			and msi.valid_flag = 1
+		where
+			ag.Valid_Flag = 1
+			and ag.Mesh_Id = #{meshId}
+	</select>
+</mapper>

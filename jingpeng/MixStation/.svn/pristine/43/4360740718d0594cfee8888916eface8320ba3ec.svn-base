@@ -1,0 +1,733 @@
+package com.blindSample.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.blindSample.model.cookieModel;
+import com.blindSample.service.TestUserInfoService;
+import com.blindSample.util.MessageUtilBlindSample;
+import com.jingpeng.dao.DataTablesResponseInfo;
+import com.jingpeng.model.ResponseInfo;
+import com.jingpeng.util.Consts;
+import com.userInfo.model.PtUserInfo;
+
+@Controller
+@RequestMapping("/testUserInfo")
+public class TestUserInfoController {
+
+	@Autowired
+	private TestUserInfoService testUserInfoService;
+
+	// 跳转登录
+	@RequestMapping("/login.html")
+	public String login() {
+		return "/BlindnessTest/login";
+	}
+
+	// 跳转用户管理
+	@RequestMapping("/userinfo.html")
+	public String userinfo() {
+		return "/BlindnessTest/userinfo";
+	}
+
+	// 跳转主页面
+	@RequestMapping("/index.html")
+	public String index() {
+		return "/BlindnessTest/index";
+	}
+
+	// 跳转注册页面
+	@RequestMapping("/user.html")
+	public String user() {
+		return "/BlindnessTest/user";
+	}
+
+	// 获取用户信息
+	@RequestMapping("/getPtUserInfo")
+	public @ResponseBody cookieModel getValue(HttpServletRequest request) {
+		// 通过session获取账号密码
+		HttpSession session = request.getSession();
+
+		PtUserInfo obj = (PtUserInfo) session.getAttribute("user");
+		cookieModel cookie = new cookieModel();
+		if (obj != null) {
+			cookie.setUserName(obj.getName());
+			cookie.setId(obj.getId());
+			cookie.setRoletype(obj.getRoletype());
+		}
+
+		return cookie;
+	}
+
+	// 获取试验室树形结构
+	@RequestMapping("/getTestRoomList")
+	@ResponseBody
+	public DataTablesResponseInfo getTestRoomName(@RequestParam HashMap<String, Object> map) {
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		List<Map<String, Object>> list = testUserInfoService.getTestRoomList(map);
+		dtr.setData(list);
+		return dtr;
+	}
+
+	// 获取拌合站树形结构
+	@RequestMapping("/getOrgInfoList")
+	@ResponseBody
+	public DataTablesResponseInfo getOrgInfoList(@RequestParam HashMap<String, Object> map) {
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		List<Map<String, Object>> list = testUserInfoService.getOrgInfoList();
+		dtr.setData(list);
+		return dtr;
+	}
+
+	// 接收map参数，查询实验室名称
+	@RequestMapping("/insertUserInfo")
+	@ResponseBody
+	public ResponseInfo addTestRoomName(@RequestParam HashMap<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+
+		// 根据用户名查找，判断是否该用户名已经存在
+		PtUserInfo userInfo = testUserInfoService.getUserLogin(map);
+
+		// 存在，提示信息
+		if (userInfo != null) {
+			// 多种选择 300
+			info.setCode(MessageUtilBlindSample.MULTIPLE_CHOICES);
+			// 用户名已经存在
+			info.setMessage(MessageUtilBlindSample.USERNAME_EXISTENCE);
+		} else {
+			// 获取画面输入的用户信息
+			PtUserInfo ptUserInfo = new PtUserInfo();
+
+			// 用户名
+			ptUserInfo.setUserCode(map.get("userCode").toString());
+
+			// 密码
+			ptUserInfo.setPassWord(map.get("passWord").toString());
+
+			// 姓名
+			ptUserInfo.setName(map.get("name").toString());
+
+			// 用户权限
+			String roleType = map.get("roleType").toString();
+			String[] roleTypes = roleType.split(",");
+
+			if (roleTypes != null && roleTypes.length > 0) {
+				for (int i = 0; i < roleTypes.length; i++) {
+
+					// 试验室权限
+					if (roleTypes[i].equals("1")) {
+						ptUserInfo.setIsTestRoom("1");
+					} else if (roleTypes[i].equals("2")) {
+						// 拌合站权限
+						ptUserInfo.setIsMixingStation("1");
+					}
+				}
+			}
+			//查询唯一标识
+			Map par = new HashMap();
+			//截取，分隔，循环放入数组，加入map作为条件
+			
+			String testId = map.get("testId").toString();
+			String[] str = testId.split(",");
+			par.put("testIds", str);
+			//查询出唯一标识
+			List<Map<String, Object>> idList = testUserInfoService.getTestRoomName(par);
+			//添加
+			//以对象类型做添加 从map取出放入对象
+			TestUser_Info testUser_Info = new TestUser_Info();
+			testUser_Info.setUsercode(map.get("userName").toString());
+			testUser_Info.setPassword(map.get("password").toString());
+			testUser_Info.setName(map.get("name").toString());
+			testUser_Info.setOperator(map.get("operator").toString());
+			if(Integer.parseInt(map.get("isCollector").toString())==0) {
+				testUser_Info.setCollector(1);
+			}else {
+				testUser_Info.setCollector(0);
+			}
+			//查询唯一标识
+			Map par = new HashMap();
+			//截取，分隔，循环放入数组，加入map作为条件
+			
+			String testId = map.get("testId").toString();
+			String[] str = testId.split(",");
+			par.put("testIds", str);
+			//查询出唯一标识
+			List<Map<String, Object>> idList = testUserInfoService.getTestRoomName(par);
+			//添加
+			//以对象类型做添加 从map取出放入对象
+			TestUser_Info testUser_Info = new TestUser_Info();
+			testUser_Info.setUsercode(map.get("userName").toString());
+			testUser_Info.setPassword(map.get("password").toString());
+			testUser_Info.setName(map.get("name").toString());
+			testUser_Info.setOperator(map.get("operator").toString());
+			
+
+			// 试验室收样权限
+			ptUserInfo.setIsCollector(map.get("isCollector").toString());
+
+			// 添加用户，返回用户的id
+			int count = testUserInfoService.insertUserInfo(ptUserInfo);
+			if (count > 0) {
+				// 获取用户id
+				PtUserInfo user = testUserInfoService.getUserLogin(map);
+
+				// 查询唯一标识
+				Map<String, Object> data = new HashMap<String, Object>();
+
+				// 试验室选中的权限id
+				String testId = map.get("testId").toString();
+				String[] testRoomIds = testId.split(",");
+				data.put("testIds", testRoomIds);
+
+				// 查询出唯一标识
+				List<Map<String, Object>> uniqueIdentifierList = testUserInfoService.getTestRoomList(data);
+				if (uniqueIdentifierList != null && uniqueIdentifierList.size() > 0) {
+					// 循环加入试验室权限
+					for (int i = 0; i < uniqueIdentifierList.size(); i++) {
+						Map<String, Object> params = new HashMap<String, Object>();
+						params.put("platformUserInfoId", user.getId());
+						params.put("uniqueIdentifier", uniqueIdentifierList.get(i).get("UniqueIdentifier").toString());
+						int result = testUserInfoService.insertTestSetDetailed(params);
+						if (result <= 0) {
+							// 请求失败
+							info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+							// 注册失败
+							info.setMessage(MessageUtilBlindSample.LOGIN_ERROR);
+							return info;
+						}
+					}
+				}
+
+				// 拌合站选中的权限id
+				String bhzIds = map.get("bhzId").toString();
+				String[] bhzIdList = bhzIds.split(",");
+				if (bhzIdList != null && bhzIdList.length > 0) {
+					for (int i = 0; i < bhzIdList.length; i++) {
+						Map<String, Object> params = new HashMap<String, Object>();
+						params.put("platformUserInfoId", user.getId());
+						params.put("orgId", bhzIdList[i].toString());
+						int result = testUserInfoService.insertOrgSetDetailed(params);
+						if (result <= 0) {
+							// 请求失败
+							info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+							// 注册失败
+							info.setMessage(MessageUtilBlindSample.LOGIN_ERROR);
+							return info;
+						}
+					}
+				}
+
+				// 成功处理请求提示 200
+				info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+				// 注册成功
+				info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+			} else {
+				// 请求失败
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				// 注册失败
+				info.setMessage(MessageUtilBlindSample.LOGIN_ERROR);
+				
+			}
+			
+			
+			//添加后，返回新添加的id
+			int ids = testUserInfoService.addTestName(testUser_Info);
+			//循环加入权限
+			for (int i = 0; i < idList.size(); i++) {
+				Map params = new HashMap();
+				params.put("ids", ids);
+				params.put("uniqueIdentifier", idList.get(i).get("UniqueIdentifier").toString());
+				testUserInfoService.addTestRoot(params);
+			}
+			//成功处理请求提示 200
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//注册成功
+			info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+			testUser_Info.setCollector(Integer.parseInt(map.get("isCollector").toString()));
+			testUser_Info.setIsSamping(Integer.parseInt(map.get("isSamping").toString()));
+				
+			//添加后，返回新添加的id
+			int ids = testUserInfoService.addTestName(testUser_Info);		
+			if(ids > 0) {
+				List<TestUser_Info> userInfo = testUserInfoService.getUserLogin(testUser_Info);
+				//循环加入权限
+				for (int i = 0; i < idList.size(); i++) {
+					Map params = new HashMap();
+					params.put("ids", userInfo.get(0).getId());
+					params.put("uniqueIdentifier", idList.get(i).get("UniqueIdentifier").toString());
+					testUserInfoService.addTestRoot(params);
+				}
+			}
+				
+			//成功处理请求提示 200
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//注册成功
+			info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+		}
+		return info;
+	}
+
+	// 登录
+	@RequestMapping("/userLogin.html")
+	public @ResponseBody ResponseInfo userLogin(HttpServletRequest request, @RequestParam HashMap<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		// 登录验证
+		PtUserInfo data = testUserInfoService.getUserLogin(map);
+		if (data != null) {
+			request.getSession().setAttribute(Consts.SESSION_USER_KEY, data);
+			
+			// 用户信息
+			request.getSession().setAttribute("user", data);
+			// 查询当前用户权限
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("user_id", data.getId());
+			// 查询出关联的试验室名称
+			List<Map<String, Object>> userTestDetailed = testUserInfoService.getUserTestInfo(param);
+			// 试验室权限
+			String testDetailed = "";
+			for(int i=0;i<userTestDetailed.size();i++) {
+				testDetailed += userTestDetailed.get(i).get("UniqueIdentifier").toString() + ",";
+			}
+			List<Map<String, Object>> userOrgDetailed = testUserInfoService.getUserOrgInfo(param);
+			// 拌合站权限
+			String orgDetailed = "";
+			for(int i=0;i<userOrgDetailed.size();i++) {
+				orgDetailed += userOrgDetailed.get(i).get("OrgId").toString() + ",";
+			}
+			// 试验室权限
+			request.getSession().setAttribute("userTestDetailed", testDetailed);
+			// 拌合站权限
+			request.getSession().setAttribute("userOrgDetailed", orgDetailed);
+			
+			// 登录成功返回success
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+		} else {
+			// 登录失败
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			// 账号或密码错误
+			info.setMessage(MessageUtilBlindSample.ACCOUNT_PASSWORD_ERROR);
+		}
+		return info;
+	}
+
+	// 获取用户信息
+	@RequestMapping("/getPtUserList")
+	@ResponseBody
+	public DataTablesResponseInfo getUserInformation(@RequestParam HashMap<String, Object> map,
+			HttpServletRequest request) {
+
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		// 从session里获取当前登录的账号
+		HttpSession session = request.getSession();
+		PtUserInfo user = (PtUserInfo) session.getAttribute("user");
+		// 参数
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userCode", user.getUserCode());
+
+		// 获取当前用户信息
+		PtUserInfo userInfo = testUserInfoService.getUserLogin(param);
+
+		// 返回结果
+		Map<String, Object> dataList = new HashMap<String, Object>();
+		if (userInfo != null) {
+			// 查询当前用户权限
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("user_id", userInfo.getId());
+			// 查询出关联的试验室名称
+			List<Map<String, Object>> userTestDetailed = testUserInfoService.getUserTestInfo(data);
+			List<Map<String, Object>> userOrgDetailed = testUserInfoService.getUserOrgInfo(data);
+			// 用户信息
+			dataList.put("userInfo", userInfo);
+			// 试验室权限
+			dataList.put("userTsetDetailed", userTestDetailed);
+			// 拌合站权限
+			dataList.put("userOrgDetailed", userOrgDetailed);
+		}
+		// 返回
+		dtr.setData(dataList);
+		return dtr;
+	}
+
+	// 删除用户
+	@RequestMapping("/deleteUserInfo")
+	public @ResponseBody ResponseInfo testUserdel(@RequestParam HashMap<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		// 删除试验室的
+		int result = testUserInfoService.deleteUserInfo(map);
+		if (result > 0) {
+			// 删除用户的权限
+			testUserInfoService.delTestSetDetailed(map);
+			testUserInfoService.delOrgSetDetailed(map);
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			// 操作成功提示
+			info.setMessage(MessageUtilBlindSample.DELETE_SUCCESSFU);
+		} else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			// 操作失败提示
+			info.setMessage(MessageUtilBlindSample.DELETE_ERROR);
+		}
+		return info;
+	}
+
+	// 修改用户的信息显示
+	@RequestMapping("/getUserInfo")
+	@ResponseBody
+	public DataTablesResponseInfo getTestNameUpdate(@RequestParam HashMap<String, Object> map) {
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		// 获取当前用户信息
+		PtUserInfo userInfo = testUserInfoService.getUserInfo(map);
+
+		// 返回结果
+		Map<String, Object> dataList = new HashMap<String, Object>();
+		if (userInfo != null) {
+			// 查询当前用户权限
+			Map<String, Object> data = new HashMap<String, Object>();
+			data.put("user_id", userInfo.getId());
+			// 查询出关联的试验室名称
+			List<Map<String, Object>> userTestDetailed = testUserInfoService.getUserTestInfo(data);
+			List<Map<String, Object>> userOrgDetailed = testUserInfoService.getUserOrgInfo(data);
+			// 用户信息
+			dataList.put("userInfo", userInfo);
+			// 试验室权限
+			dataList.put("userTsetDetailed", userTestDetailed);
+			// 拌合站权限
+			dataList.put("userOrgDetailed", userOrgDetailed);
+		}
+		// 返回
+		dtr.setData(dataList);
+		return dtr;
+	}
+
+	// 修改用户信息
+	@RequestMapping("/updateUserInfo")
+	@ResponseBody
+	public ResponseInfo updateTestUser(@RequestParam HashMap<String, Object> map) {
+
+		ResponseInfo info = new ResponseInfo();
+		// 获取画面输入的用户信息
+		PtUserInfo ptUserInfo = new PtUserInfo();
+		
+		// 用户id
+		ptUserInfo.setId(Integer.parseInt(map.get("id").toString()));
+
+		// 用户名
+		ptUserInfo.setUserCode(map.get("userCode").toString());
+
+		// 密码
+		ptUserInfo.setPassWord(map.get("passWord").toString());
+
+		// 姓名
+		ptUserInfo.setName(map.get("name").toString());
+
+		// 用户权限
+		String roleType = map.get("roleType").toString();
+		String[] roleTypes = roleType.split(",");
+
+		if (roleTypes != null && roleTypes.length > 0) {
+			for (int i = 0; i < roleTypes.length; i++) {
+
+				// 试验室权限
+				if (roleTypes[i].equals("1")) {
+					ptUserInfo.setIsTestRoom("1");
+				} else if (roleTypes[i].equals("2")) {
+					// 拌合站权限
+					ptUserInfo.setIsMixingStation("1");
+				}
+			}
+		}
+		
+		if(Integer.parseInt(map.get("isCollector").toString())==0) {
+			test.setCollector(1);
+		}else {
+			test.setCollector(0);
+		}
+
+		// 试验室收样权限
+		ptUserInfo.setIsCollector(map.get("isCollector").toString());
+
+		// 删除用户的权限
+		testUserInfoService.delTestSetDetailed(map);
+		testUserInfoService.delOrgSetDetailed(map);
+	
+		// 查询唯一标识
+		Map<String, Object> data = new HashMap<String, Object>();
+
+		// 试验室选中的权限id
+		String testId = map.get("testId").toString();
+		String[] testRoomIds = testId.split(",");
+		data.put("testIds", testRoomIds);
+
+		// 查询出唯一标识
+		List<Map<String, Object>> uniqueIdentifierList = testUserInfoService.getTestRoomList(data);
+		if (uniqueIdentifierList != null && uniqueIdentifierList.size() > 0) {
+			// 循环加入试验室权限
+			for (int i = 0; i < uniqueIdentifierList.size(); i++) {
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("platformUserInfoId", ptUserInfo.getId());
+				params.put("uniqueIdentifier", uniqueIdentifierList.get(i).get("UniqueIdentifier").toString());
+				int result = testUserInfoService.insertTestSetDetailed(params);
+				if (result <= 0) {
+					// 请求失败
+					info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+					// 注册失败
+					info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+					return info;
+				}
+			}
+		}
+
+		// 拌合站选中的权限id
+		String bhzIds = map.get("bhzId").toString();
+		String[] bhzIdList = bhzIds.split(",");
+		if (bhzIdList != null && bhzIdList.length > 0) {
+			for (int i = 0; i < bhzIdList.length; i++) {
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("platformUserInfoId", ptUserInfo.getId());
+				params.put("orgId", bhzIdList[i].toString());
+				int result = testUserInfoService.insertOrgSetDetailed(params);
+				if (result <= 0) {
+					// 请求失败
+					info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+					// 注册失败
+					info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+					return info;
+				}
+		test.setId(Integer.parseInt(map.get("id").toString()));
+		
+		//修改主表
+		int num = testUserInfoService.updateTestUser(test);
+		if(num==0) {
+			//修改失败
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+			return info;
+		}
+		
+		if(map.containsKey("testId")&&(!"".equals(map.get("testId").toString()))&&map.get("testId").toString().length()>0) {
+			Map par = new HashMap();
+			//截取，分隔，循环放入数组，加入map作为条件
+			String testId = map.get("testId").toString();
+			String[] str = testId.split(",");
+			par.put("testIds", str);
+			List<Map<String, Object>> idList = testUserInfoService.getTestRoomName(par);
+			
+			//删除子表
+			TestSetDetailed td = new TestSetDetailed();
+			td.setPlatformUserInfoId(Integer.parseInt(map.get("id").toString()));
+			int nums = testUserInfoService.deleteUserSubtable(td);
+			if(nums==0) {
+				//删除失败子表失败
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				info.setMessage(MessageUtilBlindSample.DELETE_Subtable_ERRO);
+				return info;
+		test.setCollector(Integer.parseInt(map.get("isCollector").toString()));
+		test.setIsSamping(Integer.parseInt(map.get("isSamping").toString()));
+		
+		test.setId(Integer.parseInt(map.get("id").toString()));
+		
+		//修改主表
+		int num = testUserInfoService.updateTestUser(test);
+		if(num==0) {
+			//修改失败
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+			return info;
+		}
+		
+		if(map.containsKey("testId")&&(!"".equals(map.get("testId").toString()))&&map.get("testId").toString().length()>0) {
+			Map par = new HashMap();
+			//截取，分隔，循环放入数组，加入map作为条件
+			String testId = map.get("testId").toString();
+			String[] str = testId.split(",");
+			par.put("testIds", str);
+			List<Map<String, Object>> idList = testUserInfoService.getTestRoomName(par);
+			
+			//删除子表
+			TestSetDetailed td = new TestSetDetailed();
+			td.setPlatformUserInfoId(Integer.parseInt(map.get("id").toString()));
+			int nums = testUserInfoService.deleteUserSubtable(td);
+			if(nums==0) {
+				//删除失败子表失败
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				info.setMessage(MessageUtilBlindSample.DELETE_Subtable_ERRO);
+				return info;
+			}
+		}
+
+		// 更新用户信息
+		int result = testUserInfoService.updateUserInfo(ptUserInfo);
+		if (result > 0) {
+			// 成功处理请求提示 200
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			// 注册成功
+			info.setMessage(MessageUtilBlindSample.UPDATE_SUCCESS);
+		}else {
+			// 请求失败
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			// 注册失败
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+		}
+		
+		return info;
+	}
+
+	// 获取app用户信息
+	@RequestMapping("/getAppUserList")
+	@ResponseBody
+	public DataTablesResponseInfo getAppUserList(@RequestParam Map<String, Object> map) {
+
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+
+		List<APPUserInfo> list = testUserInfoService.getAppUserList(map);
+		dtr.setData(list);
+
+		return dtr;
+	}
+
+	// 更新app用户信息
+	@RequestMapping("/updateAppUser")
+	public @ResponseBody ResponseInfo updateAppUser(@RequestParam Map<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.updateAppUser(map);
+		if (num > 0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			// 操作成功提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_SUCCESS);
+		} else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			// 操作失败提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+		}
+		return info;
+	}
+
+	// 删除app用户信息
+	@RequestMapping("/deleteAppUser")
+	public @ResponseBody ResponseInfo deleteAppUser(@RequestParam Map<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.deleteAppUser(map);
+		if (num > 0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			// 操作成功提示
+			info.setMessage(MessageUtilBlindSample.DELETE_SUCCESSFU);
+		} else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			// 操作失败提示
+			info.setMessage(MessageUtilBlindSample.DELETE_ERROR);
+		}
+		return info;
+	}
+
+	// 添加app用户信息
+	@RequestMapping("/addAppUser")
+	@ResponseBody
+	public ResponseInfo addAppUser(@RequestParam Map<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		List<APPUserInfo> list = testUserInfoService.getAppUserList(map);
+		if (list != null && list.size() > 0) {
+			// 多种选择 300
+			info.setCode(MessageUtilBlindSample.MULTIPLE_CHOICES);
+			// 用户名已经存在
+			info.setMessage(MessageUtilBlindSample.USERNAME_EXISTENCE);
+		} else {
+			int num = testUserInfoService.addAppUser(map);
+			if (num > 0) {
+				info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+				// 操作成功提示
+				info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+			} else {
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				// 操作失败提示
+				info.setMessage(MessageUtilBlindSample.LOGIN_ERROR);
+			}
+		}
+		return info;
+	}
+	}
+	
+
+	// 获取app用户信息
+	@RequestMapping("/getAppUserList")
+	@ResponseBody
+	public DataTablesResponseInfo getAppUserList(@RequestParam Map<String, Object> map) {
+							
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();						
+			
+		List<APPUserInfo> list = testUserInfoService.getAppUserList(map);	
+		dtr.setData(list);
+
+		return dtr;
+	}
+	
+	// 更新app用户信息
+	@RequestMapping("/updateAppUser")
+	public @ResponseBody ResponseInfo updateAppUser(@RequestParam Map<String, Object> map){
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.updateAppUser(map);
+		if(num>0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_SUCCESS);
+		}else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			//操作失败提示
+			info.setMessage(MessageUtilBlindSample.UPDATE_ERROR);
+		}
+		return info;
+	}
+	
+	// 删除app用户信息
+	@RequestMapping("/deleteAppUser")
+	public @ResponseBody ResponseInfo deleteAppUser(@RequestParam Map<String, Object> map){
+		ResponseInfo info = new ResponseInfo();
+		int num = testUserInfoService.deleteAppUser(map);
+		if(num>0) {
+			info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+			//操作成功提示
+			info.setMessage(MessageUtilBlindSample.DELETE_SUCCESSFU);
+		}else {
+			info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+			//操作失败提示
+			info.setMessage(MessageUtilBlindSample.DELETE_ERROR);
+		}
+		return info;
+	}
+	
+	// 添加app用户信息
+	@RequestMapping("/addAppUser")
+	@ResponseBody
+	public ResponseInfo addAppUser(@RequestParam Map<String, Object> map) {
+		ResponseInfo info = new ResponseInfo();
+		List<APPUserInfo> list = testUserInfoService.getAppUserList(map);
+		if(list != null && list.size() > 0) {
+			//多种选择 300
+			info.setCode(MessageUtilBlindSample.MULTIPLE_CHOICES);
+			//用户名已经存在
+			info.setMessage(MessageUtilBlindSample.USERNAME_EXISTENCE);
+		} else {
+			int num = testUserInfoService.addAppUser(map);
+			if(num>0) {
+				info.setCode(MessageUtilBlindSample.SUCCESSFUL_OPERATION_REQUESTS);
+				//操作成功提示
+				info.setMessage(MessageUtilBlindSample.LOGIN_SUCCESSFUL);
+			}else {
+				info.setCode(MessageUtilBlindSample.SERVER_ERROR);
+				//操作失败提示
+				info.setMessage(MessageUtilBlindSample.LOGIN_ERROR);
+			}
+		}
+		return info;
+	}
+	
+	}	
+}

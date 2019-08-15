@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformCementProductAnalysisDao">
+	<!-- 产能分析 沥青原材料取得 -->
+	<select id="getCementMaterialInfo" parameterType="java.util.Map" resultType="ProductAnalysisEntity">
+		select distinct
+		  cem.Product_ID                                  -- 产品Id
+		  , vm.Material_Name
+		  , vm.Material_Model 
+		from
+		  Cement_ProductionData as cem 
+		  left join V_MaterialInfo as vm 
+		    on cem.Product_ID = vm.Id 
+		    and vm.Valid_Flag = 1 
+		  	and vm.Org_ID = #{orgId}
+		where
+		  cem.Valid_Flag = 1 
+		  and cem.Org_ID = #{orgId}
+		  and cem.Collect_Date &gt;= #{startTime} 
+		  and cem.Collect_Date &lt;= #{endTime} 
+		order by
+		  cem.Product_ID
+	</select>
+	
+	<!-- 产能分析 echar -->
+	<select id="getCementProductAnalysisList" parameterType="java.util.Map" resultType="ProductAnalysisEntity">
+		select
+		  cem.Product_ID                                  -- 产品Id
+		  , vm.Material_Name
+		  , vm.Material_Model
+		  <if test="date == 1">
+		    , CONVERT(varchar (100), cem.Collect_Date, 23) as Collect_Time -- 采集时间按日
+		  </if>
+		  <if test="date == 2">
+		    , CONVERT(varchar (7), cem.Collect_Date, 23) as Collect_Time -- 采集时间按月
+		  </if>
+		  <if test="date == 3">
+		    , CONVERT(varchar (4), cem.Collect_Date, 23) as Collect_Time -- 采集时间按年
+		  </if>
+		  , Convert(decimal(18,2),sum(cem.Total_Weight)/1000) as Total_Weight --拌和总量
+		from
+		  Cement_ProductionData as cem 
+		  left join V_MaterialInfo as vm 
+		    on cem.Product_ID = vm.Id 
+		    and vm.Valid_Flag = 1 
+		  	and vm.Org_ID = #{orgId}
+		where
+		  cem.Valid_Flag = 1 
+		  and cem.Org_ID = #{orgId}
+		  and cem.Collect_Date &gt;= #{startTime} 
+		  and cem.Collect_Date &lt;= #{endTime}
+		group by
+		  <if test="date == 1">
+		    CONVERT(varchar (100), cem.Collect_Date, 23)
+		  </if>
+		  <if test="date == 2">
+		    CONVERT(varchar (7), cem.Collect_Date, 23)
+		  </if>
+		  <if test="date == 3">
+		    CONVERT(varchar (4), cem.Collect_Date, 23)
+		  </if>	  
+		  , cem.Product_ID
+		  , vm.Material_Name
+		  , vm.Material_Model 
+		order by
+		  Collect_Time 
+	</select>
+	
+</mapper>

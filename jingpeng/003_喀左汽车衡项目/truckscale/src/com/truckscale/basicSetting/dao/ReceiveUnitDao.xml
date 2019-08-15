@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.basicSetting.dao.ReceiveUnitDao">	
+	<!-- 收料单位List取得 -->
+	<select id="getReceiveUnitList" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.ReceiveUnitEntity">
+		SELECT
+		   r.Id                           
+		  , r.ReceiveUnitNumber as receiveUnitNumber            
+		  , r.ReceiveUnitName as receiveUnitName               
+		  , r.Purpose as purpose         
+		  , r.Contacts as contacts
+		  , r.Telephone as telephone               
+		  , r.Remarks as remarks
+		  , r.IsDel as isDel
+		  , r.Creater as creater
+		  , r.CreaterDate as createrDate
+		  , r.Reviser as reviser
+		  , r.ReviserDate as reviserDate
+		FROM
+		  receiveunit r
+		where r.IsDel = 0
+		<if test="id != null and id != ''">
+			and r.Id = #{id}                       -- 主键id
+		</if>
+		<if test="receiveUnitName != null and receiveUnitName != ''">
+			and r.ReceiveUnitName like CONCAT('%',CONCAT(#{receiveUnitName},'%'))    
+		</if>
+		<if test="ids != null and ids != 0">
+			and r.Id != #{ids}                     
+		</if>
+		ORDER BY  r.CreaterDate DESC
+	</select>
+	<!-- 收料单位名称去重 -->
+	<select id="getReceiveUnitList1" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.ReceiveUnitEntity">
+		SELECT
+		   r.Id                           
+		  , r.ReceiveUnitNumber as receiveUnitNumber            
+		  , r.ReceiveUnitName as receiveUnitName               
+		  , r.Purpose as purpose         
+		  , r.Contacts as contacts
+		  , r.Telephone as telephone               
+		  , r.Remarks as remarks
+		  , r.IsDel as isDel
+		  , r.Creater as creater
+		  , r.CreaterDate as createrDate
+		  , r.Reviser as reviser
+		  , r.ReviserDate as reviserDate
+		FROM
+		  receiveunit r
+		where r.IsDel = 0
+		and r.Purpose = #{Purpose}
+		ORDER BY  r.CreaterDate DESC
+	</select>
+	
+	<select id="getExportmeasureList" resultType="map">
+		SELECT
+		   e.Id as id
+		FROM
+		  exportmeasure e
+		where e.IsDel = 0 
+		AND e.MaterielNameId = #{id} LIMIT 1
+	</select>
+	
+	<select id="getReceiveUnitListNumber" resultType="com.truckscale.basicSetting.model.ReceiveUnitEntity">
+		SELECT
+		   r.Id                           
+		  , r.ReceiveUnitNumber as receiveUnitNumber            
+		  , r.ReceiveUnitName as receiveUnitName               
+		  , r.Purpose as purpose         
+		  , r.Contacts as contacts
+		  , r.Telephone as telephone               
+		  , r.Remarks as remarks
+		  , r.IsDel as isDel
+		  , r.Creater as creater
+		  , r.CreaterDate as createrDate
+		  , r.Reviser as reviser
+		  , r.ReviserDate as reviserDate
+		FROM
+		  receiveunit r
+		WHERE r.IsDel = 0
+		ORDER BY  r.CreaterDate DESC LIMIT 1
+	</select>
+
+	<!-- 新增材料名称表 -->
+	<insert id="insertReceiveUnit" parameterType="com.truckscale.basicSetting.model.ReceiveUnitEntity" useGeneratedKeys="true" keyProperty="id">
+		INSERT 
+		INTO receiveunit
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		  <if test="receiveUnitNumber != null">
+		    	ReceiveUnitNumber,
+		  </if>
+		  <if test="receiveUnitName != null">
+		        ReceiveUnitName,
+		  </if>
+		  <if test="purpose != null">
+		   		Purpose,
+		  </if>
+		  <if test="contacts != null">
+		   		Contacts,
+		  </if>
+		  <if test="telephone != null">
+		   		Telephone,
+		  </if>
+		  <if test="remarks != null">
+		   		Remarks,
+		  </if>		
+	  		 	IsDel,	
+		  <if test="creater != null">
+		   		Creater,
+		  </if>		
+		   		CreaterDate,
+		</trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+          <if test="receiveUnitNumber != null">
+		    #{receiveUnitNumber},
+          </if>
+          <if test="receiveUnitName">
+            #{receiveUnitName},
+          </if>
+          <if test="purpose">
+            #{purpose},
+          </if>
+          <if test="contacts">
+            #{contacts},
+          </if>
+          <if test="telephone">
+            #{telephone},
+          </if>
+          <if test="remarks">
+            #{remarks},
+          </if>
+            0,
+		   <if test="creater">
+            #{creater},
+          </if>
+		    now()
+		</trim> 
+	</insert>
+	
+	<!-- 修改材料名称表 -->
+	<update id="updateReceiveUnit" parameterType="com.truckscale.basicSetting.model.ReceiveUnitEntity">
+		UPDATE receiveunit 
+		<set>
+		<if test="receiveUnitNumber != null">
+		    	ReceiveUnitNumber = #{receiveUnitNumber},
+		  </if>
+		  <if test="receiveUnitName != null">
+		        ReceiveUnitName = #{receiveUnitName},
+		  </if>
+		  <if test="purpose != null">
+		        Purpose = #{purpose},
+		  </if>
+		  <if test="contacts != null">
+		   		Contacts = #{contacts},
+		  </if>
+		  <if test="telephone != null">
+		   		Telephone = #{telephone},
+		  </if>
+		   		Remarks = #{remarks},
+		  <if test="reviser">
+		  		Reviser = #{reviser},
+		  </if>		
+		   		ReviserDate = now(),
+		</set>
+		WHERE
+		  Id = #{id}
+	</update>
+	
+	<!-- 删除材料名称表 -->
+	<update id="deleteReceiveUnit" parameterType="com.truckscale.basicSetting.model.ReceiveUnitEntity">
+		UPDATE receiveunit 
+		SET
+		    IsDel = 1
+		  , Reviser = #{reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{id}
+	</update>
+</mapper>

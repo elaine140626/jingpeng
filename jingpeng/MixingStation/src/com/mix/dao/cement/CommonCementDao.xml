@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mix.dao.cement.CommonCementDao">
+	<!-- 获取用户的组织机构 -->
+	<select id="getCUserOrgId" parameterType="Core_User_Info" resultType="java.util.Map">
+		select Power_Org_ID str_power_Org_Id from Core_User_Info where Id=#{i_id}
+	</select>
+	<select id="getUserOrgId" parameterType="User_Info" resultType="java.util.Map">
+		select id i_id from Organization_Info where Parent_Id=#{i_power_Org_Id}
+	</select>
+	
+	<!-- 获取客户端树tree -->
+	<select id="getOrgTree" resultType="Organization_Info" parameterType="java.util.Map">
+		select id i_id,Org_Name str_org_Name, Parent_Id i_parent_Id,org_Type str_org_Type from Organization_Info 
+		where Parent_Id = (select Power_Org_ID from User_Info where USER_NAME = #{str_user_Name}) 
+		and MixStation_Type = #{mixStation_Type}
+		and Org_Type = 2
+		union
+		select id i_id,Org_Name str_org_Name, -1 i_parent_Id,org_Type str_org_Type from Organization_Info
+		where id=(select Power_Org_ID from User_Info where USER_NAME = #{str_user_Name}) 
+		and Org_Type = 1
+	</select>
+	
+	<!-- 查询产品名称 -->
+	<select id="getMaterialNames" resultType="V_MaterialInfo" parameterType="java.util.HashMap">
+		<!-- SELECT 
+		id i_id,
+		mateName_id i_mateName_id,
+		Material_Name str_material_Name
+		FROM
+		V_MaterialInfo
+		WHERE
+		Material_Type = 
+		AND Material_Mold = 
+		AND Valid_Flag = 1 -->
+		
+		select distinct Material_Name str_material_Name from V_MaterialInfo where 1=1
+		
+		 and Material_Mold = #{str_material_Mold} and Material_Type = #{str_material_Type}  and Valid_Flag = 1
+		
+		<foreach collection="org_Ids" index="index" item="item" open="and org_id in (" separator="," close=")">
+		#{item}
+		</foreach>
+	</select>
+	
+	<!-- 查询产品型号 -->
+	<select id="getMaterialModels" resultType="V_MaterialInfo" parameterType="java.util.HashMap">
+	
+		<!-- select a.Id i_id,a.material_model str_material_model from V_MaterialInfo a 
+		where ID in(select min(ID) from V_MaterialInfo group by material_model)
+		and 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND Material_Name = #{str_material_Name}
+		AND a.Valid_Flag = 1    
+		注释于 2018-6-28 17:09 -->
+		
+		<!-- id 加入i_id别名 -->
+		select a.Id as i_id,a.Material_Model str_material_model from V_MaterialInfo a 
+		where 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND a.Material_Name = #{str_material_Name}
+		AND a.Valid_Flag = 1
+		
+		<!-- SELECT DISTINCT 
+		isnull(Id,'') i_mateName_id,
+	    material_model str_material_model
+        FROM
+	    V_MaterialInfo
+        WHERE
+	    Material_Type = #{str_material_Type}
+        AND Material_Mold = #{str_material_Mold}
+        AND Material_Name = #{str_material_Name}
+        and valid_Flag=1 -->
+        
+        <foreach collection="org_Ids" index="index" item="item" open="and org_id in (" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="getMaterialModel" resultType="V_MaterialInfo" parameterType="V_MaterialInfo">
+		 
+		 <!-- 注释于 2018-6-28 18:17 -->
+		
+	<!-- 	select a.Id,a.Material_Model str_material_model from V_MaterialInfo a where ID in(select min(ID) from V_MaterialInfo group by Material_Model)
+		and 
+		a.Material_Type =#{str_material_Type}
+		AND a.Material_Mold = #{str_material_Mold}
+		AND a.Material_Name = #{str_material_Name}
+		AND a.Valid_Flag = 1 -->
+		
+		SELECT
+	    id i_id,
+	    Material_model str_material_model
+        FROM
+	    V_MaterialInfo
+        WHERE
+	    Material_Type = #{str_material_Type}
+        AND Material_Mold = #{str_material_Mold}
+        AND Material_Name = #{str_material_Name}
+        AND org_id = #{i_org_Id} 
+        AND Valid_Flag = 1
+	</select>
+	
+	<!-- 获取设备信息 -->
+	<select id="getEquipmentInfo" resultType="Equipment_Info" parameterType="java.util.HashMap">
+		SELECT
+			Id i_id,
+			Equipment_Name str_equipment_Name
+		FROM
+			Equipment_Info
+		WHERE
+		Valid_Flag = 1
+	
+		<foreach collection="org_Ids" index="index" item="item" open="AND Org_ID in (" close=")" separator=",">
+				#{item}
+		</foreach>
+		AND Equipment_Type=#{i_equipment_Type}
+	</select>
+</mapper>

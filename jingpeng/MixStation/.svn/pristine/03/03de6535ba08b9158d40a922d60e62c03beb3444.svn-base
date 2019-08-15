@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>无机结合料稳定材料无侧限抗压强度试验自动采集数据</title>
+<link href="../resources/css2/record.css" rel="stylesheet"
+	type="text/css">
+<script type="text/javascript"
+src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+</head>
+<body>
+	<div class="jilu_main_s" style="position: relative; height: auto;">
+		<div id="qrCode" class="dingwei"
+			style="position: relative; float: right;"></div>
+		<div id="istestcollection" class="jilu_title"
+			style="padding-top: 60px;">无机结合料稳定材料无侧限抗压强度试验自动采集数据</div>
+		<div id="istestblind" class="jilu_title" style="display: none;">无机结合料稳定材料无侧限抗压强度试验检测报告</div>
+		<div>
+			<table border="0" cellpadding="0" cellspacing="0" class="table_2">
+				<tr>
+					<td width="68%">试验室名称：<label id="testRoomName"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_3">
+				<tr>
+					<td width="17%">试验依据</td>
+					<td width="33%"><label id="testRules"></label></td>
+					<td width="16%">试验日期</td>
+					<td width="34%"><label id="testDate"></label></td>
+				</tr>
+				<tr>
+					<td>样品名称</td>
+					<td><label id="sampleName"></label></td>
+					<td>试件个数</td>
+					<td><label id="sampleCount"></label></td>
+				</tr>
+				<tr>
+					<td>试件类型</td>
+					<td><label id="specType"></label></td>
+					<td>试验员</td>
+					<td><label id="testOperator"></label></td>
+				</tr>
+				<tr>
+					<td>成型日期</td>
+					<td><label id="moldDate"></label></td>
+					<td>设计强度</td>
+					<td><label id="designStrength"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div id="show">
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="17%">施工单位</td>
+					<td width="15%"><label id="constructionUnit"></label></td>
+					<td width="18%">工程名称</td>
+					<td width="16%"><label id="engineeringName"></label></td>
+					<td width="18%">工程部位/用途</td>
+					<td width="16%"><label id="purpose"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<thead>
+					<tr>
+						<td width="17%">试件编号</td>
+						<td width="39%">试验的最大压力（N）</td>
+						<td width="44%">无侧限坑压强度（MPa）</td>
+					</tr>
+				</thead>
+				<tbody id="list"></tbody>
+			</table>
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_4">
+				<tr>
+					<td width="17%">平均抗压强度（MPa）</td>
+					<td width="83%"><label id="avgValue"></label></td>
+				</tr>
+			</table>
+
+		</div>
+		<div>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="table_7 xbj1">
+				<tr>
+					<td width="17%" align="center">结果判定</td>
+					<td width="83%"><label id="isQualifiedTest"></label></td>
+				</tr>
+			</table>
+		</div>
+		<div class="fanhui">
+			<a href="#" onclick="javascript:window.history.back();">返回>></a>
+		</div>
+	</div>
+	<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+	<script type="text/javascript"
+		src="../resources/DataTables/datatables.js"></script>
+	<script type="text/javascript" src="../resources/js/shiyan04.js"></script>
+</body>
+</html>

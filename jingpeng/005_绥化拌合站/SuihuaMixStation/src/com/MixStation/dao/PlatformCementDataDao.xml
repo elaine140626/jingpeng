@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.MixStation.dao.PlatformCementDataDao">
+	<!-- 沥青拌合站树 -->
+	<select id="getOrgId" parameterType="java.util.List" resultType="java.util.Map">
+		SELECT
+		  o.Id
+		  , o.Org_Name
+		  , o.Parent_Id
+		  , o.org_Type 
+		FROM
+		  Organization_Info o 
+		WHERE
+		  o.Org_Type = 2 
+		  AND o.MixStation_Type = '1' 
+		  <foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+			#{item}
+		  </foreach>
+		UNION ALL 
+		SELECT
+		  a.Id
+		  , a.Org_Name
+		  , a.Parent_Id
+		  , a.org_Type 
+		FROM
+		  Organization_Info a
+		  , ( 
+		    SELECT
+		      o.Parent_Id 
+		    FROM
+		      Organization_Info o 
+		    WHERE
+		      o.Org_Type = 2 
+		      AND o.MixStation_Type = '1' 
+		      <foreach collection="list" index="index" item="item" open=" AND o.id IN (" separator="," close=")">
+				#{item}
+			  </foreach>
+		  ) b 
+		WHERE
+		  a.Id = b.Parent_Id			
+	</select>
+	
+	<!-- 查询生产数据列表 -->
+	<select id="getPlatformCementData" parameterType="java.util.Map" resultType="PlatformCementDataEntity">
+		<!-- select
+		  * 
+		from
+		  V_Cement_ProductionData
+		where
+		  1 = 1
+		  <if test="orgId != null">
+		  	and Org_ID in
+		  	<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		  </if>	   
+		  and str_Collect_date &gt;= #{startTime} 
+		  and str_Collect_date &lt;= #{endTime} 
+		  and Valid_Flag = 1
+		  <if test="Analysis_Result == 1">
+		  and i_analysis_Results = '1'
+		  </if>
+		  <if test="Analysis_Result == 2">
+		  and i_analysis_Results != '1'
+		  </if> -->
+		  select cpd.Org_ID
+					,cpd.ProdPlan_No
+					,cpd.Equ_ID
+					,cpd.Bin_Relationship_ID
+					,e.Equipment_Name
+					,CONVERT(varchar(20),cpd.Collect_Date,120) collect_Date
+					,cpd.Mix_Time
+					,cpd.Grade
+					,cpd.Disk_Number
+					,cpd.Weight_Cement1
+					,cpd.Weight_Cement2
+					,cpd.Weight_Cement3
+					,cpd.Weight_Cement4
+					,cpd.Weight_Aggregate1
+					,cpd.Weight_Aggregate2
+					,cpd.Weight_Aggregate3
+					,cpd.Weight_Aggregate4
+					,cpd.Weight_Aggregate5
+					,cpd.Weight_Aggregate6
+					,cpd.Weight_Water
+					,cpd.Weight_Admixture1
+					,cpd.Weight_Admixture2
+					,cpd.Weight_Cement1
+					,cpd.Weight_Cement2
+					,cpd.Weight_Cement3
+					,cpd.Weight_Cement4
+					,cpd.Set_Aggregate1
+					,cpd.Set_Aggregate2
+					,cpd.Set_Aggregate3
+					,cpd.Set_Aggregate4
+					,cpd.Set_Aggregate5
+					,cpd.Set_Aggregate6
+					,cpd.Set_Water
+					,cpd.Set_Admixture1
+					,cpd.Set_Admixture2
+					,cpd.Total_Weight
+					,cpd.Mixing_Volume
+					,cpp.Proj_Pos
+					,cpp.Watering_Site
+					,cpd.Analysis_Results
+				 from Cement_ProductionData cpd
+				 left join Cement_Production_Plan cpp on cpd.ProdPlan_No = cpp.Plan_No
+				 and cpp.Valid_Flag = 1
+				 left join Equipment_Info e on e.Id = cpd.Equ_ID
+				 and e.Valid_Flag = 1
+		         where cpd.Valid_Flag = 1
+			 <if test="startTime != null and startTime != ''">
+				AND cpd.Collect_Date &gt;=  #{startTime}
+			 </if>
+ 			<if test="endTime != null and endTime != ''">
+ 				AND cpd.Collect_Date &lt;= #{endTime}
+ 			</if>
+			<if test="orgId != null">
+			  	and cpd.Org_ID in
+			  	<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+					#{item}
+				</foreach>
+			 </if>	
+			 <if test="Analysis_Result == 1">
+			  and cpd.Analysis_Results = '1'
+			  </if>
+			  <if test="Analysis_Result == 2">
+			  and cpd.Analysis_Results != '1'
+			 </if>
+            order by cpd.collect_Date desc
+	</select>
+	
+	<!-- 采集数据明细 -->
+	<select id="getCementPropDataAnalysis" parameterType="java.util.Map" resultType="CementPropDataAnalysisEntity">
+		<!-- select 
+			v.Material_Code,
+			c.Cons_Prop_Weight,
+			c.Collection_Weight,
+			c.Actual_Proportion
+		 from 
+		 	Cement_ProductionDetailed c,
+		 	V_MaterialInfo v 
+		 where 
+		 	c.Materials_ID = v.Id 
+		 AND
+		    c.Cemment_ID = #{id} -->
+		    select
+		   mn.Material_Name  + '/' + mm.Material_Model as Material_Aggregate_1
+		  ,cpd.Set_Aggregate1
+		  ,cpd.Weight_Aggregate1
+		  ,(cpd.Weight_Aggregate1 - cpd.Set_Aggregate1)/NULLIF(cpd.Set_Aggregate1,0)*100 as Deviation_Aggregate_1
+		  ,mn0.Material_Name  + '/' + mm0.Material_Model as Material_Aggregate_2
+		  ,cpd.Set_Aggregate2
+		  ,cpd.Weight_Aggregate2
+		  ,(cpd.Weight_Aggregate2 - cpd.Set_Aggregate2)/NULLIF(cpd.Weight_Aggregate2,0)*100 as Deviation_Aggregate_2
+		  ,mn1.Material_Name  + '/' + mm1.Material_Model as Material_Aggregate_3
+		  ,cpd.Set_Aggregate3
+		  ,cpd.Weight_Aggregate3
+		  ,(cpd.Weight_Aggregate3 - cpd.Set_Aggregate3)/NULLIF(cpd.Weight_Aggregate3,0)*100 as Deviation_Aggregate_3
+		  ,mn2.Material_Name  + '/' + mm2.Material_Model as Material_Aggregate_4
+		  ,cpd.Set_Aggregate4
+		  ,cpd.Weight_Aggregate4
+		  ,(cpd.Weight_Aggregate4 - cpd.Set_Aggregate4)/NULLIF(cpd.Weight_Aggregate4,0)*100 as Deviation_Aggregate_4  
+		  ,mn3.Material_Name  + '/' + mm3.Material_Model as Material_Aggregate_5
+		  ,cpd.Set_Aggregate5
+		  ,cpd.Weight_Aggregate5
+		  ,(cpd.Weight_Aggregate5 - cpd.Set_Aggregate5)/NULLIF(cpd.Weight_Aggregate5,0)*100 as Deviation_Aggregate_5  
+		  ,mn4.Material_Name  + '/' + mm4.Material_Model as Material_Aggregate_6
+		  ,cpd.Set_Aggregate6
+		  ,cpd.Weight_Aggregate6
+		  ,(cpd.Weight_Aggregate6 - cpd.Set_Aggregate6)/NULLIF(cpd.Weight_Aggregate6,0)*100 as Deviation_Aggregate_6  
+		  ,mn5.Material_Name  + '/' + mm5.Material_Model as Material_Cement_1
+		  ,cpd.Set_Cement1
+		  ,cpd.Weight_Cement1
+		  ,(cpd.Weight_Cement1 - cpd.Set_Cement1)/NULLIF(cpd.Set_Cement1,0)*100 as Deviation_Cement_1
+		  ,mn6.Material_Name  + '/' + mm6.Material_Model as Material_Cement_2
+		  ,cpd.Set_Cement2
+		  ,cpd.Weight_Cement2
+		  ,(cpd.Weight_Cement2 - cpd.Set_Cement2)/NULLIF(cpd.Set_Cement2,0)*100 as Deviation_Cement_2 
+		  ,mn7.Material_Name  + '/' + mm7.Material_Model as Material_Cement_3
+		  ,cpd.Set_Cement3
+		  ,cpd.Weight_Cement3
+		  ,(cpd.Weight_Cement3 - cpd.Set_Cement3)/NULLIF(cpd.Set_Cement3,0)*100 as Deviation_Cement_3 
+		  ,mn8.Material_Name  + '/' + mm8.Material_Model as Material_Cement_4
+		  ,cpd.Set_Cement4
+		  ,cpd.Weight_Cement4
+		  ,(cpd.Weight_Cement4 - cpd.Set_Cement4)/NULLIF(cpd.Set_Cement4,0)*100 as Deviation_Cement_4 
+		  ,mn9.Material_Name  + '/' + mm9.Material_Model as Material_Admixture_1
+		  ,cpd.Set_Admixture1
+		  ,cpd.Weight_Admixture1
+		  ,(cpd.Weight_Admixture1 - cpd.Set_Admixture1)/NULLIF(cpd.Set_Admixture1,0)*100 as Deviation_Admixture_1
+		  ,mn10.Material_Name  + '/' + mm10.Material_Model as Material_Admixture_2
+		  ,cpd.Set_Admixture2
+		  ,cpd.Weight_Admixture2
+		  ,(cpd.Weight_Admixture2 - cpd.Set_Admixture2)/NULLIF(cpd.Set_Admixture1,0)*100 as Deviation_Admixture_2
+		  ,cpd.Set_Water
+		  ,cpd.Weight_Water
+		  ,(cpd.Weight_Water - cpd.Set_Water)/NULLIF(cpd.Set_Water,0)*100 as Deviation_Water
+		  from Cement_ProductionData cpd 
+			left join Bunker_Correspondence bc on cpd.Bin_Relationship_ID = bc.Id
+			left join Material_Info m on bc.MateID_Aggregate1 = m.Id
+			left join Material_Info m0 on bc.MateID_Aggregate2 = m0.Id
+			left join Material_Info m1 on bc.MateID_Aggregate3 = m1.Id
+			left join Material_Info m2 on bc.MateID_Aggregate4 = m2.Id
+			left join Material_Info m3 on bc.MateID_Aggregate5 = m3.Id
+			left join Material_Info m4 on bc.MateID_Aggregate6 = m4.Id
+			left join Material_Info m5 on bc.MateID_Cement1 = m5.Id
+			left join Material_Info m6 on bc.MateID_Cement2 = m6.Id
+			left join Material_Info m7 on bc.MateID_Cement3 = m7.Id
+			left join Material_Info m8 on bc.MateID_Cement4 = m8.Id
+			left join Material_Info m9 on bc.MateID_Admixture1 = m9.Id
+			left join Material_Info m10 on bc.MateID_Admixture2 = m10.Id
+			left join MaterName_Info mn on mn.Id = m.MateName_ID
+			left join MaterName_Info mn0 on mn0.Id = m0.MateName_ID
+			left join MaterName_Info mn1 on mn1.Id = m1.MateName_ID
+			left join MaterName_Info mn2 on mn2.Id = m2.MateName_ID
+			left join MaterName_Info mn3 on mn3.Id = m3.MateName_ID
+			left join MaterName_Info mn4 on mn4.Id = m4.MateName_ID
+			left join MaterName_Info mn5 on mn5.Id = m5.MateName_ID
+			left join MaterName_Info mn6 on mn6.Id = m6.MateName_ID
+			left join MaterName_Info mn7 on mn7.Id = m7.MateName_ID
+			left join MaterName_Info mn8 on mn8.Id = m8.MateName_ID
+			left join MaterName_Info mn9 on mn9.Id = m9.MateName_ID
+			left join MaterName_Info mn10 on mn10.Id = m10.MateName_ID
+			left join MaterModel_Info mm on mm.Id = m.MateModel_ID
+			left join MaterModel_Info mm0 on mm0.Id = m0.MateModel_ID
+			left join MaterModel_Info mm1 on mm1.Id = m1.MateModel_ID
+			left join MaterModel_Info mm2 on mm2.Id = m2.MateModel_ID
+			left join MaterModel_Info mm3 on mm3.Id = m3.MateModel_ID
+			left join MaterModel_Info mm4 on mm4.Id = m4.MateModel_ID
+			left join MaterModel_Info mm5 on mm5.Id = m5.MateModel_ID
+			left join MaterModel_Info mm6 on mm6.Id = m6.MateModel_ID
+			left join MaterModel_Info mm7 on mm7.Id = m7.MateModel_ID
+			left join MaterModel_Info mm8 on mm8.Id = m8.MateModel_ID
+			left join MaterModel_Info mm9 on mm9.Id = m9.MateModel_ID
+			left join MaterModel_Info mm10 on mm10.Id = m10.MateModel_ID
+		    where ProdPlan_No = #{prodPlan_No}
+			AND cpd.Org_ID = #{orgId}
+	</select>
+	<!-- 原材料消耗 -->
+	<select id="getVMaterialConsumption" parameterType="java.util.Map" resultType="PlatformCementMaterialsConsumptionEntity">
+		select
+		  V.Id
+		  , V.Material
+		  , V.MaterialConsumption 
+		from
+		  V_MaterialConsumption V 
+		where
+		  V.Id = #{id} 
+	</select>
+	<select id="getIndexLq"  parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			  SUM(apd.Total_Weight) as ZongChanLiang,
+			  SUM(apd.Asphalt_Meter)as LQYongLiang,
+			  COUNT(*)as TotalCount,
+			  SUM(case when apd.No1_MeterValue > 20 and oi.Id =5 then 20 else 0 end) as Subtractive1,
+			  SUM(case when apd.No2_MeterValue > 20 and oi.Id =5 then 20 else 0 end) as Subtractive2,
+			  SUM(case when apd.No3_MeterValue > 20 and oi.Id =5 then 20 else 0 end) as Subtractive3,
+			  SUM(case when apd.No4_MeterValue > 20 and oi.Id =5 then 20 else 0 end) as Subtractive4,
+			  SUM(case when apd.No5_MeterValue > 20 and oi.Id =5 then 20 else 0 end) as Subtractive5,
+			  SUM(case when apd.No6_MeterValue > 20 and oi.Id =5 then 20 else 0 end) as Subtractive6 
+			from
+			  Organization_Info as oi 
+			  left join Asphalt_ProductionData as apd 
+			    on oi.Id = apd.Org_ID 
+			    and apd.Create_Date &gt; Convert(varchar(100),getdate(),23)+' 00:00:00'
+			    and apd.Create_Date &lt; getdate()
+			    where 1 = 1
+				<if test="orgId != null">
+					and Org_ID in
+					<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			    </if>	 
+	</select>
+	<select id="getIndexSn"  parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			  SUM(cpd.Total_Weight) as ZongChanLiang,
+			  SUM(cpd.Weight_Cement1)+SUM(cpd.Weight_Cement2)+SUM(cpd.Weight_Cement3)+SUM(cpd.Weight_Cement4)as SNYongLiang,
+			  COUNT(*) as TotalCount
+	     from
+			  Organization_Info as oi 
+			  left join Cement_ProductionData as cpd 
+			    on oi.Id = cpd.Org_ID 
+			    and cpd.Create_Date &gt; Convert(varchar(100),getdate(),23)+' 00:00:00'
+			    and cpd.Create_Date &lt; getdate()
+			    where 1 = 1
+				<if test="orgId != null">
+					and Org_ID in
+					<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			    </if>	 
+	</select>
+	<select id="getIndexSw"  parameterType="java.util.Map" resultType="java.util.Map">
+		select
+			  SUM(cpd.Total_Weight) as ZongChanLiang,
+			  SUM(cpd.Weight_Cement1)+SUM(cpd.Weight_Cement2)+SUM(cpd.Weight_Cement3)+SUM(cpd.Weight_Cement4)as SWYongLiang,
+			  SUM(cpd.Total_Weight) as TotalCount
+			from
+			  Organization_Info as oi 
+			  left join Cement_ProductionData as cpd 
+			    on oi.Id = cpd.Org_ID 
+			    and  cpd.Create_Date &gt; Convert(varchar(100),getdate(),23)+' 00:00:00'
+			    and  cpd.Create_Date &lt; getdate()
+				<if test="orgId != null">
+					and Org_ID in
+					<foreach collection="orgId" item="item" index="index" open="(" separator="," close=")">
+						#{item}
+					</foreach>
+			    </if>	 
+	</select>
+</mapper>

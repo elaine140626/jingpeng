@@ -1,0 +1,182 @@
+<div class="section-heading">
+	<h2>拌合站生产统计</h2>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-12 liqing" style="display: none">
+		<div class="agileits_updates_grid_left_grid">
+			<div class="col-xs-3 agileits_updates_grid_left1">
+				<h4>
+					沥青<span id="lqdate"><i id="lqdatei"></i></span>
+				</h4>
+			</div>
+			<div class="col-xs-9 agileits_updates_grid_left1">
+				<h5>
+					<a href="single.html">沥青拌合站</a>
+				</h5>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0"
+					class="lqtet">
+					<tbody>
+						<tr>
+							<td>生产总盘数：</td>
+							<td><span id="lqtotal"></span></td>
+							<td>混合料总量：</td>
+							<td><span id="lqz"></span>&nbsp;kg</td>
+						</tr>
+						<tr>
+							<td>沥青用量：</td>
+							<td><span id="lqy"></span>&nbsp;kg</td>
+							<td>&nbsp;</td>
+							<td>&nbsp;</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</a>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-12 shuini" style="display: none">
+	<div class="agileits_updates_grid_left_grid">
+		<div class="col-xs-3 agileits_updates_grid_left1">
+			<h4>
+				水泥<span id="sndate"><i id="sndatei"></i></span>
+			</h4>
+		</div>
+		<div class="col-xs-9 agileits_updates_grid_left1">
+			<h5>
+				<a href="single.html">水泥拌合站</a>
+			</h5>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="lqtet">
+				<tbody>
+					<tr>
+						<td>生产总盘数：</td>
+						<td><span id="sntotal"></span></td>
+						<td>混合料总量：</td>
+						<td><span id="snz"></span>&nbsp;kg</td>
+					</tr>
+					<tr>
+						<td>水泥用量：</td>
+						<td><span id="sny"></span>&nbsp;kg</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>
+<div class="col-lg-4 col-md-4 col-sm-12 shuiwen" style="display: none">
+	<div class="agileits_updates_grid_left_grid">
+		<div class="col-xs-3 agileits_updates_grid_left1">
+			<h4>
+				水稳<span id="swdate"><i id="swdatei"></i></span>
+			</h4>
+		</div>
+		<div class="col-xs-9 agileits_updates_grid_left1">
+			<h5>
+				<a href="single.html">水稳拌合站</a>
+			</h5>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0"
+				class="lqtet">
+				<tbody>
+					<tr>
+						<td>生产总盘数：</td>
+						<td><span id="swtotal"></span></td>
+						<td>混合料总量：</td>
+						<td><span id="swz"></span>&nbsp;kg</td>
+					</tr>
+					<tr>
+						<td>水稳用量：</td>
+						<td><span id="swy"></span>&nbsp;kg</td>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</div>
+<script>
+function getUser() {
+	var userInfo = '';
+	$.ajax({
+		type : "post",
+		url : "../UserInfo/getPtUserInfo.action",
+		data : {},
+		async : false,
+		dataType : "json",
+		success : function(data) {
+			userInfo = data;
+			// 获取当前登录人做显示
+		}
+	});
+	return userInfo;
+}
+var user = getUser();
+arr=user.userOrgDetailed.split(',');
+	$.ajax({
+		type : "POST",
+		url : "../js/set.json",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			var mix = data.projectItem[1].project;
+			$.each(mix, function(i, n) {
+					console.log(n);
+				if (n.item_name == '沥青拌合站') {
+					$('.liqing').show();
+					$('.liqing').click(function(){
+						if ($.inArray("5", arr)>-1||$.inArray("7", arr)>-1||$.inArray("9", arr)>-1) {
+							window.location.href = n.page_url;
+						} else {
+							swal("操作失败", "你没有该权限", "info");
+							return false;
+						}
+					});
+				}
+				if (n.item_name == '水泥混凝土') {
+					//console.log(n);
+					$('.shuini').show();
+					$('.shuini').click(function(){
+						if ($.inArray("11", arr)>-1) {
+						window.location.href = n.page_url;
+						} else {
+							swal("操作失败", "你没有该权限", "info");
+							return false;
+						}
+					});
+				}
+				if (n.item_name == '水稳拌合站') {
+					//console.log(n);
+					$('.shuiwen').show();
+					$('.shuiwen').click(function(){
+						if ($.inArray("6", arr)>-1||$.inArray("8", arr)>-1||$.inArray("10", arr)>-1) {
+							window.location.href = n.page_url;
+						} else {
+							swal("操作失败", "你没有该权限", "info");
+							return false;
+						}
+					});
+				}
+
+			})
+		}
+	})
+</script>
+
+<script type="text/javascript">
+nowDate = new Date();
+year = nowDate.getFullYear();
+month = nowDate.getMonth() + 1 < 10 ? "0" + (nowDate.getMonth() + 1)
+          : nowDate.getMonth() + 1;
+day= nowDate.getDate() < 10 ? "0" + nowDate.getDate() : nowDate
+          .getDate();
+this.datetime = month + "." + day; 
+$("#lqdate").append(this.datetime);
+$("#sndate").append(this.datetime);
+$("#swdate").append(this.datetime);
+$("#lqdatei").append(year);
+$("#sndatei").append(year);
+$("#swdatei").append(year);
+</script>

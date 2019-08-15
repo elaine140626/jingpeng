@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.login.LoginDao">
+    <!-- 登录验证 -->
+	<select id="login" parameterType="java.util.Map" resultType="Userinfo">
+		SELECT
+		  ut.Id                as id               -- 用户id
+		  , ut.UserName        as username         -- 用户名
+		  , ut.PassWord        as password         -- 密码
+		  , ut.RoleCode        as rolecode         -- 角色Code 0:管理员 1:销售人员 2:调度人员 3:检查员 4:财务 5:总经理
+		  , ut.Name            as name             -- 姓名 
+		  , ut.Age             as age              -- 年龄
+		  , ut.Sex             as sex              -- 性别
+		  , ut.Birthday        as birthday         -- 出生年月
+		  , ut.Address         as address          -- 地址
+		  , ut.Telephone       as telephone        -- 电话
+		  , ut.OtherNumbers    as othernumbers     -- 其他联系方式
+		FROM
+		  userinfo ut                              -- 用户表
+		WHERE
+		  ut.IsDel = 0
+		  <if test="username != null and username != ''">
+		    and BINARY ut.UserName  = #{username}
+		  </if>
+		  <if test="password != null and password != ''">
+		    and BINARY ut.PassWord  = #{password}
+		  </if>
+		order by ut.Id desc
+	</select>
+	<!-- 获取用户信息 -->
+	<select id="getUserInfo" parameterType="java.util.Map" resultType="UserEntity">
+		SELECT
+		  ut.Id                as id               -- 用户id
+		  , ut.UserName        as username         -- 用户名
+		  , ut.PassWord        as password         -- 密码
+		  , ut.RoleCode        as rolecode         -- 角色Code 0:管理员 1:销售人员 2:调度人员 3:检查员 4:财务 5:总经理
+		  , ut.Name            as name             -- 姓名 
+		  , ut.Age             as age              -- 年龄
+		  , ut.Sex             as sex              -- 性别
+		  , DATE_FORMAT(ut.Birthday, '%Y-%m-%d') as birthday         -- 出生年月
+		  , ut.Address         as address          -- 地址
+		  , ut.Telephone       as telephone        -- 电话
+		  , ut.OtherNumbers    as othernumbers     -- 其他联系方式
+		FROM
+		  userinfo ut                              -- 用户表
+		WHERE
+		  ut.IsDel = 0 
+		  <if test="id != null and id != 0">
+		    and ut.Id = #{id}
+		  </if>
+		  <if test="username != null and username != ''">
+		    and ut.UserName = #{username}
+		  </if>
+		 order by ut.CreaterDate desc
+	</select>
+	<!-- 用户注册 -->
+	<insert id="insertUserInfo" parameterType="Userinfo">
+		INSERT INTO userinfo( 
+		    UserName
+		  , PassWord
+		  , RoleCode
+		  , Name
+		  , Age
+		  , Sex
+		  , Birthday
+		  , Address
+		  , Telephone
+		  , OtherNumbers
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		    #{username}
+		  , #{password}
+		  , #{rolecode}
+		  , #{name}
+		  , #{age}
+		  , #{sex}
+		  , #{birthday}
+		  , #{address}
+		  , #{telephone}
+		  , #{othernumbers}
+		  , 0
+		  , #{username}
+		  , now()
+		)
+	</insert>
+	<!-- 修改用户信息 -->
+	<update id="updateUserInfo" parameterType="Userinfo">
+		UPDATE userinfo 
+		SET
+		    PassWord = #{password}
+		  , RoleCode = #{rolecode}
+		  , Name = #{name}
+		  , Age = #{age}
+		  , Sex = #{sex}
+		  , Birthday = #{birthday}
+		  , Address = #{address}
+		  , Telephone = #{telephone}
+		  , OtherNumbers = #{othernumbers}
+		  , Reviser = #{username}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{id}
+	</update>
+	<!-- 删除用户信息 -->
+	<update id="deleteUserInfo" parameterType="int">
+		UPDATE userinfo 
+		SET
+		   IsDel = 1 
+		WHERE
+		  Id = #{id} 
+	</update>
+	<!-- 获取用户的权限名称  -->
+	<select id="getRoleName" parameterType="java.util.Map" resultType="String">
+	     select
+	        group_concat(ji.JurisdictionName) 
+	     from jurisdictioninfo ji 
+	     where 1=1
+	     <if test="rolecodeList != null and rolecodeList != ''">
+		   and ji.RoleCode in
+		   <foreach collection="rolecodeList" index="index" item="item" open="(" separator="," close=")">
+           		 #{item}
+           </foreach>   
+		 </if>
+	</select>
+	<!-- 添加用户session登陆信息-->
+	<insert id="addUserSession" parameterType="java.util.Map">
+		INSERT 
+		INTO IsUserSession (
+			UserId
+			, CreateDate) 
+		VALUES (
+			#{user_Id}
+			, now())
+	</insert>
+	<!-- 查询session信息判断是否登陆 -->
+	<select id="getUserSession" parameterType="java.util.Map" resultType="IsSameUser">
+    	select id from IsUserSession where UserId = #{user_Id}
+	</select>
+	<!-- 删除用户session信息 -->
+	<delete id="delUserSession" parameterType="java.util.Map">
+	    delete from IsUserSession where UserId = #{user_Id}
+	</delete>
+</mapper>

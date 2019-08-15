@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="andro">
+
+	<select id="getAsphalt_warning" resultType="androDTO"
+		parameterType="java.util.HashMap">
+		<!-- select o.Org_Name,o.Id,a.* from Organization_Info o left join (select 
+			v.Org_ID,count(*) as TotalCount ,(select COUNT(*) from V_Asphalt_ProductionData 
+			d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.Analysis_Result != 
+			'1' and d.Analysis_Result is not null) as Unqualified ,(select COUNT(*) from 
+			V_Asphalt_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 
+			and d.Analysis_Result like '%2%') as GLUnqualified ,(select COUNT(*) from 
+			V_Asphalt_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 
+			and d.Analysis_Result like '%3%' ) as FLUnqualified ,(select COUNT(*) from 
+			V_Asphalt_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 
+			and d.Analysis_Result like '%4%' ) as LQUnqualified ,(select COUNT(*) from 
+			V_Asphalt_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 
+			and d.Analysis_Result like '%5%' ) as WCJUnqualified ,(select COUNT(*) from 
+			V_Asphalt_ProductionData d where d.Org_ID = v.Org_ID and d.Valid_Flag = 1 
+			and d.Analysis_Result like '%10%' ) as JPUnqualified from V_Asphalt_ProductionData 
+			v where 1=1 <foreach collection="org_Ids" index="index" item="item" open=" 
+			AND v.Org_ID in (" separator="," close=")"> #{item} </foreach> and v.Valid_Flag 
+			= 1 group by v.Org_ID) as a on o.Id = a.Org_ID where o.Org_Type = 2 and o.MixStation_Type 
+			= '0' <foreach collection="org_Ids" index="index" item="item" open=" AND 
+			o.Id in (" separator="," close=")"> #{item} </foreach> -->
+
+		select o.Org_Name,o.Id,a.*
+		from Organization_Info o left join
+		(select
+		v.Org_ID,v.Equipment_Name,count(*) as TotalCount
+		,(select COUNT(*)
+		from
+		V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Equ_ID =
+		v.Equ_ID and d.Valid_Flag =
+		1 and d.Analysis_Result != '1'
+		and
+		d.Analysis_Result is not null
+
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		) as Unqualified
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where
+		d.Org_ID = v.Org_ID and d.Equ_ID = v.Equ_ID and d.Valid_Flag = 1 and
+		d.Analysis_Result like
+		'%2%'
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		) as GLUnqualified
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Equ_ID = v.Equ_ID and d.Valid_Flag = 1
+		and d.Analysis_Result
+		like
+		'%3%'
+
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		) as FLUnqualified
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Equ_ID = v.Equ_ID and d.Valid_Flag = 1
+		and d.Analysis_Result
+		like
+		'%4%'
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		) as LQUnqualified
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Equ_ID = v.Equ_ID and d.Valid_Flag = 1
+		and d.Analysis_Result
+		like
+		'%5%'
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		) as WCJUnqualified
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Equ_ID = v.Equ_ID and d.Valid_Flag = 1
+		and d.Analysis_Result
+		like
+		'%10%'
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		) as JPUnqualified
+		from V_Asphalt_ProductionData v
+		where 1=1
+
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND v.Org_ID in (" separator="," close=")">
+			#{item}
+		</foreach>
+		and v.Valid_Flag = 1
+		<if test="start_Time != null and start_Time != ''">
+			AND d.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND d.collect_Time &lt;= #{end_Time}
+		</if>
+		group by v.Org_ID,v.Equ_ID,v.Equipment_Name ) as a on o.Id = a.Org_ID
+		where o.Org_Type = 2 and
+		o.MixStation_Type = '0'
+
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND o.Id in (" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getAsphalt_production_statisticslist" resultType="androDTO"
+		parameterType="java.util.HashMap">
+		select o.Org_Name,o.Id,a.*
+		from Organization_Info o left join
+		(select
+		v.Org_ID,SUM(v.Total_Weight) as
+		ZongChanLiang,
+		SUM(v.Asphalt_Meter) as
+		LQYongLiang,
+		COUNT(*) as TotalCount,
+		(select COUNT(*)
+		from
+		V_Asphalt_ProductionData a
+		where 1=1
+		<if test="start_Time != null and start_Time != ''">
+			AND a.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND a.collect_Time &lt;= #{end_Time}
+		</if>
+		and a.Valid_Flag =1 and a.Analysis_Result = '1' and a.Org_ID =
+		v.Org_ID ) as HeGePanShu,
+		(select COUNT(*)
+		from V_Asphalt_ProductionData
+		a
+		where 1=1
+
+		<if test="start_Time != null and start_Time != ''">
+			AND a.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND a.collect_Time &lt;= #{end_Time}
+		</if>
+		and a.Valid_Flag =1 and a.Analysis_Result != '1' and a.Analysis_Result
+		is not null
+		and a.Org_ID = v.Org_ID) as BuHeGePanShu
+		from
+		V_Asphalt_ProductionData v
+		where 1=1
+		<if test="start_Time != null and start_Time != ''">
+			AND v.collect_Time &gt;= #{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND v.collect_Time &lt;= #{end_Time}
+		</if>
+
+		and v.Org_ID in(3)
+		group by v.Org_ID)as a on o.Id = a.Org_ID
+		where
+		o.Org_Type = 2 and o.MixStation_Type = '0'
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND o.Id in (" separator="," close=")">
+			#{item}
+		</foreach>
+
+
+
+	</select>
+
+	<select id="getAsphalt_production_statisticspage" resultType="androDTO"
+		parameterType="androDTO">
+		select CONVERT(varchar(100), v.Collect_Time, 23) Collect_Time
+		,v.Org_ID,v.Org_Name,v.str_productInfo, CONVERT(varchar(100),
+		v.Collect_Time, 23) as Day
+		,SUM(v.Total_Weight) as
+		Total_Weight,SUM(v.Asphalt_Meter) as Total_Asphalt
+		,COUNT(*) as
+		TotalCount
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where
+		d.Org_ID = v.Org_ID and d.Valid_Flag = 1 and d.Analysis_Result = '1'
+		and CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100),
+		v.Collect_Time, 23) ) as HeGePanShu
+		,(select COUNT(*)
+		from
+		V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Valid_Flag =
+		1 and d.Analysis_Result != '1'
+		and d.Analysis_Result is not null
+		and
+		CONVERT(varchar(100), d.Collect_Time, 23) = CONVERT(varchar(100),
+		v.Collect_Time, 23) ) as Unqualified
+		from V_Asphalt_ProductionData v
+		WHERE v.Org_ID =3
+		<if test="start_Time != null and start_Time != ''">
+			AND CONVERT(varchar(100), v.Collect_Time, 23) &gt;=
+			#{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND CONVERT(varchar(100), v.Collect_Time, 23) &lt;=
+			#{end_Time}
+		</if>
+
+		group by v.Org_ID,v.Org_Name,CONVERT(varchar(100), v.Collect_Time,
+		23),v.Product_ID,v.str_productInfo
+	</select>
+	<select id="getAsphalt_production_statisticsechar" resultType="androDTO"
+		parameterType="java.util.HashMap">
+
+		select v.Org_ID,v.Org_Name, CONVERT(varchar(100), v.Collect_Time, 23)
+		as Day
+		,SUM(v.Total_Weight) as Total_Weight,SUM(v.Asphalt_Meter) as
+		Total_Asphalt
+		,COUNT(*) as TotalCount
+		,(select COUNT(*)
+		from
+		V_Asphalt_ProductionData d
+		where d.Org_ID = v.Org_ID and d.Valid_Flag =
+		1 and d.Analysis_Result = '1'
+		and CONVERT(varchar(100), d.Collect_Time,
+		23) = CONVERT(varchar(100),
+		v.Collect_Time, 23) ) as HeGePanShu
+		,(select COUNT(*)
+		from V_Asphalt_ProductionData d
+		where d.Org_ID =
+		v.Org_ID and d.Valid_Flag = 1 and d.Analysis_Result != '1'
+		and
+		d.Analysis_Result is not null
+		and CONVERT(varchar(100), d.Collect_Time,
+		23) = CONVERT(varchar(100),
+		v.Collect_Time, 23) ) as Unqualified
+		from
+		V_Asphalt_ProductionData v
+		WHERE 1=1
+		<if test="start_Time != null and start_Time != ''">
+			AND CONVERT(varchar(100), v.Collect_Time, 23) &gt;=
+			#{start_Time}
+		</if>
+		<if test="end_Time != null and end_Time != ''">
+			AND CONVERT(varchar(100), v.Collect_Time, 23) &lt;=
+			#{end_Time}
+		</if>
+
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND v.Org_ID in (" separator="," close=")">
+			#{item}
+		</foreach>
+		group by v.Org_ID,v.Org_Name,CONVERT(varchar(100), v.Collect_Time, 23)
+
+
+
+	</select>
+
+
+	<select id="getmaterial_consumption" resultType="androDTO"
+		parameterType="java.util.HashMap">
+
+		select o.Org_Name,o.Id,a.*
+		from Organization_Info o left
+		join
+		(select
+		v.Org_ID
+		,v.Material,SUM(v.MaterialConsumption) as
+		MaterialConsumption
+		from V_MaterialConsumption v left join
+		Equipment_Info e on e.Id =
+		v.Equ_ID left join
+		Organization_Info o on
+		o.Id = v.Org_ID
+		where v.Org_ID
+		= o.Id
+		group by v.Org_ID,v.Material ) a
+		on o.Id = a.Org_ID
+		where
+		o.Org_Type = 2 and o.MixStation_Type = '0'
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND o.Id in (" separator="," close=")">
+			#{item}
+		</foreach>
+
+
+	</select>
+
+	<select id="getmaterial_consumption1" resultType="androDTO"
+		parameterType="java.util.HashMap">
+
+		select o.Org_Name Org_Name,v.Org_ID,CONVERT(varchar(100),
+		v.Collect_Time,
+		23) as
+		date,v.Material,SUM(v.MaterialConsumption) as
+		MaterialConsumption
+		from V_MaterialConsumption v
+		LEFT JOIN
+		Organization_Info o on o.Id = v.Org_ID
+		where 1=1
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND v.Org_ID  in (" separator="," close=")">
+			#{item}
+		</foreach>
+
+		group by v.Material,v.Org_ID,CONVERT(varchar(100),
+		v.Collect_Time,
+		23),o.Org_Name
+		order by v.Material,CONVERT(varchar(100),
+		v.Collect_Time, 23)
+
+
+	</select>
+
+	<select id="test" resultType="androDTO" parameterType="java.util.HashMap"
+		statementType="CALLABLE">
+		exec proc_Alert '2018-03-09 00:00:00','2018-05-07
+		00:00:00','3,17,22',0,1;
+	</select>
+
+	<select id="getAsphalt_warningdetails" resultType="androDTO"
+		parameterType="java.util.HashMap" statementType="CALLABLE">
+
+
+
+
+		<!-- SELECT o.Org_Name, o.Id, a.* FROM Organization_Info o LEFT JOIN ( 
+			SELECT v.Org_ID, v.Equipment_Name, COUNT (*) AS TotalCount, ( SELECT COUNT 
+			(*) FROM V_Asphalt_ProductionData d WHERE d.Org_ID = v.Org_ID AND d.Equ_ID 
+			= v.Equ_ID AND d.Valid_Flag = 1 AND d.Analysis_Result != ' 1 ' AND d.Analysis_Result 
+			IS NOT NULL <if test="start_Time != null and start_Time != ''"> AND d.collect_Time 
+			&gt;= #{start_Time} </if> <if test="end_Time != null and end_Time != ''"> 
+			AND d.collect_Time &lt;= #{end_Time} </if> ) AS Unqualified, ( SELECT COUNT 
+			(*) FROM V_Asphalt_ProductionData d WHERE d.Org_ID = v.Org_ID AND d.Equ_ID 
+			= v.Equ_ID AND d.Valid_Flag = 1 AND d.Analysis_Result LIKE '%2%' <IF test="start_Time 
+			!= null and start_Time != ''"> AND d.collect_Time &gt;= #{start_Time} </IF> 
+			<IF test="end_Time != null and end_Time != ''"> AND d.collect_Time &lt;= 
+			#{end_Time} </IF> ) AS GLUnqualified, ( SELECT COUNT (*) FROM V_Asphalt_ProductionData 
+			d WHERE d.Org_ID = v.Org_ID AND d.Equ_ID = v.Equ_ID AND d.Valid_Flag = 1 
+			AND d.Analysis_Result LIKE '%3%' <IF test="start_Time != null and start_Time 
+			!= ''"> AND d.collect_Time &gt;= #{start_Time} </IF> <IF test="end_Time != 
+			null and end_Time != ''"> AND d.collect_Time &lt;= #{end_Time} </IF> ) AS 
+			FLUnqualified, ( SELECT COUNT (*) FROM V_Asphalt_ProductionData d WHERE d.Org_ID 
+			= v.Org_ID AND d.Equ_ID = v.Equ_ID AND d.Valid_Flag = 1 AND d.Analysis_Result 
+			LIKE '%4%' <if test="start_Time != null and start_Time != ''"> AND d.collect_Time 
+			&gt;= #{start_Time} </if> <if test="end_Time != null and end_Time != ''"> 
+			AND d.collect_Time &lt;= #{end_Time} </if> ) AS LQUnqualified, ( SELECT COUNT 
+			(*) FROM V_Asphalt_ProductionData d WHERE d.Org_ID = v.Org_ID AND d.Equ_ID 
+			= v.Equ_ID AND d.Valid_Flag = 1 AND d.Analysis_Result LIKE '%5%' <if test="start_Time 
+			!= null and start_Time != ''"> AND d.collect_Time &gt;= #{start_Time} </if> 
+			<if test="end_Time != null and end_Time != ''"> AND d.collect_Time &lt;= 
+			#{end_Time} </if> ) AS WCJUnqualified, ( SELECT COUNT (*) FROM V_Asphalt_ProductionData 
+			d WHERE d.Org_ID = v.Org_ID AND d.Equ_ID = v.Equ_ID AND d.Valid_Flag = 1 
+			AND d.Analysis_Result LIKE '% 10 % ' <if test="start_Time != null and start_Time 
+			!= ''"> AND d.collect_Time &gt;= #{start_Time} </if> <if test="end_Time != 
+			null and end_Time != ''"> AND d.collect_Time &lt;= #{end_Time} </if> ) AS 
+			JPUnqualified FROM V_Asphalt_ProductionData v WHERE 1 = 1 AND v.Org_ID IN 
+			(3, 7, 12) AND v.Valid_Flag = 1 <if test="start_Time != null and start_Time 
+			!= ''"> AND d.collect_Time &gt;= #{start_Time} </if> <if test="end_Time != 
+			null and end_Time != ''"> AND d.collect_Time &lt;= #{end_Time} </if> GROUP 
+			BY v.Org_ID, v.Equ_ID, v.Equipment_Name ) AS a ON o.Id = a.Org_ID WHERE o.Org_Type 
+			= 2 AND o.MixStation_Type = 0 AND o.Id IN (3, 7, 12) -->
+	</select>
+
+	<select id="getDeviation_Asphalt" resultType="androDTO"
+		parameterType="java.util.HashMap">
+		SELECT o.Org_Name,da.Id,da.Dev_Aggregate ,da.Dev_Powder
+		,da.Dev_Admixture,da.Dev_Asphalt,da.MixTemperatureUp,da.MixTemperatureDown
+		from Deviation_Asphalt da
+		LEFT JOIN Organization_Info o on o.Id =
+		da.Org_ID
+
+		WHERE da.Valid_Flag =1
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND da.Org_id in (" separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+	<insert id="addDeviation_Asphalt" parameterType="androDTO">
+
+
+		INSERT INTO
+		Deviation_Asphalt
+		(Org_ID,Dev_Aggregate,Dev_Powder,Dev_Admixture,Dev_Asphalt,Operator,Create_Date,Valid_Flag,Upload,MixTemperatureUp,MixTemperatureDown)
+		VALUES
+		(#{org_id},#{Dev_Aggregate},#{Dev_Powder},#{Dev_Admixture},#{Dev_Asphalt},#{cjr},#{Create_Date},1,1,#{MixTemperatureUp},#{MixTemperatureDown})
+
+	</insert>
+
+
+	<select id="getDeviation_Cement" resultType="androDTO"
+		parameterType="java.util.Map">
+		SELECT
+		o.Org_Name Org_Name,
+		c.Org_ID Org_ID,
+		c.Aggregate_Deviation Aggregate_Deviation,
+		c.Cement_Deviation
+		Cement_Deviation,
+		c.Water_Deviation Water_Deviation,
+		c.Admixture_Deviation Admixture_Deviation,
+		c.Mixing_Time Mixing_Time,
+		c.Effective_Time Effective_Time,
+		c.Operator Operator,
+		c.Create_Date
+		Create_Date
+		FROM
+		Cement_Deviation c
+		LEFT JOIN Organization_Info o ON o.Id
+		= c.Org_ID
+		WHERE
+		c.Valid_Flag = 1
+		
+		<foreach collection="org_Ids" index="index" item="item"
+			open=" AND c.Org_id in (" separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+	<insert id="addDeviation_Cement" parameterType="androDTO">
+
+
+		INSERT INTO
+		Cement_Deviation
+		(Org_ID,Aggregate_Deviation,Cement_Deviation,Water_Deviation,Admixture_Deviation,Operator,Create_Date,Valid_Flag,Upload)
+		VALUES
+		(#{org_id},#{Aggregate_Deviation},#{Cement_Deviation},#{Water_Deviation},#{Admixture_Deviation},#{cjr},#{Create_Date},1,1)
+
+	</insert>
+
+	<select id="getOrgName" parameterType="java.util.List"
+		resultType="java.util.Map">
+		SELECT
+		o.Org_Name org_Name
+		FROM
+		Organization_Info o
+		WHERE 1=1
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="getOrgId" parameterType="java.util.List" resultType="java.util.Map">
+		<!-- select o.Id,o.Org_Name,o.Parent_Id,(select Org_Name from Organization_Info 
+			where Id = o.Parent_Id) as Parent_Name from Organization_Info o where o.Org_Type 
+			= 2 and o.MixStation_Type = '0' and o.id in (6,3) <foreach collection="list" 
+			index="index" item="item" open=" AND o.id IN (" separator="," close=")"> 
+			#{item} </foreach> -->
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '0'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		UNION ALL
+		SELECT
+		a.Id,
+		a.Org_Name,
+		a.Parent_Id,
+		a.org_Type
+		FROM
+		Organization_Info a,
+		(
+		SELECT
+		o.Parent_Id
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '0'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		) b
+		WHERE
+		a.Id = b.Parent_Id
+	</select>
+
+	<select id="getSnOrgId" parameterType="java.util.List"
+		resultType="java.util.Map">
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '1'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		UNION ALL
+		SELECT
+		a.Id,
+		a.Org_Name,
+		a.Parent_Id,
+		a.org_Type
+		FROM
+		Organization_Info a,
+		(
+		SELECT
+		o.Parent_Id
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '1'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		) b
+		WHERE
+		a.Id = b.Parent_Id
+	</select>
+
+	<select id="getSwOrgId" parameterType="java.util.List"
+		resultType="java.util.Map">
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '2'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		 UNION ALL
+		SELECT
+		a.Id,
+		a.Org_Name,
+		a.Parent_Id,
+		a.org_Type
+		FROM
+		Organization_Info a,
+		(
+		SELECT
+		o.Parent_Id
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '2'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		) b
+		WHERE
+		a.Id = b.Parent_Id 
+	</select>
+	
+	
+	<select id="getsnorgid" parameterType="java.util.List"
+		resultType="androDTO">
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '1'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	
+		 
+	</select>
+	
+	
+	<select id="getsworgid" parameterType="java.util.List"
+		resultType="androDTO">
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '2'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		 
+	</select>
+	
+	<select id="getlqorgid" parameterType="java.util.List"
+		resultType="androDTO">
+		SELECT
+		o.Id,
+		o.Org_Name,
+		o.Parent_Id,
+		o.org_Type
+		FROM
+		Organization_Info o
+		WHERE
+		o.Org_Type = 2
+		AND o.MixStation_Type = '0'
+		<foreach collection="list" index="index" item="item" open=" AND o.id IN ("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		 
+	</select>
+
+
+	
+
+
+</mapper>

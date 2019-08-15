@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.systemInfo.dao.EngineeringManagementDao">
+	<!-- 项目List取得 -->
+	<select id="getEngineeringManagementList" parameterType="java.util.Map" resultType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		SELECT
+		  ent.Id AS id
+		  , ent.ProjectNumber
+		  , ent.ProjectName
+		  , ent.ContractSection
+		  , ent.ContractingUnit
+		  , ent.Mileage
+		  , cou.Id AS CityId
+		  , cou.County
+		  , ci.Id AS CityPid
+		  , ci.CityName 
+		FROM
+		  EntryName AS ent 
+		  LEFT OUTER JOIN CountyInfo AS cou 
+		    ON cou.Id = ent.CityId 
+		    AND cou.IsDel = 0 
+		  LEFT OUTER JOIN CityInfo AS ci 
+		    ON ci.Id = cou.CityId 
+		    AND ci.IsDel = 0 
+		WHERE
+		  ent.IsDel = 0
+		 <if test="id != null and id != ''">
+		    and ent.Id = #{id}                            -- 根据id查询
+		 </if>
+		 <if test="CityId != null and CityId != ''">
+		    and ent.CityId = #{CityId}                    -- 根据上级id查询
+		 </if>
+	     <if test="projectName != null and projectName != ''">
+	       and ent.ProjectName like concat('%',#{projectName},'%') -- 项目名称
+	     </if>
+	     <if test="county != null and county != ''">
+	       and cou.County like concat('%',#{county},'%')   -- 县
+	     </if> 
+	     <if test="cityName != null and cityName != ''">
+	       and ci.CityName like concat('%',#{cityName},'%') -- 市
+	     </if>
+	</select>
+	
+	<!-- 查询市 -->
+	<select id="getCityInfoList" parameterType="java.util.Map" resultType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		SELECT
+		  Id
+		  , CityName
+		  , Creater
+		  , CreaterDate
+		  , Reviser
+		  , ReviserDate 
+		FROM
+		  CityInfo 
+		WHERE 1=1
+		<if test="id != null and id != ''">
+	    and Id = #{id}                            -- 根据id查询
+	 	</if>
+	 	<if test="cityName != null and cityName != ''">
+	       and CityName like concat('%',#{cityName},'%') -- 市
+	    </if>
+	</select>
+	
+	<!-- 查询县 -->
+	<select id="getCountyInfo" parameterType="java.util.Map" resultType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		SELECT
+			co.Id
+		  , co.CityId
+		  ,	ci.CityName
+		  , co.County
+		  , co.Creater
+		  , co.CreaterDate
+		  , co.Reviser
+		  , co.ReviserDate
+		FROM
+		  CountyInfo co
+		LEFT OUTER JOIN CityInfo ci
+		on  co.CityId = ci.Id
+		WHERE 1=1
+		<if test="id != null and id != ''">
+	    and co.Id = #{id}                            -- 根据id查询
+	 	</if>
+	 	<if test="CityId != null and CityId != ''">
+	    and ci.Id = #{CityId}                            -- 根据市id查询
+	 	</if>
+	 	<if test="county != null and county != ''">
+	       and County like concat('%',#{county},'%')   -- 县
+	     </if> 
+	</select>
+	
+	<!-- 新增市 -->
+	<insert id="insertCityInfo" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		INSERT 
+		INTO CityInfo ( 
+		  Id
+		  , CityName
+		  , IsDel
+		  , Reviser
+		  , ReviserDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  , #{CityName}
+		  , 0
+		  , #{Reviser}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 新增县 -->
+	<insert id="insertCountyInfo" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		INSERT 
+		INTO CountyInfo ( 
+		  Id
+		  , CityId
+		  , County
+		  , IsDel
+		  , Reviser
+		  , ReviserDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  , #{CityId}
+		  , #{County}
+		  , 0
+		  , #{Reviser}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 新增项目-->
+	<insert id="insertEntryName" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		INSERT 
+		INTO EntryName ( 
+			Id
+		  , CityId
+		  , ProjectNumber
+		  , ProjectName
+		  , ContractSection
+		  , ContractingUnit
+		  , Mileage
+		  , IsDel
+		  , Reviser
+		  , ReviserDate
+		) 
+		VALUES ( 
+		  REPLACE(UUID(),'-','')
+		  , #{CityId}
+		  , #{ProjectNumber}
+		  , #{ProjectName}
+		  , #{ContractSection}
+		  , #{ContractingUnit}
+		  , #{Mileage}
+		  , 0
+		  , #{Reviser}
+		  , NOW()
+		) 
+	</insert>
+	
+	<!-- 更新市 -->
+	<update id="updateCityInfo" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		UPDATE CityInfo 
+		SET
+		    CityName = #{CityName}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id} 
+	</update>
+	
+	<!-- 更新县 -->
+	<update id="updateCountyInfo" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		UPDATE CountyInfo 
+		SET
+			CityId = #{CityId}
+		  , CityName = #{CityName}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id} 
+	</update>
+	
+	<!-- 更新项目 -->
+	<update id="updateEntryName" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		UPDATE EntryName 
+		SET
+			CityId = #{CityId}
+		  , ProjectNumber = #{ProjectNumber}
+		  , ProjectName = #{ProjectName}
+		  , ContractSection = #{ContractSection}
+		  , ContractingUnit = #{ContractingUnit}
+		  , Mileage = #{Mileage}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id} 
+	</update>
+	
+	<!-- 删除项市-->
+	<update id="deleteCityInfo" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		UPDATE CityInfo
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<!-- 删除县-->
+	<update id="deleteCountyInfo" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		UPDATE CountyInfo
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>		
+	
+	<!-- 删除项目-->
+	<update id="deleteEntryName" parameterType="com.curing.systemInfo.model.EngineeringManagementEntity">
+		UPDATE EntryName
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{Id}
+	</update>	
+</mapper>

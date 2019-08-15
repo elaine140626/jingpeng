@@ -1,0 +1,30 @@
+
+# --   sqlserver ---#
+jdbc.driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+jdbc.url=jdbc:sqlserver://192.168.1.123:1433;databaseName=BlindSample
+
+jdbc.username=sa
+jdbc.password=123
+
+
+#jdbc.url=jdbc:sqlserver://192.168.1.123:1433;databaseName=BlindnessSystemDB180629
+
+
+
+#jdbc.driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#jdbc.url=jdbc:sqlserver://192.168.1.123:1433;databaseName=BlindnessSystemDB20180531
+#jdbc.username=sa
+#jdbc.password=123
+
+ #--   sqlserver test---#
+#jdbc.driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+#jdbc.url=jdbc:sqlserver://localhost;databaseName=BlindnessSystemDb
+#jdbc.username=sa
+#jdbc.password=123
+
+
+#jdbc.driverClassName=com.mysql.jdbc.Driver
+#jdbc.url=jdbc:mysql://localhost:3306/test 
+#jdbc.username=root
+#jdbc.password=root

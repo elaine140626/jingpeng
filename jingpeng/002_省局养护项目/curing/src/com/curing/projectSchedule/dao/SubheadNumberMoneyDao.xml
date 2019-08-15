@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SubheadNumberMoneyDao">
+	<!-- 子目List取得 -->
+	<select id="getSubheadNumberMoney" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SubheadNumberMoneyEntity">
+			SELECT
+			  sm.Id
+			  , sm.ProjectId
+			  , sm.SubheadNumber
+			  , sm.SubheadName
+			  , ve.ProjectNumber
+			  , ve.ProjectName
+			  , sm.ContractAmount
+			  , sm.Remarks
+			  , sm.Total
+			  , sm.UnitPrice
+			  , sm.TotalPrice
+			  , sm.IsDel
+			  , sm.Creater
+			  , sm.CreaterDate
+			  , sm.Reviser
+			  , sm.ReviserDate
+			FROM
+			 SubheadNumberMoney as sm
+			  left join V_EntryTree as ve 
+		    on sm.ProjectId = ve.pid 
+			 where 1=1 and sm.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sm.Id = #{id} -- 根据Id查询
+		  </if>
+		   <if test="levels == 3">
+		    and sm.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="currentSubheadNumber!=null and currentSubheadNumber !=''">
+		    and sm.SubheadNumber = #{currentSubheadNumber} -- 根据当前输入编号查询 去重
+		  </if>
+		  <if test="currentSubheadName!=null and currentSubheadName!=''">
+		    and sm.SubheadName = #{currentSubheadName}     -- 根据当前输入名称查询去重
+		  </if>
+		  <if test="subheadNumber!=null and subheadNumber!=''">
+		    and sm.SubheadNumber like concat('%',#{subheadNumber},'%') -- 根据第100章-第700章子目号查询
+		  </if>
+		  <if test="subheadName!=null and subheadName!=''">
+		    and sm.SubheadName like concat('%',#{subheadName},'%') -- 根据第100章-第700章子目名称查询
+		  </if>
+		  <if test="contractAmount!=null and contractAmount!=''">
+		    and sm.ContractAmount like concat('%',#{contractAmount},'%') -- 根据施工单位查询
+		  </if>
+		  order by sm.CreaterDate desc
+	</select>
+	
+	<!-- 新增子目 -->
+	<insert id="insertSubheadNumberMoney" parameterType="com.curing.projectSchedule.model.SubheadNumberMoneyEntity">
+		INSERT 
+		INTO SubheadNumberMoney( 
+			Id
+		  , ProjectId
+		  , SubheadNumber
+		  , SubheadName
+		  , ContractAmount
+		  , Total
+		  , UnitPrice
+		  , TotalPrice		  
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{SubheadNumber}
+		  , #{SubheadName}
+		  , #{ContractAmount}
+		  , #{Total}
+		  , #{UnitPrice}
+		  , #{TotalPrice}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新子目 -->
+	<update id="updateSubheadNumberMoney" parameterType="com.curing.projectSchedule.model.SubheadNumberMoneyEntity">
+		UPDATE SubheadNumberMoney 
+		SET
+		  SubheadNumber = #{SubheadNumber}
+		  , SubheadName = #{SubheadName}
+		  , ContractAmount = #{ContractAmount}
+		  , Total = #{Total}
+		  , UnitPrice = #{UnitPrice}
+		  , TotalPrice = #{TotalPrice}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除子目-->
+	<update id="deleteSubheadNumberMoney" parameterType="com.curing.projectSchedule.model.SubheadNumberMoneyEntity">
+		UPDATE SubheadNumberMoney 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+	
+	<select id="getSevenDailyById" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		  Id
+		  ,SubheadNumberId
+		FROM
+		  SevenDaily 
+		WHERE
+		  SubheadNumberId = #{id}
+		  and IsDel = 0
+	</select>
+</mapper>

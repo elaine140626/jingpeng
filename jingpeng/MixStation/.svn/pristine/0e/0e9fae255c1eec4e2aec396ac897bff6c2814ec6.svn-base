@@ -1,0 +1,200 @@
+$(function() {
+
+	// 是否盲样采集
+	var istestblind = getUrlParam("istestblind");
+	if(istestblind == 'true'){
+		// 盲样试验时，显示二维码和(施工单位、工程名称、工程部位)
+		$("#qrCode").attr("style","display:block;");
+		$("#show").attr("style","display:block;");
+		$("#istestblind").attr("style","display:block;padding-top: 60px;");
+		$("#istestcollection").attr("style","display:none;");
+	}
+	// 是否自动采集
+	var istestcollection = getUrlParam("istestcollection");
+	if(istestcollection == 'true'){
+		// 表格自动采集试验时，不显示二维码和（施工单位、工程名称、工程部位）；
+		$("#qrCode").attr("style","display:none;");
+		$("#show").attr("style","display:none;");
+		$("#istestcollection").attr("style","display:block;padding-top: 60px;");
+		$("#istestblind").attr("style","display:none;");
+	}
+	var id = getUrlParam("id");
+	getList(id);
+});
+
+// 获取前页面参数
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg); //匹配目标参数
+    if(r != null){
+        return decodeURIComponent(r[2]);
+//这里为什么是从第三个字符解析呢？不知道这样理解对不对，因为路径后面的参数形式为参数名=参数值，而第一个字符为参数名，第二个为=，第三个就为参数值了。。。因为下面调用的时候得出的就是参数值
+    }
+    return null;//返回参数值
+}
+
+function getList(id){
+	$.ajax({
+		type : "POST",
+		url :  "../ShiYan/getshiyan01",
+		data : {"id":id},
+		dataType : "json",
+		success : function(data) {
+			var info = data.data.list;
+			var list = data.data.listDetail;
+				
+			if(info[0].qrcode != null && info[0].qrcode != ''){
+				// 二维码
+				makeCode(info[0].qrcode);
+			}
+			if(info[0].constructionUnit != null && info[0].constructionUnit != ''){
+				// 施工单位
+				document.getElementById("constructionUnit").innerHTML = info[0].constructionUnit;
+			}
+			if(info[0].engineeringName != null && info[0].engineeringName != ''){
+				// 工程名称
+				document.getElementById("engineeringName").innerHTML = info[0].engineeringName;
+			}
+			if(info[0].purpose != null && info[0].purpose != ''){
+				// 工程部位或用途
+				document.getElementById("purpose").innerHTML = info[0].purpose;
+			}
+			if(info[0].testRoomName != null && info[0].testRoomName != ''){
+				// 试验室名称
+				document.getElementById("testRoomName").innerHTML = info[0].testRoomName;
+			}
+			if(info[0].testRules != null && info[0].testRules != ''){
+				// 试验依据
+				document.getElementById("testRules").innerHTML=info[0].testRules;	
+			}
+			if(info[0].testDate != null && info[0].testDate != ''){
+				// 试验日期
+				document.getElementById("testDate").innerHTML=info[0].testDate;
+			}
+			if(info[0].sampleName != null && info[0].sampleName != ''){
+				// 样品名称
+				document.getElementById("sampleName").innerHTML=info[0].sampleName;
+			}
+			if(info[0].sampleCount != null && info[0].sampleCount != ''){
+				// 试件个数
+				document.getElementById("sampleCount").innerHTML=info[0].sampleCount;
+			}
+			if(info[0].testOperator != null && info[0].testOperator != ''){
+				// 试验员
+				document.getElementById("testOperator").innerHTML=info[0].testOperator;
+			}
+			if(info[0].cement_Type != null && info[0].cement_Type != ''){
+				// 水泥品种
+				document.getElementById("cement_Type").innerHTML=info[0].cement_Type;
+			}
+			if(info[0].cement_Strength_Grade != null && info[0].cement_Strength_Grade != ''){
+				// 强度等级
+				document.getElementById("cement_Strength_Grade").innerHTML=info[0].cement_Strength_Grade;
+			}
+			if(info[0].age != null && info[0].age != ''){
+				// 龄期
+				document.getElementById("age").innerHTML=info[0].age;
+			}
+			if(info[0].ruptureStrength != null && info[0].ruptureStrength != ''){
+				// 抗折强度(判定指标)
+				document.getElementById("ruptureStrength").innerHTML=info[0].ruptureStrength;
+			}
+			if(info[0].compTrength != null && info[0].compTrength != ''){
+				// 抗压强度(判定指标)
+				document.getElementById("compTrength").innerHTML=info[0].compTrength;
+			}
+			if(info[0].isQualifiedTest != null && info[0].isQualifiedTest != ''){
+				var isQualifiedTest = "不合格";
+				if(info[0].isQualifiedTest==true){
+					isQualifiedTest = "合格";
+				}
+				document.getElementById("isQualifiedTest").innerHTML=isQualifiedTest;
+			}		
+					
+			var group = "";
+			
+			if(list != null && list.length > 0){
+				for(var i = 0; i < list.length; i++) {
+		    		group += "<tr>"
+							+ " <td rowspan='6'>"+(i+1) +"</td>"
+							+ " <td rowspan='2'>"+ list[i].bendFailureLoad1 +"</td>"
+							+ "	<td rowspan='2'>"+ list[i].ruptureStrength1 +"</td>"
+							+ "	<td rowspan='6'>"+ list[i].avgRuptureStrength+"</td>"
+							+ "	<td>"+ list[i].compFailureLoad1+"</td>"
+							+ "	<td>"+ list[i].compTrength1+"</td>"
+							+ "	<td rowspan='6'>"+ list[i].avgCompTrength+"</td>"
+							+ "</tr>"
+							+ "<tr>"
+							+ "	<td>"+ list[i].compFailureLoad2+"</td>"
+							+ "	<td>"+ list[i].compTrength2+"</td>"
+							+ "</tr>"
+							+ "<tr>"
+							+ " <td rowspan='2'>"+ list[i].bendFailureLoad2 +"</td>"
+							+ "	<td rowspan='2'>"+ list[i].ruptureStrength2 +"</td>"
+							+ "	<td>"+ list[i].compFailureLoad3+"</td>"
+							+ "	<td>"+ list[i].compTrength3+"</td>"
+							+ "</tr>"
+							+ "<tr>"
+							+ "	<td>"+ list[i].compFailureLoad4+"</td>"
+							+ "	<td>"+ list[i].compTrength4+"</td>"
+							+ "</tr>"
+							+ "<tr>"
+							+ " <td rowspan='2'>"+ list[i].bendFailureLoad3 +"</td>"
+							+ "	<td rowspan='2'>"+ list[i].ruptureStrength3 +"</td>"
+							+ "	<td>"+ list[i].compFailureLoad5+"</td>"
+							+ "	<td>"+ list[i].compTrength5+"</td>"
+							+ "</tr>"
+							+ "<tr>"
+							+ "	<td>"+ list[i].compFailureLoad6+"</td>"
+							+ "	<td>"+ list[i].compTrength6+"</td>"
+							+ "</tr>";
+		    	}
+			}else{
+				group += "<tr>"
+					+ " <td rowspan='6'>1</td>"
+					+ " <td rowspan='2'>&nbsp;</td>"
+					+ "	<td rowspan='2'>&nbsp;</td>"
+					+ "	<td rowspan='6'>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td rowspan='6'>&nbsp;</td>"
+					+ "</tr>"
+					+ "<tr>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "</tr>"
+					+ "<tr>"
+					+ " <td rowspan='2'>&nbsp;</td>"
+					+ "	<td rowspan='2'>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "</tr>"
+					+ "<tr>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "</tr>"
+					+ "<tr>"
+					+ " <td rowspan='2'>&nbsp;</td>"
+					+ "	<td rowspan='2'>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "</tr>"
+					+ "<tr>"
+					+ "	<td>&nbsp;</td>"
+					+ "	<td>&nbsp;</td>"
+					+ "</tr>"
+			}
+	    	
+	    	$("#list").html(group);
+		}
+	});
+}
+
+//生成二维码大小
+var qrcode = new QRCode(document.getElementById("qrCode"), {
+});
+
+// 转换二维码
+function makeCode (value) {	
+	qrcode.makeCode(value);
+}

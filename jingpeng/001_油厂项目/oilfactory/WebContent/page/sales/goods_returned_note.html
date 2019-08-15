@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="../../css/basic_layout.css" rel="stylesheet" type="text/css">
+		<link href="../../css/common_style.css" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="../../css/sweet-alert.css">
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/jquery.fancybox-1.3.4.css" media="screen" /></link>
+		<script type="text/javascript" src="../../js/jquery/jquery-1.7.1.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.js"></script>
+		<script type="text/javascript" src="../../js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+		<script type="text/javascript" src="../../js/sweet-alert.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/oilfactory/sales/goods_returned_note.js"></script>
+		<title>瑞德公路管理系统</title>
+		<style type="text/css">
+			tr {
+				margin-top: 5px;
+			}
+			
+			.ui_text_rt {
+				width: 15%;
+				text-align: right;
+			}
+			
+			.ui_text_lt {
+				width: 35%;
+			}
+			
+			.ui_input_txt01 {
+				width: 60%;
+			}
+			
+			.ui_input_txt0 {
+				width: 30%;
+				height: 26px;
+				margin: 1px -9px 1px -5px;
+				outline: 0;
+				padding: 1px;
+				border: 1px solid;
+				border-color: #C0C0C0 #D9D9D9 #D9D9D9;
+				border-radius: 2px;
+				background: #FFF;
+				box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.2);
+				-webkit-transition: box-shadow, border-color .5s ease-in-out;
+			}
+			.ui_input_txt0:first-child {
+				margin: 0px 1px 0px 5px;
+			}
+			.ui_select01 {
+				width: 60%;
+				margin-left:2%;
+			}
+			
+			.text {
+				height: 80px;
+				resize: none
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				/*
+				 * 取消
+				 */
+				$("#cancelbutton").click(function() {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				});
+
+				var result = 'null';
+				if(result == 'success') {
+					/**  关闭弹出iframe  **/
+					window.parent.$.fancybox.close();
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<form id="submitForm" name="submitForm" action="" method="post">
+			<input type="hidden" name="fyID" value="14458625716623" id="fyID" />
+			<!-- <input type="hidden" name="suttle" id="suttle" /> -->
+			<div id="container">
+				<div id="nav_links" style="background-color: #02397F;color: white;font-size: 20px;">
+					退货单
+				</div>
+				<div class="ui_content">
+					<table cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+						<tr>
+							<td class="ui_text_rt">物料名称/型号：</td>
+							<td class="ui_text_lt">
+								<select id="materielName" name="materielName" style="background-color: #e4e4e4" class="ui_input_txt0" disabled="disabled" onchange="changeMaterieName(this.value);"></select>
+								<select id="materielModel" name="materielModel" style="background-color: #e4e4e4" class="ui_input_txt0" disabled="disabled"></select>
+							</td>
+							<td class="ui_text_rt">车牌号码：</td>
+							<td class="ui_text_lt">
+								<input class="ui_select01" id="plateNumber" style="background-color: #e4e4e4" name="plateNumber" list="plateNumberList" readonly="readonly"  onchange="changePlateNumber(this.value);"/>
+								<dataList class="ui_select01" id="plateNumberList"></dataList>
+							</td>
+						</tr>
+						<tr>
+							<td class="ui_text_rt">客户编号：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" maxlength="25" readonly="readonly" style="background-color: #e4e4e4" id="client" name="client"/>
+							</td>
+							<td class="ui_text_rt">客户别称：</td>
+							<td class="ui_text_lt">
+								<input type="text" class="ui_input_txt01" maxlength="25" readonly="readonly" style="background-color: #e4e4e4" id="customerAlias" name="customerAlias"/>
+							</td>
+						</tr>
+<!-- 						<tr>
+							<td class="ui_text_rt">车主：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="carOwner" maxlength="8" name="carOwner" readonly="readonly" style="background-color: #e4e4e4" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+							<td class="ui_text_rt">车主电话：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="carOwnerTelephone" name="carOwnerTelephone" readonly="readonly" style="background-color: #e4e4e4" onchange="changeTelephone(this.value,0);" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr> -->
+						<tr>
+							<td class="ui_text_rt">出库重量(吨)：</td>
+							<td class="ui_text_lt"><input type="text" id="suttle" readonly="readonly"
+								style="background-color: #e4e4e4" name="suttle" class="ui_input_txt01" maxlength="13" onkeyup='clearNoDecimal(this,8,4)'onblur='checkPoint(this)'/></td>
+							<td class="ui_text_rt">结算重量(吨)：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="amount" name="amount" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' class="ui_input_txt01" onchange="changeAmount(0);"/><span style="color:red;">*</span>
+							</td>
+					   </tr>
+						<tr>
+							<td class="ui_text_rt">退货重量(吨)：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="refundAmount" name="refundAmount" maxlength="13" onkeyup='clearNoDecimal(this,8,4)'  class="ui_input_txt01" onchange="changeAmount(1);"/><span style="color:red;">*</span>
+							</td>
+							<td class="ui_text_rt">送货人：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="deliveryMan" name="deliveryMan" maxlength="8" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+						</tr>
+						
+						<tr>
+							<td class="ui_text_rt">送货电话：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="deliveryManPhone" name="deliveryManPhone" onchange="changeTelephone(this.value,2);" class="ui_input_txt01" /><span style="color:red;">*</span>
+							</td>
+							<td class="ui_text_rt">备注：</td>
+							<td class="ui_text_lt">
+								<input type="text" id="remark" name="remark" maxlength="100" class="ui_input_txt01" />
+							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td class="ui_text_lt">
+							</td>
+							<td>&nbsp;</td>
+							<td class="ui_text_lt">
+								&nbsp;<input id="submitbutton" type="button" value="保存" onclick="add()" class="ui_input_btnsave" /> &nbsp;
+								<input id="cancelbutton" type="button" value="关闭" class="ui_input_btnclose" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</form>
+
+	</body>
+
+</html>

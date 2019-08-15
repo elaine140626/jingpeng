@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.curing.projectMetering.dao.CompletionAmountDao">
+	<!-- 工程计量（2）List取得 -->
+	<select id="getCompletionAmountList" parameterType="java.util.Map" resultType="com.curing.projectMetering.model.CompletionAmountEntity">
+		SELECT
+		  sd.SubheadNumberId                -- 第100章-第700章子目号id
+		  , ve.ProjectNumber                -- 项目编号
+		  , ve.ProjectName                  -- 项目名称
+		  , ve.ContractSection              -- 合同段
+		  , ve.ContractingUnit              -- 承包单位
+		  , ve.Mileage                      -- 里程（km)
+		  , snm.ContractAmount              -- 合同金额
+		  , snm.SubheadNumber               -- 第100章-第700章子目号
+		  , snm.SubheadName                 -- 第100章-第700章子目名称
+		  , snm.Total                       -- 总量
+		  , t1.MonthCompletion              -- 本月完成金额
+		  , t2.YearCompletion               -- 本年完成金额
+		  , t3.StartCompletion              -- 自开工起累计完成
+		  , t4.MonthThisComplete            -- 本月完成工程量
+		  , t5.YearThisComplete             -- 本年完成工程量
+		  , t6.StartThisComplete            -- 自开工起累计工程量
+		FROM
+		  SevenDaily as sd
+		left join V_EntryTree as ve         -- 树形
+		  on sd.ProjectId = ve.pid
+		left join SubheadNumberMoney as snm -- 子母号表
+		  on sd.ProjectId = snm.ProjectId
+		  and sd.SubheadNumberId = snm.Id
+		  and snm.IsDel = 0
+		left join (
+		  select
+		  s1.SubheadNumberId
+		  , sum(s1.ThisCapital) as MonthCompletion
+		  from
+		  SevenDaily s1
+		  where
+		  s1.IsDel = 0
+		  and s1.DailyYear = #{myYear} 
+		  and s1.DailyMonth = #{myMonth}
+		  and s1.ProjectId = #{treeIds}
+		  group by
+		  s1.SubheadNumberId
+		  ) t1                             -- 月累计金额
+		  on sd.SubheadNumberId = t1.SubheadNumberId
+		left join (
+		  select
+		  s1.SubheadNumberId
+		  , sum(s1.ThisCapital) as YearCompletion
+		  from
+		  SevenDaily s1
+		  where
+		  s1.IsDel = 0
+		  and s1.DailyYear = #{myYear}  
+		  and s1.ProjectId = #{treeIds}
+		  group by
+		  s1.SubheadNumberId
+		  ) t2                             -- 年累计金额
+		  on sd.SubheadNumberId = t2.SubheadNumberId
+		left join (
+		  select
+		  s1.SubheadNumberId
+		  , sum(s1.ThisCapital) as StartCompletion
+		  from
+		  SevenDaily s1
+		  where
+		  s1.IsDel = 0
+		  and s1.ProjectId = #{treeIds}
+		  group by
+		  s1.SubheadNumberId
+		  ) t3                            -- 开工累计金额
+		  on sd.SubheadNumberId = t3.SubheadNumberId
+		  left join ( 
+		    select
+		      s1.SubheadNumberId
+		      , sum(s1.ThisComplete) as MonthThisComplete
+		    from
+		      SevenDaily s1 
+		    where
+		      s1.IsDel = 0 
+		      and s1.DailyYear = #{myYear} 
+		      and s1.DailyMonth = #{myMonth} 
+		      and s1.ProjectId = #{treeIds} 
+		    group by
+		      s1.SubheadNumberId
+		  ) t4                                            -- 本月完成工程量
+		    on sd.SubheadNumberId = t4.SubheadNumberId 
+		left join ( 
+		    select
+		      s1.SubheadNumberId
+		      , sum(s1.ThisComplete) as YearThisComplete
+		    from
+		      SevenDaily s1 
+		    where
+		      s1.IsDel = 0 
+		      and s1.DailyYear = #{myYear}  
+		      and s1.ProjectId = #{treeIds} 
+		    group by
+		      s1.SubheadNumberId
+		  ) t5                                            -- 本年完成工程量
+		    on sd.SubheadNumberId = t5.SubheadNumberId 
+		left join ( 
+		    select
+		      s1.SubheadNumberId
+		      , sum(s1.ThisComplete) as StartThisComplete 
+		    from
+		      SevenDaily s1 
+		    where
+		      s1.IsDel = 0 
+		      and s1.ProjectId = #{treeIds}  
+		    group by
+		      s1.SubheadNumberId
+		  ) t6                                            -- 开工累计工程量
+		    on sd.SubheadNumberId = t6.SubheadNumberId 
+		where
+		1 = 1
+		and sd.ProjectId = #{treeIds}
+		and sd.DailyYear = #{myYear} 
+		and sd.DailyMonth = #{myMonth}
+		and sd.IsDel = 0
+		<if test="levels == 2">
+			and ve.couid = #{treeIds}    -- 根据县id查询
+		</if>
+		<if test="levels == 1">
+			and ve.ciid = #{treeIds}     -- 根据市id查询
+		</if>
+		group by
+		  sd.SubheadNumberId
+		  , ve.ProjectNumber
+		  , ve.ProjectName
+		  , ve.ContractSection
+		  , ve.ContractingUnit
+		  , ve.Mileage
+		  , snm.SubheadNumber
+		  , snm.SubheadName
+		  , snm.ContractAmount
+		  , snm.Total 
+		  , t1.MonthCompletion
+		  , t2.YearCompletion
+		  , t3.StartCompletion
+		  , t4.MonthThisComplete
+		  , t5.YearThisComplete
+		  , t6.StartThisComplete
+	</select>
+	<!-- 合计 -->
+	<select  id="getCompletionAmountSum" parameterType="java.util.Map" resultType="com.curing.projectMetering.model.CompletionAmountSum">
+		select 
+		  sum(t.Total) as TotalSum
+		  , sum(t.MonthCompletion) as MonthCompletionSum
+		  , sum(t.YearCompletion) as YearCompletionSum
+		  , sum(t.StartCompletion) as StartCompletionSum
+		  , sum(t.ContractAmount) as ContractAmountSum
+		  , sum(t.MonthThisComplete) as MonthThisCompleteSum
+		  , sum(t.YearThisComplete) as YearThisCompleteSum
+		  , sum(t.StartThisComplete) as StartThisCompleteSum
+		from 
+		  ( SELECT
+			  sd.SubheadNumberId                -- 第100章-第700章子目号id
+			  , ve.ProjectNumber                -- 项目编号
+			  , ve.ProjectName                  -- 项目名称
+			  , ve.ContractSection              -- 合同段
+			  , ve.ContractingUnit              -- 承包单位
+			  , ve.Mileage                      -- 里程（km)
+			  , snm.ContractAmount              -- 合同金额
+			  , snm.SubheadNumber               -- 第100章-第700章子目号
+			  , snm.SubheadName                 -- 第100章-第700章子目名称
+			  , snm.Total                       -- 总量
+			  , t1.MonthCompletion              -- 本月完成金额
+			  , t2.YearCompletion               -- 本年完成金额
+			  , t3.StartCompletion              -- 自开工起累计完成
+			  , t4.MonthThisComplete            -- 本月完成工程量
+			  , t5.YearThisComplete             -- 本年完成工程量
+			  , t6.StartThisComplete            -- 自开工起累计工程量
+			FROM
+			  SevenDaily as sd
+			left join V_EntryTree as ve         -- 树形
+			  on sd.ProjectId = ve.pid
+			left join SubheadNumberMoney as snm -- 子母号表
+			  on sd.ProjectId = snm.ProjectId
+			  and sd.SubheadNumberId = snm.Id
+			  and snm.IsDel = 0
+			left join (
+			  select
+			  s1.SubheadNumberId
+			  , sum(s1.ThisCapital) as MonthCompletion
+			  from
+			  SevenDaily s1
+			  where
+			  s1.IsDel = 0
+			  and s1.DailyYear = #{myYear} 
+			  and s1.DailyMonth = #{myMonth}
+			  and s1.ProjectId = #{treeIds}
+			  group by
+			  s1.SubheadNumberId
+			  ) t1                             -- 月累计金额
+			  on sd.SubheadNumberId = t1.SubheadNumberId
+			left join (
+			  select
+			  s1.SubheadNumberId
+			  , sum(s1.ThisCapital) as YearCompletion
+			  from
+			  SevenDaily s1
+			  where
+			  s1.IsDel = 0
+			  and s1.DailyYear = #{myYear}  
+			  and s1.ProjectId = #{treeIds}
+			  group by
+			  s1.SubheadNumberId
+			  ) t2                             -- 年累计金额
+			  on sd.SubheadNumberId = t2.SubheadNumberId
+			left join (
+			  select
+			  s1.SubheadNumberId
+			  , sum(s1.ThisCapital) as StartCompletion
+			  from
+			  SevenDaily s1
+			  where
+			  s1.IsDel = 0
+			  and s1.ProjectId = #{treeIds}
+			  group by
+			  s1.SubheadNumberId
+			  ) t3                            -- 开工累计金额
+			  on sd.SubheadNumberId = t3.SubheadNumberId
+			  left join ( 
+			    select
+			      s1.SubheadNumberId
+			      , sum(s1.ThisComplete) as MonthThisComplete
+			    from
+			      SevenDaily s1 
+			    where
+			      s1.IsDel = 0 
+			      and s1.DailyYear = #{myYear} 
+			      and s1.DailyMonth = #{myMonth} 
+			      and s1.ProjectId = #{treeIds} 
+			    group by
+			      s1.SubheadNumberId
+			  ) t4                                            -- 本月完成工程量
+			    on sd.SubheadNumberId = t4.SubheadNumberId 
+			left join ( 
+			    select
+			      s1.SubheadNumberId
+			      , sum(s1.ThisComplete) as YearThisComplete
+			    from
+			      SevenDaily s1 
+			    where
+			      s1.IsDel = 0 
+			      and s1.DailyYear = #{myYear}  
+			      and s1.ProjectId = #{treeIds} 
+			    group by
+			      s1.SubheadNumberId
+			  ) t5                                            -- 本年完成工程量
+			    on sd.SubheadNumberId = t5.SubheadNumberId 
+			left join ( 
+			    select
+			      s1.SubheadNumberId
+			      , sum(s1.ThisComplete) as StartThisComplete 
+			    from
+			      SevenDaily s1 
+			    where
+			      s1.IsDel = 0 
+			      and s1.ProjectId = #{treeIds}  
+			    group by
+			      s1.SubheadNumberId
+			  ) t6                                            -- 开工累计工程量
+			    on sd.SubheadNumberId = t6.SubheadNumberId 
+			where
+			1 = 1
+			and sd.ProjectId = #{treeIds}
+			and sd.DailyYear = #{myYear} 
+			and sd.DailyMonth = #{myMonth}
+			and sd.IsDel = 0
+			<if test="levels == 2">
+				and ve.couid = #{treeIds}    -- 根据县id查询
+			</if>
+			<if test="levels == 1">
+				and ve.ciid = #{treeIds}     -- 根据市id查询
+			</if>
+			group by
+			  sd.SubheadNumberId
+			  , ve.ProjectNumber
+			  , ve.ProjectName
+			  , ve.ContractSection
+			  , ve.ContractingUnit
+			  , ve.Mileage
+			  , snm.SubheadNumber
+			  , snm.SubheadName
+			  , snm.ContractAmount
+			  , snm.Total 
+			  , t1.MonthCompletion
+			  , t2.YearCompletion
+			  , t3.StartCompletion
+			  , t4.MonthThisComplete
+			  , t5.YearThisComplete
+			  , t6.StartThisComplete
+		) t
+	</select>
+</mapper>

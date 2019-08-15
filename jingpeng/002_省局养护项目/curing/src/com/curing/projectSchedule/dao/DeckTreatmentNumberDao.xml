@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.DeckTreatmentNumberDao">
+	<!-- 工程进度（桥面处理工程数量表）List取得 -->
+	<select id="getDeckTreatmentNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.DeckTreatmentNumberEntity">
+		SELECT
+		  dtn.Id
+		  , dtn.ProjectId                                 -- 项目id
+		  , dtn.BridgeName                                -- 桥梁名称
+		  , dtn.BridgeNumber                              -- 桥梁桩号
+		  , dtn.BridgeLength                              -- 桥梁长度（米）
+		  , dtn.BridgeWidth                               -- 桥面净宽（米）
+		  , dtn.FineThickness                             -- 温拌细粒厚度（厘米）
+		  , dtn.FineArea                                  -- 温拌细粒面积（千平方米）
+		  , dtn.NeutralThickness                          -- 温拌中粒厚度（厘米）
+		  , dtn.NeutralArea                               -- 温拌中粒面积（千平方米）
+		  , dtn.RubberAsphaltGravel                       -- 橡胶沥青碎石封层（千平方米）
+		  , dtn.DeckThickness                             -- 铣刨桥面厚度（厘米）
+		  , dtn.DeckArea                                  -- 铣刨桥面面积（千平方米）
+		  , dtn.Remarks                                   -- 备注
+		  , dtn.IsDel
+		  , dtn.Creater
+		  , dtn.CreaterDate
+		  , dtn.Reviser
+		  , dtn.ReviserDate 
+		FROM
+		  DeckTreatmentNumber as dtn 
+		  left join V_EntryTree as ve 
+		    on dtn.ProjectId = ve.pid 
+		WHERE
+		  dtn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and dtn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and dtn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and dtn.bridgeName like  like concat('%',#{bridgeName},'%') -- 根据名称
+		  </if>
+		  <if test="bridgeNumber!=null and bridgeNumber!=''">
+		    and dtn.bridgeNumber like concat('%',#{bridgeNumber},'%')     -- 根据桩号
+		  </if>
+		  <if test="bridgeLength!=null and bridgeLength!=''">
+		    and dtn.bridgeLength like concat('%',#{bridgeLength},'%') -- 根据长度
+		  </if>
+		  <if test="bridgeWidth!=null and bridgeWidth!=''">
+		    and dtn.bridgeWidth like concat('%',#{bridgeWidth},'%') -- 根据长度
+		  </if>
+		   order by dtn.CreaterDate desc
+	</select>
+	
+	<!-- 导出 -->
+	<select id="getDeckTreatmentNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+	
+			SELECT
+		  dtn.BridgeName                                -- 桥梁名称
+		  , dtn.BridgeNumber                              -- 桥梁桩号
+		  , dtn.BridgeLength                              -- 桥梁长度（米）
+		  , dtn.BridgeWidth                               -- 桥面净宽（米）
+		  , dtn.FineThickness                             -- 温拌细粒厚度（厘米）
+		  , dtn.FineArea                                  -- 温拌细粒面积（千平方米）
+		  , dtn.NeutralThickness                          -- 温拌中粒厚度（厘米）
+		  , dtn.NeutralArea                               -- 温拌中粒面积（千平方米）
+		  , dtn.RubberAsphaltGravel                       -- 橡胶沥青碎石封层（千平方米）
+		  , dtn.DeckThickness                             -- 铣刨桥面厚度（厘米）
+		  , dtn.DeckArea                                  -- 铣刨桥面面积（千平方米）
+		  , dtn.Remarks                                   -- 备注
+		FROM
+		  DeckTreatmentNumber as dtn 
+		  left join V_EntryTree as ve 
+		    on dtn.ProjectId = ve.pid 
+		WHERE
+		  dtn.IsDel = 0
+	</select>
+	
+	<!-- 工程进度（桥面处理工程数量表）合计 -->
+	<select id="getDeckTreatmentNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.DeckTreatmentNumberSum">
+		SELECT
+		  sum(dtn.BridgeLength) as BridgeLengthSum        -- 桥梁长度（米）
+		  , sum(dtn.BridgeWidth) as BridgeWidthSum        -- 桥面净宽（米）
+		  , sum(dtn.FineThickness) as FineThicknessSum    -- 温拌细粒厚度（厘米）
+		  , sum(dtn.FineArea) as FineAreaSum              -- 温拌细粒面积（千平方米）
+		  , sum(dtn.NeutralThickness) as NeutralThicknessSum -- 温拌中粒厚度（厘米）
+		  , sum(dtn.NeutralArea) as NeutralAreaSum        -- 温拌中粒面积（千平方米）
+		  , sum(dtn.RubberAsphaltGravel) as RubberAsphaltGravelSum -- 橡胶沥青碎石封层（千平方米）
+		  , sum(dtn.DeckThickness) as DeckThicknessSum    -- 铣刨桥面厚度（厘米）
+		  , sum(dtn.DeckArea) as DeckAreaSum              -- 铣刨桥面面积（千平方米）
+		FROM
+		  DeckTreatmentNumber as dtn 
+		  left join V_EntryTree as ve 
+		    on dtn.ProjectId = ve.pid 
+		WHERE
+		  dtn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and dtn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and dtn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="bridgeName!=null and bridgeName!=''">
+		    and dtn.bridgeName like concat('%',#{bridgeName},'%') -- 根据名称
+		  </if>
+		  <if test="bridgeNumber!=null and bridgeNumber!=''">
+		    and dtn.bridgeNumber like concat('%',#{bridgeNumber},'%')     -- 根据桩号
+		  </if>
+		  <if test="bridgeLength!=null and bridgeLength!=''">
+		    and dtn.bridgeLength like concat('%',#{bridgeLength},'%') -- 根据长度
+		  </if>
+		  <if test="bridgeWidth!=null and bridgeWidth!=''">
+		    and dtn.bridgeWidth  like concat('%',#{bridgeWidth},'%') -- 根据长度
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（桥面处理工程数量表） -->
+	<insert id="insertDeckTreatmentNumber" parameterType="com.curing.projectSchedule.model.DeckTreatmentNumberEntity">
+		INSERT 
+		INTO DeckTreatmentNumber( 
+			Id
+		  , ProjectId
+		  , BridgeName
+		  , BridgeNumber
+		  , BridgeLength
+		  , BridgeWidth
+		  , FineThickness
+		  , FineArea
+		  , NeutralThickness
+		  , NeutralArea
+		  , RubberAsphaltGravel
+		  , DeckThickness
+		  , DeckArea
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{BridgeName}
+		  , #{BridgeNumber}
+		  , #{BridgeLength}
+		  , #{BridgeWidth}
+		  , #{FineThickness}
+		  , #{FineArea}
+		  , #{NeutralThickness}
+		  , #{NeutralArea}
+		  , #{RubberAsphaltGravel}
+		  , #{DeckThickness}
+		  , #{DeckArea}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（桥面处理工程数量表） -->
+	<update id="updateDeckTreatmentNumber" parameterType="com.curing.projectSchedule.model.DeckTreatmentNumberEntity">
+		UPDATE DeckTreatmentNumber 
+		SET
+		  BridgeName = #{BridgeName}
+		  , BridgeNumber = #{BridgeNumber}
+		  , BridgeLength = #{BridgeLength}
+		  , BridgeWidth = #{BridgeWidth}
+		  , FineThickness = #{FineThickness}
+		  , FineArea = #{FineArea}
+		  , NeutralThickness = #{NeutralThickness}
+		  , NeutralArea = #{NeutralArea}
+		  , RubberAsphaltGravel = #{RubberAsphaltGravel}
+		  , DeckThickness = #{DeckThickness}
+		  , DeckArea = #{DeckArea}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（桥面处理工程数量表） -->
+	<update id="deleteDeckTreatmentNumber" parameterType="com.curing.projectSchedule.model.DeckTreatmentNumberEntity">
+		UPDATE DeckTreatmentNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

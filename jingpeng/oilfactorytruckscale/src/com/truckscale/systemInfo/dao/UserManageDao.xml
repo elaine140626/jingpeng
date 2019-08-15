@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.systemInfo.dao.UserManageDao">
+	<!-- 获取用户信息  -->
+	<select id="getUserInfo" parameterType="java.util.Map" resultType="com.truckscale.systemInfo.model.UserManageEntity">
+		 SELECT
+			  Id
+			  , UserName
+			  , PassWord
+			  , RoleCode
+			  , Name
+			  , Age
+			  , Sex
+			  , Birthday
+			  , Address
+			  , Telephone
+			  , OtherNumbers
+			  , IsDel
+			  , Creater
+			  , CreaterDate
+			  , Reviser
+			  , ReviserDate
+			FROM
+			  userinfo
+			WHERE 1=1  and IsDel = 0 
+		<if test="id != null and id != ''">
+		  	and Id = #{id}
+		 </if>
+	</select>
+</mapper>

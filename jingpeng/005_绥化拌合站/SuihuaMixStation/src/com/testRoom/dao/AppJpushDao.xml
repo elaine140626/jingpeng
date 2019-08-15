@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testRoom.dao.AppJpushDao">
+	<!-- 获取用户id -->
+	<select id="getAppUser" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  ptui.UserCode 
+		from
+		  PTestSetDetailed as ptsd 
+		  left join PTestUserInfo as ptui 
+		    on ptsd.PlatformUserInfoId = ptui.Id 
+		where
+		  1 = 1
+		<if test="UniqueIdentifier !=null and UniqueIdentifier!= ''">
+	      and ptsd.UniqueIdentifier in 
+	      <foreach collection="UniqueIdentifier" index="index" item="item" open="(" separator="," close=")">
+          		 #{item}
+       	  </foreach>
+       	</if>       	 
+	</select>
+	<!-- 获取将要推送的数据 -->
+	<select id="getPushInfo" resultType="java.util.Map">
+		SELECT
+		  id
+		  , title
+		  , content
+		  , grouping 
+		FROM
+		  PushInfo 
+		where
+		  IsValidData = 1 
+		  and IfPush = 0 
+		  and convert(char (20), PushDate, 120) &lt;= convert(char (20), getDate(), 120)
+	</select>
+	
+	<!-- 修改推送消息状态 -->
+	<update id="updatePushState" parameterType="String">
+		update PushInfo 
+		set
+		  IfPush = 1
+		  , Modifier = '定时器推送'
+		  , ModifyDate = getDate() 
+		where
+		  id = #{id}
+	</update>
+</mapper>

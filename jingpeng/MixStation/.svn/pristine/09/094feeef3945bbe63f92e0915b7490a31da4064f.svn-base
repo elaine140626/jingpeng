@@ -1,0 +1,26 @@
+package com.blindSample.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import com.blindSample.model.VideoSurveillance;
+import com.kdt.base.exception.DataAccessException;
+import com.kdt.base.support.mybatis.impl.KDDaoSupport;
+
+@Repository
+public class VideoSurveillanceDao extends KDDaoSupport{
+
+	private final static String NAMESPACE = "VideoSurveillance";
+	
+	public List<VideoSurveillance> getVideoSurveillance(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getVideoSurveillance", map);
+	}
+	
+	public List<VideoSurveillance> getVideoSurveillanceById(Map<String, Object> map)throws DataAccessException  {
+		// TODO Auto-generated method stub
+		return this.select(NAMESPACE+".getVideoSurveillanceById", map);
+	}
+}

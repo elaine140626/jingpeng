@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="renderer" content="webkit|ie-comp|ie-stand">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="/favicon.ico" >
+	<link rel="Shortcut Icon" href="/favicon.ico" />
+	<!--[if lt IE 9]>
+	<script type="text/javascript" src="../../js/html5shiv.js"></script>
+	<script type="text/javascript" src="../../js/respond.min.js"></script>
+	
+	<![endif]-->
+	<link href="../../static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="../../static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="../../js/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	
+	<!--[if IE 6]>
+	<script type="text/javascript" src="../../js/DD_belatedPNG_0.0.8a-min.js" ></script>
+	<script>DD_belatedPNG.fix('*');</script>
+	<![endif]-->
+	<title>空白页</title>
+	</head>
+	<body>
+	<div class="pd-20">
+	  <form class="form form-horizontal" id="form1" style="margin-top:-20px"  method="post">
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>起讫桩号</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="pileNumber" name="pileNumber" maxlength="15">
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>工程名称</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="projectName" name="projectName" maxlength="15">
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>位置</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="position" name="position" maxlength="15">
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>主要尺寸（规格及说明</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="size" name="size" maxlength="15">
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>路线长度（m）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="routeLength" name="routeLength" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+	  		<div class="col-md-4 col-xs-4">
+	  			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>种植长度（m）</label>
+	  			<div class="formControls col-xs-8 col-sm-9">
+	  				<input type="text" class="input-text" value="" placeholder="" id="plantLength" name="plantLength" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+	  			</div>
+	  		</div>
+	  	</div>
+	  	<div class="row cl">
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>植草（m2）</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="plantingGrass" name="plantingGrass" maxlength="13" onkeyup='clearNoDecimal(this,8,4)' onblur='checkPoint(this)'>
+				</div>
+			</div>
+			<div class="col-md-4 col-xs-4">
+				<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>备注</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="text" class="input-text" value="" placeholder="" id="remarks" name="remarks" maxlength="50">
+				</div>
+			</div>
+	  	</div>
+	 	  	<div class="row cl">
+	  		<div class="col-xs-8 col-sm-8 col-xs-offset-4 col-sm-offset-3">
+	  			<button id="saveButton" onclick="save();" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+	  			<button onclick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+	  		</div>
+	  	</div>
+	  </form>
+	</div>
+	<script type="text/javascript" src="../../js/jquery/1.9.1/jquery.min.js"></script> 
+	<script type="text/javascript" src="../../js/layer/2.4/layer.js"></script>
+	<script type="text/javascript" src="../../js/My97DatePicker/4.8/WdatePicker.js"></script> 
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/jquery.validate.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/validate-methods.js"></script>
+	<script type="text/javascript" src="../../js/jquery.validation/1.14.0/messages_zh.js"></script>
+	<script type="text/javascript" src="../../static/h-ui/js/H-ui.js"></script>
+	<script type="text/javascript" src="../../static/h-ui.admin/js/H-ui.admin.js"></script>
+	<script type="text/javascript" src="../../js/systemJs/common/datadictionary.js"></script> 
+	<script type="text/javascript" src="../../js/systemJs/projectSchedule/greenNumber_add.js"></script> 
+	</body>
+</html>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.SupervisionApplicationDao">
+	<!-- 工程进度（监督申请）List取得 -->
+	<select id="getSupervisionApplicationList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.SupervisionApplicationEntity">
+		SELECT
+		  sa.Id
+		  , sa.ProjectId                                  -- 项目id
+		  , ve.ProjectNumber                              -- 项目编号
+		  , ve.ProjectName								  -- 项目名称
+		  , sa.SupervisorCompany                          -- 监理单位
+		  , sa.SupervisorPlan                             -- 监理计划（文档）
+		  , sa.SupervisorDetailed                         -- 监理细则（文档）
+		  , sa.Reply                                      -- 监督申请批复
+		  , sa.UploadPicture                              -- 上传图片
+		  , sa.Remarks                                    -- 备注
+		  , sa.IsDel
+		  , sa.Creater
+		  , sa.CreaterDate
+		  , sa.Reviser
+		  , sa.ReviserDate 
+		FROM
+		  SupervisionApplication as sa 
+		  left join V_EntryTree as ve 
+		    on sa.ProjectId = ve.pid
+		WHERE
+		  sa.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and sa.Id = #{id}                             -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and sa.ProjectId = #{treeIds}                 -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="projectNumber!=null and projectNumber!=''">
+		    and ve.ProjectNumber like concat('%',#{projectNumber},'%') -- 根据项目编号查询
+		  </if>
+		  <if test="projectName!=null and projectName!=''">
+		    and ve.ProjectName like concat('%',#{projectName},'%') -- 根据项目名称查询
+		  </if>
+		  <if test="supervisorCompany!=null and supervisorCompany!=''">
+		    and sa.SupervisorCompany like concat('%',#{supervisorCompany},'%') -- 根据监理单位
+		  </if>
+	    order by sa.CreaterDate desc
+	</select>
+	
+	<!-- 新增工程进度（监督申请） -->
+	<insert id="insertSupervisionApplication" parameterType="com.curing.projectSchedule.model.SupervisionApplicationEntity">
+		INSERT 
+		INTO SupervisionApplication( 
+			Id
+		  , ProjectId
+		  , SupervisorCompany
+		  , SupervisorPlan
+		  , SupervisorDetailed
+		  , Reply
+		  , UploadPicture
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{SupervisorCompany}
+		  , #{SupervisorPlan}
+		  , #{SupervisorDetailed}
+		  , #{Reply}
+		  , #{UploadPicture}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（监督申请） -->
+	<update id="updateSupervisionApplication" parameterType="com.curing.projectSchedule.model.SupervisionApplicationEntity">
+		UPDATE SupervisionApplication 
+		SET
+		  SupervisorCompany = #{SupervisorCompany}
+		  , SupervisorPlan = #{SupervisorPlan}
+		  , SupervisorDetailed = #{SupervisorDetailed}
+		  , Reply = #{Reply}
+		  , UploadPicture = #{UploadPicture}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（监督申请） -->
+	<update id="deleteSupervisionApplication" parameterType="com.curing.projectSchedule.model.SupervisionApplicationEntity">
+		UPDATE SupervisionApplication 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

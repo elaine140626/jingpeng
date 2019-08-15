@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="renderer" content="webkit|ie-comp|ie-stand">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta http-equiv="Cache-Control" content="no-siteapp" />
+		<link rel="Bookmark" href="/favicon.ico">
+		<link rel="Shortcut Icon" href="/favicon.ico" />
+		<!--[if lt IE 9]>
+<script type="text/javascript" src="js/html5shiv.js"></script>
+<script type="text/javascript" src="js/respond.min.js"></script>
+<![endif]-->
+		<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
+		<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
+		<link rel="stylesheet" type="text/css" href="js/Hui-iconfont/1.0.8/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/blue/skin.css" id="skin" />
+		<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
+		<!--[if IE 6]>
+<script type="text/javascript" src="js/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+		<title>养护项目管理系统</title>
+		<meta name="keywords" content="">
+		<meta name="description" content="">
+		<script type="text/javascript">
+			function openwin(url) { 
+				window.open(url,"newwindow","height=100%,width=100%,toolbar =no,menubar=no,scrollbars=no,resizeable=no,location=no,status=no") 
+			} 
+
+		</script>
+	</head>
+	<!-- <body  onload="openwin('index0.html');window.close() "> -->
+	<body>
+		<header class="navbar-wrapper">
+			<div class="navbar navbar-fixed-top">
+				<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="index.html">养护项目管理系统</a>
+					<span class="logo navbar-slogan f-l mr-10 hidden-xs">v1.0</span>
+					<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
+						<ul class="cl">
+							<li></li>
+							<li class="dropDown dropDown_hover">
+								<a href="#" class="dropDown_A"><span id="userName"></span><i class="Hui-iconfont">&#xe6d5;</i></a>
+								<ul class="dropDown-menu menu radius box-shadow">
+									<li><a href="javascript:;" onclick="myselfinfo()">个人信息</a></li>
+									<li><a href="javascript:;" onclick="outLogin()">退出</a></li>
+								</ul>
+							</li>
+							<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+		<aside class="Hui-aside">
+			<div class="menu_dropdown bk_2">
+				<dl id="menu-information">
+					<dt><i class="Hui-iconfont">&#xe623;</i> 工程信息<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd id="first">
+						<ul>
+							<li><a data-href="pages/projectInfo/projectInfoSummary.html" data-title="工程信息" href="javascript:void(0)">工程信息</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-plan">
+					<dt><i class="Hui-iconfont">&#xe637;</i> 工程计划<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li><a data-href="pages/projectPlan/projectPlanSummary.html" data-title="工程计划" href="javascript:void(0)">工程计划</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-tender">
+					<dt><i class="Hui-iconfont">&#xe6c6;</i> 工程招标<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li><a data-href="pages/projectMetering/ProjectTenderingSummary.html" data-title="工程招标" href="javascript:void(0)">工程招标</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-progress">
+					<dt><i class="Hui-iconfont">&#xe622;</i> 工程进度<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li class="menu_dropdown" style="padding-left: 13px;">
+								<dl id="menu-progress-111">
+									<dt> 设计工程量<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+									<dd>
+										<ul>
+											<li>
+												<dl id="menu-progress-111">
+													<dt> 道路设计工程量<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+													<dd>
+														<ul>
+															<li><a data-href="pages/projectSchedule/roadbedProtectionNumber.html" data-title="路基防护工程" href="javascript:void(0)">路基防护工程</a></li>
+															<li><a data-href="pages/projectSchedule/bridge_deck.html" data-title="桥面处理工程" href="javascript:void(0)">桥面处理工程</a></li>
+															<li><a data-href="pages/projectSchedule/culvertMaintenanceNumber.html" data-title="涵洞维修工程" href="javascript:void(0)">涵洞维修工程</a></li>
+															<li><a data-href="pages/projectSchedule/bridgeRetainingWallNumber.html" data-title="桥梁挡墙工程" href="javascript:void(0)">桥梁挡墙工程</a></li>
+															<li><a data-href="pages/projectSchedule/subgradeKilometreEarthworkNumber.html" data-title="路基每公里土石方工程" href="javascript:void(0)">路基每公里土石方工程</a></li>
+															<li><a data-href="pages/projectSchedule/overhaulPavementNumber.html" data-title="大修路面工程" href="javascript:void(0)">大修路面工程</a></li>
+															<li><a data-href="pages/projectSchedule/subgradeEarthworkNumber.html" data-title="路基土石方工程" href="javascript:void(0)">路基土石方工程</a></li>
+															<li><a data-href="pages/projectSchedule/roadSurfaceNumber.html" data-title="路面工程" href="javascript:void(0)">路面工程</a></li>
+															<li><a data-href="pages/projectSchedule/sideDitchNumber.html" data-title="边沟工程" href="javascript:void(0)">边沟工程</a></li>
+															<li><a data-href="pages/projectSchedule/protectiveWallNumber.html" data-title="防护墙工程" href="javascript:void(0)">防护墙工程</a></li>
+															<li><a data-href="pages/projectSchedule/diseaseTreatmentNumber.html" data-title="旧路面病害处治" href="javascript:void(0)">旧路面病害处治</a></li>
+															<li><a data-href="pages/projectSchedule/crossRoadbedNumber.html" data-title="平面交叉路基路面" href="javascript:void(0)">平面交叉路基路面</a></li>
+															<li><a data-href="pages/projectSchedule/greenNumber.html" data-title="绿化工程" href="javascript:void(0)">绿化工程</a></li>
+															<li><a data-href="pages/projectSchedule/constructionSidewalkNumber.html" data-title="施工便道路面工程" href="javascript:void(0)">施工便道路面工程</a></li>
+															<li><a data-href="pages/projectSchedule/temporarySignsNumber.html" data-title="临时标志" href="javascript:void(0)">临时标志</a></li>
+															<li><a data-href="pages/projectSchedule/passingCulvertNumber.html" data-title="石砌边沟过路涵" href="javascript:void(0)">石砌边沟过路涵</a></li>
+														</ul>
+													</dd>
+												</dl>
+											</li>
+											<li>
+												<dl id="menu-progress-111">
+													<dt> 桥梁设计工程量<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+													<dd>
+														<ul>
+															<li><a data-href="pages/projectSchedule/bridgeTop.html" data-title="桥工程量" href="javascript:void(0)">桥工程量(上)</a></li>
+															<li><a data-href="pages/projectSchedule/bridgeBottom.html" data-title="桥工程量" href="javascript:void(0)">桥工程量(下)</a></li>
+															<li><a data-href="pages/projectSchedule/bridgeGuard.html" data-title="桥工程量" href="javascript:void(0)">桥工程量(防护工程)</a></li>
+															<li><a data-href="pages/projectSchedule/plateCulvertNumber.html" data-title="板涵工程" href="javascript:void(0)">板涵工程</a></li>
+															<li><a data-href="pages/projectSchedule/pipeCulvertNumber.html" data-title="管涵工程" href="javascript:void(0)">管涵工程</a></li>
+															<li><a data-href="pages/projectSchedule/passingThroughNumber.html" data-title="过路过户涵" href="javascript:void(0)">过路过户涵</a></li>
+														</ul>
+													</dd>
+												</dl>
+											</li>
+											<li>
+												<dl id="menu-progress-111">
+													<dt> 交通工程设计工程量<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+													<dd>
+														<ul>
+															<li><a data-href="pages/projectSchedule/CrossingPillar.html" data-title="道口标柱" href="javascript:void(0)">道口标柱</a></li>
+															<li><a data-href="pages/projectSchedule/steelGuardrail.html" data-title="钢护栏工程" href="javascript:void(0)">钢护栏工程</a></li>
+															<li><a data-href="pages/projectSchedule/MarkingLineNumber.html" data-title="标线工程" href="javascript:void(0)">标线工程</a></li>
+															<li><a data-href="pages/projectSchedule/signBoardNumber.html" data-title="标志牌工程" href="javascript:void(0)">标志牌工程</a></li>
+														</ul>
+													</dd>
+												</dl>
+											</li>
+										</ul>
+									</dd>
+								</dl>
+							</li>
+							<li><a data-href="pages/projectSchedule/supervisionApplication.html" data-title="工程监督申请" href="javascript:void(0)">工程监督申请</a></li>
+							<li><a data-href="pages/projectSchedule/construction.html" data-title="施工组织设计" href="javascript:void(0)">施工组织设计</a></li>
+							<li><a data-href="pages/projectSchedule/subheadNumberMoney.html" data-title="子目号管理" href="javascript:void(0)">子目号管理</a></li>
+							<li><a data-href="pages/projectSchedule/sevenDaily.html" data-title="七日报" href="javascript:void(0)">七日报</a></li>
+							<!-- <li><a data-href="pages/projectSchedule/construction.html" data-title="月报" href="javascript:void(0)">月报</a></li> -->
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-metering">
+					<dt><i class="Hui-iconfont">&#xe60d;</i> 工程计量<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li><a data-href="pages/projectMetering/engineeringSettlement.html" data-title="工程价款结算帐单" href="javascript:;">工程价款结算帐单</a></li>
+							<li><a data-href="pages/projectMetering/completionAmount.html" data-title="投资计划完成金额情况" href="javascript:;">投资计划完成金额情况</a></li>
+							<li><a data-href="pages/projectMetering/quantities.html" data-title="投资计划工程量投资额完成情况" href="javascript:;">投资计划工程量投资额完成情况</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-reportforms">
+					<dt><i class="Hui-iconfont">&#xe635;</i> 统计报表<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li><a data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=1" data-title="第一批计划进度" href="javascript:void(0)">第一批计划进度</a></li>
+							<li><a data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=2" data-title="第二批计划进度" href="javascript:void(0)">第二批计划进度</a></li>
+							<li><a data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=3" data-title="第三批计划进度" href="javascript:void(0)">第三批计划进度</a></li>
+							<li><a data-href="pages/statisticsForms/firstPlannedProgress.html?planBatch=7" data-title="全省" href="javascript:void(0)">全省</a></li>
+							<li><a data-href="pages/statisticsForms/dangerousBridge.html" data-title="险桥" href="javascript:void(0)">险桥</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-asphaltSupply">
+					<dt><i class="Hui-iconfont">&#xe635;</i> 沥青供应<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li><a data-href="pages/asphaltSupply/asphaltSupply.html" data-title="沥青供应" href="javascript:void(0)">沥青供应</a></li>
+						</ul>
+					</dd>
+				</dl>
+				<dl id="menu-setting">
+					<dt><i class="Hui-iconfont">&#xe62e;</i> 系统设置<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+					<dd>
+						<ul>
+							<li><a data-href="pages/systemInfo/engineeringManagement.html" data-title="项目管理" href="javascript:void(0)">项目管理</a></li>
+						</ul>
+					</dd>
+				</dl>
+			</div>
+		</aside>
+		<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+		<section class="Hui-article-box">
+			<div id="Hui-tabNav" class="Hui-tabNav hidden-xs">
+				<div class="Hui-tabNav-wp">
+					<ul id="min_title_list" class="acrossTab cl">
+						<li class="active">
+							<span title="工程信息" data-href="pages/projectInfo/projectInfoSummary.html">工程信息</span>
+							<em></em></li>
+					</ul>
+				</div>
+				<div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i
+						 class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i
+						 class="Hui-iconfont">&#xe6d7;</i></a></div>
+			</div>
+			<div id="iframe_box" class="Hui-article">
+				<div class="show_iframe">
+					<div style="display:none" class="loading"></div>
+					<iframe scrolling="yes" frameborder="0" src="pages/projectInfo/projectInfoSummary.html"></iframe>
+				</div>
+			</div>
+		</section>
+
+		<div class="contextMenu" id="Huiadminmenu">
+			<ul>
+				<li id="closethis">关闭当前 </li>
+				<li id="closeall">关闭全部 </li>
+			</ul>
+		</div>
+		<!--_footer 作为公共模版分离出去-->
+		<script type="text/javascript" src="js/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="js/layer/2.4/layer.js"></script>
+		<script type="text/javascript" src="static/h-ui/js/H-ui.js"></script>
+		<script type="text/javascript" src="static/h-ui.admin/js/H-ui.admin.js"></script>
+		<!--/_footer 作为公共模版分离出去-->
+
+		<!--请在下方写此页面业务相关的脚本-->
+		<script type="text/javascript" src="js/jquery.contextmenu/jquery.contextmenu.r2.js"></script>
+		<script type="text/javascript" src="js/systemJs/common/datadictionary.js"></script>
+		<script type="text/javascript">
+			
+			$(document).ready(function(){
+				
+				$("dd").hide();//你这直接就隐藏了
+				$("#first").show();// 这我添加的 第一个加个id 设置显示就行了
+				$("dt a").click(function(){
+				$(this).parent().toggleClass("bg");
+				$(this).parent().prevAll("dt").removeClass("bg")
+				$(this).parent().nextAll("dt").removeClass("bg")
+				$(this).parent().next().slideToggle();
+				$(this).parent().prevAll("dd").slideUp("slow");
+				$(this).parent().next().nextAll("dd").slideUp("slow");
+				return false;
+				});
+				
+				// 获取当前登录用户信息
+				userInfo = getUserInfo();
+				if(userInfo != ""){
+					userCityId = userInfo.cityId;
+					if (userCityId!=0){
+						//统计报表隐藏 
+						document.getElementById("menu-reportforms").style.display="none";
+						//沥青供应隐藏
+						document.getElementById("menu-asphaltSupply").style.display="none";
+					}
+				}
+			});
+			
+			function getUserInfo(){
+				var userInfo = "";
+				 $.ajax({
+						type: 'POST',
+						url: 'Login/getUser.action',
+						data: "",
+						dataType: 'json',
+						async:false,
+						success: function(data){
+							if(data != ""){
+								userInfo = data;
+							}
+						}
+					});	
+				// 用户id
+				return userInfo;
+			}
+			var user;
+			$(function() {
+				user = getUserInfo();
+				$("#userName").html(user.userName)
+				if(user.userName == null){
+					location.href = "/curing/pages/login/login.html";
+				}
+			});
+			/*个人信息*/
+			function myselfinfo() {
+				location.href = "pages/login/userInfo.html?flag=1";
+			}
+
+			/*用户-添加*/
+			function member_add(title, url, w, h) {
+				layer_show(title, url, w, h);
+			}
+			function outLogin(){
+				location.href = "/curing/pages/login/login.html";
+			}
+			
+		</script>
+
+	</body>
+</html>

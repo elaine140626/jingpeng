@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.projectSchedule.dao.ConstructionSidewalkNumberDao">
+	<!-- 工程进度（施工便道路面工程数量汇总表）List取得 -->
+	<select id="getConstructionSidewalkNumberList" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.ConstructionSidewalkNumberEntity">
+		SELECT
+		  csn.Id
+		  , csn.ProjectId                                 -- 项目id
+		  , csn.PileNumber                                -- 起讫桩号
+		  , csn.Length                                    -- 长度
+		  , csn.BuildNature                               -- 建设性质
+		  , csn.RoadWidth                                 -- 路面宽度
+		  , csn.OrdinaryConcrete4cm                       -- 4cm普通沥青混凝土（AC-13）
+		  , csn.ModificationConcrete4cm                   -- 4cm改性沥青混凝土（AC-13)
+		  , csn.ModificationConcrete5cm                   -- 5cm改性沥青混凝土（AC-16）
+		  , csn.OrdinaryConcrete7cm                       -- 7cm普通沥青混凝土（AC-25）
+		  , csn.GravelSeal                                -- 橡胶沥青碎石封层0.6cm
+		  , csn.StickyLayer                               -- 粘油层
+		  , csn.PermeableLayer                            -- 透油层
+		  , csn.MillingThick                              -- 铣刨旧路厚4cm
+		  , csn.DigOut                                    -- 新建结构挖除旧路
+		  , csn.GravelCushion                             -- 新建结构20cm天然砂砾垫层
+		  , csn.GravelUpper                               -- 新建结构20cm水泥稳定砂砾上基层
+		  , csn.GravelLower                               -- 新建结构20cm水泥稳定砂砾下基层
+		  , csn.Shoulder                                  -- 培路肩厚5cm
+		  , csn.Remarks                                   -- 备注
+		  , csn.IsDel
+		  , csn.Creater
+		  , csn.CreaterDate
+		  , csn.Reviser
+		  , csn.ReviserDate 
+		FROM
+		  ConstructionSidewalkNumber as csn 
+		  left join V_EntryTree as ve 
+		    on csn.ProjectId = ve.pid
+		WHERE
+		  csn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and csn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and csn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="cityId!=null and cityId!=''">
+		    and ve.ciid = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and ve.couid = #{countyId}                            -- 根据id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and csn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="length!=null and length!=''">
+		    and csn.length like concat('%',#{length},'%')     -- 根据长度查询
+		  </if>
+		  <if test="roadWidth!=null and roadWidth!=''">
+		    and csn.roadWidth  like concat('%',#{roadWidth},'%')     -- 根据路面宽度查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and csn.BuildNature like concat('%',#{buildNature},'%') -- 根据建设性质查询
+		  </if>
+		   order by csn.CreaterDate desc
+	</select>
+	
+		<select id="getConstructionSidewalkNumberListEX" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		   csn.PileNumber                                -- 起讫桩号
+		  , csn.Length                                    -- 长度
+		  , csn.BuildNature                               -- 建设性质
+		  , csn.RoadWidth                                 -- 路面宽度
+		  , csn.OrdinaryConcrete4cm                       -- 4cm普通沥青混凝土（AC-13）
+		  , csn.ModificationConcrete4cm                   -- 4cm改性沥青混凝土（AC-13)
+		  , csn.ModificationConcrete5cm                   -- 5cm改性沥青混凝土（AC-16）
+		  , csn.OrdinaryConcrete7cm                       -- 7cm普通沥青混凝土（AC-25）
+		  , csn.GravelSeal                                -- 橡胶沥青碎石封层0.6cm
+		  , csn.StickyLayer                               -- 粘油层
+		  , csn.PermeableLayer                            -- 透油层
+		  , csn.MillingThick                              -- 铣刨旧路厚4cm
+		  , csn.DigOut                                    -- 新建结构挖除旧路
+		  , csn.GravelCushion                             -- 新建结构20cm天然砂砾垫层
+		  , csn.GravelUpper                               -- 新建结构20cm水泥稳定砂砾上基层
+		  , csn.GravelLower                               -- 新建结构20cm水泥稳定砂砾下基层
+		  , csn.Shoulder                                  -- 培路肩厚5cm
+		  , csn.Remarks                                   -- 备注
+		FROM
+		  ConstructionSidewalkNumber as csn 
+		  left join V_EntryTree as ve 
+		    on csn.ProjectId = ve.pid
+		WHERE
+		  csn.IsDel = 0
+		   order by csn.CreaterDate desc
+	</select>
+	
+	<!-- 工程进度（施工便道路面工程数量汇总表）合计 -->
+	<select id="getConstructionSidewalkNumberSum" parameterType="java.util.Map" resultType="com.curing.projectSchedule.model.ConstructionSidewalkNumberSum">
+		SELECT
+		  sum(csn.Length) as LengthSum                    -- 长度
+		  , sum(csn.RoadWidth) as RoadWidthSum            -- 路面宽度
+		  , sum(csn.OrdinaryConcrete4cm) as OrdinaryConcrete4cmSum -- 4cm普通沥青混凝土（AC-13）
+		  , sum(csn.ModificationConcrete4cm) as ModificationConcrete4cmSum -- 4cm改性沥青混凝土（AC-13)
+		  , sum(csn.ModificationConcrete5cm) as ModificationConcrete5cmSum -- 5cm改性沥青混凝土（AC-16）
+		  , sum(csn.OrdinaryConcrete7cm) as OrdinaryConcrete7cmSum -- 7cm普通沥青混凝土（AC-25）
+		  , sum(csn.GravelSeal) as GravelSealSum          -- 橡胶沥青碎石封层0.6cm
+		  , sum(csn.StickyLayer) as StickyLayerSum        -- 粘油层
+		  , sum(csn.PermeableLayer) as PermeableLayerSum  -- 透油层
+		  , sum(csn.MillingThick) as MillingThickSum      -- 铣刨旧路厚4cm
+		  , sum(csn.DigOut) as DigOutSum                  -- 新建结构挖除旧路
+		  , sum(csn.GravelCushion) as GravelCushionSum    -- 新建结构20cm天然砂砾垫层
+		  , sum(csn.GravelUpper) as GravelUpperSum        -- 新建结构20cm水泥稳定砂砾上基层
+		  , sum(csn.GravelLower) as GravelLowerSum        -- 新建结构20cm水泥稳定砂砾下基层
+		  , sum(csn.Shoulder) as ShoulderSum              -- 培路肩厚5cm
+		FROM
+		  ConstructionSidewalkNumber as csn 
+		  left join V_EntryTree as ve 
+		    on csn.ProjectId = ve.pid 
+		WHERE
+		  csn.IsDel = 0
+		  <if test="id!=null and id!=''">
+		    and csn.Id = #{id}                            -- 根据id查询
+		  </if>
+		  <if test="levels == 3">
+		    and csn.ProjectId = #{treeIds}                -- 根据项目id查询
+		  </if>
+		  <if test="levels == 2">
+		    and ve.couid = #{treeIds}                     -- 根据县id查询
+		  </if>
+		  <if test="levels == 1">
+		    and ve.ciid = #{treeIds}                      -- 根据市id查询
+		  </if>
+		  <if test="pileNumber!=null and pileNumber!=''">
+		    and csn.pileNumber  like concat('%',#{pileNumber},'%') -- 根据起止桩号查询
+		  </if>
+		  <if test="length!=null and length!=''">
+		    and csn.length like concat('%',#{length},'%')     -- 根据长度查询
+		  </if>
+		  <if test="roadWidth!=null and roadWidth!=''">
+		    and csn.roadWidth  like concat('%',#{roadWidth},'%')     -- 根据路面宽度查询
+		  </if>
+		  <if test="buildNature!=null and buildNature!=''">
+		    and csn.BuildNature like concat('%',#{buildNature},'%') -- 根据建设性质查询
+		  </if>
+	</select>
+	
+	<!-- 新增工程进度（施工便道路面工程数量汇总表） -->
+	<insert id="insertConstructionSidewalkNumber" parameterType="com.curing.projectSchedule.model.ConstructionSidewalkNumberEntity">
+		INSERT 
+		INTO ConstructionSidewalkNumber( 
+			Id
+		  , ProjectId
+		  , PileNumber
+		  , Length
+		  , BuildNature
+		  , RoadWidth
+		  , OrdinaryConcrete4cm
+		  , ModificationConcrete4cm
+		  , ModificationConcrete5cm
+		  , OrdinaryConcrete7cm
+		  , GravelSeal
+		  , StickyLayer
+		  , PermeableLayer
+		  , MillingThick
+		  , DigOut
+		  , GravelCushion
+		  , GravelUpper
+		  , GravelLower
+		  , Shoulder
+		  , Remarks
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		) 
+		VALUES ( 
+		 REPLACE(UUID(),'-','')
+		  , #{ProjectId}
+		  , #{PileNumber}
+		  , #{Length}
+		  , #{BuildNature}
+		  , #{RoadWidth}
+		  , #{OrdinaryConcrete4cm}
+		  , #{ModificationConcrete4cm}
+		  , #{ModificationConcrete5cm}
+		  , #{OrdinaryConcrete7cm}
+		  , #{GravelSeal}
+		  , #{StickyLayer}
+		  , #{PermeableLayer}
+		  , #{MillingThick}
+		  , #{DigOut}
+		  , #{GravelCushion}
+		  , #{GravelUpper}
+		  , #{GravelLower}
+		  , #{Shoulder}
+		  , #{Remarks}
+		  , 0
+		  , #{Creater}
+		  , now()
+		) 
+	</insert>
+	
+	<!-- 更新工程进度（施工便道路面工程数量汇总表） -->
+	<update id="updateConstructionSidewalkNumber" parameterType="com.curing.projectSchedule.model.ConstructionSidewalkNumberEntity">
+		UPDATE ConstructionSidewalkNumber 
+		SET
+		  PileNumber = #{PileNumber}
+		  , Length = #{Length}
+		  , BuildNature = #{BuildNature}
+		  , RoadWidth = #{RoadWidth}
+		  , OrdinaryConcrete4cm = #{OrdinaryConcrete4cm}
+		  , ModificationConcrete4cm = #{ModificationConcrete4cm}
+		  , ModificationConcrete5cm = #{ModificationConcrete5cm}
+		  , OrdinaryConcrete7cm = #{OrdinaryConcrete7cm}
+		  , GravelSeal = #{GravelSeal}
+		  , StickyLayer = #{StickyLayer}
+		  , PermeableLayer = #{PermeableLayer}
+		  , MillingThick = #{MillingThick}
+		  , DigOut = #{DigOut}
+		  , GravelCushion = #{GravelCushion}
+		  , GravelUpper = #{GravelUpper}
+		  , GravelLower = #{GravelLower}
+		  , Shoulder = #{Shoulder}
+		  , Remarks = #{Remarks}
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}	
+	</update>
+	
+	<!-- 删除工程进度（施工便道路面工程数量汇总表） -->
+	<update id="deleteConstructionSidewalkNumber" parameterType="com.curing.projectSchedule.model.ConstructionSidewalkNumberEntity">
+		UPDATE ConstructionSidewalkNumber 
+		SET
+		  IsDel = 1
+		  , Reviser = #{Reviser}
+		  , ReviserDate = now()
+		WHERE
+		  Id = #{Id}
+	</update>
+		
+</mapper>

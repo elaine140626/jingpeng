@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>珲乌高速吉林至机场段改扩建工程管理平台</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/platform/css/bootstrap.css">
+<link rel="stylesheet" href="../resources/platform/css/style.css">
+<link rel="StyleSheet" href="../resources/platform/css/dtree2.css"/>
+<script type="text/javascript" src="../resources/platform/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/platform/js/dtree.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+</head>
+
+<body>
+<div class="top">
+	<div class="row">
+        <div class="topleft">珲乌高速吉林至机场段改扩建工程管理平台</div>
+        <div class="topright">
+            <a href="user.html" class="userid">wangdanwei</a><span>你好！</span>
+            <a href="../User/platformUserinfo.html" class="shezhi">用户管理</a>
+            <a href="../Common/platformOut.html" class="out">安全退出</a>
+        </div>
+	</div>
+</div>
+<div class="container-fluid content">
+	<div class="row leftbj">
+    	<div class="leftnav">
+        	<ul>
+            	<li><a href="../Platform/index.html"><span class="i_1"></span><b>首页</b></a></li>
+                <li class="focus2"><a href="../Andr/platform_asphalt_statistics.html"><span class="i_2"></span><b>沥青</b></a></li>
+                <li><a href="../cemAndr/platform_cement_statistics.html"><span class="i_3"></span><b>水泥</b></a></li>
+                <li><a href="../waterstabilityAndr/platform_waterstability_statistics.html"><span class="i_4"></span><b>水稳</b></a></li>
+            </ul>
+        </div>
+        <div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：拌合站 > 用户注册</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="lq_main">
+            	<form id="tab">
+                	<table width="100%" border="0" cellpadding="0" cellspacing="0" class="zhuce">
+                    	<tr class="dise">
+                        <th colspan="2" align="left" scope="col"><span>用户注册</span></th>
+                      </tr>
+                      <tr>
+                       <td width="23%" align="right">用户名：</td>
+                        <td width="77%">
+                        <input type="hidden" name="i_id" id="i_id">
+                        <input type="text" name="str_user_Name" id="str_user_Name" placeholder="请输入" class="zhuce_input" required="required" readonly="readonly">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="right">密码：</td>
+                        <td><input type="password" name="str_password" id="str_password" placeholder="请输入" class="zhuce_input" required="required"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">确认密码：</td>
+                        <td><input type="password" id="passwordAgin" placeholder="请输入" class="zhuce_input" required="required"></td>
+                      </tr>
+                      <tr>
+                        <td align="right">姓名：</td>
+                        <td><input type="text" name="str_name" id="str_name" placeholder="请输入" class="zhuce_input" required="required"></td>
+                      </tr>
+                      
+                      <tr>
+                        <td align="right">权限：</td>
+                        <td>
+                        <div class="dtree" id="dtree_div">
+						 <script type="text/javascript">
+							
+							 var baseUrl= getContextPath();
+							 $.ajax({
+									type : "POST",
+									url : baseUrl + "/Register/getPlatformOrg.html",
+									async:false,
+									data : {},
+									dataType : "json",
+									success : function(data) {
+										d = new dTree('d', true);
+										for(var i = 0; i < data.length; i++) {
+											var org_Name = data[i].str_org_Name;
+											if(data[i].str_org_Type == "0" || data[i].str_org_Type == 0) {
+												d.add(data[i].i_id, -1, org_Name);
+											} else if(data[i].str_org_Type == "1" || data[i].str_org_Type == 1) {
+												d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].id, org_Name, true, false);
+											} else {
+												d.add(data[i].i_id, data[i].i_parent_Id, 'authority', data[i].id, org_Name ,false, false);
+											}
+										}
+										document.write(d);
+				                        d.openAll();
+									}
+							});  
+                        </script>
+                        </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td align="right">&nbsp;</td>
+                        <td><input type="button" name="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="add();"></td>
+                      </tr>
+                    </table>
+                    </form>
+              </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom">
+	<a href="#">关于我们</a>|<a href="#">联系方式</a>Copyright (c) 2018 neiroad.com. All Rights Reserved V 1.8.5 京ICP备13015845号-1
+</div>
+
+
+<script type="text/javascript" src="../resources/platform/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/platform/js/modal.js"></script>
+<script type="text/javascript" src="../resources/platform/js/script.js"></script>
+
+<script type="text/javascript" src="../resources/js/platform/user_show.js"></script>
+
+</body>
+</html>

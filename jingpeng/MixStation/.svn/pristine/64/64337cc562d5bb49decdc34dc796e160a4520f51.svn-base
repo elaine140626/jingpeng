@@ -1,0 +1,203 @@
+package com.blindSample.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.blindSample.service.TestInfoService;
+import com.jingpeng.dao.DataTablesResponseInfo;
+import com.blindSample.util.MessageUtilBlindSample;
+import com.kdt.base.exception.BusinessException;
+import com.kdt.base.support.springsupport.KDController;
+
+/**
+ *生产配合比Controller
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/testInfo")
+public class TestInfoController extends KDController<Object>{
+	
+	@Autowired
+	private TestInfoService  testInfoService;
+	//跳转试验汇总页面
+	@RequestMapping("/shiyan_1.html")
+	public String shiyan_1() {
+		return "/BlindnessTest/shiyan_1";
+	}
+	//跳转详细各个数的页面
+	@RequestMapping("/shiyan_2_1.html")
+	public String shiyan_2_1() {
+		return "/BlindnessTest/shiyan_2_1";
+	}
+	
+	//砂浆抗压强自动采集数据页面
+	@RequestMapping("/shiyan03.html")
+	public String shiyan03() {
+		return "/BlindnessTest/shiyan03";
+	}
+
+	//接收map参数，获取试验汇总数据
+	@RequestMapping("/getTestSummary.html")
+	@ResponseBody
+	public DataTablesResponseInfo getTestSummary(@RequestParam HashMap<String, Object> map) {
+		
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		try {
+			if(map.isEmpty()==false) {
+				if(map.size()>=3){
+					String[] uniqueidentifiers = map.get("uniqueidentifiers").toString().split(",");
+					map.put("un", uniqueidentifiers);
+				}
+			}
+			List<Map<String, Object>> list = testInfoService.getTestSummary(map);
+			
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).put("no", i+1);
+				list.get(i).put("testHG", "<a href='javascript:void(0)' onclick='showDetailsNumber(1,\""+list.get(i).get("TestRoomName")+"\")'>"+list.get(i).get("testHG")+"</a>");
+				list.get(i).put("ZD", "<a href='javascript:void(0)' onclick='showDetailsNumber(2,\""+list.get(i).get("TestRoomName")+"\")'>"+list.get(i).get("testZD")+"</a>");
+//				list.get(i).put("zd", list.get(i).get("testZD"));
+				list.get(i).put("ZDHE", "<a href='javascript:void(0)' onclick='showDetailsNumber(3,\""+list.get(i).get("TestRoomName")+"\")'>"+list.get(i).get("testZDHE")+"</a>");
+				list.get(i).put("MY", "<a href='javascript:void(0)' onclick='showDetailsNumber(4,\""+list.get(i).get("TestRoomName")+"\")'>"+list.get(i).get("testMY")+"</a>");
+//				list.get(i).put("my", list.get(i).get("testMY"));
+				list.get(i).put("MYHE", "<a href='javascript:void(0)' onclick='showDetailsNumber(5,\""+list.get(i).get("TestRoomName")+"\")'>"+list.get(i).get("testMYHE")+"</a>");
+				list.get(i).put("operation", "<a href='javascript:void(0)' onclick='showDetails(\""+list.get(i).get("TestRoomName")+"\")'>查看</a>");
+			}
+			//折线图方法，把初始化或查询的结果传过去
+			dtr.setData(list);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
+		return dtr;
+	}
+	
+	//接收map参数，获取试验汇总详细数据
+	@RequestMapping("/getTestSummaryDetailed.html")
+	@ResponseBody
+	public DataTablesResponseInfo getTestSummaryDetailed(@RequestParam HashMap<String, Object> map) {
+			
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+			
+		try {
+			List<Map<String, Object>> list = testInfoService.getTestSummaryDetailed(map);
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).put("no", i+1);
+			}
+			dtr.setData(list);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
+		return dtr;
+	}
+	
+	//接收map参数，获取试验汇总详细各个数的数据
+	@RequestMapping("/getTestSummaryDetailedNumber.html")
+	@ResponseBody
+	public DataTablesResponseInfo getTestSummaryDetailedNumber(@RequestParam HashMap<String, Object> map) {
+				
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+				
+		try {
+			List<Map<String, Object>> list = testInfoService.getTestSummaryDetailedNumber(map);
+			for (int i = 0; i < list.size(); i++) {
+				list.get(i).put("no", i+1);
+				
+				String isQualifiedTest = "是";
+				if(list.get(i).get("isQualifiedTest")==null || list.get(i).get("isQualifiedTest")=="") {
+					isQualifiedTest = "否";
+				}else if(list.get(i).get("isQualifiedTest").toString()=="false") {
+					isQualifiedTest="否";
+				}
+				list.get(i).put("isQualifiedTest1",isQualifiedTest);
+				
+				String isTestCollection = "是";
+				if(list.get(i).get("isTestCollection")==null || list.get(i).get("isTestCollection")=="") {
+					isTestCollection = "否";
+				}else if(list.get(i).get("isTestCollection").toString()=="false") {
+					isTestCollection="否";
+				}
+				list.get(i).put("isTestCollection1", isTestCollection);
+				
+				String isTestBlind = "是";
+				if(list.get(i).get("isTestBlind")==null || list.get(i).get("isTestBlind")=="") {
+					isTestBlind = "否";
+				}else if(list.get(i).get("isTestBlind").toString()=="false") {
+					isTestBlind="否";
+				}
+				list.get(i).put("isTestBlind1", isTestBlind);
+				list.get(i).put("select","");
+			}
+			dtr.setData(list);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
+		return dtr;
+	}
+	
+	//接收map参数，查询砂浆抗压强自动采集数据
+	@RequestMapping("/getCollection.html")
+	@ResponseBody
+	public DataTablesResponseInfo getCollection(@RequestParam HashMap<String, Object> map) {
+					
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+					
+		try {
+			//分为两段查询 list主表 list1子表
+			List<Map<String, Object>> list = testInfoService.getCollection(map);
+			List<Map<String, Object>> list1 = testInfoService.getCollectionSubtable(map);
+			Map params = new HashMap();
+			params.put("list", list);
+			params.put("list1", list1);
+			dtr.setData(params);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
+		return dtr;
+	}
+
+	//查询折线图数据
+	@RequestMapping("/getChart.html")
+	@ResponseBody   										//这里接收的是初始化或查询方法的结果
+	public DataTablesResponseInfo getChart(@RequestParam HashMap<String, Object> map) throws BusinessException {
+						
+		DataTablesResponseInfo dtr = new DataTablesResponseInfo();
+		Map params = new HashMap();
+		if(map.isEmpty()==false) {
+			String[] uniqueidentifiers = map.get("uniqueidentifiers").toString().split(",");
+			map.put("un", uniqueidentifiers);
+			params.put("un", uniqueidentifiers);
+		}
+		//调用查询方法
+		List<Map<String, Object>> list = testInfoService.getTestSummary(map);
+		//传参
+		
+		
+		//把分组的list放到arraylist里返回
+		List li = new ArrayList();
+		for (int i = 0; i < list.size(); i++) {
+			//分组list
+			Map store = new HashMap();
+			//传参
+			params.put("TestRoomName", list.get(i).get("TestRoomName"));
+			try {
+				List<Map<String, Object>> listDetailed = testInfoService.getChart(params);
+				//前台方便区分
+				store.put("dataList", listDetailed);
+				li.add(store);
+			} catch (BusinessException e) {
+				e.printStackTrace();
+			}
+		}
+		dtr.setData(li);
+		return dtr;
+	}
+	
+}

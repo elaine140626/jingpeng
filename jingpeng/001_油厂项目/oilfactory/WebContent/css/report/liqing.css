@@ -1,0 +1,48 @@
+
+/*不同部分    */
+/*沥青*/
+.liqing {
+	width: 100%;
+	height: 100%;
+}
+.liqing .liqing-line {
+	width: 100%;
+	height: 28px;
+}
+.liqing .liqing-line:not(:last-child) {
+	border-bottom: 1px solid #000;
+}
+.liqing .liqing-line div {
+	height: 100%;
+	line-height: 28px;
+	text-align: center;
+	float: left;
+}
+.liqing .liqing-line div:nth-child(even) {
+	font-family: "FangSong", SimSun;
+}
+
+.liqing .liqing-line div:nth-child(odd) {
+	width: calc(17% - 1px);
+	border-right: 1px solid #000;
+}
+.liqing .liqing-line div:nth-child(2) {
+	width: calc(33% - 1px);
+	border-right: 1px solid #000;
+}
+.liqing .liqing-line div:last-child {
+	width: 33%;
+}
+/* .liqing .liqing-line:last-child  div:nth-child(2){
+	width: 83%;
+	border-right: none;
+} */
+.liqing .liqing-line div.countContain {
+	width: calc(15% - 1px);
+}
+.liqing .liqing-line div.adress {
+	width: calc(15% - 1px);
+}
+.liqing .liqing-line div.adressContain {
+	width: 53%;
+}

@@ -1,0 +1,97 @@
+﻿@charset "UTF-8";
+/**
+ * 
+ * @authors Logan
+ * @date    2016-01-12 15:30
+ * @version 1.0
+ */
+
+/* reset */
+body, h1, h2, h3, h4, h5, h6, p, ul, li, form, button, input, textarea, th, td, table, a, em, span, img, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { margin: 0; padding: 0; }
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; }
+body { font-size: 10pt; line-height: 20px; font-family: Arial, "宋体", sans-serif; background: #fff; }
+em,strong { font-style: normal; }
+ul, li { list-style: none; }
+input, select, img { vertical-align: middle; border: none; }
+p { word-wrap: break-word; }
+a { text-decoration: none; }
+a:hover { text-decoration: none; }
+a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer { cursor: pointer; }
+input{ outline: none;}
+button{ border: none;}
+.clearfix { zoom: 1; }
+.clearfix:after { display: block; visibility: hidden; clear: both; overflow: hidden; height: 0; content: '.'; }
+.floatl { float: left; }
+.floatr { float: right; }
+.textc { text-align: center; }
+table { border-spacing: 0; border-collapse:collapse; }
+tr,td { padding: 0;}
+
+/***********/
+body{ margin: 0; padding:0;}
+.table-wrap{ width: 680px; height: 1150px; margin: 10px auto 0; position:relative;}
+.table-wrap-s{ width: 1068px; height:auto; margin: 10px auto 0; position:relative;}
+.table-wrap h1{ font-size: 16pt; line-height: 60px; text-align: center;}
+table{ width: 100%; }
+td{ border: 1px solid #000; border-bottom: none; color: #000;}
+
+
+.table1 td{ height: 24px; text-align: center;}
+.table2 td{ height: 24px; text-align: center;}
+.tablezai td{ height: 18px; text-align: center;}
+.table2zhai td{ height: 14px; text-align: center;}
+
+.table3 td{ border-bottom: 1px solid #000;vertical-align:top;}
+.table3 .tfoot{ color: #000; padding-left: 25px;}
+.table3 .tfoot span{ padding-right: 120px; font-family:"宋体"}
+.table3 .tfoot em{ padding-left: 10px;}
+.table3 .tfootjbshu span{ padding-right: 120px; font-family:"宋体"}
+.table3 .tfootjb span{ padding-left: 25px; padding-right: 160px; font-family:"宋体"}
+.table3 .tfootjb em{ padding-left: 55px;}
+.table3 .tfoots{ color: #000; padding-left: 25px;}
+.table3 .tfoots span{ padding-right: 250px; font-family:"宋体"}
+.table3 .tfoots em{ padding-left: 10px;}
+.table3 .bei{ font-size: 10pt; font-family:"仿宋"; text-align: left;  vertical-align:top; padding:5px; }
+.table3 .bei span{ font-family:"宋体"; }
+.table4 { height:48px;}
+.table1ai td{ height: 18px; text-align: center;}
+.table2ai td{ height: 18px; text-align: center;}
+.table3ai td{ height: 18px; border-bottom: 1px solid #000;}
+.table10 .table_a {
+    border: 1px solid #000;
+}
+    .table10 .table_a .a {
+        float:left;
+        height:200px;
+    }
+ .table10 .tfoot{ color: #000; padding-left: 25px;}
+.table10 .tfoot span{ padding-right: 120px; font-family:"宋体"}
+.table3 .tfoot em{ padding-left: 10px;}
+.table10 .tfootjbshu span{ padding-right: 120px; font-family:"宋体"}
+.table10 .tfootjb span{ padding-left: 25px; padding-right: 160px; font-family:"宋体"}
+.table10 .tfootjb em{ padding-left: 55px;}
+.table10 .tfoots{ color: #000; padding-left: 25px;}
+.table10 .tfoots span{ padding-right: 250px; font-family:"宋体"}
+.table10 .tfoots em{ padding-left: 10px;}
+
+h1{	height: 48px;	line-height: 48px;	text-align: center;}
+
+.table4 td{ border: 0px solid #fff; font-size: 10pt; font-family:"宋体"; text-align: right; height:24px;}
+.table5{ height:24px; margin:0; padding:0;}
+.table5 td{ border: 0px solid #fff; font-size: 10pt; font-family:"宋体"; text-align: left; height:24px;}
+.td1{ font-size: 10pt; font-family:"仿宋"; text-align: center; word-wrap:break-word; }
+.td2{ text-align: left; vertical-align:text-top; font-size: 10pt; font-family:"仿宋"; }
+.td3{ font-size: 10pt; font-family:"宋体"; }
+
+.table1s td{ height: 14px; text-align: center; cellpadding="20"}
+.table2s tr{ height: 20px; text-align: center;}
+.td4{ height: 20px; text-align: center;}
+.td28{ height: 28px; text-align: center;}
+
+.pages{ width:680px; text-align: right; font-size: 10pt; position:absolute; bottom: 0; left:50%; margin-left:-340px;}
+.pages-s{ width:860px; text-align: right; font-size: 10pt; position:absolute; bottom: -20px; left:50%; margin-left:-340px;}
+
+.pages a{ color: #000; padding-left: 35px;}
+.pages-s a{ color: #000; padding-left: 35px;}
+*{word-break:break-all;}
+

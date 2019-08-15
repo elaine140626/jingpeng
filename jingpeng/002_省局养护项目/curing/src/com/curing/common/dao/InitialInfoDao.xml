@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.curing.common.dao.InitialInfoDao">
+	<!-- 左侧市县项目树取得 -->
+	<select id="getEntryTreeList" parameterType="java.util.Map" resultType="com.curing.common.model.EntryTreeEntity">
+		select
+		  CONCAT('ci', ci.Id) as ciid                     -- 市id
+		  , ci.CityName                                   -- 市名称
+		  , CONCAT('co', cou.Id) as couid                 -- 县id
+		  , cou.County                                    -- 县名称
+		  , CONCAT('en', ent.Id) as pid                   -- 项目名称id
+		  , ent.ProjectNumber                             -- 项目编号
+		  , ent.ProjectName                               -- 项目名称
+		from
+		  CityInfo as ci                                  -- 市信息表
+		  left join CountyInfo as cou                     -- 县信息表
+		    on ci.Id = cou.CityId 
+		    and cou.IsDel = 0 
+		  left join EntryName as ent                      -- 项目信息表
+		    on cou.Id = ent.CityId 
+		    and ent.IsDel = 0 
+		where
+		  ci.IsDel = 0
+		  <if test="cityId!=null and cityId!=''">
+		    and ci.Id = #{cityId}                            -- 根据id查询
+		  </if>
+		  <if test="countyId!=null and countyId!=''">
+		    and cou.Id = #{countyId}                            -- 根据id查询
+		  </if>
+	</select>
+	
+	<!-- 数据字典取得 -->
+	<select id="getDataDictionary" parameterType="java.util.Map" resultType="java.util.Map">
+		select
+		  Id
+		  , Code
+		  , Content 
+		from
+		  datadictionary 
+		where
+		  Type = #{Type}
+	</select>
+	
+	<!-- 根据项目id 查询项目信息 -->
+	<select id="getVEntryTree" parameterType="java.util.Map" resultType="com.curing.common.model.EntryTreeEntity">
+		select * from V_EntryTree
+		where pid = #{ProjectId}
+	</select>
+	
+	<!-- 根据项目id 查询子目号金额 -->
+	<select id="getSubheadNumberMoney" parameterType="java.util.Map" resultType="com.curing.common.model.SubheadNumberMoneyEntity">
+		SELECT
+		  Id
+		  , ProjectId                                     -- 项目id
+		  , SubheadNumber                                 -- 第100章-第700章子目号
+		  , SubheadName                                   -- 第100章-第700章子目名称
+		  , ContractAmount                                -- 合同金额
+		  , Total 									      -- 总量
+		  , UnitPrice 									  -- 单价
+		  , TotalPrice 									  -- 总价
+		  , Remarks                                       -- 备注
+		  , IsDel
+		  , Creater
+		  , CreaterDate
+		  , Reviser
+		  , ReviserDate 
+		FROM
+		  SubheadNumberMoney 
+		WHERE
+		  IsDel = 0 
+		  and ProjectId = #{ProjectId}
+	</select>
+		
+</mapper>

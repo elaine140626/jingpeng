@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.truckscale.basicSetting.dao.TransportCompanyDao">
+	<!-- 查询所有运输单位 -->
+	<select id="getAllTransportCompany" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.TransportCompany">
+		SELECT
+			Id                     AS id,-- 自增长id
+			TransportCompanyNumber AS transportCompanyNumber,-- 运输单位编号
+			TransportCompanyName   AS transportCompanyName,-- 运输单位
+			CarOwnerName           AS carOwnerName,-- 车主姓名
+			CarOwnerTelephone      AS carOwnerTelephone,-- 车主电话
+			Remarks                AS remarks,-- 备注
+			IsDel                  AS isDel,-- 删除标记(0未删除， 1删除)
+			Creater                AS creater,-- 创建人
+			CreaterDate            AS createrDate,-- 创建日期
+			Reviser                AS reviser,-- 修改人
+			ReviserDate            AS reviserDate-- 修改日期
+		FROM
+			transportcompany -- 运输单位表
+		WHERE
+			IsDel = 0
+			<if test="id != null and id != 0">
+				AND Id = #{id}
+			</if>
+			<if test="transportCompanyName != null and transportCompanyName != ''">
+				AND TransportCompanyName like '%${transportCompanyName}%'
+			</if>
+		ORDER BY Id DESC
+	</select>
+	<!-- 添加运输单位 -->
+	<insert id="addTransportCompany" parameterType="com.truckscale.basicSetting.model.TransportCompany">
+		INSERT INTO transportcompany (
+			TransportCompanyNumber,
+			TransportCompanyName,
+			CarOwnerName,
+			CarOwnerTelephone,
+			Remarks,
+			IsDel,
+			Creater,
+			CreaterDate
+		)
+		VALUES
+			(
+				#{transportCompanyNumber},
+				#{transportCompanyName},
+				#{carOwnerName},
+				#{carOwnerTelephone},
+				#{remarks},
+				0,
+				#{creater},
+				NOW()
+			)
+	</insert>
+	<!-- 修改运输单位 -->
+	<update id="updateTransportCompany" parameterType="com.truckscale.basicSetting.model.TransportCompany">
+		UPDATE transportcompany 
+		SET
+		    TransportCompanyNumber = #{transportCompanyNumber}
+		  , TransportCompanyName = #{transportCompanyName}
+		  , CarOwnerName = #{carOwnerName}
+		  , CarOwnerTelephone = #{carOwnerTelephone}
+		  , Remarks = #{remarks}
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}
+	</update>
+	<!-- 删除材料名称表 -->
+	<update id="delTransportCompany" parameterType="com.truckscale.basicSetting.model.TransportCompany">
+		UPDATE transportcompany 
+		SET
+		    IsDel = 1
+		  , Reviser = #{reviser}
+		  , ReviserDate = NOW()
+		WHERE
+		  Id = #{id}
+	</update>
+	<!-- 运输单位去重 -->
+	<select id="getTransportCompany" resultType="java.util.Map" parameterType="com.truckscale.basicSetting.model.TransportCompany">
+		SELECT
+			TransportCompanyName AS transportCompanyName
+		FROM transportcompany
+		WHERE IsDel = 0
+		AND TransportCompanyName = #{transportCompanyName} 
+	</select>
+	<!-- 判断运输单是否被关联 -->
+	<select id="getCarInfoList" parameterType="java.util.Map" resultType="com.truckscale.basicSetting.model.CarInfo">
+		SELECT
+			c.Id              AS id,-- 自增长id 
+			c.CarNumber       AS carNumber,-- 车辆编码
+			c.PlateNumber     AS plateNumber,-- 车牌号码
+			c.CarModel        AS carModel,-- 车辆型号
+			c.DriverName      AS driverName,-- 司机姓名
+			c.Telephone       AS telephone,-- 联系电话
+			c.TareWeight      AS tareWeight,-- 皮重
+			c.TransportUnitId AS transportUnitId,-- 运输单位id
+			c.Remarks         AS remarks,-- 备注
+			c.IsDel           AS isDel,-- 删除标记
+			c.Creater         AS creater,-- 创建人
+			c.CreaterDate     AS createrDate,-- 创建日期
+			c.Reviser         AS reviser,-- 修改人
+			c.ReviserDate     AS reviserDate -- 修改日期
+		FROM
+			carinfo c
+		WHERE
+			c.IsDel = 0
+			AND c.InOrTemporary = 0
+			AND c.TransportUnitId = #{id}
+	</select>
+	<!-- 运输单位编号自增 -->
+	<select id="getTransportCompanyCount" resultType="com.truckscale.basicSetting.model.TransportCompany">
+		SELECT
+			Id                     AS id,-- 自增长id
+			TransportCompanyNumber AS transportCompanyNumber,-- 运输单位编号
+			TransportCompanyName   AS transportCompanyName,-- 运输单位
+			CarOwnerName           AS carOwnerName,-- 车主姓名
+			CarOwnerTelephone      AS carOwnerTelephone,-- 车主电话
+			Remarks                AS remarks,-- 备注
+			IsDel                  AS isDel,-- 删除标记(0未删除， 1删除)
+			Creater                AS creater,-- 创建人
+			CreaterDate            AS createrDate,-- 创建日期
+			Reviser                AS reviser,-- 修改人
+			ReviserDate            AS reviserDate-- 修改日期
+		FROM
+			transportcompany -- 运输单位表
+		WHERE
+			IsDel = 0
+		ORDER BY CreaterDate DESC LIMIT 1
+	</select>
+</mapper>

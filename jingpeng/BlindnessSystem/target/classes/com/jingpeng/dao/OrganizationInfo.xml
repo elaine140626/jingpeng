@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="organizationInfo">
+
+	<select id="getOrganizationInfo"  resultType="java.util.Map">
+		
+		select count(*) as a from Organization_Info
+		
+	</select>
+	
+	
+	<select id="getOrgInfo" parameterType="java.util.HashMap"  resultType="organizationInfo">
+		
+		select Id id,Org_Name orgName, Parent_Id parentId from Organization_Info 
+		
+		 <if test="orgId != null and orgId != ''">
+		 
+		 where   id = #{orgId} or Parent_Id = #{orgId}
+		   
+		 </if>
+		
+		order by  Parent_id asc
+		    		       
+	</select>
+	
+	
+</mapper>

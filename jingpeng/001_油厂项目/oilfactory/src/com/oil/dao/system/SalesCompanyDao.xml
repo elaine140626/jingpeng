@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.SalesCompanyDao">
+	
+	<!-- 查询所有的销售公司 -->
+	<select id="getSalesCompanyList" parameterType="java.util.Map" resultType="SalesCompany">
+		select 
+			Id                 as id
+			,CompanyNumber     as companyNumber
+			,CompanyName       as companyName
+			,CompanyAddress    as companyAddress
+			,Contacts          as contacts
+			,Telephone         as telephone
+			,Remarks           as remarks
+			,IsDel             as isDel
+			,Creater           as creater
+			,CreaterDate       as createrDate
+			,Reviser           as reviser
+			,ReviserDate       as reviserDate
+		from salecompany
+			where IsDel = 0
+			<if test="id != null and id != 0">
+				and Id = #{id}
+			</if>
+			<if test="companyName != null and companyName != ''">
+				and CompanyName like '%${companyName}%'
+			</if>
+		ORDER BY CreaterDate DESC
+	</select>
+
+	<!-- 添加销售公司 -->
+	<insert id="addSalesCompany" parameterType="SalesCompany">
+		insert into salecompany(
+			CompanyNumber
+			,CompanyName
+			,CompanyAddress
+			,Contacts
+			,Telephone
+			,Remarks
+			,Creater
+			,CreaterDate
+			,IsDel
+		)
+		values(
+			#{companyNumber}
+			,#{companyName}
+			,#{companyAddress}
+			,#{contacts}
+			,#{telephone}
+			,#{remarks}
+			,#{creater}
+			,now()
+			,0
+		)
+	</insert>
+	
+	<!-- 删除销售公司 -->
+	<update id="delSalesCompany" parameterType="java.util.Map">
+		update salecompany
+			set
+		  		IsDel = 1
+		  where 
+		  	Id = #{id}
+	</update>
+	
+	<!-- 修改销售公司 -->
+	<update id="updateSalesCompany" parameterType="SalesCompany">
+		update salecompany
+			set
+			CompanyNumber=#{companyNumber}
+			,CompanyName=#{companyName}
+			,CompanyAddress=#{companyAddress}
+			,Contacts=#{contacts}
+			,Telephone=#{telephone}
+			,Remarks=#{remarks}
+			,Reviser=#{reviser}
+			,ReviserDate=now()
+			,IsDel=0
+		where
+			Id = #{id}
+	</update>
+	
+	<!-- 销售公司名称 -->
+	<select id="getSalesCompanyName" resultType="java.util.Map">
+		select
+		  Id as id
+		  , CompanyName as companyName
+		from
+		  salecompany 
+		where IsDel = 0
+		order by Id desc
+	</select>
+	
+	<!-- 删除的校验查询 -->
+	<select id="getAllSalesCompany" resultType="java.util.Map" parameterType="java.util.Map">
+		select SalesCompanyId from contractinfo where IsDel = 0
+		<if test="salesCompanyId != null and salesCompanyId != 0">
+			and SalesCompanyId = #{salesCompanyId}
+		</if>
+		UNION ALL
+		select SalesCompanyId from salesorder where IsDel = 0
+		<if test="salesCompanyId != null and salesCompanyId != 0">
+			and SalesCompanyId = #{salesCompanyId}
+		</if>
+	</select>
+</mapper>

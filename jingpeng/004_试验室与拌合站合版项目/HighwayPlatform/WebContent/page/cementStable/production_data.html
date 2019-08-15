@@ -1,0 +1,73 @@
+<script src="../../js/HighwayPlatform/MixStation/cementStable/production_data.js"
+	type="text/javascript" charset="utf-8"></script>
+
+<div class="lq_biao gdt">
+	<table width="100%" border="0" cellpadding="0" cellspacing="0"
+		class="table-hover table-minwidth table-2000" id="list">
+		<thead>
+			<tr class="table-2000-bt">
+				<!-- <th rowspan="2" class="scgl_xz"><input type="checkbox" name="all" id="all" onclick="checkAll()"></th> -->
+				<th rowspan="2" class="scsj_xh">序号</th>
+				<th rowspan="2">拌合站名称</th>
+				<th rowspan="2" class="cjsj_sb">设备名称</th>
+				<th rowspan="2" class="cjsj_sb">施工配合比编号</th>
+				<th rowspan="2" class="cjsj_140">采集时间</th>
+				<th rowspan="2">拌和时间</th>
+				<th colspan="4">水泥仓采集值(kg)</th>
+				<th colspan="6">骨料仓采集值(kg)</th>
+                <th rowspan="2">水仓采集值(kg)</th>
+                <th rowspan="2">外掺剂1采集值(kg)</th>
+                <th rowspan="2">外掺剂2采集值(kg)</th>
+                <th rowspan="2">拌和总量(kg)</th>
+                <th rowspan="2" class="gcbw_100">施工地点</th>
+                <th rowspan="2">浇灌部位</th>
+                <th rowspan="2">分析结果</th>
+			</tr>
+			<tr class="table-2000-bt">
+              <th>1#仓</th>
+              <th>2#仓</th>
+              <th>3#仓</th>
+              <th>4#仓</th>
+              <th>1#仓</th>
+              <th>2#仓</th>
+              <th>3#仓</th>
+              <th>4#仓</th>
+              <th>5#仓</th>
+              <th>6#仓</th>
+            </tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="tan_dx_title">
+				<span><img src="../../image/images/bi.png" width="16"
+					height="16"></span>
+				<h3>生产数据明细</h3>
+				<button type="button" id="login_close" class="close"
+					data-dismiss="modal">
+					<span aria-hidden="true" class="tan_close">×</span>
+				</button>
+			</div>
+			<div class="example tan_dx_txt2">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="zi12" id="info" style="margin:20px">
+					<thead>
+					<tr>
+						<td width="12%"><strong>序号</strong></td>
+	                    <td width="28%"><strong>原材料名称</strong></td>
+	                    <td width="20%"><strong>施工配比值</strong></td>
+	                    <td width="20%"><strong>采集重量(kg)</strong></td>
+	                    <td width="20%"><strong>实际占比(%)</strong></td>
+					</tr>
+					</thead>
+					<tbody id="cetb"></tbody>
+				</table>
+				<div style="width:100%; text-align:center"><input type="submit" name="button" id="login_close" data-dismiss="modal" value="关&nbsp;&nbsp;闭" class="btn_bc"></div>
+				
+			</div>
+		</div>
+	</div>
+</div>

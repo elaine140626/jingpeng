@@ -1,0 +1,173 @@
+var user;
+$(function() {
+	/*$.ajaxSetup({ 
+	    statusCode: {
+	        401: function() { 
+	            window.location.href="../page/centerLogin/centerLogin.html"
+	        }, 
+	        403: function() { 
+	        	window.location.href="../page/centerLogin/centerLogin.html"
+	        }
+	    }
+	})*/
+	// 首页初始化加载
+	$.ajax({
+		type : "POST",
+		url : "../js/set.json",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			var index_block = $('#index_block');
+			var slide = data.slides;
+			var test_block = data.projectItem[0];
+			var mix_block = data.projectItem[1];
+			var index_block_text = data.index_block_text;
+			var index_block_img = data.index_block_img;
+			$('html head title').html(data.projectName);
+
+			// 遍历轮播
+			var html = '<div class="swiper-wrapper">';
+			$.each(slide,
+					function(i, n) {
+						html += '<div class="swiper-slide"><img src="' + n
+								+ '"></div>';
+					})
+			html += '</div>';
+			$('#swiper1').append(html);
+			// 轮播图初始化
+			var swiper1 = new Swiper('#swiper1', {
+				autoplay : 3500,
+				loop : true,
+			});
+			
+			$('.about_p').html(index_block_text);
+		}
+	});
+	user = getUser()
+	var str = user.userOrgDetailed;//获取拌合转权限字符串
+	//判断沥青混合料权限
+	var lq_1 = RegExp(/5/);//判断字符串是否包含orgId为5
+	var lq_2 = RegExp(/7/);//判断字符串是否包含orgId为7
+	var lq_3 = RegExp(/9/);//判断字符串是否包含orgId为9
+	//判断水泥混凝土权限
+	var sn_1 = RegExp(/11/);//判断字符串是否包含orgId为11
+	//判断水泥稳定土权限
+	var sw_1 = RegExp(/6/);//判断字符串是否包含orgId为6
+	var sw_2 = RegExp(/8/);//判断字符串是否包含orgId为8
+	var sw_3 = RegExp(/10/);//判断字符串是否包含orgId为10
+	//有一个条件满足即调用沥青拌合站生产统计方法
+	if(lq_1.test(str)== true || lq_2.test(str)== true || lq_3.test(str) == true){
+		getIndexLq();
+	}
+//	//有一个条件满足即调用水泥拌合站生产统计方法
+//	if(sn_1.test(str)== true){
+//		getIndexSn();
+//	}
+//	//有一个条件满足即调用水稳拌合站生产统计方法
+//	if(sw_1.test(str)== true || sw_2.test(str)== true || sw_3.test(str) == true){
+//		getIndexSw();
+//	}
+});
+
+// 加载子页面
+function loadHTML(url, container) {
+	$.ajax({
+		type : "get",
+		url : url,
+		dataType : 'html',
+		beforeSend : function() {
+		},
+		success : function(data) {
+			container.append(data);
+		},
+		error : function(xhr, ajaxOptions, thrownError) {
+
+		}
+	});
+};
+function outLogin() {
+	$.ajax({
+		type : "POST",
+		url : "../UserInfo/delUserSession.action",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			if (data.code == 'error') {
+				// 失败信息
+				swal("操作失败", data.message, data.code);
+			} else {
+				// 首页
+				$(location).attr('href', '../page/centerLogin/centerLogin.html');
+			}
+		}
+	});
+//	$(location).attr('href', '../page/centerLogin/centerLogin.html');
+}
+
+function getUser() {
+	var userInfo = '';
+	$.ajax({
+		type : "post",
+		url : "../UserInfo/getPtUserInfo.action",
+		data : {},
+		async : false,
+		dataType : "json",
+		success : function(data) {
+			userInfo = data;
+			// 获取当前登录人做显示
+		}
+	});
+	return userInfo;
+}
+function getIndexLq() {
+	$.ajax({
+		type : "POST",
+		url : "../PlatformCementData/getIndexLq.action",
+		data : {},
+		dataType : "json",
+		success : function(data) {
+			console.log(data);
+			data= data.lq;
+			$("#lqtotal").append(data.TotalCount);
+			$("#lqz").append(data.ZongChanLiang);
+			$("#lqy").append(data.LQYongLiang);
+		}
+	});
+}
+
+function isJumpTest() {
+	if (user.userTestDetailed == "") {
+		swal("操作失败", "你没有该权限", "info");
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function isJumpTestOrgLi() {
+	arr=user.userOrgDetailed.split(',');
+		if ($.inArray("5", arr)>-1||$.inArray("7", arr)>-1||$.inArray("9", arr)>-1) {
+			return true;
+		} else {
+			swal("操作失败", "你没有该权限", "info");
+			return false;
+		}
+}
+function isJumpTestOrgNi() {
+	arr=user.userOrgDetailed.split(',');
+	if ($.inArray("11", arr)>-1) {
+		return true;
+	} else {
+		swal("操作失败", "你没有该权限", "info");
+		return false;
+	}
+}
+function isJumpTestOrgWen() {
+	arr=user.userOrgDetailed.split(',');
+	if ($.inArray("6", arr)>-1||$.inArray("8", arr)>-1||$.inArray("10", arr)>-1) {
+		return true;
+	} else {
+		swal("操作失败", "你没有该权限", "info");
+		return false;
+	}
+}

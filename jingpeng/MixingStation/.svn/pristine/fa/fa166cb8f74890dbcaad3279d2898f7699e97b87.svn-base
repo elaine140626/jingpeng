@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../resources/css/bootstrap.min.css">
+<link rel="stylesheet" href="../resources/css/style_sn.css">
+</head>
+<body>
+<div class="rightcon">
+        	<div class="rightcon_wz">
+                <div class="location">您的位置：沥青混凝土拌合站（综合一标） > 生产管理 > 生产数据</div>
+                <!--<div class="time">2018年4月10日 16:28:53</div>-->
+            </div>
+            <div class="rightcon_content">
+            	<div class="table-b">
+            	  	<div class="table-c-right table-b-right gdt">
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover table-minwidth table-2000" id="list">
+                        <thead>
+                          <tr class="table-2000-bt">
+                            <!-- <th rowspan="2" class="scgl_xz"><input type="checkbox" name="all" id="all" onclick="checkAll()"></th> -->
+                            <th rowspan="2" class="scsj_xh">序号</th>
+                            <th rowspan="2" class="cjsj_140">采集时间</th>
+                            <th rowspan="2" class="sgdw_count">施工单位</th>
+                            <th rowspan="2" class="gcbw_100">工程部位/用途</th>
+                            <th rowspan="2" class="gcbw_100">拌合设备名称</th>
+                            <th rowspan="2" class="cpmc_140">产品名称/型号</th>
+                            <th rowspan="2">生产配合比编号</th>
+                            <th rowspan="2">级配编号</th>
+                            <th rowspan="2">拌合温度(°C)</th>
+                            <th rowspan="2">盘重量(KG)</th>
+                            <th colspan="6">骨料仓(KG)</th>
+                            <th colspan="2">粉料(KG)</th>
+                            <th>沥青(KG)</th>
+                            <th colspan="2">外掺剂(KG)</th>
+                            <th rowspan="2">分析结果</th>
+                          </tr>
+                          <tr class="table-2000-bt">
+                            <th>1#仓</th>
+                            <th>2#仓</th>
+                            <th>3#仓</th>
+                            <th>4#仓</th>
+                            <th>5#仓</th>
+                            <th>6#仓</th>
+                            <th>冷粉</th>
+                            <th>热粉</th>
+                            <th>沥青</th>
+                            <th>外掺剂1</th>
+                            <th>外掺剂2</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          </tbody>
+                        </table>
+
+					 	<!-- <div class="page page_dbj">
+                        <a href="#">首页</a><a href="#">上一页</a><a href="#" class="page-focus">1</a><a href="#">2</a><a href="#">3</a><a href="#">下一页</a><a href="#">尾页</a>第1页,共1页( 显示15条, 共13条) 	</div> -->
+                  	</div>
+              	</div>
+            	
+            	
+            	<div class="table-b">
+               	 <!-- <div class="yujing"><a href="#" class="hvr-icon-float">导出数据</a></div>-->
+                 	<div class="table-c-right table-b-right gdt">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover table-2000 jz" id="list2">
+                    <thead>
+                      <tr class="table-2000-bt">
+                        <th rowspan="2" class="scsj_xh">序号</th>
+                        <th rowspan="2" class="cjsj_sb">拌和设备名称</th>
+                        <th rowspan="2" class="cjsj_sb">施工配合比编号</th>
+                        <th rowspan="2" class="cjsj_140">采集时间</th>
+                        <th rowspan="2">拌和时间</th>
+                        <th colspan="4">水泥仓采集值(kg)</th>
+                        <th colspan="6">骨料仓采集值(kg)</th>
+                        <th rowspan="2">水仓采集值(kg)</th>
+                        <th rowspan="2">外掺剂1采集值(kg)</th>
+                        <th rowspan="2">外掺剂2采集值(kg)</th>
+                        <th rowspan="2">拌和总量(kg)</th>
+                        <th rowspan="2" class="gcbw_100">施工地点</th>
+                        <th rowspan="2">浇灌部位</th>
+                        <th rowspan="2">分析结果</th>
+                      </tr>
+                      <tr class="table-2000-bt">
+                        <th>1#仓</th>
+                        <th>2#仓</th>
+                        <th>3#仓</th>
+                        <th>4#仓</th>
+                        <th>1#仓</th>
+                        <th>2#仓</th>
+                        <th>3#仓</th>
+                        <th>4#仓</th>
+                        <th>5#仓</th>
+                        <th>6#仓</th>
+                       </tr>
+                       </thead>
+                       <tbody></tbody>
+                    </table>
+                    </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <input type="button" value="1111111111111" onclick="a();">
+            
+<script type="text/javascript" src="../resources/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="../resources/js/jquery3.3.1.min.js"></script>
+<script type="text/javascript" src="../resources/js/modal.js"></script>
+<script type="text/javascript" src="../resources/DataTables/datatables.js"></script>
+<script type="text/javascript" src="../resources/js/common.js"></script>
+<script type="text/javascript" src="../resources/js/test.js"></script>
+</body>
+</html>

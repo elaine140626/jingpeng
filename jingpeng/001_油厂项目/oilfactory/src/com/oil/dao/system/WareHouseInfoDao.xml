@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.oil.dao.system.WareHouseInfoDao">
+	<!-- 添加仓库信息数据 -->
+   <insert id="addWareHouseInfo" parameterType="WareHouseInfo">
+		INSERT 
+		INTO WarehouseInfo( 
+		  `WarehouseNumber`
+		  , `WarehouseName`
+		  , `WarehouseType`
+		  , `Type`
+		  , `Remarks`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		  #{warehouseNumber}
+		  , #{warehouseName}
+		  , #{warehouseType}
+		  , #{type}
+		  , #{remarks}
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!-- 添加大罐信息数据 -->
+    <insert id="addWareHouseInfoTank" parameterType="WareHouseInfo">
+		INSERT 
+		INTO WarehouseInfo( 
+		  `WarehouseNumber`
+		  , `WarehouseName`
+		  , `Type`
+		  , `TankHeight`
+		  , `TankCapacity`
+		  , `Position`
+		  , `LiquidHeight`
+		  , `AlarmLow`
+		  , `AlarmHigh`
+		  , `Remarks`
+		  ,`IsDel`
+		) 
+		VALUES ( 
+		  #{warehouseNumber}
+		  , #{warehouseName}
+		  , #{type}
+		  , #{tankHeight}
+		  , #{tankCapacity}
+		  , #{position}
+		  , #{liquidHeight}
+		  , #{alarmLow}
+		  , #{alarmHigh}
+		  , #{remarks}
+		  ,#{isDel}
+		) 
+	</insert>
+	
+	<!-- 查询仓库信息数据 -->
+	<select id="getWareHouseInfo" resultType="WareHouseInfo">
+		select * from WareHouseInfo where IsDel = 0 order by Id desc
+	</select>
+	
+	<!-- 修改大罐信息数据 -->
+	<update id="updateWareHouseInfoTank" parameterType="WareHouseInfo">
+		update WarehouseInfo set
+		WarehouseNumber = #{warehouseNumber},
+		WarehouseName = #{warehouseName},
+		WarehouseType ='',
+		Type =#{type},
+		TankHeight =#{tankHeight},
+		TankCapacity =#{tankCapacity},
+		Position =#{position},
+		LiquidHeight =#{liquidHeight},
+		AlarmLow =#{alarmLow},
+		AlarmHigh =#{alarmHigh},
+		Remarks = #{remarks}
+		where Id = #{id}
+	</update>
+	
+		<!-- 修改仓库信息数据 -->
+	<update id="updateWareHouseInfo" parameterType="WareHouseInfo">
+		update WarehouseInfo set
+		WarehouseNumber = #{warehouseNumber},
+		WarehouseName = #{warehouseName},
+		WarehouseType =#{warehouseType},
+		Type =#{type},
+		TankHeight =0,
+		TankCapacity =0,
+		Position =#{position},
+		LiquidHeight =0,
+		AlarmLow =0,
+		AlarmHigh =0,
+		Remarks = #{remarks}
+		where Id = #{id}
+	</update>
+	
+	<!-- 删除仓库信息数据 -->
+	<update id="delWareHouseInfo" parameterType="WareHouseInfo">
+		update WarehouseInfo set
+		WarehouseNumber = #{warehouseNumber},
+		WarehouseName = #{warehouseName},
+		WarehouseType =#{warehouseType},
+		Remarks = #{remarks},
+		IsDel = #{isDel}
+		where Id = #{id}
+	</update>
+	
+	<!-- 查询全部仓库信息数据 -->
+	<select id="getLevel"  resultType="Datadictionary">
+		select * from Datadictionary where type = '1'
+	</select>
+	
+	<!-- 查询全部仓库分类信息数据 -->
+	<select id="getTankType"  resultType="Datadictionary">
+		select * from Datadictionary where type = '2'
+	</select>
+	
+	<!-- 通过code查询全部仓库信息数据 -->
+	<select id="getLevelByid" parameterType="String"  resultType="Datadictionary">
+		select * from Datadictionary where type = '1' and code=#{code}
+	</select>
+	
+	<!-- 通过code查询全部仓库分类信息数据 -->
+	<select id="getTankTypeById"  resultType="Datadictionary">
+		select * from Datadictionary where type = '2' and code=#{code}
+	</select>
+	
+	<!-- 通过仓库信息id 查询仓库信息 -->
+	<select id="getWareHouseInfoByid" parameterType="int" resultType="WareHouseInfo">
+		select * from WarehouseInfo where id=#{id}
+	</select>
+	
+	<!-- 根据名称模糊查询 -->
+	<select id="findWareHouseInfoByName" parameterType="String" resultType="WareHouseInfo">
+		select * from WarehouseInfo where IsDel = 0
+		<if test="warehouseName !=null  and warehouseName != '' ">
+			and WarehouseName LIKE '%${warehouseName}%'
+		</if>
+	</select>
+	
+</mapper>

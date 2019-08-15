@@ -1,0 +1,189 @@
+<!-- 沥青生产配合比 -->
+<script type="text/javascript" src="../../js/mixStation/pitch/production_mix.js"></script>
+<div class="rightcon_wz">
+	<div class="location">您的位置：沥青混凝土拌合站（<span class="banhez" id="locationText"></span>） &gt; 配比管理 &gt; 生产配合比</div>
+</div>
+
+<div class="rightcon_content">
+	<div class="shunav">
+		<!-- <div class="shu_btn">
+			<span class="shu_ban" id="toggle">拌合站</span>
+			<div class="dtree" id="content" style="display:none;">
+				<div class="dtree_Tree">
+					<div class="dTreeNode rootNode">
+						<a>吉东公路盲样试验室</a>
+					</div>
+					<div id="dd0-1" class="clip" style="display:block;">
+						<div class="dTreeNode"><img src="../../image/img/joinbottom.gif" alt="">
+							<a id="sd1" class="node" href="#" onmouseover="window.status='authority';return true;" onmouseout="window.status='';return true;">
+								<input type="checkbox" desc="ZS1中心试验室" name="authority" id="authority_2" cshow="ZS1中心试验室" value="ZS1" onclick="javascript: d.checkNode(2,0,false,&quot;ZS1中心试验室&quot;,this.checked);"
+								 checked="checked">
+								<span class="dtree_node" node_id="2">ZS1中心试验室</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> -->
+		<form action="" method="get" class="sousuo">
+			<label>生产配合比编号：</label>
+			<input type="text" class="search_input rightwbj" id="proportion_Code">
+			<label>产品名称：</label>
+			<input type="text" id="material_Name" class="search_input rightwbj">
+			<label>产品型号：</label>
+			<input type="text" id="material_Model" class="search_input rightwbj">
+			<input name="" type="button" value="查&nbsp;&nbsp;询" class="btncha" id="chaxun" onclick="search();">
+		</form>
+		<div class="table-b">
+			<div class="luru"><a href="javascript:void(0)" class="hvr-icon-forward globalLoginBtn" onclick="getAddView();">新增录入</a></div>
+			<div class="table-b-right table-c-right">
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" class="table-hover dataTable no-footer" id="list"
+				 role="grid" aria-describedby="list_info">
+					<thead>
+						<tr role="row">
+							<th scope="col" width="8%">序号</th>
+							<th scope="col" width="12%">生产配合比编号</th>
+							<th scope="col" width="%">级配编号</th>
+							<th scope="col" width="%">目标配合比编号</th>
+							<th scope="col" width="%">产品名称/型号</th>
+							<th scope="col" width="10%">创建人</th>
+							<th scope="col" width="%">创建时间</th>
+							<th scope="col" width="15%">备注</th>
+							<th scope="col" width="%">操作</th>
+						</tr>
+					</thead>
+					<tbody id="tb">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="loginModal">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="tan_dx_title">
+					<span><img src="../../image/images/bi.png" width="16" height="16"></span>
+					<h3>生产配合比</h3>
+					<button type="button" id="login_close" class="close" data-dismiss="modal"><span aria-hidden="true" class="tan_close">×</span></button>
+				</div>
+				<div class="tan_dx_txt">
+					<form id="tabForm">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" class="mbphb_luru" id="add">
+							<tbody>
+								<tr>
+									<td width="16%" align="right">生产配合比编号：</td>
+									<td width="20%"><input name="proportionCode" type="text" placeholder="输入生产配合比编号" id="proportionCode" onkeyup="value=value.replace(/[\W]/g,'')" onchange="changeProportionCode(this.value);"
+										 maxlength="40"><span style="color:red">&nbsp;&nbsp;*</span></td>
+									<td width="10%" align="right">产品名称：</td>
+									<td width="20%">
+										<select size="1" style="width:153px;"  id="materialName" name="materialName" onchange="getOutName()">
+											<option></option>
+										</select><span style="color:red">&nbsp;&nbsp;*</span>
+									</td>
+									<td width="10%" align="right">产品型号：</td>
+									<td width="24%">
+										<select style="width:153px;" size="1" name="productId" id="materialModel" required="required" onchange="getOutModel()">
+											<option></option>
+										</select><span style="color:red">&nbsp;&nbsp;*</span>
+									</td>
+								</tr>
+								<tr>
+									<td width="14%" align="right">目标配合比编号：</td>
+									<td width="18%">
+										<select style="width:153px;" name="targPropId" size="1" id="mbproportionCode">
+											<option></option>
+										</select><span style="color:red">&nbsp;&nbsp;*</span>
+									</td>
+									<td width="7%" align="right">级配编号：</td>
+									<td colspan="3" align="left">
+										<select style="width:153px;" name="gradId" size="1" id="gradeCode">
+											<option></option>
+										</select><span style="color:red">&nbsp;&nbsp;*</span>
+									</td>
+									<td align="left">&nbsp;</td>
+									<td align="left">&nbsp;</td>
+								</tr>
+								<tr>
+									<td width="14%" align="right">备注：</td>
+									<td height="60" colspan="5" valign="bottom">
+										<textarea name="remarks" cols="100" rows="2" id="remarks" class="textkuan"></textarea>
+									</td>
+								</tr>
+								<tr>
+									<td><input type="hidden" id="orgId" name="orgId" value=""></td>
+									<td><input type="hidden" id="id" name="id" value=""></td>
+								</tr>
+							</tbody>
+						</table>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" class="scphb_jia" id="detailedTab">
+							<thead>
+								<tr class="mbphb_luru_dise">
+									<td width="9%" rowspan="2">材料种类</td>
+									<td colspan="6">骨料仓(%)</td>
+									<td colspan="3">粉料仓(%)</td>
+									<td width="9%" rowspan="2">油石比(%)</td>
+									<td colspan="2">外掺剂(%)</td>
+								</tr>
+								<tr class="mbphb_luru_dise">
+									<td width="7%">1#仓</td>
+									<td width="7%">2#仓</td>
+									<td width="7%">3#仓</td>
+									<td width="7%">4#仓</td>
+									<td width="7%">5#仓</td>
+									<td width="7%">6#仓</td>
+									<td width="7%">冷粉仓</td>
+									<td width="7%">冷粉2仓</td>
+									<td >热粉仓</td>
+									<td width="7%">外掺剂1</td>
+									<td width="7%">外掺剂2</td>
+								</tr>
+							</thead>
+							<tbody id="tb">
+								<tr>
+									<td class="mbphb_luru_dise h50">用量</td>
+									<td><input type="text" name="no1SetValue" id="no1SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="no2SetValue" id="no2SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="no3SetValue" id="no3SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="no4SetValue" id="no4SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="no5SetValue" id="no5SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="no6SetValue" id="no6SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="coldPowderSetValue" id="coldPowderSetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="coldPowder2SetValue" id="coldPowder2SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="hotPowderSetValue" id="hotPowderSetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="asphaltSetValue" id="asphaltSetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="admixture1SetValue" id="admixture1SetValue" value="" onkeyup="num(this)"></td>
+									<td><input type="text" name="admixture2SetValue" id="admixture2SetValue" value="" onkeyup="num(this)"></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+					<table width="100%" border="0" cellpadding="0" cellspacing="0" class="btn_xg">
+						<tbody>
+							<tr>
+								<td align="center"><input type="button" id="button" value="保&nbsp;&nbsp;存" class="btn_bc" onclick="addOrUpdate();"></td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$('#toggle').on('click', function(event) {
+		event.stopPropagation();
+		$(this).siblings('#content').toggle();
+		var tag = $(this).siblings('#content');
+		var flag = true;
+		$(document).bind("click", function(e) {
+			var target = $(e.target);
+			if (target.closest(tag).length == 0 && flag == true) {
+				$(tag).hide();
+				flag = false;
+			}
+		});
+	});
+</script>

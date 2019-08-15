@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="equipment_info">
+
+	<select id="gets" resultType="equipment_info" parameterType="equipment_info">
+		
+	SELECT
+		o.Org_Name str_org_name,
+		e.Id i_id,
+		e.Org_ID i_org_Id,
+		e.Upload_Module_ID i_upload_Module_Id,
+		e.Equipment_Code str_equipment_Code,
+		e.Equipment_No str_equipment_No,
+		e.Equipment_Type i_equipment_Type,
+		e.Equipment_Name str_equipment_Name,
+		e.Equipment_Model str_equipment_Model,
+		e.Equi_State str_equi_State,
+		e.State_Time str_state_Time,
+		e.Vendor str_vendor,
+		e.Latitude d_latitude,
+		e.Longitude d_longitude,
+		e.Remarks str_remarks,
+		e.Operator str_operator,
+		e.Create_Date str_create_Date,
+		e.Modifier str_modifier,
+		e.Modify_Date str_modify_Date,
+		e.Valid_Flag i_valid_Flag,
+		e.Upload i_upload,
+		e.Equi_State str_equi_State
+	FROM
+		Equipment_Info e LEFT JOIN Organization_Info o ON e.Org_ID = o.Id
+		
+		where	e.Valid_Flag =1 
+		
+		e.Org_ID =#{i_org_Id}
+		
+		<!-- <trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="str_equipment_Code != null and str_equipment_Code != ''">
+				AND Equipment_Code like '%${str_equipment_Code}%'
+			</if>
+			<if test="str_equipment_No != null and str_equipment_No != ''">
+				AND Equipment_No like '%${str_equipment_No}%'
+			</if>
+			<if test="str_equipment_Name != null and str_equipment_Name != ''">
+				AND Equipment_Name like '%${str_equipment_Name}%'
+			</if>
+			
+			<if test="str_equipment_Model != null and str_equipment_Model != ''">
+				AND Equipment_Model like '%${str_equipment_Model}%'
+			</if>		
+			<if test="i_id != null and i_id != ''">
+				AND id = #{i_id}
+			</if>
+		</trim> -->
+		
+	</select>
+	
+	
+	<select id="getequipmentbyNo" parameterType="equipment_info" resultType="equipment_info">
+		SELECT
+		id i_id
+		FROM
+		equipment_info
+		where 1=1
+		AND Org_ID =#{i_org_Id} 
+		and Equipment_No=#{str_equipment_No}
+	
+	</select>
+	<select id="getequipmentbyCode" parameterType="equipment_info" resultType="equipment_info">
+		SELECT
+		id i_id
+		FROM
+		equipment_info
+		where  Equipment_Code=#{str_equipment_Code}
+	
+	</select>
+	
+	<select id="getById" parameterType="equipment_info" resultType="equipment_info">
+			SELECT o.Org_Name str_org_name,
+			e.Id i_id,
+			e.Org_ID i_org_Id,
+			e.Upload_Module_ID i_upload_Module_Id,
+			e.Equipment_Code str_equipment_Code,
+			e.Equipment_No str_equipment_No,
+			e.Equipment_Name str_equipment_Name,
+			e.Equipment_Model str_equipment_Model,
+			e.Equipment_Type i_equipment_Type,
+			e.Equi_State str_equi_State,
+			e.State_Time str_state_Time,
+			e.Vendor str_vendor,
+			e.Latitude d_latitude,
+			e.Longitude d_longitude,
+			e.Remarks str_remarks,
+			e.Operator str_operator,
+			e.Create_Date str_create_Date,
+			e.Modifier str_modifier,
+			e.Modify_Date str_modify_Date,
+			e.Valid_Flag i_valid_Flag,
+			e.Upload i_upload,
+			e.Equi_State str_equi_State
+		FROM
+			Equipment_Info e LEFT JOIN Organization_Info o ON e.Org_ID = o.Id
+			
+			where	e.id = #{i_id}
+	</select>
+
+	
+	<insert id="add" parameterType="equipment_info">
+		
+	INSERT INTO equipment_info (
+			Remarks,
+			Vendor,
+			Operator,
+			Upload_Module_Id,
+			Org_ID,
+			Equipment_Code,
+			Equipment_Type,
+			Equipment_No,
+			Equipment_Name,
+			Equipment_Model,
+			Create_Date,
+			Valid_Flag,
+			Upload,
+			Latitude,
+			Longitude
+		)
+		VALUES(
+	
+		#{str_remarks},#{str_vendor},	#{str_operator},#{i_upload_Module_Id},#{ i_org_Id }, #{ str_equipment_Code }, #{ i_equipment_Type }, #{ str_equipment_No }, #{ str_equipment_Name }, #{ str_equipment_Model }, #{ str_create_Date }, #{ i_valid_Flag },#{i_upload}, #{ d_latitude }, #{ d_longitude }
+ 			)
+	</insert>
+	
+	
+	
+	<update id="update" parameterType="equipment_info">
+		UPDATE Equipment_Info set 
+
+			Org_ID =#{i_org_Id},
+			Upload_Module_ID =#{i_upload_Module_Id},
+			Equipment_Code =#{str_equipment_Code} ,
+			Equipment_No =#{str_equipment_No},
+			Equipment_Name =#{str_equipment_Name},
+			Equipment_Model =#{str_equipment_Model},
+			Equipment_Type =#{i_equipment_Type},
+			Remarks =#{str_remarks},
+			Vendor =#{str_vendor},
+			Modifier =#{str_modifier},
+			Modify_Date =#{str_modify_Date}
+		where id=#{i_id}
+	
+	</update>
+	
+
+	<delete id="del" parameterType="equipment_Info">
+	
+		UPDATE equipment_info set Valid_Flag = 0 where Id = #{i_id} 
+	
+	</delete> 
+</mapper>
